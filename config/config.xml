@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<plugin-config>
+	<libraries library-dir="lib"/>
+	<resourceBundle name="text"/>
+	<extensions>
+		<extension class-name="com.iver.cit.gvsig.StartEditing"
+			description="Extensión encargada de comenzar la edición sobre la capa activa."
+			active="true">
+			<menu text="Capa/comenzar_edicion" action-command="STARTEDITING"/>
+		</extension>
+		<extension class-name="com.iver.cit.gvsig.StopEditingToShp"
+			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla en un shapefile."
+			active="true">
+			<menu text="Capa/terminar_edicion/shp" action-command="STOPEDITING"/>
+		</extension>
+		<extension class-name="com.iver.cit.gvsig.EditingExtension"
+			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla en un shapefile."
+			active="true">
+			<menu text="Capa/cancelar_edicion" action-command="CANCELEDITING"/>
+			<menu text="Capa/mostrar_grid" action-command="SHOWGRID"/>
+			<menu text="Capa/ocultar_grid" action-command="HIDEGRID"/>
+			<menu text="Capa/ajustar_grid" action-command="SETADJUSTGRID"/>
+			<menu text="Capa/no_ajustar_grid" action-command="NOTADJUSTGRID"/>
+		</extension>
+	</extensions>
+</plugin-config>

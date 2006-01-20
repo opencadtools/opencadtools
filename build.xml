@@ -1,0 +1,56 @@
+<project name="Generar extension en Andami" default="dist" basedir=".">
+    <description>
+        Instala el plugin de CAD
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="bin"/>
+  <property name="dist"  location="dist"/>
+  <property name="plugin" value="com.iver.cit.gvsig.cad"/>
+  <property name="extensionDir" location="../fwAndami/gvSIG/extensiones"/>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  	<!-- Creamos un fichero con el timeStamp para que lo lea el FPanelAbout -->
+  	<buildnumber/>
+
+  </target>
+
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+  </target>
+
+  <target name="dist" depends="compile"
+        description="generate the distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}"/>
+    <copy todir="${dist}/lib">
+    	<fileset dir="./lib" includes="*.jar,*.zip"/>
+    </copy>
+  	<jar jarfile="${dist}/${plugin}.jar" basedir="${build}"/>
+    <copy file="config/config.xml" todir="${dist}"/>
+    <copy todir="${dist}">
+    	<fileset dir="." includes="text*.properties"/>
+    </copy>
+    <copy todir="${dist}/images">
+    	<fileset dir="images/" includes="*"/>
+    </copy>
+
+    <move todir="${extensionDir}/${plugin}/">
+    	<fileset dir="${dist}" includes="**/**"/>
+    </move>
+  </target>
+
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
+
