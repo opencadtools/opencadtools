@@ -1,0 +1,15 @@
+<project default="generate">
+	<property name="smfiles" location="../lib/Smc.jar" />
+	<property name="javafiles" location="../src/com/iver/cit/gvsig/gui/cad/tools/smc" />
+
+	<target name="generate">
+		<apply executable="java">
+			<arg value="-jar" />
+			<arg value="../lib/Smc.jar"/>
+			<arg value="-java"/>
+			<arg value="-d" />
+			<arg value="../src/com/iver/cit/gvsig/gui/cad/tools/smc" />
+			<fileset dir="." includes="*.sm"/>
+		</apply>
+	</target>
+</project>

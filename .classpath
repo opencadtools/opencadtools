@@ -5,5 +5,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/extGvSIG"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/fwAndami"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libFMap"/>
+	<classpathentry kind="lib" path="lib/Smc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
