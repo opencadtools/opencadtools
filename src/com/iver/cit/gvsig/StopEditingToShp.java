@@ -53,63 +53,8 @@ public class StopEditingToShp implements Extension {
                     return;
                 }
             }
-            }else if (s.equals("CANCELEDITING")){
-            	for (int i = 0; i < layers.getLayersCount(); i++) {
-                    if (layers.getLayer(i) instanceof FLyrVect &&
-                            layers.getLayer(i).isEditing()) {
-                        FLyrVect lv = (FLyrVect) layers.getLayer(i);
-                        //stopEditing(lv);
-                        VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) layers.getLayer(i)).getSource();
-                        lv.setSource(vea.getOriginalAdapter());
-                        lv.setEditing(false);
-                        return;
-                    }
-                }
             }
             PluginServices.getMainFrame().enableControls();
-        /*          try {
-           if (actionCommand.equals("STOP")){
-                   File file = null;
-                   if (((FLyrVect)capa).getFile()==null){
-                   JFileChooser jfc = new JFileChooser();
-                   jfc.addChoosableFileFilter(new GenericFileFilter("dxf",
-                   PluginServices.getText(this, "DxfFiles")));
-                   if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
-                           file = jfc.getSelectedFile();
-                           if (!(file.getPath().endsWith(".dxf") ||
-                                           file.getPath().endsWith(".DXF"))) {
-                                   file = new File(file.getPath() + ".dxf");
-                           }
-                           DxfWriter dxfwriter = new DxfWriter();
-                           try {
-                                   dxfwriter.write(new IGeometry[0], file);
-                           } catch (Exception e3) {
-                                   e3.printStackTrace();
-                           }
-                   }
-                   }else{
-                           file=((FLyrVect)capa).getFile();
-                   }
-                           capa.stopEdition(file);
-                           vista.getMapControl().getMapControl().setTool("zoomIn");
-                           vista.getMapControl().getMapControl().drawMap(false);
-           }else if (actionCommand.equals("CANCELEDITION")){
-                   capa.cancelEdition();
-                   vista.getMapControl().getMapControl().setTool("zoomIn");
-                   vista.getMapControl().getMapControl().drawMap(false);
-           }else if (actionCommand.equals("SHOWGRID")){
-                   vista.getMapControl().getCadToolAdapter().setGrid(true);
-           }else if (actionCommand.equals("HIDEGRID")){
-                   vista.getMapControl().getCadToolAdapter().setGrid(false);
-           }else if (actionCommand.equals("SETADJUSTGRID")){
-                   vista.getMapControl().getCadToolAdapter().setAdjustGrid(true);
-           }else if (actionCommand.equals("NOTADJUSTGRID")){
-                   vista.getMapControl().getCadToolAdapter().setAdjustGrid(false);
-           }
-           } catch (EditionException e) {
-                   e.printStackTrace();
-           }
-           }*/
     }
 
     /**
