@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <plugin-config>
-	<libraries library-dir="lib"/>
+	<libraries library-dir="./"/>
+	<depends plugin-name="com.iver.cit.gvsig" />
 	<resourceBundle name="text"/>
 	<extensions>
 		<extension class-name="com.iver.cit.gvsig.StartEditing"
