@@ -23,5 +23,60 @@
 			<menu text="Capa/ajustar_grid" action-command="SETADJUSTGRID"/>
 			<menu text="Capa/no_ajustar_grid" action-command="NOTADJUSTGRID"/>
 		</extension>
+
+		<extension class-name="com.iver.cit.gvsig.CADExtension"
+			description="Extensión encargada de gestionar los eventos realizados sobre las geometrías."
+			active="true">
+			<menu text="geometria/insertar/punto" action-command="POINT" icon="images/Point.png"/>
+			<menu text="geometria/insertar/linea" action-command="LINE" icon="images/Rect.png"/>
+			<menu text="geometria/insertar/polilinea" action-command="POLYLINE" icon="images/Line.png"/>
+			<menu text="geometria/insertar/poligono" action-command="POLYGON" icon="images/Poligon.png"/>
+			<menu text="geometria/insertar/rectangulo" action-command="RECTANGLE" icon="images/Rectangle.png"/>
+			<menu text="geometria/insertar/circulo" action-command="CIRCLE" icon="images/Circle.png"/>
+			<menu text="geometria/insertar/elipse" action-command="ELLIPSE" icon="images/Ellipse.png"/>
+			<menu text="geometria/insertar/arc" action-command="ARC" icon="images/Arc.png"/>
+			<!--menu text="geometria/insertar/curva" action-command="SPLINE" icon="images/Spline.png"/-->
+			<menu text="geometria/insertar/copia" action-command="COPY" icon="images/Copy.png"/>
+			<!--menu text="geometria/insertar/equidistante" action-command="EQUIDISTANCE" icon="images/Equidistance.png"/-->
+			<!--menu text="geometria/insertar/Matriz" action-command="MATRIZ" icon="images/Matriz.png"/-->
+			<!--menu text="geometria/insertar/simetria" action-command="SYMMETRY" icon="images/Symmetry.png"/-->
+			<menu text="geometria/insertar/rotacion" action-command="ROTATION" icon="images/Rotation.png"/>
+			<menu text="geometria/insertar/estirar" action-command="STRETCHING" icon="images/Stretching.png"/>
+			<menu text="geometria/insertar/escalado" action-command="SCALE" icon="images/Scale.png"/>
+			<!--menu text="geometria/insertar/alargar" action-command="EXTEND" icon="images/Extend.png"/-->
+			<!--menu text="geometria/insertar/recortar" action-command="TRIM" icon="images/Trim.png"/-->
+			<!--menu text="geometria/insertar/unir_separar" action-command="UNIT" icon="images/Unit.png"/-->
+			<menu text="geometria/insertar/explotar" action-command="EXPLOIT" icon="images/Exploit.png"/>
+			<!--menu text="geometria/insertar/chaflan" action-command="CHAFLAN" icon="images/Chaflan.png"/-->
+			<!--menu text="geometria/insertar/empalme" action-command="JOIN" icon="images/Join.png"/-->
+
+			<tool-bar name="insertar">
+				<selectable-tool icon="images/Point.png" action-command="POINT" tooltip="punto" group="vista"/>
+				<selectable-tool icon="images/Rect.png" action-command="LINE" tooltip="linea" group="vista"/>
+				<selectable-tool icon="images/Line.png" action-command="POLYLINE" tooltip="polilinea" group="vista"/>
+				<selectable-tool icon="images/Poligon.png" action-command="POLYGON" tooltip="poligono" group="vista"/>
+				<selectable-tool icon="images/Rectangle.png" action-command="RECTANGLE" tooltip="rectangulo" group="vista"/>
+				<selectable-tool icon="images/Circle.png" action-command="CIRCLE" tooltip="circulo" group="vista"/>
+				<selectable-tool icon="images/Ellipse.png" action-command="ELLIPSE" tooltip="elipse" group="vista"/>
+				<selectable-tool icon="images/Arc.png" action-command="ARC" tooltip="arco" group="vista"/>
+				<!--selectable-tool icon="images/Spline.png" action-command="SPLINE" tooltip="curva" group="vista"/-->
+			</tool-bar>
+			<tool-bar name="modificar">
+				<selectable-tool name="selection" icon="images/Select.png" action-command="SELECT" tooltip="seleccionar_por_rectangulo" group="vista"/>
+				<selectable-tool icon="images/Copy.png" action-command="COPY" tooltip="copia" group="vista"/>
+				<!--selectable-tool icon="images/Equidistance.png" action-command="EQUIDISTANCE" tooltip="equidistante" group="vista"/-->
+				<!--selectable-tool icon="images/Matriz.png" action-command="MATRIZ" tooltip="matriz" group="vista"/-->
+				<!--selectable-tool icon="images/Symmetry.png" action-command="SYMMETRY" tooltip="simetria" group="vista"/-->
+				<selectable-tool icon="images/Rotation.png" action-command="ROTATION" tooltip="rotacion" group="vista"/>
+				<selectable-tool icon="images/Stretching.png" action-command="STRETCHING" tooltip="estirar" group="vista"/>
+				<selectable-tool icon="images/Scale.png" action-command="SCALE" tooltip="escalado" group="vista"/>
+				<!--selectable-tool icon="images/Extend.png" action-command="EXTEND" tooltip="alargar" group="vista"/-->
+				<!--selectable-tool icon="images/Trim.png" action-command="TRIM" tooltip="recortar" group="vista"/-->
+				<!--selectable-tool icon="images/Unit.png" action-command="UNIT" tooltip="unir_separar" group="vista"/-->
+				<selectable-tool icon="images/Exploit.png" action-command="EXPLOIT" tooltip="explotar" group="vista"/>
+				<!--selectable-tool icon="images/Chaflan.png" action-command="CHAFLAN" tooltip="chaflan" group="vista"/-->
+				<!--selectable-tool icon="images/Join.png" action-command="JOIN" tooltip="empalme" group="vista"/-->
+			</tool-bar>
+		</extension>
 	</extensions>
 </plugin-config>
