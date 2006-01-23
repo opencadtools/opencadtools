@@ -47,7 +47,6 @@ import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
-import com.iver.cit.gvsig.gui.cad.CadTool;
 
 
 public abstract class DefaultCADTool implements CADTool {
@@ -55,11 +54,11 @@ public abstract class DefaultCADTool implements CADTool {
 	public void setCadToolAdapter(CADToolAdapter cta){
 		cadToolAdapter = cta;
 	}
-	
+
 	public CADToolAdapter getCadToolAdapter(){
 		return cadToolAdapter;
 	}
-	
+
 	public void drawLine(Graphics2D g, Point2D firstPoint, Point2D endPoint){
 		GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
 				2);
@@ -67,7 +66,7 @@ public abstract class DefaultCADTool implements CADTool {
 		elShape.lineTo(endPoint.getX(), endPoint.getY());
 		ShapeFactory.createPolyline2D(elShape).draw(g,
 			getCadToolAdapter().getMapControl().getViewPort(),
-			CadTool.drawingSymbol);
-		
+			CADTool.drawingSymbol);
+
 	}
 }

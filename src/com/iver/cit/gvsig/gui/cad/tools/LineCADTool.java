@@ -1,13 +1,13 @@
-package com.iver.cit.gvsig.gui.cad.smc.gen;
+package com.iver.cit.gvsig.gui.cad.tools;
 
+import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
-import com.iver.cit.gvsig.fmap.edition.EditableFeatureSource;
-import com.iver.cit.gvsig.fmap.edition.cad.TrigonometricalFunctions;
+import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
-import com.iver.cit.gvsig.gui.cad.smc.AbstractCADTool;
-import com.iver.cit.gvsig.gui.cad.smc.gen.CADToolContext.CADToolState;
+import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext;//.LineCADToolState;
+import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext.LineCADToolState;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -57,41 +57,27 @@ import java.util.BitSet;
  *   +34 963163400
  *   dac@iver.es
  */
-public class LineCADTool extends AbstractCADTool {
-    private CADToolContext _fsm;
+public class LineCADTool extends DefaultCADTool {
+    private LineCADToolContext _fsm;
+    private VectorialEditableAdapter vea;
     private String question;
-    private EditableFeatureSource efs;
     private Point2D firstPoint;
     private Point2D lastPoint;
     private double angle;
 	private double length;
 public LineCADTool(){
-	_fsm=new CADToolContext(this);
+	_fsm=new LineCADToolContext(this);
 }
     /**
      * Método de incio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    	
+
     }
     public void transition(java.util.BitSet sel, double x, double y){
 		_fsm.addpoint(sel,x,y);
 	}
-    /**
-     * Inserta el EditableFeatureSource que es sobre el que se hacen las
-     * operaciones.
-     *
-     * @param efs EditableFeatureSource.
-     */
-    public void setEditingSource(EditableFeatureSource efs) {
-        this.efs = efs;
-    }
-
-  /*  public void transition(java.util.BitSet sel, double x, double y){
-    	_fsm.addpoint(sel,x,y);
-    }
-    */
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
      * editableFeatureSource que ya estará creado.
@@ -103,18 +89,18 @@ public LineCADTool(){
     public void addpoint(java.util.BitSet sel, double x, double y) {
        // _fsm.addpoint(sel, x, y);
 
-        CADToolState actualState = (CADToolState)_fsm.getPreviousState();
+        LineCADToolState actualState = (LineCADToolState)_fsm.getPreviousState();
       //  CADToolState previousState=(CADToolState)_fsm.getPreviousState();
         String status = actualState.getName();
        // String previousstatus=previousState.getName();
-        
+
         if (status.equals("ExecuteMap.Initial")) {
         	firstPoint=new Point2D.Double(x,y);
         	System.out.println("Question : "+question);
         } else if (status == "ExecuteMap.First") {
 			firstPoint=new Point2D.Double(x,y);
 			System.out.println("Question : "+question);
-			
+
 		} else if (status == "ExecuteMap.Second") {
 			System.out.println("Question : "+question);
 			//firstPoint=lastPoint;
@@ -124,14 +110,15 @@ public LineCADTool(){
 						2);
 				elShape.moveTo(firstPoint.getX(), firstPoint.getY());
 				elShape.lineTo(lastPoint.getX(), lastPoint.getY());
-				efs.addGeometry(ShapeFactory.createPolyline2D(elShape));
+				DefaultFeature df=new DefaultFeature(ShapeFactory.createPolyline2D(elShape),null);
+				vea.addRow(df);
 			} catch (DriverIOException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			firstPoint=lastPoint;
-		} 
+		}
 
     }
 
@@ -164,13 +151,13 @@ public LineCADTool(){
      */
     public void drawOperation(Graphics g, FBitSet selectedGeometries, double x,
         double y) {
-    	CADToolState actualState = _fsm.getState();
+    	LineCADToolState actualState = _fsm.getState();
     	 String status = actualState.getName();
 
 		//if ((status == "ExecuteMap.Second")){// || (status == "5")) {
 			if (firstPoint!=null)
 			drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
-		//} 
+		//}
 	}
 
     /**
@@ -191,6 +178,10 @@ public LineCADTool(){
         // TODO Auto-generated method stub
     }
     public void refresh(){
-    	
+
     }
+	public void setVectorialAdapter(VectorialEditableAdapter vea) {
+	this.vea=vea;
+
+	}
 }

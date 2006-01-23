@@ -2,7 +2,6 @@ package com.iver.cit.gvsig;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -10,6 +9,9 @@ import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.project.ProjectView;
+
+
+
 
 
 /**
@@ -31,8 +33,9 @@ public class StartEditing implements Extension {
         com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
                                                              .getActiveView();
 
-        if (f.getClass() == View.class) {
+        if (f instanceof View) {
             View vista = (View) f;
+            vista.showConsole();
             ProjectView model = vista.getModel();
             FMap mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
@@ -48,11 +51,10 @@ public class StartEditing implements Extension {
                     lv.setVisible(true);
 
                     VectorialEditableAdapter vea = new VectorialEditableAdapter(lv.getSource());
-                    try {
-						vea.startEdition();
-					} catch (EditionException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+                    try{
+                    vea.startEdition();
+                    }catch (EditionException e) {
+						// TODO: handle exception
 					}
                     lv.setSource(vea);
                     lv.setEditing(true);

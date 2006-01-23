@@ -36,7 +36,8 @@ public class EditingExtension implements Extension {
             FLayers layers = mapa.getLayers();
            if (s.equals("CANCELEDITING")){
             	for (int i = 0; i < layers.getLayersCount(); i++) {
-                    if (layers.getLayer(i) instanceof FLyrVect &&
+                    vista.hideConsole();
+            		if (layers.getLayer(i) instanceof FLyrVect &&
                             layers.getLayer(i).isEditing()) {
                         FLyrVect lv = (FLyrVect) layers.getLayer(i);
                         //stopEditing(lv);

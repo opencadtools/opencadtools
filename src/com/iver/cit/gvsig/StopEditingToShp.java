@@ -8,16 +8,14 @@ import javax.swing.JFileChooser;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
-import com.iver.cit.gvsig.fmap.core.IFeature;
-import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
-import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.VectorialAdapter;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.project.ProjectView;
+
+
 
 
 /**
@@ -26,7 +24,8 @@ import com.iver.cit.gvsig.project.ProjectView;
  * @author Vicente Caballero Navarro
  */
 public class StopEditingToShp implements Extension {
-    /**
+    private  View vista;
+	/**
      * @see com.iver.andami.plugins.Extension#inicializar()
      */
     public void inicializar() {
@@ -39,7 +38,8 @@ public class StopEditingToShp implements Extension {
         com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
                                                              .getActiveView();
 
-        View vista = (View) f;
+        vista = (View) f;
+
         ProjectView model = vista.getModel();
         FMap mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
@@ -70,7 +70,6 @@ public class StopEditingToShp implements Extension {
     public void stopEditing(FLyrVect layer) {
         try {
             JFileChooser jfc = new JFileChooser();
-
            // if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             /*   FLyrVect layer = (FLyrVect) test.createLayer("prueba",
                         (VectorialFileDriver) driverManager.getDriver(
@@ -81,23 +80,12 @@ public class StopEditingToShp implements Extension {
         		    File newFile = jfc.getSelectedFile();
 
                     ShpWriter writer = new ShpWriter(newFile, layer);
-                /*    writer.preProcess();
 
-                    VectorialAdapter adapter = layer.getSource();
-
-                    for (int i = 0; i < adapter.getShapeCount(); i++) {
-                        IFeature feat = adapter.getFeature(i);
-                        IRowEdited editFeat = new DefaultRowEdited(feat,
-                                IRowEdited.STATUS_MODIFIED);
-                        writer.process(editFeat);
-                    }
-
-                    writer.postProcess();
-*/
                     VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
                     vea.stopEdition(writer);
                     layer.setSource(vea.getOriginalAdapter());
                     layer.setEditing(false);
+                    vista.hideConsole();
                 }
             //}
         } catch (Exception e) {
