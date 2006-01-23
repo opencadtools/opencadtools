@@ -8,7 +8,7 @@
 %start ExecuteMap::Initial
 %class LineCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
-%access import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
+%access import com.iver.cit.gvsig.gui.cad.tools.LineCADTool; public
 
 
 %map ExecuteMap
