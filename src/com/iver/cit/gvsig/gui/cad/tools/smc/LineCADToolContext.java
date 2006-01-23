@@ -241,7 +241,7 @@ import com.iver.cit.gvsig.gui.cad.tools.LineCADTool; public final class LineCADT
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto");
+                    ctxt.setQuestion("Insertar primer punto");
                     ctxt.addpoint(sel, pointX, pointY);
                     ctxt.refresh();
                 }

@@ -42,7 +42,7 @@ First{
 Second{
 	addpoint(sel:java.util.BitSet,pointX:double,pointY:double)
 		First {
-			setQuestion("Insertar segundo punto");
+			setQuestion("Insertar primer punto");
 			addpoint(sel,pointX,pointY);
 			refresh();
 			}

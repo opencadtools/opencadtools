@@ -154,10 +154,10 @@ public LineCADTool(){
     	LineCADToolState actualState = _fsm.getState();
     	 String status = actualState.getName();
 
-		//if ((status == "ExecuteMap.Second")){// || (status == "5")) {
+    	 if ((status == "ExecuteMap.Second")){// || (status == "5")) {
 			if (firstPoint!=null)
 			drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
-		//}
+    	 }
 	}
 
     /**
