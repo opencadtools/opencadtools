@@ -622,19 +622,19 @@ public class CADToolAdapter extends Behavior {
 	 * @param actionCommand
 	 */
 	public void keyPressed(String actionCommand) {
-	/***	if (actionCommand.equals("eliminar")) {
+		if (actionCommand.equals("eliminar")) {
 			delete();
 		} else if (actionCommand.equals("escape")) {
 			if (getMapControl().getCurrentMapTool() instanceof CADToolAdapter){
 				cadToolStack.clear();
-				pushCadTool(new SelectionCadTool());
+				/***pushCadTool(new SelectionCadTool());***/
 				selection.clear();
 				getMapControl().drawMap(false);
-				PluginServices.getMainFrame().setSelectedTool("selection");
+				/***PluginServices.getMainFrame().setSelectedTool("selection");***/
 				askQuestion();
 			}
 		}
-***/
+
 		PluginServices.getMainFrame().enableControls();
 
 	}
