@@ -41,7 +41,7 @@
 package com.iver.cit.gvsig.gui.cad;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
-import com.iver.cit.gvsig.fmap.edition.EditableFeatureSource;
+import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
 import java.awt.Color;
@@ -64,12 +64,12 @@ public interface CADTool {
 
 	public void init();
 	public void transition(java.util.BitSet sel, double x, double y);
-	public void setEditingSource(EditableFeatureSource efs);
+	public void setVectorialAdapter(VectorialEditableAdapter vea);
 	public void addpoint(BitSet sel,double x,double y);
 	public void addoption(String s);
 	public void setQuestion(String s);
 	//public void updateState(String s);
-	
+
 	/**
 	 * Recibe un graphics en el que se encuentra dibujada la
 	 * EditableFeatureSource que se pasa como parámetro. En este método, la
