@@ -8,7 +8,7 @@
   <property name="dist"  location="dist"/>
   <property name="plugin" value="com.iver.cit.gvsig.cad"/>
   <property name="extensionDir" location="../fwAndami/gvSIG/extensiones"/>
-
+<property name="mainplugin" value="com.iver.cit.gvsig"/>
   <target name="init">
     <!-- Create the time stamp -->
     <tstamp/>
@@ -28,7 +28,7 @@
         description="generate the distribution" >
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}"/>
-    <copy todir="${dist}/lib">
+    <copy todir="${extensionDir}/${mainplugin}/lib">
     	<fileset dir="./lib" includes="*.jar,*.zip"/>
     </copy>
   	<jar jarfile="${dist}/${plugin}.jar" basedir="${build}"/>
