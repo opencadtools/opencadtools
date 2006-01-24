@@ -2,9 +2,16 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/Smc.jar"/>
+	<classpathentry sourcepath="/libGDBMS" kind="lib" path="/libFMap/lib/gdbms-0.8-SNAPSHOT.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extGvSIG"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/fwAndami"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libFMap"/>
-	<classpathentry kind="lib" path="lib/Smc.jar"/>
+	<classpathentry sourcepath="/libIverUtiles" kind="lib" path="/fwAndami/lib/iver-utiles.jar"/>
+	<classpathentry sourcepath="/libDriverManager" kind="lib" path="/libFMap/lib/driver-manager-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt2-shapefile.jar"/>
+	<classpathentry kind="lib" path="lib/jdom-1.0b10.jar"/>
+	<classpathentry kind="lib" path="/libFMap/lib/gt2-main.jar"/>
+	<classpathentry kind="lib" path="/libFMap/lib/jts-1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

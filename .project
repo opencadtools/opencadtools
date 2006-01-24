@@ -3,10 +3,19 @@
 	<name>extCAD</name>
 	<comment></comment>
 	<projects>
+		<project>extGvSIG</project>
+		<project>fwAndami</project>
+		<project>libFMap</project>
+		<project>libIverUtiles</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>de.loskutov.FileSync.FSBuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
