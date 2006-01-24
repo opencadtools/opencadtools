@@ -6,10 +6,11 @@
 %}
 
 %start ExecuteMap::Initial
-%class LineCADTool
+%class PointCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
-%import com.iver.cit.gvsig.gui.cad.tools.LineCADTool
+%import com.iver.cit.gvsig.gui.cad.tools.PointCADTool
 %import com.iver.cit.gvsig.fmap.layers.FBitSet
+
 
 %map ExecuteMap
 %%
@@ -19,7 +20,7 @@ Initial
 
 	Entry {
 		init();
-		setQuestion("Insertar primer punto");
+		setQuestion("Defina el punto");
 		}
 	Exit {
 		}
@@ -27,26 +28,18 @@ Initial
 	{
 
 		addpoint(sel:FBitSet,pointX:double,pointY:double)
-			Second {
+			First {
 				setQuestion("Insertar segundo punto");
 				addpoint(sel,pointX,pointY);
 				}
 	}
 First{
 	addpoint(sel:FBitSet,pointX:double,pointY:double)
-		Second {
-			setQuestion("Insertar segundo punto");
+		First {
+			setQuestion("Insertar punto");
 			addpoint(sel,pointX,pointY);
 			}
 }
-Second{
-	addpoint(sel:FBitSet,pointX:double,pointY:double)
-		First {
-			setQuestion("Insertar primer punto");
-			addpoint(sel,pointX,pointY);
-			refresh();
-			}
-	}
 Default
 {
 
