@@ -520,7 +520,7 @@ public class CADToolAdapter extends Behavior {
 		}
 */
 		View vista = (View) PluginServices.getMDIManager().getActiveView();
-		vista.getConsolePanel().addText("\n" + cadtool.getQuestion());
+		vista.getConsolePanel().addText("\n" + cadtool.getQuestion()+">");
 		//***PluginServices.getMainFrame().addTextToConsole("\n" + cadtool.getQuestion());
 		questionAsked = true;
 
