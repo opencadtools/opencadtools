@@ -88,12 +88,12 @@ public PointCADTool(){
     public void addpoint(FBitSet sel, double x, double y) {
        // _fsm.addpoint(sel, x, y);
 
-        LineCADToolState actualState = (LineCADToolState)_fsm.getPreviousState();
+        PointCADToolState actualState = (PointCADToolState)_fsm.getPreviousState();
       //  CADToolState previousState=(CADToolState)_fsm.getPreviousState();
         String status = actualState.getName();
        // String previousstatus=previousState.getName();
 
-        if (status.equals("ExecuteMap.Initial") || 
+        if (status.equals("ExecuteMap.Initial") ||
         	(status == "ExecuteMap.First"))
         {
 			System.out.println("Question : "+question);
