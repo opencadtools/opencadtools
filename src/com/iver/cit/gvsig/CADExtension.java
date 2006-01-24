@@ -60,22 +60,8 @@ import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import com.iver.utiles.console.ResponseListener;
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.MemoryImageSource;
-import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 /**
  * Extensión dedicada a controlar las diferentes operaciones sobre el editado
  * de una capa.
@@ -96,7 +82,9 @@ public class CADExtension implements Extension {
      */
     public void inicializar() {
         LineCADTool line = new LineCADTool();
+        PointCADTool point = new PointCADTool();
         addCADTool("line", line);
+        addCADTool("point", point);
     }
 
     /**
@@ -170,6 +158,7 @@ public class CADExtension implements Extension {
             ///vista.getMapControl().setCadTool("selection");
         } else if (s.compareTo("POINT") == 0) {
             ///vista.getMapControl().setCadTool("point");
+        	setCADTool("point");
         } else if (s.compareTo("LINE") == 0) {
         	setCADTool("line");
         	///vista.getMapControl().setCadTool("line");

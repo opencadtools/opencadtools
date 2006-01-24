@@ -14,6 +14,12 @@
 			active="true">
 			<menu text="Capa/terminar_edicion/shp" action-command="STOPEDITING"/>
 		</extension>
+		<extension class-name="com.iver.cit.gvsig.StopEditingToGT2Shp"
+			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma si es un shapefile."
+			active="true">
+			<menu text="Capa/terminar_edicion/GT2shp" action-command="STOPEDITING"/>
+		</extension>
+		
 		<extension class-name="com.iver.cit.gvsig.EditingExtension"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla en un shapefile."
 			active="true">
