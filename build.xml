@@ -14,8 +14,6 @@
     <tstamp/>
     <!-- Create the build directory structure used by compile -->
     <mkdir dir="${build}"/>
-  	<!-- Creamos un fichero con el timeStamp para que lo lea el FPanelAbout -->
-  	<buildnumber/>
 
   </target>
 
