@@ -12,7 +12,6 @@ import java.util.Stack;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.ViewPort;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
@@ -21,7 +20,7 @@ import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
-import com.iver.utiles.console.JConsole;
+import com.iver.cit.gvsig.gui.View;
 
 /**
  * DOCUMENT ME!

@@ -1,9 +1,5 @@
 package com.iver.cit.gvsig.gui.cad.tools;
 
-import com.hardcode.driverManager.DriverLoadException;
-import com.hardcode.gdbms.engine.data.driver.DriverException;
-import com.hardcode.gdbms.engine.values.Value;
-import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
@@ -79,7 +75,7 @@ public LineCADTool(){
     public void init() {
 
     }
-    public void transition(java.util.BitSet sel, double x, double y){
+    public void transition(FBitSet sel, double x, double y){
 		_fsm.addpoint(sel,x,y);
 	}
     /**
@@ -90,7 +86,7 @@ public LineCADTool(){
      * @param x parámetro x del punto que se pase en esta transición.
      * @param y parámetro y del punto que se pase en esta transición.
      */
-    public void addpoint(java.util.BitSet sel, double x, double y) {
+    public void addpoint(FBitSet sel, double x, double y) {
        // _fsm.addpoint(sel, x, y);
 
         LineCADToolState actualState = (LineCADToolState)_fsm.getPreviousState();
@@ -114,21 +110,7 @@ public LineCADTool(){
 						2);
 				elShape.moveTo(firstPoint.getX(), firstPoint.getY());
 				elShape.lineTo(lastPoint.getX(), lastPoint.getY());
-				int numFields=0;
-				try {
-					numFields = vea.getRecordset().getFieldCount();
-				} catch (DriverException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (DriverLoadException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Value[] value=new Value[numFields];
-				for (int i=0;i<value.length;i++){
-					value[i]=ValueFactory.createNullValue();
-				}
-				DefaultFeature df=new DefaultFeature(ShapeFactory.createPolyline2D(elShape),value);
+				DefaultFeature df=new DefaultFeature(ShapeFactory.createPolyline2D(elShape),null);
 				vea.addRow(df);
 			} catch (DriverIOException e) {
 				e.printStackTrace();

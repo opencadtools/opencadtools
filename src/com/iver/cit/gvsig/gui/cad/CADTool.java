@@ -63,9 +63,9 @@ public interface CADTool {
 			Color.ORANGE);
 
 	public void init();
-	public void transition(java.util.BitSet sel, double x, double y);
+	public void transition(FBitSet sel, double x, double y);
 	public void setVectorialAdapter(VectorialEditableAdapter vea);
-	public void addpoint(BitSet sel,double x,double y);
+	public void addpoint(FBitSet sel,double x,double y);
 	public void addoption(String s);
 	public void setQuestion(String s);
 	//public void updateState(String s);
