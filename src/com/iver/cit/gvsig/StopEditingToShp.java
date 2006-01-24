@@ -113,7 +113,7 @@ public class StopEditingToShp implements Extension {
 
             for (int i = 0; i < capas.getLayersCount(); i++) {
                 if (capas.getLayer(i) instanceof FLyrVect &&
-                        capas.getLayer(i).isEditing()) {
+                        capas.getLayer(i).isEditing() && capas.getLayer(i).isActive()) {
                     return true;
                 }
             }
