@@ -59,6 +59,7 @@ import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
+import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import com.iver.utiles.console.ResponseListener;
@@ -70,7 +71,7 @@ import com.iver.utiles.console.ResponseListener;
  */
 public class CADExtension implements Extension {
    private static CADToolAdapter adapter=new CADToolAdapter();
-   private HashMap namesCadTools = new HashMap();
+   private static HashMap namesCadTools = new HashMap();
    private boolean isLoad =false;
    private MapControl mapControl;
    private View view;
@@ -83,8 +84,10 @@ public class CADExtension implements Extension {
     public void inicializar() {
         LineCADTool line = new LineCADTool();
         PointCADTool point = new PointCADTool();
+        CircleCADTool circle=new CircleCADTool();
         addCADTool("line", line);
         addCADTool("point", point);
+        addCADTool("circle",circle);
     }
 
     /**
@@ -157,15 +160,13 @@ public class CADExtension implements Extension {
         } else if (s.compareTo("SELECT") == 0) {
             ///vista.getMapControl().setCadTool("selection");
         } else if (s.compareTo("POINT") == 0) {
-            ///vista.getMapControl().setCadTool("point");
         	setCADTool("point");
         } else if (s.compareTo("LINE") == 0) {
         	setCADTool("line");
-        	///vista.getMapControl().setCadTool("line");
         } else if (s.compareTo("POLYLINE") == 0) {
             ///vista.getMapControl().setCadTool("polyline");
         } else if (s.compareTo("CIRCLE") == 0) {
-            ///vista.getMapControl().setCadTool("circle");
+           setCADTool("circle");
         } else if (s.compareTo("ARC") == 0) {
             ///vista.getMapControl().setCadTool("arc");
         } else if (s.compareTo("ELLIPSE") == 0) {
@@ -181,7 +182,7 @@ public class CADExtension implements Extension {
     public void addCADTool(String name, CADTool c){
 		namesCadTools.put(name, c);
 	}
-    public void setCADTool(String text){
+    public static void setCADTool(String text){
 		CADTool ct = (CADTool) namesCadTools.get(text);
 		if (ct == null) throw new RuntimeException("No such cad tool");
 		ct.init();

@@ -12,4 +12,20 @@
 			<fileset dir="." includes="*.sm"/>
 		</apply>
 	</target>
+	<target name="html">
+		<apply executable="java">
+			<arg value="-jar" />
+			<arg value="../lib/Smc.jar"/>
+			<arg value="-table"/>
+			<fileset dir="." includes="*.sm"/>
+		</apply>
+	</target>
+	<target name="dot">
+		<apply executable="java">
+			<arg value="-jar" />
+			<arg value="../lib/Smc.jar"/>
+			<arg value="-graph"/>
+			<fileset dir="." includes="*.sm"/>
+		</apply>
+	</target>
 </project>

@@ -69,7 +69,7 @@ public interface CADTool {
 	public void setVectorialAdapter(VectorialEditableAdapter vea);
 	public void addpoint(FBitSet sel,double x,double y);
 	public void addvalue(FBitSet sel,double d);
-	public void addoption(String s);
+	public void addoption(FBitSet sel,String s);
 	public void setQuestion(String s);
 	//public void updateState(String s);
 

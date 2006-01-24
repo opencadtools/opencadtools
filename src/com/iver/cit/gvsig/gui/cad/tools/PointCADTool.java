@@ -13,7 +13,6 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext.LineCADToolState;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolState;
 
 
@@ -163,7 +162,7 @@ public class PointCADTool extends DefaultCADTool {
      *
      * @param s Diferent option.
      */
-    public void addoption(String s) {
+    public void addoption(FBitSet sel,String s) {
         // TODO Auto-generated method stub
     }
     public void refresh(){

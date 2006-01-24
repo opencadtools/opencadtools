@@ -250,7 +250,7 @@ public class LineCADTool extends DefaultCADTool {
      *
      * @param s Diferent option.
      */
-    public void addoption(String s) {
+    public void addoption(FBitSet sel,String s) {
         // TODO Auto-generated method stub
     }
 

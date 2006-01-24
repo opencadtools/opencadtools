@@ -1,0 +1,87 @@
+// -*- tab-width: 4; -*-
+
+%{
+//
+// Vicente Caballero Navarro
+%}
+
+%start ExecuteMap::Initial
+%class CircleCADTool
+%package com.iver.cit.gvsig.gui.cad.tools.smc
+%import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool
+%import com.iver.cit.gvsig.fmap.layers.FBitSet
+
+%map ExecuteMap
+%%
+// A task begins life in suspended animation.
+
+Initial
+
+	Entry {
+		init();
+		setQuestion("Insertar punto central o [3P]:");
+		}
+	Exit{
+		}
+
+	{
+	addpoint(sel:FBitSet,pointX:double,pointY:double)
+			First {
+				setQuestion("Insertar radio o segundo punto");
+				addpoint(sel,pointX,pointY);
+				}
+	addoption(sel:FBitSet,s:String)
+			Seventh{
+				setQuestion("Insertar primer punto");
+				addoption(sel,s);
+			}
+
+	}
+First{
+	addpoint(sel:FBitSet,pointX:double,pointY:double)
+		Sixth {
+			addpoint(sel,pointX,pointY);
+			refresh();
+			end();
+			}
+	addvalue(sel:FBitSet,d:double)
+		Fiveth {
+			addvalue(sel,d);
+			refresh();
+			end();
+			}
+
+}
+Second{
+	addpoint(sel:FBitSet,pointX:double,pointY:double)
+		Third {
+			setQuestion("Insertar tercer punto");
+			addpoint(sel,pointX,pointY);
+			}
+}
+Third{
+	addpoint(sel:FBitSet,pointX:double,pointY:double)
+		Fourth {
+			addpoint(sel,pointX,pointY);
+			refresh();
+			end();
+			}
+}
+
+Fourth{
+}
+Fiveth{
+}
+Sixth{
+}
+Seventh{
+	addpoint(sel:FBitSet,pointX:double,pointY:double)
+		Second {
+			setQuestion("Insertar segundo punto");
+			addpoint(sel,pointX,pointY);
+			}
+}
+Default{
+
+}
+%%
