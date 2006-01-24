@@ -32,6 +32,14 @@ public final class LineCADToolContext
         return;
     }
 
+    public void addvalue(FBitSet sel, double d)
+    {
+        _transition = "addvalue";
+        getState().addvalue(this, sel, d);
+        _transition = "";
+        return;
+    }
+
     public LineCADToolState getState()
         throws statemap.StateUndefinedException
     {
@@ -75,6 +83,11 @@ public final class LineCADToolContext
         protected void Exit(LineCADToolContext context) {}
 
         protected void addpoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+        {
+            Default(context);
+        }
+
+        protected void addvalue(LineCADToolContext context, FBitSet sel, double d)
         {
             Default(context);
         }
@@ -160,6 +173,14 @@ public final class LineCADToolContext
                 return;
             }
 
+            protected void Exit(LineCADToolContext context)
+            {
+                LineCADTool ctxt = context.getOwner();
+
+                ctxt.end();
+                return;
+            }
+
             protected void addpoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
                 LineCADTool ctxt = context.getOwner();
@@ -169,12 +190,12 @@ public final class LineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto");
+                    ctxt.setQuestion("Insertar segundo punto o angulo");
                     ctxt.addpoint(sel, pointX, pointY);
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(ExecuteMap.First);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -201,13 +222,33 @@ public final class LineCADToolContext
             {
                 LineCADTool ctxt = context.getOwner();
 
+                LineCADToolState endState = context.getState();
+
+                context.clearState();
+                try
+                {
+                    ctxt.setQuestion("Insertar segundo punto o angulo");
+                    ctxt.addpoint(sel, pointX, pointY);
+                    ctxt.refresh();
+                }
+                finally
+                {
+                    context.setState(endState);
+                }
+                return;
+            }
+
+            protected void addvalue(LineCADToolContext context, FBitSet sel, double d)
+            {
+                LineCADTool ctxt = context.getOwner();
+
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto");
-                    ctxt.addpoint(sel, pointX, pointY);
+                    ctxt.setQuestion("Insertar longitud o punto");
+                    ctxt.addvalue(sel, d);
                 }
                 finally
                 {
@@ -243,8 +284,29 @@ public final class LineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar primer punto");
+                    ctxt.setQuestion("Insertar segundo punto o angulo");
                     ctxt.addpoint(sel, pointX, pointY);
+                    ctxt.refresh();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.First);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+            protected void addvalue(LineCADToolContext context, FBitSet sel, double d)
+            {
+                LineCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.setQuestion("Insertar segundo punto o angulo");
+                    ctxt.addvalue(sel, d);
                     ctxt.refresh();
                 }
                 finally

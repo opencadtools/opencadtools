@@ -46,7 +46,6 @@ import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.BitSet;
 
 
 /**
@@ -63,9 +62,13 @@ public interface CADTool {
 			Color.ORANGE);
 
 	public void init();
+	public void end();
 	public void transition(FBitSet sel, double x, double y);
+	public void transition(FBitSet sel,double d);
+	public void transition(FBitSet sel,String s);
 	public void setVectorialAdapter(VectorialEditableAdapter vea);
 	public void addpoint(FBitSet sel,double x,double y);
+	public void addvalue(FBitSet sel,double d);
 	public void addoption(String s);
 	public void setQuestion(String s);
 	//public void updateState(String s);

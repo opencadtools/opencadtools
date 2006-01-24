@@ -6,12 +6,13 @@ import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
-import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext;//.LineCADToolState;
+import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext; //.LineCADToolState;
 import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext.LineCADToolState;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+
 import java.io.IOException;
 
 import java.util.BitSet;
@@ -64,20 +65,39 @@ public class LineCADTool extends DefaultCADTool {
     private Point2D firstPoint;
     private Point2D lastPoint;
     private double angle;
-	private double length;
-public LineCADTool(){
-	_fsm=new LineCADToolContext(this);
-}
+    private double length;
+
+    /**
+     * Crea un nuevo LineCADTool.
+     */
+    public LineCADTool() {
+        _fsm = new LineCADToolContext(this);
+    }
+
     /**
      * Método de incio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-
     }
-    public void transition(FBitSet sel, double x, double y){
-		_fsm.addpoint(sel,x,y);
-	}
+
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
+     */
+    public void end() {
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param sel DOCUMENT ME!
+     * @param x DOCUMENT ME!
+     * @param y DOCUMENT ME!
+     */
+    public void transition(FBitSet sel, double x, double y) {
+        _fsm.addpoint(sel, x, y);
+    }
+
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
      * editableFeatureSource que ya estará creado.
@@ -87,39 +107,91 @@ public LineCADTool(){
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addpoint(FBitSet sel, double x, double y) {
-       // _fsm.addpoint(sel, x, y);
+        // _fsm.addpoint(sel, x, y);
+        LineCADToolState actualState = (LineCADToolState) _fsm.getPreviousState();
 
-        LineCADToolState actualState = (LineCADToolState)_fsm.getPreviousState();
-      //  CADToolState previousState=(CADToolState)_fsm.getPreviousState();
+        //  CADToolState previousState=(CADToolState)_fsm.getPreviousState();
         String status = actualState.getName();
-       // String previousstatus=previousState.getName();
 
+        // String previousstatus=previousState.getName();
+
+        /*
+           if (status.equals("ExecuteMap.Initial")) {
+                   firstPoint=new Point2D.Double(x,y);
+                   System.out.println("Question : "+question);
+           } else if (status == "ExecuteMap.First") {
+                           firstPoint=new Point2D.Double(x,y);
+                           System.out.println("Question : "+question);
+                   } else if (status == "ExecuteMap.Second") {
+                           System.out.println("Question : "+question);
+                           //firstPoint=lastPoint;
+                           lastPoint=new Point2D.Double(x,y);
+                           try {
+                                   GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+                                                   2);
+                                   elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+                                   elShape.lineTo(lastPoint.getX(), lastPoint.getY());
+                                   DefaultFeature df=new DefaultFeature(ShapeFactory.createPolyline2D(elShape),null);
+                                   vea.addRow(df);
+                           } catch (DriverIOException e) {
+                                   e.printStackTrace();
+                           } catch (IOException e) {
+                                   e.printStackTrace();
+                           }
+                           firstPoint=lastPoint;
+                   }*/
         if (status.equals("ExecuteMap.Initial")) {
-        	firstPoint=new Point2D.Double(x,y);
-        	System.out.println("Question : "+question);
+            firstPoint = new Point2D.Double(x, y);
         } else if (status == "ExecuteMap.First") {
-			firstPoint=new Point2D.Double(x,y);
-			System.out.println("Question : "+question);
+            //if ((lineStatus.getPreviousStatus() == 5) ||
+            //		(lineStatus.getPreviousStatus() == 1)) {
+            lastPoint = new Point2D.Double(x, y);
 
-		} else if (status == "ExecuteMap.Second") {
-			System.out.println("Question : "+question);
-			//firstPoint=lastPoint;
-			lastPoint=new Point2D.Double(x,y);
-			try {
-				GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-						2);
-				elShape.moveTo(firstPoint.getX(), firstPoint.getY());
-				elShape.lineTo(lastPoint.getX(), lastPoint.getY());
-				DefaultFeature df=new DefaultFeature(ShapeFactory.createPolyline2D(elShape),null);
-				vea.addRow(df);
-			} catch (DriverIOException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			firstPoint=lastPoint;
-		}
+            try {
+                GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+                        2);
+                elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+                elShape.lineTo(lastPoint.getX(), lastPoint.getY());
 
+                DefaultFeature df = new DefaultFeature(ShapeFactory.createPolyline2D(
+                            elShape), null);
+                vea.addRow(df);
+            } catch (DriverIOException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            firstPoint = (Point2D) lastPoint.clone();
+
+            //}
+        } else if (status == "ExecuteMap.Fourth") {
+            length = firstPoint.distance(x, y);
+
+            double w = (Math.cos(Math.toRadians(angle))) * length;
+            double h = (Math.sin(Math.toRadians(angle))) * length;
+            lastPoint = new Point2D.Double(firstPoint.getX() + w,
+                    firstPoint.getY() + h);
+
+            try {
+                GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+                        2);
+                elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+                elShape.lineTo(lastPoint.getX(), lastPoint.getY());
+
+                DefaultFeature df = new DefaultFeature(ShapeFactory.createPolyline2D(
+                            elShape), null);
+                vea.addRow(df);
+            } catch (DriverIOException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            firstPoint = (Point2D) lastPoint.clone();
+
+            //ret = ret | lineStatus.transition("end");
+        }
     }
 
     /**
@@ -128,7 +200,8 @@ public LineCADTool(){
      * @return Cadena para mostrar por consola.
      */
     public String getQuestion() {
-    	System.out.println("Question : "+question);
+        System.out.println("Question : " + question);
+
         return question;
     }
 
@@ -142,7 +215,8 @@ public LineCADTool(){
     }
 
     /**
-     * Método para dibujar la lo necesario para el estado en el que nos encontremos.
+     * Método para dibujar la lo necesario para el estado en el que nos
+     * encontremos.
      *
      * @param g Graphics sobre el que dibujar.
      * @param selectedGeometries BitSet con las geometrías seleccionadas.
@@ -151,14 +225,16 @@ public LineCADTool(){
      */
     public void drawOperation(Graphics g, FBitSet selectedGeometries, double x,
         double y) {
-    	LineCADToolState actualState = _fsm.getState();
-    	 String status = actualState.getName();
+        LineCADToolState actualState = _fsm.getState();
+        String status = actualState.getName();
 
-    	 if ((status == "ExecuteMap.Second")){// || (status == "5")) {
-			if (firstPoint!=null)
-			drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
-    	 }
-	}
+        if ((status != "ExecuteMap.Initial")) { // || (status == "5")) {
+
+            if (firstPoint != null) {
+                drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
+            }
+        }
+    }
 
     /**
      * Actualiza la cadena que corresponde al estado actual.
@@ -177,11 +253,72 @@ public LineCADTool(){
     public void addoption(String s) {
         // TODO Auto-generated method stub
     }
-    public void refresh(){
 
+    /**
+     * DOCUMENT ME!
+     */
+    public void refresh() {
+    	getCadToolAdapter().getMapControl().drawMap(false);
     }
-	public void setVectorialAdapter(VectorialEditableAdapter vea) {
-	this.vea=vea;
 
+    /**
+     * DOCUMENT ME!
+     *
+     * @param vea DOCUMENT ME!
+     */
+    public void setVectorialAdapter(VectorialEditableAdapter vea) {
+        this.vea = vea;
+    }
+
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
+     */
+    public void addvalue(FBitSet sel,double d) {
+        LineCADToolState actualState = (LineCADToolState) _fsm.getPreviousState();
+        String status = actualState.getName();
+
+        if (status == "ExecuteMap.Second") {
+            angle = d;
+        } else if (status == "ExecuteMap.Third") {
+            length = d;
+
+            double w = Math.cos(Math.toRadians(angle)) * length;
+            double h = Math.sin(Math.toRadians(angle)) * length;
+            lastPoint = new Point2D.Double(firstPoint.getX() + w,
+                    firstPoint.getY() + h);
+
+            try {
+                GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+                        2);
+                elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+                elShape.lineTo(lastPoint.getX(), lastPoint.getY());
+
+                DefaultFeature df = new DefaultFeature(ShapeFactory.createPolyline2D(
+                            elShape), null);
+                vea.addRow(df);
+            } catch (DriverIOException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            firstPoint = (Point2D) lastPoint.clone();
+
+            //	ret = ret | lineStatus.transition("end");
+        }
+    }
+
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+	 */
+	public void transition(FBitSet sel, double d) {
+		_fsm.addvalue(sel,d);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+	 */
+	public void transition(FBitSet sel, String s) {
+		//_fsm.addoption(sel,s);
 	}
 }

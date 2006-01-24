@@ -167,8 +167,9 @@ public final class PointCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto");
+                    ctxt.setQuestion("Insertar punto");
                     ctxt.addpoint(sel, pointX, pointY);
+                    ctxt.refresh();
                 }
                 finally
                 {
@@ -206,6 +207,7 @@ public final class PointCADToolContext
                 {
                     ctxt.setQuestion("Insertar punto");
                     ctxt.addpoint(sel, pointX, pointY);
+                    ctxt.refresh();
                 }
                 finally
                 {

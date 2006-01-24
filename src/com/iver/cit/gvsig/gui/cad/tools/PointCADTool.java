@@ -62,11 +62,10 @@ public class PointCADTool extends DefaultCADTool {
     private VectorialEditableAdapter vea;
     private String question;
     private IGeometry first;
-    private double angle;
-	private double length;
-public PointCADTool(){
-	_fsm=new PointCADToolContext(this);
-}
+
+    public PointCADTool(){
+    	_fsm=new PointCADToolContext(this);
+    }
     /**
      * Método de incio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
@@ -168,10 +167,38 @@ public PointCADTool(){
         // TODO Auto-generated method stub
     }
     public void refresh(){
-
+    	getCadToolAdapter().getMapControl().drawMap(false);
     }
 	public void setVectorialAdapter(VectorialEditableAdapter vea) {
 	this.vea=vea;
+
+	}
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
+	 */
+	public void end() {
+		// TODO Auto-generated method stub
+
+	}
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
+	 */
+	public void addvalue(FBitSet sel,double d) {
+		// TODO Auto-generated method stub
+
+	}
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+	 */
+	public void transition(FBitSet sel, double d) {
+		// TODO Auto-generated method stub
+
+	}
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+	 */
+	public void transition(FBitSet sel, String s) {
+		// TODO Auto-generated method stub
 
 	}
 }

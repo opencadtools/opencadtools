@@ -96,7 +96,7 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				p = vp.toMapPoint(adjustedPoint);
 			}
-			transition("punto", vea, selection,
+			transition(vea, selection,
 				new double[] { p.getX(), p.getY() });
 		}
 	}
@@ -315,17 +315,17 @@ public class CADToolAdapter extends Behavior {
 								Double.parseDouble(numbers[0]),
 								Double.parseDouble(numbers[1])
 							};
-						transition("punto", vea, selection,
+						transition( vea, selection,
 							values);
 					} else if (numbers.length == 1) {
 						//valor
 						values = new double[] { Double.parseDouble(numbers[0]) };
-						transition("numero", vea, selection,
-							values);
+						transition( vea, selection,
+							values[0]);
 					}
 				} catch (NumberFormatException e) {
-					transition(text, vea, selection,
-						new double[0]);
+					transition( vea, selection,
+						text);
 				}
 			//}
 		}
@@ -337,7 +337,7 @@ public class CADToolAdapter extends Behavior {
 	 * @param text DOCUMENT ME!
 	 */
 	public void transition(String text) {
-		transition(text, vea, selection, new double[0]);
+		transition( vea, selection, text);
 		configureMenu();
 	}
 
@@ -367,10 +367,9 @@ public class CADToolAdapter extends Behavior {
 	 * @param sel DOCUMENT ME!
 	 * @param values DOCUMENT ME!
 	 */
-	private void transition(String text, VectorialEditableAdapter source,
+	private void transition( VectorialEditableAdapter source,
 		FBitSet sel, double[] values) {
 		questionAsked = true;
-		//logger.debug(text);
 		if (!cadToolStack.isEmpty()){
 		    CADTool ct = (CADTool) cadToolStack.peek();
 		    ///String[] trs = ct.getAutomaton().getCurrentTransitions();
@@ -386,7 +385,7 @@ public class CADToolAdapter extends Behavior {
 				ct.transition(sel,
 						values[0],values[1]);
 				//Si es la transición que finaliza una geometria hay que redibujar la vista.
-				getMapControl().drawMap(false);
+
 				askQuestion();
 			/*	if ((ret & Automaton.AUTOMATON_FINISHED) == Automaton.AUTOMATON_FINISHED) {
 					popCadTool();
@@ -414,7 +413,37 @@ public class CADToolAdapter extends Behavior {
 		}
 		PluginServices.getMainFrame().enableControls();
 	}
+	/**
+	 * DOCUMENT ME!
+	 *
+	 * @param text DOCUMENT ME!
+	 * @param source DOCUMENT ME!
+	 * @param sel DOCUMENT ME!
+	 * @param values DOCUMENT ME!
+	 */
+	private void transition( VectorialEditableAdapter source,
+		FBitSet sel, double value) {
+		questionAsked = true;
+		if (!cadToolStack.isEmpty()){
+		    CADTool ct = (CADTool) cadToolStack.peek();
+		    ct.transition(sel,
+					value);
+			askQuestion();
+		    }
 
+		PluginServices.getMainFrame().enableControls();
+	}
+	private void transition( VectorialEditableAdapter source,
+			FBitSet sel, String option) {
+			questionAsked = true;
+			if (!cadToolStack.isEmpty()){
+			    CADTool ct = (CADTool) cadToolStack.peek();
+			    ct.transition(sel,
+						option);
+				askQuestion();
+			    }
+			PluginServices.getMainFrame().enableControls();
+	}
 	/**
 	 * DOCUMENT ME!
 	 *

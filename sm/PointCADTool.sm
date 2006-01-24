@@ -29,8 +29,9 @@ Initial
 
 		addpoint(sel:FBitSet,pointX:double,pointY:double)
 			First {
-				setQuestion("Insertar segundo punto");
+				setQuestion("Insertar punto");
 				addpoint(sel,pointX,pointY);
+				refresh();
 				}
 	}
 First{
@@ -38,6 +39,7 @@ First{
 		First {
 			setQuestion("Insertar punto");
 			addpoint(sel,pointX,pointY);
+			refresh();
 			}
 }
 Default
