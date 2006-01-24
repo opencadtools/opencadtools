@@ -5,17 +5,17 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
-public final class LineCADToolContext
+public final class PointCADToolContext
     extends statemap.FSMContext
 {
 //---------------------------------------------------------------
 // Member methods.
 //
 
-    public LineCADToolContext(LineCADTool owner)
+    public PointCADToolContext(PointCADTool owner)
     {
         super();
 
@@ -32,7 +32,7 @@ public final class LineCADToolContext
         return;
     }
 
-    public LineCADToolState getState()
+    public PointCADToolState getState()
         throws statemap.StateUndefinedException
     {
         if (_state == null)
@@ -41,10 +41,10 @@ public final class LineCADToolContext
                 new statemap.StateUndefinedException());
         }
 
-        return ((LineCADToolState) _state);
+        return ((PointCADToolState) _state);
     }
 
-    protected LineCADTool getOwner()
+    protected PointCADTool getOwner()
     {
         return (_owner);
     }
@@ -53,33 +53,33 @@ public final class LineCADToolContext
 // Member data.
 //
 
-    transient private LineCADTool _owner;
+    transient private PointCADTool _owner;
 
 //---------------------------------------------------------------
 // Inner classes.
 //
 
-    public static abstract class LineCADToolState
+    public static abstract class PointCADToolState
         extends statemap.State
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected LineCADToolState(String name, int id)
+        protected PointCADToolState(String name, int id)
         {
             super (name, id);
         }
 
-        protected void Entry(LineCADToolContext context) {}
-        protected void Exit(LineCADToolContext context) {}
+        protected void Entry(PointCADToolContext context) {}
+        protected void Exit(PointCADToolContext context) {}
 
-        protected void addpoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addpoint(PointCADToolContext context, FBitSet sel, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void Default(LineCADToolContext context)
+        protected void Default(PointCADToolContext context)
         {
             throw (
                 new statemap.TransitionUndefinedException(
@@ -109,21 +109,19 @@ public final class LineCADToolContext
         //
         /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
         /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
         private static ExecuteMap_Default Default;
 
         static
         {
             Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
             First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
             Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
         }
 
     }
 
     protected static class ExecuteMap_Default
-        extends LineCADToolState
+        extends PointCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -151,18 +149,18 @@ public final class LineCADToolContext
                 super (name, id);
             }
 
-            protected void Entry(LineCADToolContext context)
+            protected void Entry(PointCADToolContext context)
             {
-                LineCADTool ctxt = context.getOwner();
+                PointCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar primer punto");
+                ctxt.setQuestion("Defina el punto");
                 return;
             }
 
-            protected void addpoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addpoint(PointCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                LineCADTool ctxt = context.getOwner();
+                PointCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
@@ -174,7 +172,7 @@ public final class LineCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(ExecuteMap.First);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -197,60 +195,21 @@ public final class LineCADToolContext
                 super (name, id);
             }
 
-            protected void addpoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addpoint(PointCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                LineCADTool ctxt = context.getOwner();
+                PointCADTool ctxt = context.getOwner();
 
+                PointCADToolState endState = context.getState();
 
-                (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto");
+                    ctxt.setQuestion("Insertar punto");
                     ctxt.addpoint(sel, pointX, pointY);
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Second(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addpoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
-            {
-                LineCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Insertar primer punto");
-                    ctxt.addpoint(sel, pointX, pointY);
-                    ctxt.refresh();
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.First);
-                    (context.getState()).Entry(context);
+                    context.setState(endState);
                 }
                 return;
             }
