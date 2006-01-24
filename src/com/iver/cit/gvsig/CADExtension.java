@@ -69,12 +69,12 @@ import com.iver.utiles.console.ResponseListener;
  * @author Vicente Caballero Navarro
  */
 public class CADExtension implements Extension {
-   private CADToolAdapter adapter=new CADToolAdapter();
+   private static CADToolAdapter adapter=new CADToolAdapter();
    private HashMap namesCadTools = new HashMap();
    private boolean isLoad =false;
    private MapControl mapControl;
    private View view;
-   public CADToolAdapter getCADToolAdapter(){
+   public static CADToolAdapter getCADToolAdapter(){
 	   return adapter;
    }
    /**
