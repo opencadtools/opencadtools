@@ -1,7 +1,10 @@
 package com.iver.cit.gvsig.gui.cad.tools;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Arc2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
@@ -141,9 +144,14 @@ public class PointCADTool extends DefaultCADTool {
         double y) {
     	PointCADToolState actualState = _fsm.getState();
     	 String status = actualState.getName();
+    	 
+ 		BufferedImage img = getCadToolAdapter().getMapControl().getImage();
 
     	 if ((status == "ExecuteMap.First")){// || (status == "5")) {
-			first.draw((Graphics2D) g, getCadToolAdapter().
+    		 // Pintamos sobre la imagen para no tener que
+    		 // refrescar todo.
+    		 Graphics2D gImag = img.createGraphics();
+			first.draw(gImag, getCadToolAdapter().
 					getMapControl().getViewPort(), CADTool.drawingSymbol);
     	 }
 	}
