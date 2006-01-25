@@ -59,8 +59,10 @@ public class StartEditing implements Extension {
                     lv.setSource(vea);
                     CADExtension.getCADToolAdapter().setVectorialAdapter(vea,null);
                     lv.setEditing(true);
-                    layers.removeLayer(lv);
-                    layers.addLayer(lv);
+                    if (!(layers.getLayer(0)==(lv))){
+                    	layers.removeLayer(lv);
+                    	layers.addLayer(lv);
+                    }
                     return;
                 }
             }
