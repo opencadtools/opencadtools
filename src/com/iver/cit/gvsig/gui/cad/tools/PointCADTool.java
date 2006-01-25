@@ -1,13 +1,3 @@
-package com.iver.cit.gvsig.gui.cad.tools;
-
-import java.awt.Graphics;
-
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
-import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolState;
-
-
 /* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
  *
  * Copyright (C) 2004 IVER T.I. and Generalitat Valenciana.
@@ -48,36 +38,63 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolStat
  *   +34 963163400
  *   dac@iver.es
  */
+package com.iver.cit.gvsig.gui.cad.tools;
+
+import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext;
+import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolState;
+
+import java.awt.Graphics;
+
+
+/**
+ * DOCUMENT ME!
+ *
+ * @author Vicente Caballero Navarro
+ */
 public class PointCADTool extends DefaultCADTool {
     private PointCADToolContext _fsm;
 
-    public PointCADTool(){
-    	_fsm=new PointCADToolContext(this);
+    /**
+     * Crea un nuevo PointCADTool.
+     */
+    public PointCADTool() {
+        _fsm = new PointCADToolContext(this);
     }
+
     /**
      * Método de incio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-
     }
-    public void transition(FBitSet sel, double x, double y){
-		_fsm.addPoint(sel,x,y);
-	}
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param sel DOCUMENT ME!
+     * @param x DOCUMENT ME!
+     * @param y DOCUMENT ME!
+     */
+    public void transition(FBitSet sel, double x, double y) {
+        _fsm.addPoint(sel, x, y);
+    }
+
     /* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
-	 */
-	public void transition(FBitSet sel, double d) {
-		// TODO Auto-generated method stub
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+     */
+    public void transition(FBitSet sel, double d) {
+        // TODO Auto-generated method stub
+    }
 
-	}
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
-	 */
-	public void transition(FBitSet sel, String s) {
-		// TODO Auto-generated method stub
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+     */
+    public void transition(FBitSet sel, String s) {
+        // TODO Auto-generated method stub
+    }
 
-	}
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
      * editableFeatureSource que ya estará creado.
@@ -87,17 +104,18 @@ public class PointCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(FBitSet sel, double x, double y) {
-        PointCADToolState actualState = (PointCADToolState)_fsm.getPreviousState();
+        PointCADToolState actualState = (PointCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-        if (status.equals("ExecuteMap.Initial") ||
-        	(status == "ExecuteMap.First")){
-			addGeometry(ShapeFactory.createPoint2D(x,y));
-		}
 
+        if (status.equals("ExecuteMap.Initial") ||
+                (status == "ExecuteMap.First")) {
+            addGeometry(ShapeFactory.createPoint2D(x, y));
+        }
     }
 
     /**
-     * Método para dibujar la lo necesario para el estado en el que nos encontremos.
+     * Método para dibujar la lo necesario para el estado en el que nos
+     * encontremos.
      *
      * @param g Graphics sobre el que dibujar.
      * @param selectedGeometries BitSet con las geometrías seleccionadas.
@@ -106,30 +124,29 @@ public class PointCADTool extends DefaultCADTool {
      */
     public void drawOperation(Graphics g, FBitSet selectedGeometries, double x,
         double y) {
-   }
+    }
 
     /**
      * Add a diferent option.
      *
+     * @param sel DOCUMENT ME!
      * @param s Diferent option.
      */
-    public void addOption(FBitSet sel,String s) {
+    public void addOption(FBitSet sel, String s) {
         // TODO Auto-generated method stub
     }
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-	 */
-	public void end() {
-		// TODO Auto-generated method stub
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
+     */
+    public void end() {
+        // TODO Auto-generated method stub
+    }
 
-	}
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
-	 */
-	public void addValue(FBitSet sel,double d) {
-		// TODO Auto-generated method stub
-
-	}
-
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
+     */
+    public void addValue(FBitSet sel, double d) {
+        // TODO Auto-generated method stub
+    }
 }

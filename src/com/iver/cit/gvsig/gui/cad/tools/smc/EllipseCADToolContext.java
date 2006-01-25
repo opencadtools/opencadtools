@@ -5,31 +5,23 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
-public final class PolylineCADToolContext
+public final class EllipseCADToolContext
     extends statemap.FSMContext
 {
 //---------------------------------------------------------------
 // Member methods.
 //
 
-    public PolylineCADToolContext(PolylineCADTool owner)
+    public EllipseCADToolContext(EllipseCADTool owner)
     {
         super();
 
         _owner = owner;
         setState(ExecuteMap.Initial);
         ExecuteMap.Initial.Entry(this);
-    }
-
-    public void addOption(FBitSet sel, String s)
-    {
-        _transition = "addOption";
-        getState().addOption(this, sel, s);
-        _transition = "";
-        return;
     }
 
     public void addPoint(FBitSet sel, double pointX, double pointY)
@@ -40,7 +32,15 @@ public final class PolylineCADToolContext
         return;
     }
 
-    public PolylineCADToolState getState()
+    public void addValue(FBitSet sel, double d)
+    {
+        _transition = "addValue";
+        getState().addValue(this, sel, d);
+        _transition = "";
+        return;
+    }
+
+    public EllipseCADToolState getState()
         throws statemap.StateUndefinedException
     {
         if (_state == null)
@@ -49,10 +49,10 @@ public final class PolylineCADToolContext
                 new statemap.StateUndefinedException());
         }
 
-        return ((PolylineCADToolState) _state);
+        return ((EllipseCADToolState) _state);
     }
 
-    protected PolylineCADTool getOwner()
+    protected EllipseCADTool getOwner()
     {
         return (_owner);
     }
@@ -61,38 +61,38 @@ public final class PolylineCADToolContext
 // Member data.
 //
 
-    transient private PolylineCADTool _owner;
+    transient private EllipseCADTool _owner;
 
 //---------------------------------------------------------------
 // Inner classes.
 //
 
-    public static abstract class PolylineCADToolState
+    public static abstract class EllipseCADToolState
         extends statemap.State
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected PolylineCADToolState(String name, int id)
+        protected EllipseCADToolState(String name, int id)
         {
             super (name, id);
         }
 
-        protected void Entry(PolylineCADToolContext context) {}
-        protected void Exit(PolylineCADToolContext context) {}
+        protected void Entry(EllipseCADToolContext context) {}
+        protected void Exit(EllipseCADToolContext context) {}
 
-        protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
+        protected void addPoint(EllipseCADToolContext context, FBitSet sel, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addValue(EllipseCADToolContext context, FBitSet sel, double d)
         {
             Default(context);
         }
 
-        protected void Default(PolylineCADToolContext context)
+        protected void Default(EllipseCADToolContext context)
         {
             throw (
                 new statemap.TransitionUndefinedException(
@@ -140,7 +140,7 @@ public final class PolylineCADToolContext
     }
 
     protected static class ExecuteMap_Default
-        extends PolylineCADToolState
+        extends EllipseCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -168,25 +168,25 @@ public final class PolylineCADToolContext
                 super (name, id);
             }
 
-            protected void Entry(PolylineCADToolContext context)
+            protected void Entry(EllipseCADToolContext context)
             {
-                PolylineCADTool ctxt = context.getOwner();
+                EllipseCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar primer punto");
+                ctxt.setQuestion("Insertar punto inicial de eje de elipse");
                 return;
             }
 
-            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(EllipseCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                PolylineCADTool ctxt = context.getOwner();
+                EllipseCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+                    ctxt.setQuestion("Insertar punto final de eje de elipse");
                     ctxt.addPoint(sel, pointX, pointY);
                 }
                 finally
@@ -214,64 +214,22 @@ public final class PolylineCADToolContext
                 super (name, id);
             }
 
-            protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
+            protected void addPoint(EllipseCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                PolylineCADTool ctxt = context.getOwner();
+                EllipseCADTool ctxt = context.getOwner();
 
-                if (s.equals("A") ||  s.equals("a"))
-                {
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-                        ctxt.addOption(sel, s);
-                    }
-                    finally
-                    {
-                        context.setState(ExecuteMap.Second);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (s.equals("C") ||  s.equals("c"))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.addOption(sel, s);
-                        ctxt.end();
-                    }
-                    finally
-                    {
-                        context.setState(ExecuteMap.Third);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.addOption(context, sel, s);
-                }
-
-                return;
-            }
-
-            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
-            {
-                PolylineCADTool ctxt = context.getOwner();
-
-                PolylineCADToolState endState = context.getState();
-
+                (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+                    ctxt.setQuestion("Insertar distancia al otro eje");
                     ctxt.addPoint(sel, pointX, pointY);
                 }
                 finally
                 {
-                    context.setState(endState);
+                    context.setState(ExecuteMap.Second);
+                    (context.getState()).Entry(context);
                 }
                 return;
             }
@@ -293,64 +251,42 @@ public final class PolylineCADToolContext
                 super (name, id);
             }
 
-            protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
+            protected void addPoint(EllipseCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                PolylineCADTool ctxt = context.getOwner();
+                EllipseCADTool ctxt = context.getOwner();
 
-                if (s.equals("N") ||  s.equals("n"))
-                {
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-                        ctxt.addOption(sel, s);
-                    }
-                    finally
-                    {
-                        context.setState(ExecuteMap.First);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (s.equals("C") ||  s.equals("c"))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.addOption(sel, s);
-                        ctxt.end();
-                    }
-                    finally
-                    {
-                        context.setState(ExecuteMap.Third);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.addOption(context, sel, s);
-                }
-
-                return;
-            }
-
-            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
-            {
-                PolylineCADTool ctxt = context.getOwner();
-
-                PolylineCADToolState endState = context.getState();
-
+                (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
                     ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.end();
                 }
                 finally
                 {
-                    context.setState(endState);
+                    context.setState(ExecuteMap.Third);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+            protected void addValue(EllipseCADToolContext context, FBitSet sel, double d)
+            {
+                EllipseCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.addValue(sel, d);
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Fourth);
+                    (context.getState()).Entry(context);
                 }
                 return;
             }

@@ -40,18 +40,16 @@
  */
 package com.iver.cit.gvsig.gui.cad.tools;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-
-import statemap.TransitionUndefinedException;
-
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
-import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext.CircleCADToolState;
+import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext;
+import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext.ArcCADToolState;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 
 
 /**
@@ -59,18 +57,17 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext.CircleCADToolSt
  *
  * @author Vicente Caballero Navarro
  */
-public class CircleCADTool extends DefaultCADTool {
-    private CircleCADToolContext _fsm;
-    private Point2D center;
-    private Point2D firstPoint;
-    private Point2D secondPoint;
-    private Point2D thirdPoint;
+public class ArcCADTool extends DefaultCADTool {
+    private ArcCADToolContext _fsm;
+    private Point2D p1;
+    private Point2D p2;
+    private Point2D p3;
 
     /**
      * Crea un nuevo LineCADTool.
      */
-    public CircleCADTool() {
-        _fsm = new CircleCADToolContext(this);
+    public ArcCADTool() {
+        _fsm = new ArcCADToolContext(this);
     }
 
     /**
@@ -84,32 +81,28 @@ public class CircleCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
      */
     public void end() {
-        _fsm = new CircleCADToolContext(this);
-        firstPoint = null;
+        _fsm = new ArcCADToolContext(this);
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
-    public void transition(FBitSet sel, double x, double y)
-        throws TransitionUndefinedException {
+    public void transition(FBitSet sel, double x, double y) {
         _fsm.addPoint(sel, x, y);
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
      */
-    public void transition(FBitSet sel, double d)
-        throws TransitionUndefinedException {
-        _fsm.addValue(sel, d);
+    public void transition(FBitSet sel, double d) {
+        //_fsm.addValue(sel,d);
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(FBitSet sel, String s)
-        throws TransitionUndefinedException {
-        _fsm.addOption(sel, s);
+    public void transition(FBitSet sel, String s) {
+        //_fsm.addOption(sel,s);
     }
 
     /**
@@ -121,25 +114,21 @@ public class CircleCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(FBitSet sel, double x, double y) {
-        CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
+        ArcCADToolState actualState = (ArcCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
         if (status.equals("ExecuteMap.Initial")) {
-            center = new Point2D.Double(x, y);
-        } else if (status == "ExecuteMap.First") {
-            addGeometry(ShapeFactory.createCircle(center,
-                    new Point2D.Double(x, y)));
-        } else if (status == "ExecuteMap.Seventh") {
-            firstPoint = new Point2D.Double(x, y);
-        } else if (status == "ExecuteMap.Second") {
-            secondPoint = new Point2D.Double(x, y);
-        } else if (status == "ExecuteMap.Third") {
-            thirdPoint = new Point2D.Double(x, y);
-            addGeometry(ShapeFactory.createCircle(firstPoint, secondPoint,
-                    thirdPoint));
-        } else if (status == "ExecuteMap.Sixth") {
-            addGeometry(ShapeFactory.createCircle(center,
-                    new Point2D.Double(x, y)));
+            p1 = new Point2D.Double(x, y);
+        } else if (status.equals("ExecuteMap.First")) {
+            p2 = new Point2D.Double(x, y);
+        } else if (status.equals("ExecuteMap.Second")) {
+            p3 = new Point2D.Double(x, y);
+
+            IGeometry ig = ShapeFactory.createArc(p1, p2, p3);
+
+            if (ig != null) {
+                addGeometry(ig);
+            }
         }
     }
 
@@ -154,33 +143,27 @@ public class CircleCADTool extends DefaultCADTool {
      */
     public void drawOperation(Graphics g, FBitSet selectedGeometries, double x,
         double y) {
-        CircleCADToolState actualState = _fsm.getState();
+        ArcCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
-        if ((status == "ExecuteMap.Initial")) { // || (status == "5")) {
+        if (status.equals("ExecuteMap.First")) {
+            drawLine((Graphics2D) g, p1, new Point2D.Double(x, y));
+        } else if (status.equals("ExecuteMap.Second")) {
+            Point2D current = new Point2D.Double(x, y);
+            IGeometry ig = ShapeFactory.createArc(p1, p2, current);
 
-            if (firstPoint != null) {
-                drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
-            }
-        }
-
-        if (status == "ExecuteMap.First") {
-            Point2D currentPoint = new Point2D.Double(x, y);
-            ShapeFactory.createCircle(center, currentPoint).draw((Graphics2D) g,
-                getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.modifySymbol);
-        } else if (status == "ExecuteMap.Second") {
-            drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
-        } else if (status == "ExecuteMap.Third") {
-            Point2D currentPoint = new Point2D.Double(x, y);
-            IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint,
-                    currentPoint);
-
-            if (geom != null) {
-                geom.draw((Graphics2D) g,
+            if (ig != null) {
+                ig.draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
                     CADTool.modifySymbol);
             }
+
+            Point2D p = getCadToolAdapter().getMapControl().getViewPort()
+                            .fromMapPoint(p1.getX(), p1.getY());
+            g.drawRect((int) p.getX(), (int) p.getY(), 1, 1);
+            p = getCadToolAdapter().getMapControl().getViewPort().fromMapPoint(p2.getX(),
+                    p2.getY());
+            g.drawRect((int) p.getX(), (int) p.getY(), 1, 1);
         }
     }
 
@@ -191,25 +174,12 @@ public class CircleCADTool extends DefaultCADTool {
      * @param s Diferent option.
      */
     public void addOption(FBitSet sel, String s) {
-        CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
-
-        if (status == "ExecuteMap.Initial") {
-            if (s.equals("3p") || s.equals("3P")) {
-                //Opción correcta.
-            }
-        }
+        // TODO Auto-generated method stub
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
     public void addValue(FBitSet sel, double d) {
-        CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
-
-        if (status == "ExecuteMap.Fiveth") {
-            addGeometry(ShapeFactory.createCircle(center, d));
-        }
     }
 }

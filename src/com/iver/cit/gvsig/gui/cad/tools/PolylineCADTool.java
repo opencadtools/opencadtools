@@ -1,26 +1,3 @@
-package com.iver.cit.gvsig.gui.cad.tools;
-
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import com.iver.cit.gvsig.fmap.core.DefaultFeature;
-import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
-import com.iver.cit.gvsig.fmap.core.FShape;
-import com.iver.cit.gvsig.fmap.core.GeneralPathX;
-import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
-import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
-import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
-import com.iver.cit.gvsig.gui.cad.CADTool;
-import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADToolState;
-
-
 /* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
  *
  * Copyright (C) 2004 IVER T.I. and Generalitat Valenciana.
@@ -61,18 +38,41 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADTo
  *   +34 963163400
  *   dac@iver.es
  */
+package com.iver.cit.gvsig.gui.cad.tools;
+
+import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
+import com.iver.cit.gvsig.fmap.core.FShape;
+import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
+import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import com.iver.cit.gvsig.gui.cad.CADTool;
+import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext;
+import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADToolState;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+
+import java.util.ArrayList;
+
+
+/**
+ * DOCUMENT ME!
+ *
+ * @author Vicente Caballero Navarro
+ */
 public class PolylineCADTool extends DefaultCADTool {
     private PolylineCADToolContext _fsm;
-    private VectorialEditableAdapter vea;
-    private String question;
     private Point2D firstPoint;
     private Point2D antPoint;
-    private Point2D lastPoint;
     private Point2D antantPoint;
     private Point2D antCenter;
-	private Point2D antInter;
-	private ArrayList list=new ArrayList();
-	/**
+    private Point2D antInter;
+    private ArrayList list = new ArrayList();
+
+    /**
      * Crea un nuevo PolylineCADTool.
      */
     public PolylineCADTool() {
@@ -90,30 +90,31 @@ public class PolylineCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
      */
     public void end() {
-    	 _fsm = new PolylineCADToolContext(this);
-    	 firstPoint=null;
+        _fsm = new PolylineCADToolContext(this);
+        firstPoint = null;
     }
 
     /* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
-	 */
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
+     */
     public void transition(FBitSet sel, double x, double y) {
         _fsm.addPoint(sel, x, y);
     }
 
     /* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
-	 */
-	public void transition(FBitSet sel, double d) {
-		//_fsm.addValue(sel,d);
-	}
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+     */
+    public void transition(FBitSet sel, double d) {
+        //_fsm.addValue(sel,d);
+    }
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
-	 */
-	public void transition(FBitSet sel, String s) {
-		_fsm.addOption(sel,s);
-	}
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+     */
+    public void transition(FBitSet sel, String s) {
+        _fsm.addOption(sel, s);
+    }
+
     /**
      * Equivale al transition del prototipo pero sin pasarle como parámetro el
      * editableFeatureSource que ya estará creado.
@@ -125,161 +126,134 @@ public class PolylineCADTool extends DefaultCADTool {
     public void addPoint(FBitSet sel, double x, double y) {
         PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
+
         if (status.equals("ExecuteMap.Initial")) {
             antPoint = new Point2D.Double(x, y);
+
+            if (firstPoint == null) {
+                firstPoint = (Point2D) antPoint.clone();
+            }
         } else if (status.equals("ExecuteMap.First")) {
-        		Point2D point = new Point2D.Double(x, y);
+            Point2D point = new Point2D.Double(x, y);
 
-				if (firstPoint == null) {
-					firstPoint = point;
-				}
+            if (antPoint != null) {
+                GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+                        2);
+                elShape.moveTo(antPoint.getX(), antPoint.getY());
+                elShape.lineTo(point.getX(), point.getY());
+                list.add(ShapeFactory.createPolyline2D(elShape));
+            }
 
-				if (antPoint != null) {
-					GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-							2);
-					elShape.moveTo(antPoint.getX(), antPoint.getY());
-					elShape.lineTo(point.getX(), point.getY());
-					list.add(ShapeFactory.createPolyline2D(elShape));
-				}
+            if (antPoint != null) {
+                antantPoint = antPoint;
+            }
 
-				if (antPoint != null) {
-					antantPoint = antPoint;
-				}
-
-				antPoint = point;
-
-
-
+            antPoint = point;
         } else if (status.equals("ExecuteMap.Second")) {
+            Point2D point = new Point2D.Double(x, y);
+            Point2D lastp = antPoint; //(Point2D)points.get(i-1);
 
-        	Point2D point = new Point2D.Double(x, y);
-			Point2D lastp = antPoint; //(Point2D)points.get(i-1);
+            if (antantPoint == null) {
+                antantPoint = new Point2D.Double(lastp.getX() +
+                        (point.getX() / 2), lastp.getY() + (point.getY() / 2));
+            }
 
-			if (antantPoint == null) {
-				antantPoint = new Point2D.Double(lastp.getX() +
-						(point.getX() / 2), lastp.getY() + (point.getY() / 2));
-			}
+            if (((point.getY() == lastp.getY()) &&
+                    (point.getX() < lastp.getX())) ||
+                    ((point.getX() == lastp.getX()) &&
+                    (point.getY() < lastp.getY()))) {
+            } else {
+                if (point.getX() == lastp.getX()) {
+                    point = new Point2D.Double(point.getX() + 0.00000001,
+                            point.getY());
+                } else if (point.getY() == lastp.getY()) {
+                    point = new Point2D.Double(point.getX(),
+                            point.getY() + 0.00000001);
+                }
 
-			if (((point.getY() == lastp.getY()) &&
-					(point.getX() < lastp.getX())) ||
-					((point.getX() == lastp.getX()) &&
-					(point.getY() < lastp.getY()))) {
-			} else {
-				if (point.getX() == lastp.getX()) {
-					point = new Point2D.Double(point.getX() + 0.00000001,
-							point.getY());
-				} else if (point.getY() == lastp.getY()) {
-					point = new Point2D.Double(point.getX(),
-							point.getY() + 0.00000001);
-				}
+                if (point.getX() == antantPoint.getX()) {
+                    point = new Point2D.Double(point.getX() + 0.00000001,
+                            point.getY());
+                } else if (point.getY() == antantPoint.getY()) {
+                    point = new Point2D.Double(point.getX(),
+                            point.getY() + 0.00000001);
+                }
 
-				if (point.getX() == antantPoint.getX()) {
-					point = new Point2D.Double(point.getX() + 0.00000001,
-							point.getY());
-				} else if (point.getY() == antantPoint.getY()) {
-					point = new Point2D.Double(point.getX(),
-							point.getY() + 0.00000001);
-				}
+                if (!(list.size() > 0) ||
+                        (((IGeometry) list.get(list.size() - 1)).getGeometryType() == FShape.LINE)) {
+                    Point2D[] ps1 = UtilFunctions.getPerpendicular(antantPoint,
+                            lastp, lastp);
+                    Point2D mediop = new Point2D.Double((point.getX() +
+                            lastp.getX()) / 2, (point.getY() + lastp.getY()) / 2);
+                    Point2D[] ps2 = UtilFunctions.getPerpendicular(lastp,
+                            point, mediop);
+                    Point2D interp = UtilFunctions.getIntersection(ps1[0],
+                            ps1[1], ps2[0], ps2[1]);
+                    antInter = interp;
 
-				if (!(list.size() > 0) ||
-						(((IGeometry) list.get(list.size() - 1)).getGeometryType() == FShape.LINE)) {
-					Point2D[] ps1 = UtilFunctions.getPerpendicular(antantPoint,
-							lastp, lastp);
-					Point2D mediop = new Point2D.Double((point.getX() +
-							lastp.getX()) / 2, (point.getY() + lastp.getY()) / 2);
-					Point2D[] ps2 = UtilFunctions.getPerpendicular(lastp,
-							point, mediop);
-					Point2D interp = UtilFunctions.getIntersection(ps1[0],
-							ps1[1], ps2[0], ps2[1]);
-					antInter = interp;
+                    double radio = interp.distance(lastp);
 
-					double radio = interp.distance(lastp);
+                    if (UtilFunctions.isLowAngle(antantPoint, lastp, interp,
+                                point)) {
+                        radio = -radio;
+                    }
 
-					if (UtilFunctions.isLowAngle(antantPoint, lastp,
-								interp, point)) {
-						radio = -radio;
-					}
+                    Point2D centerp = UtilFunctions.getPoint(interp, mediop,
+                            radio);
+                    antCenter = centerp;
 
-					Point2D centerp = UtilFunctions.getPoint(interp,
-							mediop, radio);
-					antCenter = centerp;
+                    IGeometry ig = ShapeFactory.createArc(lastp, centerp, point);
 
-					IGeometry ig = ShapeFactory.createArc(lastp, centerp, point);
+                    if (ig != null) {
+                        list.add(ig);
+                    }
+                } else {
+                    Point2D[] ps1 = UtilFunctions.getPerpendicular(lastp,
+                            antInter, lastp);
+                    double a1 = UtilFunctions.getAngle(ps1[0], ps1[1]);
+                    double a2 = UtilFunctions.getAngle(ps1[1], ps1[0]);
+                    double angle = UtilFunctions.getAngle(antCenter, lastp);
+                    Point2D ini1 = null;
+                    Point2D ini2 = null;
 
-					if (ig != null) {
-						list.add(ig);
-					}
-				} else {
-					Point2D[] ps1 = UtilFunctions.getPerpendicular(lastp,
-							antInter, lastp);
-					double a1 = UtilFunctions.getAngle(ps1[0], ps1[1]);
-					double a2 = UtilFunctions.getAngle(ps1[1], ps1[0]);
-					double angle = UtilFunctions.getAngle(antCenter,
-							lastp);
-					Point2D ini1 = null;
-					Point2D ini2 = null;
+                    if (UtilFunctions.absoluteAngleDistance(angle, a1) > UtilFunctions.absoluteAngleDistance(
+                                angle, a2)) {
+                        ini1 = ps1[0];
+                        ini2 = ps1[1];
+                    } else {
+                        ini1 = ps1[1];
+                        ini2 = ps1[0];
+                    }
 
-					if (UtilFunctions.absoluteAngleDistance(angle, a1) > UtilFunctions.absoluteAngleDistance(
-								angle, a2)) {
-						ini1 = ps1[0];
-						ini2 = ps1[1];
-					} else {
-						ini1 = ps1[1];
-						ini2 = ps1[0];
-					}
+                    Point2D unit = UtilFunctions.getUnitVector(ini1, ini2);
+                    Point2D correct = new Point2D.Double(lastp.getX() +
+                            unit.getX(), lastp.getY() + unit.getY());
+                    Point2D[] ps = UtilFunctions.getPerpendicular(lastp,
+                            correct, lastp);
+                    Point2D mediop = new Point2D.Double((point.getX() +
+                            lastp.getX()) / 2, (point.getY() + lastp.getY()) / 2);
+                    Point2D[] ps2 = UtilFunctions.getPerpendicular(lastp,
+                            point, mediop);
+                    Point2D interp = UtilFunctions.getIntersection(ps[0],
+                            ps[1], ps2[0], ps2[1]);
+                    antInter = interp;
 
-					Point2D unit = UtilFunctions.getUnitVector(ini1,
-							ini2);
-					Point2D correct = new Point2D.Double(lastp.getX() +
-							unit.getX(), lastp.getY() + unit.getY());
+                    double radio = interp.distance(lastp);
 
-					Point2D[] ps = UtilFunctions.getPerpendicular(lastp,
-							correct, lastp);
-					Point2D mediop = new Point2D.Double((point.getX() +
-							lastp.getX()) / 2, (point.getY() + lastp.getY()) / 2);
-					Point2D[] ps2 = UtilFunctions.getPerpendicular(lastp,
-							point, mediop);
-					Point2D interp = UtilFunctions.getIntersection(ps[0],
-							ps[1], ps2[0], ps2[1]);
-					antInter = interp;
+                    if (UtilFunctions.isLowAngle(correct, lastp, interp, point)) {
+                        radio = -radio;
+                    }
 
-					double radio = interp.distance(lastp);
+                    Point2D centerp = UtilFunctions.getPoint(interp, mediop,
+                            radio);
+                    antCenter = centerp;
+                    list.add(ShapeFactory.createArc(lastp, centerp, point));
+                }
 
-					if (UtilFunctions.isLowAngle(correct, lastp,
-								interp, point)) {
-						radio = -radio;
-					}
-
-					Point2D centerp = UtilFunctions.getPoint(interp,
-							mediop, radio);
-					antCenter = centerp;
-					list.add(ShapeFactory.createArc(lastp, centerp, point));
-				}
-
-				antantPoint = antPoint;
-				antPoint = point;
-			}
+                antantPoint = antPoint;
+                antPoint = point;
+            }
         }
-    }
-
-    /**
-     * Devuelve la cadena que corresponde al estado en el que nos encontramos.
-     *
-     * @return Cadena para mostrar por consola.
-     */
-    public String getQuestion() {
-        System.out.println("Question : " + question);
-
-        return question;
-    }
-
-    /**
-     * Devuelve el nombre de la clase en la que nos encontramos.
-     *
-     * @return Nombre de la clase en la que nos encontramos.
-     */
-    public String getName() {
-        return this.getClass().getName();
     }
 
     /**
@@ -297,199 +271,158 @@ public class PolylineCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status.equals("ExecuteMap.First")) {
-			for (int i = 0; i < list.size(); i++) {
-				((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
-					getCadToolAdapter().getMapControl().getViewPort(),
-					CADTool.modifySymbol);
-			}
+            for (int i = 0; i < list.size(); i++) {
+                ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
+                    getCadToolAdapter().getMapControl().getViewPort(),
+                    CADTool.modifySymbol);
+            }
 
-			drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
-		} else if ((status.equals("ExecuteMap.First")) || (status.equals("ExecuteMap.Second"))) {
-			for (int i = 0; i < list.size(); i++) {
-				((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
-					getCadToolAdapter().getMapControl().getViewPort(),
-					CADTool.modifySymbol);
-			}
+            drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
+        } else if ((status.equals("ExecuteMap.Second"))) {
+            for (int i = 0; i < list.size(); i++) {
+                ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
+                    getCadToolAdapter().getMapControl().getViewPort(),
+                    CADTool.modifySymbol);
+            }
 
-			Point2D point = new Point2D.Double(x, y);
-			Point2D lastp = antPoint;
+            Point2D point = new Point2D.Double(x, y);
+            Point2D lastp = antPoint;
 
-			if (!(list.size() > 0) ||
-					(((IGeometry) list.get(list.size() - 1)).getGeometryType() == FShape.LINE)) {
-				if (antantPoint == null) {
-					drawArc(point, lastp,
-						new Point2D.Double(lastp.getX() + (point.getX() / 2),
-							lastp.getY() + (point.getY() / 2)), g);
-				} else {
-					drawArc(point, lastp, antantPoint, g);
-				}
-			} else {
-				if (antInter != null) {
-					Point2D[] ps1 = UtilFunctions.getPerpendicular(lastp,
-							antInter, lastp);
-					double a1 = UtilFunctions.getAngle(ps1[0], ps1[1]);
-					double a2 = UtilFunctions.getAngle(ps1[1], ps1[0]);
-					double angle = UtilFunctions.getAngle(antCenter,
-							lastp);
-					Point2D ini1 = null;
-					Point2D ini2 = null;
+            if (!(list.size() > 0) ||
+                    (((IGeometry) list.get(list.size() - 1)).getGeometryType() == FShape.LINE)) {
+                if (antantPoint == null) {
+                    drawArc(point, lastp,
+                        new Point2D.Double(lastp.getX() + (point.getX() / 2),
+                            lastp.getY() + (point.getY() / 2)), g);
+                } else {
+                    drawArc(point, lastp, antantPoint, g);
+                }
+            } else {
+                if (antInter != null) {
+                    Point2D[] ps1 = UtilFunctions.getPerpendicular(lastp,
+                            antInter, lastp);
+                    double a1 = UtilFunctions.getAngle(ps1[0], ps1[1]);
+                    double a2 = UtilFunctions.getAngle(ps1[1], ps1[0]);
+                    double angle = UtilFunctions.getAngle(antCenter, lastp);
+                    Point2D ini1 = null;
+                    Point2D ini2 = null;
 
-					if (UtilFunctions.absoluteAngleDistance(angle, a1) > UtilFunctions.absoluteAngleDistance(
-								angle, a2)) {
-						ini1 = ps1[0];
-						ini2 = ps1[1];
-					} else {
-						ini1 = ps1[1];
-						ini2 = ps1[0];
-					}
+                    if (UtilFunctions.absoluteAngleDistance(angle, a1) > UtilFunctions.absoluteAngleDistance(
+                                angle, a2)) {
+                        ini1 = ps1[0];
+                        ini2 = ps1[1];
+                    } else {
+                        ini1 = ps1[1];
+                        ini2 = ps1[0];
+                    }
 
-					Point2D unit = UtilFunctions.getUnitVector(ini1,
-							ini2);
-					Point2D correct = new Point2D.Double(lastp.getX() +
-							unit.getX(), lastp.getY() + unit.getY());
-					drawArc(point, lastp, correct, g);
-				}
-			}
-		}
-    }
-    /**
-	 * Dibuja el arco sobre el graphics.
-	 *
-	 * @param point Puntero del ratón.
-	 * @param lastp Último punto de la polilinea.
-	 * @param antp Punto antepenultimo.
-	 * @param g Graphics sobre el que se dibuja.
-	 */
-	private void drawArc(Point2D point, Point2D lastp, Point2D antp, Graphics g) {
-		if (((point.getY() == lastp.getY()) && (point.getX() < lastp.getX())) ||
-				((point.getX() == lastp.getX()) &&
-				(point.getY() < lastp.getY()))) {
-		} else {
-			if (point.getX() == lastp.getX()) {
-				point = new Point2D.Double(point.getX() + 0.00000001,
-						point.getY());
-			} else if (point.getY() == lastp.getY()) {
-				point = new Point2D.Double(point.getX(),
-						point.getY() + 0.00000001);
-			}
-
-			if (point.getX() == antp.getX()) {
-				point = new Point2D.Double(point.getX() + 0.00000001,
-						point.getY());
-			} else if (point.getY() == antp.getY()) {
-				point = new Point2D.Double(point.getX(),
-						point.getY() + 0.00000001);
-			}
-
-			Point2D[] ps1 = UtilFunctions.getPerpendicular(lastp,
-					antp, lastp);
-			Point2D mediop = new Point2D.Double((point.getX() + lastp.getX()) / 2,
-					(point.getY() + lastp.getY()) / 2);
-			Point2D[] ps2 = UtilFunctions.getPerpendicular(lastp,
-					point, mediop);
-			Point2D interp = UtilFunctions.getIntersection(ps1[0],
-					ps1[1], ps2[0], ps2[1]);
-
-			double radio = interp.distance(lastp);
-
-			if (UtilFunctions.isLowAngle(antp, lastp, interp, point)) {
-				radio = -radio;
-			}
-
-			Point2D centerp = UtilFunctions.getPoint(interp, mediop,
-					radio);
-
-			drawLine((Graphics2D) g, lastp, point);
-
-			IGeometry ig = ShapeFactory.createArc(lastp, centerp, point);
-
-			if (ig != null) {
-				ig.draw((Graphics2D) g,
-					getCadToolAdapter().getMapControl().getViewPort(),
-					CADTool.modifySymbol);
-			}
-		}
-	}
-
-    /**
-     * Actualiza la cadena que corresponde al estado actual.
-     *
-     * @param s Cadena que aparecerá en consola.
-     */
-    public void setQuestion(String s) {
-        question = s;
-    }
-
-    /**
-     * Add a diferent option.
-     *
-     * @param s Diferent option.
-     */
-    public void addOption(FBitSet sel,String s) {
-    	PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
-    	if (status.equals("ExecuteMap.First")) {
-             if (s.equals("A") || s.equals("a")){
-            	 //Arco
-             }else if (s.equals("C") || s.equals("c")){
-            	 closeGeometry();
-             }
-        }else if (status.equals("ExecuteMap.Second")){
-        	if (s.equals("N") || s.equals("n")){
-           	 //Línea
-            }else if (s.equals("C") || s.equals("c")){
-            	closeGeometry();
+                    Point2D unit = UtilFunctions.getUnitVector(ini1, ini2);
+                    Point2D correct = new Point2D.Double(lastp.getX() +
+                            unit.getX(), lastp.getY() + unit.getY());
+                    drawArc(point, lastp, correct, g);
+                }
             }
         }
     }
 
     /**
-	 *
-	 */
-	private void closeGeometry() {
-		GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-				2);
-		elShape.moveTo(antPoint.getX(), antPoint.getY());
-		elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-
-		list.add(ShapeFactory.createPolyline2D(elShape));
-
-		IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
-		FGeometryCollection fgc = new FGeometryCollection(geoms);
-
-		try {
-			DefaultFeature df = new DefaultFeature(fgc, null);
-			vea.addRow(df);
-		} catch (DriverIOException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
-	}
-
-	/**
-     * DOCUMENT ME!
+     * Dibuja el arco sobre el graphics.
+     *
+     * @param point Puntero del ratón.
+     * @param lastp Último punto de la polilinea.
+     * @param antp Punto antepenultimo.
+     * @param g Graphics sobre el que se dibuja.
      */
-    public void refresh() {
-    	getCadToolAdapter().getMapControl().drawMap(false);
+    private void drawArc(Point2D point, Point2D lastp, Point2D antp, Graphics g) {
+        if (((point.getY() == lastp.getY()) && (point.getX() < lastp.getX())) ||
+                ((point.getX() == lastp.getX()) &&
+                (point.getY() < lastp.getY()))) {
+        } else {
+            if (point.getX() == lastp.getX()) {
+                point = new Point2D.Double(point.getX() + 0.00000001,
+                        point.getY());
+            } else if (point.getY() == lastp.getY()) {
+                point = new Point2D.Double(point.getX(),
+                        point.getY() + 0.00000001);
+            }
+
+            if (point.getX() == antp.getX()) {
+                point = new Point2D.Double(point.getX() + 0.00000001,
+                        point.getY());
+            } else if (point.getY() == antp.getY()) {
+                point = new Point2D.Double(point.getX(),
+                        point.getY() + 0.00000001);
+            }
+
+            Point2D[] ps1 = UtilFunctions.getPerpendicular(lastp, antp, lastp);
+            Point2D mediop = new Point2D.Double((point.getX() + lastp.getX()) / 2,
+                    (point.getY() + lastp.getY()) / 2);
+            Point2D[] ps2 = UtilFunctions.getPerpendicular(lastp, point, mediop);
+            Point2D interp = UtilFunctions.getIntersection(ps1[0], ps1[1],
+                    ps2[0], ps2[1]);
+
+            double radio = interp.distance(lastp);
+
+            if (UtilFunctions.isLowAngle(antp, lastp, interp, point)) {
+                radio = -radio;
+            }
+
+            Point2D centerp = UtilFunctions.getPoint(interp, mediop, radio);
+
+            drawLine((Graphics2D) g, lastp, point);
+
+            IGeometry ig = ShapeFactory.createArc(lastp, centerp, point);
+
+            if (ig != null) {
+                ig.draw((Graphics2D) g,
+                    getCadToolAdapter().getMapControl().getViewPort(),
+                    CADTool.modifySymbol);
+            }
+        }
     }
 
     /**
-     * DOCUMENT ME!
+     * Add a diferent option.
      *
-     * @param vea DOCUMENT ME!
+     * @param sel DOCUMENT ME!
+     * @param s Diferent option.
      */
-    public void setVectorialAdapter(VectorialEditableAdapter vea) {
-        this.vea = vea;
+    public void addOption(FBitSet sel, String s) {
+        PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
+        String status = actualState.getName();
+
+        if (status.equals("ExecuteMap.First")) {
+            if (s.equals("A") || s.equals("a")) {
+                //Arco
+            } else if (s.equals("C") || s.equals("c")) {
+                closeGeometry();
+            }
+        } else if (status.equals("ExecuteMap.Second")) {
+            if (s.equals("N") || s.equals("n")) {
+                //Línea
+            } else if (s.equals("C") || s.equals("c")) {
+                closeGeometry();
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    private void closeGeometry() {
+        GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
+        elShape.moveTo(antPoint.getX(), antPoint.getY());
+        elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+        list.add(ShapeFactory.createPolyline2D(elShape));
+
+        IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
+        FGeometryCollection fgc = new FGeometryCollection(geoms);
+        addGeometry(fgc);
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
-    public void addValue(FBitSet sel,double d) {
-
+    public void addValue(FBitSet sel, double d) {
     }
-
-
 }

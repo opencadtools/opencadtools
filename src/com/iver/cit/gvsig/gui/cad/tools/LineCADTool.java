@@ -1,16 +1,3 @@
-package com.iver.cit.gvsig.gui.cad.tools;
-
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-
-import com.iver.cit.gvsig.fmap.core.GeneralPathX;
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
-import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext.LineCADToolState;
-
-
 /* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
  *
  * Copyright (C) 2004 IVER T.I. and Generalitat Valenciana.
@@ -51,6 +38,24 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext.LineCADToolState;
  *   +34 963163400
  *   dac@iver.es
  */
+package com.iver.cit.gvsig.gui.cad.tools;
+
+import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext;
+import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext.LineCADToolState;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+
+
+/**
+ * DOCUMENT ME!
+ *
+ * @author Vicente Caballero Navarro
+ */
 public class LineCADTool extends DefaultCADTool {
     private LineCADToolContext _fsm;
     private Point2D firstPoint;
@@ -79,24 +84,26 @@ public class LineCADTool extends DefaultCADTool {
     }
 
     /* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
-	 */
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
+     */
     public void transition(FBitSet sel, double x, double y) {
         _fsm.addPoint(sel, x, y);
     }
-    /* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
-	 */
-	public void transition(FBitSet sel, double d) {
-		_fsm.addValue(sel,d);
-	}
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
-	 */
-	public void transition(FBitSet sel, String s) {
-		//_fsm.addOption(sel,s);
-	}
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+     */
+    public void transition(FBitSet sel, double d) {
+        _fsm.addValue(sel, d);
+    }
+
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+     */
+    public void transition(FBitSet sel, String s) {
+        //_fsm.addOption(sel,s);
+    }
+
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
      * editableFeatureSource que ya estará creado.
@@ -108,12 +115,14 @@ public class LineCADTool extends DefaultCADTool {
     public void addPoint(FBitSet sel, double x, double y) {
         LineCADToolState actualState = (LineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
+
         if (status.equals("ExecuteMap.Initial")) {
             firstPoint = new Point2D.Double(x, y);
         } else if (status == "ExecuteMap.First") {
             lastPoint = new Point2D.Double(x, y);
+
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-                      2);
+                    2);
             elShape.moveTo(firstPoint.getX(), firstPoint.getY());
             elShape.lineTo(lastPoint.getX(), lastPoint.getY());
             addGeometry(ShapeFactory.createPolyline2D(elShape));
@@ -127,11 +136,10 @@ public class LineCADTool extends DefaultCADTool {
                     firstPoint.getY() + h);
 
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-					2);
-			elShape.moveTo(firstPoint.getX(), firstPoint.getY());
-			elShape.lineTo(lastPoint.getX(), lastPoint.getY());
-			addGeometry(ShapeFactory.createPolyline2D(elShape));
-
+                    2);
+            elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+            elShape.lineTo(lastPoint.getX(), lastPoint.getY());
+            addGeometry(ShapeFactory.createPolyline2D(elShape));
 
             firstPoint = (Point2D) lastPoint.clone();
         }
@@ -150,6 +158,7 @@ public class LineCADTool extends DefaultCADTool {
         double y) {
         LineCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
+
         if ((status != "ExecuteMap.Initial")) { // || (status == "5")) {
 
             if (firstPoint != null) {
@@ -161,16 +170,17 @@ public class LineCADTool extends DefaultCADTool {
     /**
      * Add a diferent option.
      *
+     * @param sel DOCUMENT ME!
      * @param s Diferent option.
      */
-    public void addOption(FBitSet sel,String s) {
+    public void addOption(FBitSet sel, String s) {
         // TODO Auto-generated method stub
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
-    public void addValue(FBitSet sel,double d) {
+    public void addValue(FBitSet sel, double d) {
         LineCADToolState actualState = (LineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
@@ -185,13 +195,11 @@ public class LineCADTool extends DefaultCADTool {
                     firstPoint.getY() + h);
 
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-                        2);
+                    2);
             elShape.moveTo(firstPoint.getX(), firstPoint.getY());
             elShape.lineTo(lastPoint.getX(), lastPoint.getY());
             addGeometry(ShapeFactory.createPolyline2D(elShape));
             firstPoint = (Point2D) lastPoint.clone();
-   }
+        }
     }
-
-
 }

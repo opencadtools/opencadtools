@@ -5,17 +5,17 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
-public final class PolylineCADToolContext
+public final class PolygonCADToolContext
     extends statemap.FSMContext
 {
 //---------------------------------------------------------------
 // Member methods.
 //
 
-    public PolylineCADToolContext(PolylineCADTool owner)
+    public PolygonCADToolContext(PolygonCADTool owner)
     {
         super();
 
@@ -40,7 +40,15 @@ public final class PolylineCADToolContext
         return;
     }
 
-    public PolylineCADToolState getState()
+    public void addValue(FBitSet sel, double d)
+    {
+        _transition = "addValue";
+        getState().addValue(this, sel, d);
+        _transition = "";
+        return;
+    }
+
+    public PolygonCADToolState getState()
         throws statemap.StateUndefinedException
     {
         if (_state == null)
@@ -49,10 +57,10 @@ public final class PolylineCADToolContext
                 new statemap.StateUndefinedException());
         }
 
-        return ((PolylineCADToolState) _state);
+        return ((PolygonCADToolState) _state);
     }
 
-    protected PolylineCADTool getOwner()
+    protected PolygonCADTool getOwner()
     {
         return (_owner);
     }
@@ -61,38 +69,43 @@ public final class PolylineCADToolContext
 // Member data.
 //
 
-    transient private PolylineCADTool _owner;
+    transient private PolygonCADTool _owner;
 
 //---------------------------------------------------------------
 // Inner classes.
 //
 
-    public static abstract class PolylineCADToolState
+    public static abstract class PolygonCADToolState
         extends statemap.State
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected PolylineCADToolState(String name, int id)
+        protected PolygonCADToolState(String name, int id)
         {
             super (name, id);
         }
 
-        protected void Entry(PolylineCADToolContext context) {}
-        protected void Exit(PolylineCADToolContext context) {}
+        protected void Entry(PolygonCADToolContext context) {}
+        protected void Exit(PolygonCADToolContext context) {}
 
-        protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
+        protected void addOption(PolygonCADToolContext context, FBitSet sel, String s)
         {
             Default(context);
         }
 
-        protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void Default(PolylineCADToolContext context)
+        protected void addValue(PolygonCADToolContext context, FBitSet sel, double d)
+        {
+            Default(context);
+        }
+
+        protected void Default(PolygonCADToolContext context)
         {
             throw (
                 new statemap.TransitionUndefinedException(
@@ -140,7 +153,7 @@ public final class PolylineCADToolContext
     }
 
     protected static class ExecuteMap_Default
-        extends PolylineCADToolState
+        extends PolygonCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -168,26 +181,46 @@ public final class PolylineCADToolContext
                 super (name, id);
             }
 
-            protected void Entry(PolylineCADToolContext context)
+            protected void Entry(PolygonCADToolContext context)
             {
-                PolylineCADTool ctxt = context.getOwner();
+                PolygonCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar primer punto");
+                ctxt.setQuestion("Insertar numero de lados<5>");
                 return;
             }
 
-            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                PolylineCADTool ctxt = context.getOwner();
+                PolygonCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+                    ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]");
                     ctxt.addPoint(sel, pointX, pointY);
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Second);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+            protected void addValue(PolygonCADToolContext context, FBitSet sel, double d)
+            {
+                PolygonCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.setQuestion("Insertar punto central del poligono");
+                    ctxt.addValue(sel, d);
                 }
                 finally
                 {
@@ -214,64 +247,22 @@ public final class PolylineCADToolContext
                 super (name, id);
             }
 
-            protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
+            protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                PolylineCADTool ctxt = context.getOwner();
+                PolygonCADTool ctxt = context.getOwner();
 
-                if (s.equals("A") ||  s.equals("a"))
-                {
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-                        ctxt.addOption(sel, s);
-                    }
-                    finally
-                    {
-                        context.setState(ExecuteMap.Second);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (s.equals("C") ||  s.equals("c"))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.addOption(sel, s);
-                        ctxt.end();
-                    }
-                    finally
-                    {
-                        context.setState(ExecuteMap.Third);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.addOption(context, sel, s);
-                }
-
-                return;
-            }
-
-            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
-            {
-                PolylineCADTool ctxt = context.getOwner();
-
-                PolylineCADToolState endState = context.getState();
-
+                (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+                    ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]<C>");
                     ctxt.addPoint(sel, pointX, pointY);
                 }
                 finally
                 {
-                    context.setState(endState);
+                    context.setState(ExecuteMap.Second);
+                    (context.getState()).Entry(context);
                 }
                 return;
             }
@@ -293,64 +284,62 @@ public final class PolylineCADToolContext
                 super (name, id);
             }
 
-            protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
+            protected void addOption(PolygonCADToolContext context, FBitSet sel, String s)
             {
-                PolylineCADTool ctxt = context.getOwner();
+                PolygonCADTool ctxt = context.getOwner();
 
-                if (s.equals("N") ||  s.equals("n"))
-                {
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-                        ctxt.addOption(sel, s);
-                    }
-                    finally
-                    {
-                        context.setState(ExecuteMap.First);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (s.equals("C") ||  s.equals("c"))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.addOption(sel, s);
-                        ctxt.end();
-                    }
-                    finally
-                    {
-                        context.setState(ExecuteMap.Third);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.addOption(context, sel, s);
-                }
-
-                return;
-            }
-
-            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
-            {
-                PolylineCADTool ctxt = context.getOwner();
-
-                PolylineCADToolState endState = context.getState();
-
+                (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.setQuestion("Precise r?dio(r)");
+                    ctxt.addOption(sel, s);
                 }
                 finally
                 {
-                    context.setState(endState);
+                    context.setState(ExecuteMap.Third);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+            protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
+            {
+                PolygonCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Fourth);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+            protected void addValue(PolygonCADToolContext context, FBitSet sel, double d)
+            {
+                PolygonCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.addValue(sel, d);
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Fourth);
+                    (context.getState()).Entry(context);
                 }
                 return;
             }
@@ -370,6 +359,46 @@ public final class PolylineCADToolContext
             private ExecuteMap_Third(String name, int id)
             {
                 super (name, id);
+            }
+
+            protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
+            {
+                PolygonCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Fourth);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+            protected void addValue(PolygonCADToolContext context, FBitSet sel, double d)
+            {
+                PolygonCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.addValue(sel, d);
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Fourth);
+                    (context.getState()).Entry(context);
+                }
+                return;
             }
 
         //-------------------------------------------------------

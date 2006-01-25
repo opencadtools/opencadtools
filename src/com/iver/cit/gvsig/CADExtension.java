@@ -59,9 +59,12 @@ import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
+import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
 import com.iver.utiles.console.ResponseListener;
@@ -89,11 +92,17 @@ public class CADExtension implements Extension {
         CircleCADTool circle=new CircleCADTool();
         RectangleCADTool rectangle=new RectangleCADTool();
         PolylineCADTool polyline=new PolylineCADTool();
+        EllipseCADTool ellipse=new EllipseCADTool();
+        ArcCADTool arc=new ArcCADTool();
+        PolygonCADTool polygon=new PolygonCADTool();
         addCADTool("line", line);
         addCADTool("point", point);
         addCADTool("circle",circle);
         addCADTool("rectangle", rectangle);
         addCADTool("polyline", polyline);
+        addCADTool("ellipse", ellipse);
+        addCADTool("arc", arc);
+        addCADTool("polygon", polygon);
     }
 
     /**
@@ -172,7 +181,7 @@ public class CADExtension implements Extension {
         } else if (s.compareTo("RECTANGLE") == 0) {
         	setCADTool("rectangle");
         } else if (s.compareTo("POLYGON") == 0) {
-        	setCADTool("poligon");
+        	setCADTool("polygon");
         }
 
         //ViewControls.CANCELED=false;

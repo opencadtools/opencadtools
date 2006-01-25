@@ -1,17 +1,3 @@
-package com.iver.cit.gvsig.gui.cad.tools;
-
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-
-import com.iver.cit.gvsig.fmap.core.GeneralPathX;
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
-import com.iver.cit.gvsig.gui.cad.CADTool;
-import com.iver.cit.gvsig.gui.cad.tools.smc.RectangleCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.RectangleCADToolContext.RectangleCADToolState;
-
-
 /* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
  *
  * Copyright (C) 2004 IVER T.I. and Generalitat Valenciana.
@@ -52,6 +38,25 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.RectangleCADToolContext.RectangleCAD
  *   +34 963163400
  *   dac@iver.es
  */
+package com.iver.cit.gvsig.gui.cad.tools;
+
+import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import com.iver.cit.gvsig.gui.cad.CADTool;
+import com.iver.cit.gvsig.gui.cad.tools.smc.RectangleCADToolContext;
+import com.iver.cit.gvsig.gui.cad.tools.smc.RectangleCADToolContext.RectangleCADToolState;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+
+
+/**
+ * DOCUMENT ME!
+ *
+ * @author Vicente Caballero Navarro
+ */
 public class RectangleCADTool extends DefaultCADTool {
     private RectangleCADToolContext _fsm;
     private Point2D firstPoint;
@@ -75,29 +80,31 @@ public class RectangleCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
      */
     public void end() {
-    	 _fsm = new RectangleCADToolContext(this);
-    	 firstPoint=null;
+        _fsm = new RectangleCADToolContext(this);
+        firstPoint = null;
     }
 
     /* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
-	 */
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
+     */
     public void transition(FBitSet sel, double x, double y) {
         _fsm.addPoint(sel, x, y);
     }
-    /* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
-	 */
-	public void transition(FBitSet sel, double d) {
-		//_fsm.addvalue(sel,d);
-	}
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
-	 */
-	public void transition(FBitSet sel, String s) {
-		_fsm.addOption(sel,s);
-	}
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+     */
+    public void transition(FBitSet sel, double d) {
+        //_fsm.addvalue(sel,d);
+    }
+
+    /* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+     */
+    public void transition(FBitSet sel, String s) {
+        _fsm.addOption(sel, s);
+    }
+
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
      * editableFeatureSource que ya estará creado.
@@ -110,39 +117,47 @@ public class RectangleCADTool extends DefaultCADTool {
         RectangleCADToolState actualState = (RectangleCADToolState) _fsm.getPreviousState();
 
         String status = actualState.getName();
+
         if (status.equals("ExecuteMap.Initial")) {
             firstPoint = new Point2D.Double(x, y);
         } else if (status == "ExecuteMap.First") {
             lastPoint = new Point2D.Double(x, y);
 
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-					2);
-			elShape.moveTo(firstPoint.getX(), firstPoint.getY());
-			elShape.lineTo(lastPoint.getX(), firstPoint.getY());
-			elShape.lineTo(lastPoint.getX(), lastPoint.getY());
-			elShape.lineTo(firstPoint.getX(), lastPoint.getY());
-			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-			addGeometry(ShapeFactory.createPolyline2D(elShape));
-			firstPoint = (Point2D) lastPoint.clone();
+                    2);
+            elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+            elShape.lineTo(lastPoint.getX(), firstPoint.getY());
+            elShape.lineTo(lastPoint.getX(), lastPoint.getY());
+            elShape.lineTo(firstPoint.getX(), lastPoint.getY());
+            elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            addGeometry(ShapeFactory.createPolyline2D(elShape));
+            firstPoint = (Point2D) lastPoint.clone();
         } else if (status == "ExecuteMap.Second") {
-        	lastPoint = new Point2D.Double(x, y);
+            lastPoint = new Point2D.Double(x, y);
 
-        	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-					2);
-			elShape.moveTo(firstPoint.getX(), firstPoint.getY());
-			elShape.lineTo(lastPoint.getX(), firstPoint.getY());
+            GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+                    2);
+            elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+            elShape.lineTo(lastPoint.getX(), firstPoint.getY());
 
-			if ((lastPoint.getY()<=firstPoint.getY() && lastPoint.getX()<=firstPoint.getX())||(lastPoint.getY()>firstPoint.getY() && lastPoint.getX()>firstPoint.getX())){
-				elShape.lineTo(lastPoint.getX(), firstPoint.getY() + (lastPoint.getX() - firstPoint.getX()));
-				elShape.lineTo(firstPoint.getX(), firstPoint.getY() + (lastPoint.getX() - firstPoint.getX()));
-			}else {
-				elShape.lineTo(lastPoint.getX(), firstPoint.getY() - (lastPoint.getX() - firstPoint.getX()));
-				elShape.lineTo(firstPoint.getX(), firstPoint.getY() - (lastPoint.getX() - firstPoint.getX()));
-			}
+            if (((lastPoint.getY() <= firstPoint.getY()) &&
+                    (lastPoint.getX() <= firstPoint.getX())) ||
+                    ((lastPoint.getY() > firstPoint.getY()) &&
+                    (lastPoint.getX() > firstPoint.getX()))) {
+                elShape.lineTo(lastPoint.getX(),
+                    firstPoint.getY() + (lastPoint.getX() - firstPoint.getX()));
+                elShape.lineTo(firstPoint.getX(),
+                    firstPoint.getY() + (lastPoint.getX() - firstPoint.getX()));
+            } else {
+                elShape.lineTo(lastPoint.getX(),
+                    firstPoint.getY() - (lastPoint.getX() - firstPoint.getX()));
+                elShape.lineTo(firstPoint.getX(),
+                    firstPoint.getY() - (lastPoint.getX() - firstPoint.getX()));
+            }
 
-			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-			addGeometry(ShapeFactory.createPolyline2D(elShape));
-			firstPoint = (Point2D) lastPoint.clone();
+            elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            addGeometry(ShapeFactory.createPolyline2D(elShape));
+            firstPoint = (Point2D) lastPoint.clone();
         }
     }
 
@@ -161,57 +176,61 @@ public class RectangleCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status == "ExecuteMap.First") {
-			GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-					4);
-			elShape.moveTo(firstPoint.getX(), firstPoint.getY());
-			elShape.lineTo(x, firstPoint.getY());
-			elShape.lineTo(x, y);
-			elShape.lineTo(firstPoint.getX(), y);
-			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
-				getCadToolAdapter().getMapControl().getViewPort(),
-				CADTool.modifySymbol);
-		} else if (status == "ExecuteMap.Second") {
-			GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-					4);
-			elShape.moveTo(firstPoint.getX(), firstPoint.getY());
-			elShape.lineTo(x, firstPoint.getY());
-			if ((y<=firstPoint.getY() && x<=firstPoint.getX())||(y>firstPoint.getY() && x>firstPoint.getX())){
-				elShape.lineTo(x, firstPoint.getY() + (x - firstPoint.getX()));
-				elShape.lineTo(firstPoint.getX(), firstPoint.getY() + (x - firstPoint.getX()));
-				elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-			}else {
-				elShape.lineTo(x, firstPoint.getY() - (x - firstPoint.getX()));
-				elShape.lineTo(firstPoint.getX(), firstPoint.getY() - (x - firstPoint.getX()));
-				elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-			}
-			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
-				getCadToolAdapter().getMapControl().getViewPort(),
-				CADTool.modifySymbol);
-		}
+            GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+                    4);
+            elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+            elShape.lineTo(x, firstPoint.getY());
+            elShape.lineTo(x, y);
+            elShape.lineTo(firstPoint.getX(), y);
+            elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
+                getCadToolAdapter().getMapControl().getViewPort(),
+                CADTool.modifySymbol);
+        } else if (status == "ExecuteMap.Second") {
+            GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+                    4);
+            elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+            elShape.lineTo(x, firstPoint.getY());
+
+            if (((y <= firstPoint.getY()) && (x <= firstPoint.getX())) ||
+                    ((y > firstPoint.getY()) && (x > firstPoint.getX()))) {
+                elShape.lineTo(x, firstPoint.getY() + (x - firstPoint.getX()));
+                elShape.lineTo(firstPoint.getX(),
+                    firstPoint.getY() + (x - firstPoint.getX()));
+                elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            } else {
+                elShape.lineTo(x, firstPoint.getY() - (x - firstPoint.getX()));
+                elShape.lineTo(firstPoint.getX(),
+                    firstPoint.getY() - (x - firstPoint.getX()));
+                elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            }
+
+            ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
+                getCadToolAdapter().getMapControl().getViewPort(),
+                CADTool.modifySymbol);
+        }
     }
 
     /**
      * Add a diferent option.
      *
+     * @param sel DOCUMENT ME!
      * @param s Diferent option.
      */
-    public void addOption(FBitSet sel,String s) {
-    	  RectangleCADToolState actualState = (RectangleCADToolState) _fsm.getPreviousState();
-          String status = actualState.getName();
-    	if (status == "ExecuteMap.First") {
-    		if (s.equals("C") || s.equals("c")){
-    			//Opción correcta
-    		}
-    	}
+    public void addOption(FBitSet sel, String s) {
+        RectangleCADToolState actualState = (RectangleCADToolState) _fsm.getPreviousState();
+        String status = actualState.getName();
+
+        if (status == "ExecuteMap.First") {
+            if (s.equals("C") || s.equals("c")) {
+                //Opción correcta
+            }
+        }
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
-    public void addValue(FBitSet sel,double d) {
-
+    public void addValue(FBitSet sel, double d) {
     }
-
-
 }

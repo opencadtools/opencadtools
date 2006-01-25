@@ -22,11 +22,9 @@ Initial
 		setQuestion("Insertar primer punto");
 		}
 	Exit{
-		end();
 		}
 
 	{
-
 		addPoint(sel:FBitSet,pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
@@ -37,13 +35,13 @@ Initial
 First{
 
 	addOption(sel:FBitSet,s:String)
-		[s == "A" ||  s == "a"]
+		[s.equals("A") ||  s.equals("a")]
 		Second {
-			setQuestion("Insertar punto siguiente, Línea[N] o Cerrar[C]");
+			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
 			addOption(sel,s);
 			}
 	addOption(sel:FBitSet,s:String)
-		[s == "C" ||  s == "c"]
+		[s.equals("C") ||  s.equals("c")]
 		Third {
 			addOption(sel,s);
 			end();
@@ -58,17 +56,17 @@ First{
 Second{
 	addPoint(sel:FBitSet,pointX:double,pointY:double)
 		Second {
-			setQuestion("Insertar punto siguiente, Línea[N] o Cerrar[C]");
+			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
 			addPoint(sel,pointX,pointY);
 			}
 	addOption(sel:FBitSet,s:String)
-		[s == "N" ||  s == "n"]
+		[s.equals("N") ||  s.equals("n")]
 		First {
 			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
 			addOption(sel,s);
 			}
 	addOption(sel:FBitSet,s:String)
-		[s == "C" ||  s == "c"]
+		[s.equals("C") ||  s.equals("c")]
 		Third {
 			addOption(sel,s);
 			end();
