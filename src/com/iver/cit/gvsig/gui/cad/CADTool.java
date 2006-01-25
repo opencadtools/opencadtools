@@ -67,11 +67,10 @@ public interface CADTool {
 	public void transition(FBitSet sel,double d);
 	public void transition(FBitSet sel,String s);
 	public void setVectorialAdapter(VectorialEditableAdapter vea);
-	public void addpoint(FBitSet sel,double x,double y);
-	public void addvalue(FBitSet sel,double d);
-	public void addoption(FBitSet sel,String s);
+	public void addPoint(FBitSet sel,double x,double y);
+	public void addValue(FBitSet sel,double d);
+	public void addOption(FBitSet sel,String s);
 	public void setQuestion(String s);
-	//public void updateState(String s);
 
 	/**
 	 * Recibe un graphics en el que se encuentra dibujada la
@@ -113,11 +112,4 @@ public interface CADTool {
 	 * @return DOCUMENT ME!
 	 */
 	public CADToolAdapter getCadToolAdapter();
-
-	/**
-	 * Devuelve el nombre de la herramienta cad.
-	 *
-	 * @return Nombre de la herramienta.
-	 */
-	public String getName();
 }
