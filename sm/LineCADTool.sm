@@ -27,39 +27,36 @@ Initial
 
 	{
 
-		addpoint(sel:FBitSet,pointX:double,pointY:double)
+		addPoint(sel:FBitSet,pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar segundo punto o angulo");
-				addpoint(sel,pointX,pointY);
+				addPoint(sel,pointX,pointY);
 				}
 
 	}
 First{
-	addpoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint(sel:FBitSet,pointX:double,pointY:double)
 		First {
 			setQuestion("Insertar segundo punto o angulo");
-			addpoint(sel,pointX,pointY);
-			refresh();
+			addPoint(sel,pointX,pointY);
 			}
-	addvalue(sel:FBitSet,d:double)
+	addValue(sel:FBitSet,d:double)
 		Second {
 			setQuestion("Insertar longitud o punto");
-			addvalue(sel,d);
+			addValue(sel,d);
 			}
 
 }
 Second{
-	addpoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint(sel:FBitSet,pointX:double,pointY:double)
 		First {
 			setQuestion("Insertar segundo punto o angulo");
-			addpoint(sel,pointX,pointY);
-			refresh();
+			addPoint(sel,pointX,pointY);
 			}
-	addvalue(sel:FBitSet,d:double)
+	addValue(sel:FBitSet,d:double)
 		First {
 			setQuestion("Insertar segundo punto o angulo");
-			addvalue(sel,d);
-			refresh();
+			addValue(sel,d);
 			}
 	}
 Default

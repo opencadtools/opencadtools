@@ -3,17 +3,11 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
-import java.io.IOException;
 
-import statemap.State;
 import statemap.TransitionUndefinedException;
 
-import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
-import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext;
@@ -62,8 +56,6 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext.CircleCADToolSt
  */
 public class CircleCADTool extends DefaultCADTool {
     private CircleCADToolContext _fsm;
-    private VectorialEditableAdapter vea;
-    private String question;
     private Point2D center;
     private Point2D firstPoint;
     private Point2D secondPoint;
@@ -95,20 +87,20 @@ public class CircleCADTool extends DefaultCADTool {
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
 	 */
     public void transition(FBitSet sel, double x, double y) throws TransitionUndefinedException {
-     	_fsm.addpoint(sel, x, y);
+     	_fsm.addPoint(sel, x, y);
     }
     /* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
 	 */
 	public void transition(FBitSet sel, double d) throws TransitionUndefinedException {
-		_fsm.addvalue(sel,d);
+		_fsm.addValue(sel,d);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
 	 */
 	public void transition(FBitSet sel, String s) throws TransitionUndefinedException{
-		_fsm.addoption(sel,s);
+		_fsm.addOption(sel,s);
 	}
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
@@ -118,66 +110,26 @@ public class CircleCADTool extends DefaultCADTool {
      * @param x parámetro x del punto que se pase en esta transición.
      * @param y parámetro y del punto que se pase en esta transición.
      */
-    public void addpoint(FBitSet sel, double x, double y) {
+    public void addPoint(FBitSet sel, double x, double y) {
         CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
+
         if (status.equals("ExecuteMap.Initial")) {
         	center = new Point2D.Double(x, y);
 		} else if (status == "ExecuteMap.First") {
-			 try {
-	              DefaultFeature df = new DefaultFeature(ShapeFactory.createCircle(center,
-							new Point2D.Double(x,y)), null);
-	                vea.addRow(df);
-	            } catch (DriverIOException e) {
-	                e.printStackTrace();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
+			addGeometry(ShapeFactory.createCircle(center,new Point2D.Double(x,y)));
 		} else if (status == "ExecuteMap.Seventh") {
 			firstPoint= new Point2D.Double(x, y);
 		} else if (status == "ExecuteMap.Second") {
 			secondPoint= new Point2D.Double(x, y);
 		} else if (status == "ExecuteMap.Third") {
 			thirdPoint= new Point2D.Double(x, y);
-			 try {
-	               DefaultFeature df = new DefaultFeature(ShapeFactory.createCircle(firstPoint,secondPoint,thirdPoint), null);
-	                vea.addRow(df);
-	            } catch (DriverIOException e) {
-	                e.printStackTrace();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-		} else if (status == "ExecuteMap.Sixth") {
-			try {
-	               DefaultFeature df = new DefaultFeature(ShapeFactory.createCircle(center,new Point2D.Double(x, y)), null);
-	                vea.addRow(df);
-	            } catch (DriverIOException e) {
-	                e.printStackTrace();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-		}
+			addGeometry(ShapeFactory.createCircle(firstPoint,secondPoint,thirdPoint));
+	    } else if (status == "ExecuteMap.Sixth") {
+			addGeometry(ShapeFactory.createCircle(center,new Point2D.Double(x, y)));
+	    }
   }
 
-    /**
-     * Devuelve la cadena que corresponde al estado en el que nos encontramos.
-     *
-     * @return Cadena para mostrar por consola.
-     */
-    public String getQuestion() {
-        System.out.println("Question : " + question);
-
-        return question;
-    }
-
-    /**
-     * Devuelve el nombre de la clase en la que nos encontramos.
-     *
-     * @return Nombre de la clase en la que nos encontramos.
-     */
-    public String getName() {
-        return this.getClass().getName();
-    }
 
     /**
      * Método para dibujar la lo necesario para el estado en el que nos
@@ -208,8 +160,6 @@ public class CircleCADTool extends DefaultCADTool {
 			drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
 		} else if (status == "ExecuteMap.Third") {
 			Point2D currentPoint = new Point2D.Double(x, y);
-			//System.out.println("p2 = "+p2);
-			//System.out.println("currentPoint = "+currentPoint);
 			IGeometry geom=ShapeFactory.createCircle(firstPoint,secondPoint,currentPoint);
 			if (geom!=null){
 			geom.draw((Graphics2D) g,
@@ -219,21 +169,13 @@ public class CircleCADTool extends DefaultCADTool {
 		}
     }
 
-    /**
-     * Actualiza la cadena que corresponde al estado actual.
-     *
-     * @param s Cadena que aparecerá en consola.
-     */
-    public void setQuestion(String s) {
-        question = s;
-    }
 
     /**
      * Add a diferent option.
      *
      * @param s Diferent option.
      */
-    public void addoption(FBitSet sel,String s) {
+    public void addOption(FBitSet sel,String s) {
     	CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
     	if (status == "ExecuteMap.Initial") {
@@ -243,39 +185,16 @@ public class CircleCADTool extends DefaultCADTool {
     	}
     }
 
-    /**
-     * DOCUMENT ME!
-     */
-    public void refresh() {
-    	getCadToolAdapter().getMapControl().drawMap(false);
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param vea DOCUMENT ME!
-     */
-    public void setVectorialAdapter(VectorialEditableAdapter vea) {
-        this.vea = vea;
-    }
-
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
-    public void addvalue(FBitSet sel,double d) {
+    public void addValue(FBitSet sel,double d) {
         CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
         if (status == "ExecuteMap.Fiveth") {
-			try {
-	               DefaultFeature df = new DefaultFeature(ShapeFactory.createCircle(center,d), null);
-	                vea.addRow(df);
-	            } catch (DriverIOException e) {
-	                e.printStackTrace();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-		}
+			addGeometry(ShapeFactory.createCircle(center,d));
+	    }
     }
 
 

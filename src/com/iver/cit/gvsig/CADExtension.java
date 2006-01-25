@@ -62,6 +62,8 @@ import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
 import com.iver.utiles.console.ResponseListener;
 /**
  * Extensión dedicada a controlar las diferentes operaciones sobre el editado
@@ -85,9 +87,13 @@ public class CADExtension implements Extension {
         LineCADTool line = new LineCADTool();
         PointCADTool point = new PointCADTool();
         CircleCADTool circle=new CircleCADTool();
+        RectangleCADTool rectangle=new RectangleCADTool();
+        PolylineCADTool polyline=new PolylineCADTool();
         addCADTool("line", line);
         addCADTool("point", point);
         addCADTool("circle",circle);
+        addCADTool("rectangle", rectangle);
+        addCADTool("polyline", polyline);
     }
 
     /**
@@ -95,12 +101,12 @@ public class CADExtension implements Extension {
      */
     public void execute(String s) {
         view = (View) PluginServices.getMDIManager().getActiveView();
-
-        //PluginServices.getMainFrame().showConsole();
         mapControl = (MapControl) view.getMapControl();
         if (!isLoad){
         	mapControl.addMapTool("cadtooladapter", new Behavior[]{adapter});
-        	 view.addConsoleListener("cad", new ResponseListener() {
+        	isLoad=true;
+        }
+        	view.addConsoleListener("cad", new ResponseListener() {
      			public void acceptResponse(String response) {
      				adapter.textEntered(response);
      				FocusManager fm=FocusManager.getCurrentManager();
@@ -111,7 +117,7 @@ public class CADExtension implements Extension {
 
      			}
      		});
-        }
+        	registerKeyStrokes();
         FLayers layers=mapControl.getMapContext().getLayers();
 		for (int i=0;i<layers.getLayersCount();i++){
 			if (layers.getLayer(i).isEditing() && layers.getLayer(i) instanceof FLyrVect){
@@ -121,60 +127,52 @@ public class CADExtension implements Extension {
 		}
 
         view.getMapControl().setTool("cadtooladapter");
-        //((CADToolAdapter)vista.getMapControl().getCurrentMapTool());
         if (s.compareTo("SPLINE") == 0) {
-            //Spline.png
-            ///vista.getMapControl().setCadTool("spline");
+        	setCADTool("spline");
         } else if (s.compareTo("COPY") == 0) {
-            //Copy.png
-            ///vista.getMapControl().setCadTool("copy");
+        	setCADTool("copy");
         } else if (s.compareTo("EQUIDISTANCE") == 0) {
-            //Equidistance.png
+        	setCADTool("equidistance");
         } else if (s.compareTo("MATRIZ") == 0) {
-            //Matriz.png
+        	setCADTool("matriz");
         } else if (s.compareTo("SYMMETRY") == 0) {
-            //Symmetry.png
-            ///vista.getMapControl().setCadTool("symmetry");
+        	setCADTool("symmetry");
         } else if (s.compareTo("ROTATION") == 0) {
-            //Rotation.png
-            ///vista.getMapControl().setCadTool("rotate");
+        	setCADTool("rotation");
         } else if (s.compareTo("STRETCHING") == 0) {
-            //Stretching.png
-            ///vista.getMapControl().setCadTool("stretching");
+        	setCADTool("stretching");
         } else if (s.compareTo("SCALE") == 0) {
-            //Scale.png
-            ///vista.getMapControl().setCadTool("scale");
+        	setCADTool("scale");
         } else if (s.compareTo("EXTEND") == 0) {
-            //Extend.png
+        	setCADTool("extend");
         } else if (s.compareTo("TRIM") == 0) {
-            //Trim.png
+        	setCADTool("trim");
         } else if (s.compareTo("UNIT") == 0) {
-            //Unit.png
+        	setCADTool("unit");
         } else if (s.compareTo("EXPLOIT") == 0) {
-            //Exploit.png
-            ///vista.getMapControl().setCadTool("exploit");
+        	setCADTool("exploit");
         } else if (s.compareTo("CHAFLAN") == 0) {
-            //Chaflan.png
+        	setCADTool("chaflan");
         } else if (s.compareTo("JOIN") == 0) {
-            //Join.png
+        	setCADTool("join");
         } else if (s.compareTo("SELECT") == 0) {
-            ///vista.getMapControl().setCadTool("selection");
+        	setCADTool("select");
         } else if (s.compareTo("POINT") == 0) {
         	setCADTool("point");
         } else if (s.compareTo("LINE") == 0) {
         	setCADTool("line");
         } else if (s.compareTo("POLYLINE") == 0) {
-            ///vista.getMapControl().setCadTool("polyline");
+        	setCADTool("polyline");
         } else if (s.compareTo("CIRCLE") == 0) {
            setCADTool("circle");
         } else if (s.compareTo("ARC") == 0) {
-            ///vista.getMapControl().setCadTool("arc");
+        	setCADTool("arc");
         } else if (s.compareTo("ELLIPSE") == 0) {
-            ///vista.getMapControl().setCadTool("ellipse");
+        	setCADTool("ellipse");
         } else if (s.compareTo("RECTANGLE") == 0) {
-            ///vista.getMapControl().setCadTool("rectangle");
+        	setCADTool("rectangle");
         } else if (s.compareTo("POLYGON") == 0) {
-            ///vista.getMapControl().setCadTool("polygon");
+        	setCADTool("poligon");
         }
 
         //ViewControls.CANCELED=false;

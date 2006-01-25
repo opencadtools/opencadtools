@@ -24,10 +24,10 @@ public final class PointCADToolContext
         ExecuteMap.Initial.Entry(this);
     }
 
-    public void addpoint(FBitSet sel, double pointX, double pointY)
+    public void addPoint(FBitSet sel, double pointX, double pointY)
     {
-        _transition = "addpoint";
-        getState().addpoint(this, sel, pointX, pointY);
+        _transition = "addPoint";
+        getState().addPoint(this, sel, pointX, pointY);
         _transition = "";
         return;
     }
@@ -74,7 +74,7 @@ public final class PointCADToolContext
         protected void Entry(PointCADToolContext context) {}
         protected void Exit(PointCADToolContext context) {}
 
-        protected void addpoint(PointCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addPoint(PointCADToolContext context, FBitSet sel, double pointX, double pointY)
         {
             Default(context);
         }
@@ -158,7 +158,7 @@ public final class PointCADToolContext
                 return;
             }
 
-            protected void addpoint(PointCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PointCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
                 PointCADTool ctxt = context.getOwner();
 
@@ -168,8 +168,7 @@ public final class PointCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar punto");
-                    ctxt.addpoint(sel, pointX, pointY);
-                    ctxt.refresh();
+                    ctxt.addPoint(sel, pointX, pointY);
                 }
                 finally
                 {
@@ -196,7 +195,7 @@ public final class PointCADToolContext
                 super (name, id);
             }
 
-            protected void addpoint(PointCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PointCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
                 PointCADTool ctxt = context.getOwner();
 
@@ -206,8 +205,7 @@ public final class PointCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar punto");
-                    ctxt.addpoint(sel, pointX, pointY);
-                    ctxt.refresh();
+                    ctxt.addPoint(sel, pointX, pointY);
                 }
                 finally
                 {

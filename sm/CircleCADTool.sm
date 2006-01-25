@@ -25,45 +25,42 @@ Initial
 		}
 
 	{
-	addpoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint(sel:FBitSet,pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar radio o segundo punto");
-				addpoint(sel,pointX,pointY);
+				addPoint(sel,pointX,pointY);
 				}
-	addoption(sel:FBitSet,s:String)
+	addOption(sel:FBitSet,s:String)
 			Seventh{
 				setQuestion("Insertar primer punto");
-				addoption(sel,s);
+				addOption(sel,s);
 			}
 
 	}
 First{
-	addpoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint(sel:FBitSet,pointX:double,pointY:double)
 		Sixth {
-			addpoint(sel,pointX,pointY);
-			refresh();
+			addPoint(sel,pointX,pointY);
 			end();
 			}
-	addvalue(sel:FBitSet,d:double)
+	addValue(sel:FBitSet,d:double)
 		Fiveth {
-			addvalue(sel,d);
-			refresh();
+			addValue(sel,d);
 			end();
 			}
 
 }
 Second{
-	addpoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint(sel:FBitSet,pointX:double,pointY:double)
 		Third {
 			setQuestion("Insertar tercer punto");
-			addpoint(sel,pointX,pointY);
+			addPoint(sel,pointX,pointY);
 			}
 }
 Third{
-	addpoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint(sel:FBitSet,pointX:double,pointY:double)
 		Fourth {
-			addpoint(sel,pointX,pointY);
-			refresh();
+			addPoint(sel,pointX,pointY);
 			end();
 			}
 }
@@ -75,10 +72,10 @@ Fiveth{
 Sixth{
 }
 Seventh{
-	addpoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint(sel:FBitSet,pointX:double,pointY:double)
 		Second {
 			setQuestion("Insertar segundo punto");
-			addpoint(sel,pointX,pointY);
+			addPoint(sel,pointX,pointY);
 			}
 }
 Default{

@@ -6,11 +6,10 @@
 %}
 
 %start ExecuteMap::Initial
-%class PointCADTool
+%class RectangleCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
-%import com.iver.cit.gvsig.gui.cad.tools.PointCADTool
+%import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool
 %import com.iver.cit.gvsig.fmap.layers.FBitSet
-
 
 %map ExecuteMap
 %%
@@ -20,25 +19,43 @@ Initial
 
 	Entry {
 		init();
-		setQuestion("Defina el punto");
+		setQuestion("Insertar primer punto de esquina");
 		}
-	Exit {
+	Exit{
 		}
 
 	{
 
 		addPoint(sel:FBitSet,pointX:double,pointY:double)
 			First {
-				setQuestion("Insertar punto");
+				setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
 				addPoint(sel,pointX,pointY);
 				}
+
 	}
 First{
 	addPoint(sel:FBitSet,pointX:double,pointY:double)
-		First {
-			setQuestion("Insertar punto");
+		Third {
 			addPoint(sel,pointX,pointY);
+			end();
 			}
+	addOption(sel:FBitSet,s:String)
+		Second {
+			setQuestion("Insertar esquina opuesta");
+			addOption(sel,s);
+			}
+
+}
+Second{
+	addPoint(sel:FBitSet,pointX:double,pointY:double)
+		Fourth {
+			addPoint(sel,pointX,pointY);
+			end();
+			}
+}
+Third{
+}
+Fourth{
 }
 Default
 {

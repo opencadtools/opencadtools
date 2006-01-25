@@ -42,15 +42,34 @@ package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import com.hardcode.gdbms.engine.values.Value;
+import com.iver.cit.gvsig.fmap.ViewPort;
+import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
 
 public abstract class DefaultCADTool implements CADTool {
 	private CADToolAdapter cadToolAdapter;
+	private VectorialEditableAdapter vea;
+	private IGeometry geometry=null;
+	private String question;
+	public void draw(){
+		if (geometry!=null){
+			 BufferedImage img = getCadToolAdapter().getMapControl().getImage();
+	         Graphics2D gImag=(Graphics2D)img.getGraphics();
+	         ViewPort vp=getCadToolAdapter().getMapControl().getViewPort();
+	    	 geometry.draw(gImag,vp, CADTool.drawingSymbol);
+		}
+	}
 	public void setCadToolAdapter(CADToolAdapter cta){
 		cadToolAdapter = cta;
 	}
@@ -69,4 +88,49 @@ public abstract class DefaultCADTool implements CADTool {
 			CADTool.drawingSymbol);
 
 	}
+	public IGeometry getGeometry() {
+		return this.geometry.cloneGeometry();
+	}
+	public void addGeometry(IGeometry geometry) {
+		this.geometry = geometry;
+		DefaultFeature df = new DefaultFeature(getGeometry(), null);
+        try {
+			vea.addRow(df);
+		} catch (DriverIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        draw();
+	}
+	public void addGeometry(IGeometry geometry,Value[] values){
+
+	}
+	public void setVectorialAdapter(VectorialEditableAdapter vea) {
+		this.vea=vea;
+	}
+	 /**
+     * Devuelve la cadena que corresponde al estado en el que nos encontramos.
+     *
+     * @return Cadena para mostrar por consola.
+     */
+    public String getQuestion() {
+       return question;
+    }
+    /**
+     * Actualiza la cadena que corresponde al estado actual.
+     *
+     * @param s Cadena que aparecerá en consola.
+     */
+    public void setQuestion(String s) {
+        question = s;
+    }
+    /**
+     * DOCUMENT ME!
+     */
+    public void refresh() {
+    	getCadToolAdapter().getMapControl().drawMap(false);
+    }
 }

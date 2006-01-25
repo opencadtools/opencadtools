@@ -5,17 +5,17 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
-public final class CircleCADToolContext
+public final class PolylineCADToolContext
     extends statemap.FSMContext
 {
 //---------------------------------------------------------------
 // Member methods.
 //
 
-    public CircleCADToolContext(CircleCADTool owner)
+    public PolylineCADToolContext(PolylineCADTool owner)
     {
         super();
 
@@ -40,15 +40,7 @@ public final class CircleCADToolContext
         return;
     }
 
-    public void addValue(FBitSet sel, double d)
-    {
-        _transition = "addValue";
-        getState().addValue(this, sel, d);
-        _transition = "";
-        return;
-    }
-
-    public CircleCADToolState getState()
+    public PolylineCADToolState getState()
         throws statemap.StateUndefinedException
     {
         if (_state == null)
@@ -57,10 +49,10 @@ public final class CircleCADToolContext
                 new statemap.StateUndefinedException());
         }
 
-        return ((CircleCADToolState) _state);
+        return ((PolylineCADToolState) _state);
     }
 
-    protected CircleCADTool getOwner()
+    protected PolylineCADTool getOwner()
     {
         return (_owner);
     }
@@ -69,43 +61,38 @@ public final class CircleCADToolContext
 // Member data.
 //
 
-    transient private CircleCADTool _owner;
+    transient private PolylineCADTool _owner;
 
 //---------------------------------------------------------------
 // Inner classes.
 //
 
-    public static abstract class CircleCADToolState
+    public static abstract class PolylineCADToolState
         extends statemap.State
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected CircleCADToolState(String name, int id)
+        protected PolylineCADToolState(String name, int id)
         {
             super (name, id);
         }
 
-        protected void Entry(CircleCADToolContext context) {}
-        protected void Exit(CircleCADToolContext context) {}
+        protected void Entry(PolylineCADToolContext context) {}
+        protected void Exit(PolylineCADToolContext context) {}
 
-        protected void addOption(CircleCADToolContext context, FBitSet sel, String s)
+        protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
         {
             Default(context);
         }
 
-        protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void addValue(CircleCADToolContext context, FBitSet sel, double d)
-        {
-            Default(context);
-        }
-
-        protected void Default(CircleCADToolContext context)
+        protected void Default(PolylineCADToolContext context)
         {
             throw (
                 new statemap.TransitionUndefinedException(
@@ -138,9 +125,6 @@ public final class CircleCADToolContext
         /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
         /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
         /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fiveth Fiveth;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Sixth Sixth;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Seventh Seventh;
         private static ExecuteMap_Default Default;
 
         static
@@ -150,16 +134,13 @@ public final class CircleCADToolContext
             Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
             Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
             Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
-            Fiveth = new ExecuteMap_Default.ExecuteMap_Fiveth("ExecuteMap.Fiveth", 5);
-            Sixth = new ExecuteMap_Default.ExecuteMap_Sixth("ExecuteMap.Sixth", 6);
-            Seventh = new ExecuteMap_Default.ExecuteMap_Seventh("ExecuteMap.Seventh", 7);
             Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
         }
 
     }
 
     protected static class ExecuteMap_Default
-        extends CircleCADToolState
+        extends PolylineCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -187,45 +168,33 @@ public final class CircleCADToolContext
                 super (name, id);
             }
 
-            protected void Entry(CircleCADToolContext context)
+            protected void Entry(PolylineCADToolContext context)
             {
-                CircleCADTool ctxt = context.getOwner();
+                PolylineCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar punto central o [3P]:");
+                ctxt.setQuestion("Insertar primer punto");
                 return;
             }
 
-            protected void addOption(CircleCADToolContext context, FBitSet sel, String s)
+            protected void Exit(PolylineCADToolContext context)
             {
-                CircleCADTool ctxt = context.getOwner();
+                PolylineCADTool ctxt = context.getOwner();
+
+                ctxt.end();
+                return;
+            }
+
+            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            {
+                PolylineCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar primer punto");
-                    ctxt.addOption(sel, s);
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.Seventh);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
-            {
-                CircleCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Insertar radio o segundo punto");
+                    ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
                     ctxt.addPoint(sel, pointX, pointY);
                 }
                 finally
@@ -253,42 +222,64 @@ public final class CircleCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
             {
-                CircleCADTool ctxt = context.getOwner();
+                PolylineCADTool ctxt = context.getOwner();
 
+                if (s == "A" ||  s == "a")
+                {
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.addPoint(sel, pointX, pointY);
-                    ctxt.end();
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Insertar punto siguiente, L?nea[N] o Cerrar[C]");
+                        ctxt.addOption(sel, s);
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.Second);
+                        (context.getState()).Entry(context);
+                    }
                 }
-                finally
+                else if (s == "C" ||  s == "c")
                 {
-                    context.setState(ExecuteMap.Sixth);
-                    (context.getState()).Entry(context);
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.addOption(sel, s);
+                        ctxt.end();
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.Third);
+                        (context.getState()).Entry(context);
+                    }
+                }                else
+                {
+                    super.addOption(context, sel, s);
                 }
+
                 return;
             }
 
-            protected void addValue(CircleCADToolContext context, FBitSet sel, double d)
+            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                CircleCADTool ctxt = context.getOwner();
+                PolylineCADTool ctxt = context.getOwner();
 
+                PolylineCADToolState endState = context.getState();
 
-                (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.addValue(sel, d);
-                    ctxt.end();
+                    ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+                    ctxt.addPoint(sel, pointX, pointY);
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fiveth);
-                    (context.getState()).Entry(context);
+                    context.setState(endState);
                 }
                 return;
             }
@@ -310,22 +301,64 @@ public final class CircleCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
             {
-                CircleCADTool ctxt = context.getOwner();
+                PolylineCADTool ctxt = context.getOwner();
 
+                if (s == "N" ||  s == "n")
+                {
 
-                (context.getState()).Exit(context);
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+                        ctxt.addOption(sel, s);
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.First);
+                        (context.getState()).Entry(context);
+                    }
+                }
+                else if (s == "C" ||  s == "c")
+                {
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.addOption(sel, s);
+                        ctxt.end();
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.Third);
+                        (context.getState()).Entry(context);
+                    }
+                }                else
+                {
+                    super.addOption(context, sel, s);
+                }
+
+                return;
+            }
+
+            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            {
+                PolylineCADTool ctxt = context.getOwner();
+
+                PolylineCADToolState endState = context.getState();
+
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar tercer punto");
+                    ctxt.setQuestion("Insertar punto siguiente, L?nea[N] o Cerrar[C]");
                     ctxt.addPoint(sel, pointX, pointY);
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Third);
-                    (context.getState()).Entry(context);
+                    context.setState(endState);
                 }
                 return;
             }
@@ -347,26 +380,6 @@ public final class CircleCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
-            {
-                CircleCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.addPoint(sel, pointX, pointY);
-                    ctxt.end();
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.Fourth);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
         //-------------------------------------------------------
         // Member data.
         //
@@ -382,77 +395,6 @@ public final class CircleCADToolContext
             private ExecuteMap_Fourth(String name, int id)
             {
                 super (name, id);
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Fiveth
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Fiveth(String name, int id)
-            {
-                super (name, id);
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Sixth
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Sixth(String name, int id)
-            {
-                super (name, id);
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Seventh
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Seventh(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
-            {
-                CircleCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Insertar segundo punto");
-                    ctxt.addPoint(sel, pointX, pointY);
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.Second);
-                    (context.getState()).Entry(context);
-                }
-                return;
             }
 
         //-------------------------------------------------------

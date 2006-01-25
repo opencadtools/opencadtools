@@ -5,23 +5,31 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
-public final class LineCADToolContext
+public final class RectangleCADToolContext
     extends statemap.FSMContext
 {
 //---------------------------------------------------------------
 // Member methods.
 //
 
-    public LineCADToolContext(LineCADTool owner)
+    public RectangleCADToolContext(RectangleCADTool owner)
     {
         super();
 
         _owner = owner;
         setState(ExecuteMap.Initial);
         ExecuteMap.Initial.Entry(this);
+    }
+
+    public void addOption(FBitSet sel, String s)
+    {
+        _transition = "addOption";
+        getState().addOption(this, sel, s);
+        _transition = "";
+        return;
     }
 
     public void addPoint(FBitSet sel, double pointX, double pointY)
@@ -32,15 +40,7 @@ public final class LineCADToolContext
         return;
     }
 
-    public void addValue(FBitSet sel, double d)
-    {
-        _transition = "addValue";
-        getState().addValue(this, sel, d);
-        _transition = "";
-        return;
-    }
-
-    public LineCADToolState getState()
+    public RectangleCADToolState getState()
         throws statemap.StateUndefinedException
     {
         if (_state == null)
@@ -49,10 +49,10 @@ public final class LineCADToolContext
                 new statemap.StateUndefinedException());
         }
 
-        return ((LineCADToolState) _state);
+        return ((RectangleCADToolState) _state);
     }
 
-    protected LineCADTool getOwner()
+    protected RectangleCADTool getOwner()
     {
         return (_owner);
     }
@@ -61,38 +61,38 @@ public final class LineCADToolContext
 // Member data.
 //
 
-    transient private LineCADTool _owner;
+    transient private RectangleCADTool _owner;
 
 //---------------------------------------------------------------
 // Inner classes.
 //
 
-    public static abstract class LineCADToolState
+    public static abstract class RectangleCADToolState
         extends statemap.State
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected LineCADToolState(String name, int id)
+        protected RectangleCADToolState(String name, int id)
         {
             super (name, id);
         }
 
-        protected void Entry(LineCADToolContext context) {}
-        protected void Exit(LineCADToolContext context) {}
+        protected void Entry(RectangleCADToolContext context) {}
+        protected void Exit(RectangleCADToolContext context) {}
 
-        protected void addPoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addOption(RectangleCADToolContext context, FBitSet sel, String s)
         {
             Default(context);
         }
 
-        protected void addValue(LineCADToolContext context, FBitSet sel, double d)
+        protected void addPoint(RectangleCADToolContext context, FBitSet sel, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void Default(LineCADToolContext context)
+        protected void Default(RectangleCADToolContext context)
         {
             throw (
                 new statemap.TransitionUndefinedException(
@@ -123,6 +123,8 @@ public final class LineCADToolContext
         /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
         /* package */ static ExecuteMap_Default.ExecuteMap_First First;
         /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
+        /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
+        /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
         private static ExecuteMap_Default Default;
 
         static
@@ -130,13 +132,15 @@ public final class LineCADToolContext
             Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
             First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
             Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
+            Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
+            Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
             Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
         }
 
     }
 
     protected static class ExecuteMap_Default
-        extends LineCADToolState
+        extends RectangleCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -164,33 +168,25 @@ public final class LineCADToolContext
                 super (name, id);
             }
 
-            protected void Entry(LineCADToolContext context)
+            protected void Entry(RectangleCADToolContext context)
             {
-                LineCADTool ctxt = context.getOwner();
+                RectangleCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar primer punto");
+                ctxt.setQuestion("Insertar primer punto de esquina");
                 return;
             }
 
-            protected void Exit(LineCADToolContext context)
+            protected void addPoint(RectangleCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                LineCADTool ctxt = context.getOwner();
-
-                ctxt.end();
-                return;
-            }
-
-            protected void addPoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
-            {
-                LineCADTool ctxt = context.getOwner();
+                RectangleCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto o angulo");
+                    ctxt.setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
                     ctxt.addPoint(sel, pointX, pointY);
                 }
                 finally
@@ -218,40 +214,41 @@ public final class LineCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addOption(RectangleCADToolContext context, FBitSet sel, String s)
             {
-                LineCADTool ctxt = context.getOwner();
-
-                LineCADToolState endState = context.getState();
-
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.addPoint(sel, pointX, pointY);
-                }
-                finally
-                {
-                    context.setState(endState);
-                }
-                return;
-            }
-
-            protected void addValue(LineCADToolContext context, FBitSet sel, double d)
-            {
-                LineCADTool ctxt = context.getOwner();
+                RectangleCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar longitud o punto");
-                    ctxt.addValue(sel, d);
+                    ctxt.setQuestion("Insertar esquina opuesta");
+                    ctxt.addOption(sel, s);
                 }
                 finally
                 {
                     context.setState(ExecuteMap.Second);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+            protected void addPoint(RectangleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            {
+                RectangleCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Third);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -274,44 +271,58 @@ public final class LineCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(RectangleCADToolContext context, FBitSet sel, double pointX, double pointY)
             {
-                LineCADTool ctxt = context.getOwner();
+                RectangleCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto o angulo");
                     ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.end();
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(ExecuteMap.Fourth);
                     (context.getState()).Entry(context);
                 }
                 return;
             }
 
-            protected void addValue(LineCADToolContext context, FBitSet sel, double d)
+        //-------------------------------------------------------
+        // Member data.
+        //
+        }
+
+        private static final class ExecuteMap_Third
+            extends ExecuteMap_Default
+        {
+        //-------------------------------------------------------
+        // Member methods.
+        //
+
+            private ExecuteMap_Third(String name, int id)
             {
-                LineCADTool ctxt = context.getOwner();
+                super (name, id);
+            }
 
+        //-------------------------------------------------------
+        // Member data.
+        //
+        }
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.addValue(sel, d);
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.First);
-                    (context.getState()).Entry(context);
-                }
-                return;
+        private static final class ExecuteMap_Fourth
+            extends ExecuteMap_Default
+        {
+        //-------------------------------------------------------
+        // Member methods.
+        //
+
+            private ExecuteMap_Fourth(String name, int id)
+            {
+                super (name, id);
             }
 
         //-------------------------------------------------------
