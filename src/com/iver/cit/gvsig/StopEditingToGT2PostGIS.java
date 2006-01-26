@@ -1,28 +1,24 @@
 package com.iver.cit.gvsig;
 
+import java.awt.Component;
 import java.io.File;
-import java.net.URL;
-import java.sql.Types;
 
-import org.geotools.data.FeatureStore;
-import org.geotools.data.FeatureWriter;
-import org.geotools.data.shapefile.ShapefileDataStore;
-import org.geotools.feature.AttributeType;
-import org.geotools.feature.AttributeTypeFactory;
-import org.geotools.feature.FeatureType;
-import org.geotools.feature.FeatureTypeBuilder;
+import javax.swing.JFileChooser;
 
-import com.hardcode.gdbms.engine.values.NullValue;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.core.IFeature;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.VectorialAdapter;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.project.ProjectView;
-import com.iver.cit.gvsig.writers.WriterGT2;
-import com.vividsolutions.jts.geom.LineString;
+import com.iver.cit.gvsig.writers.WriterGT2Shp;
 
 
 /**
@@ -30,7 +26,7 @@ import com.vividsolutions.jts.geom.LineString;
  *
  * @author Vicente Caballero Navarro
  */
-public class StopEditingToGT2Shp implements Extension {
+public class StopEditingToGT2PostGIS implements Extension {
     /**
      * @see com.iver.andami.plugins.Extension#inicializar()
      */
@@ -69,71 +65,12 @@ public class StopEditingToGT2Shp implements Extension {
         return true;
     }
 
-    
-    
-    private Class getClassBySqlTYPE(int type)
-    {
-        switch (type)
-        {
-            case Types.SMALLINT:
-                return Integer.class;
-            case Types.INTEGER:
-            	return Integer.class;
-            case Types.BIGINT:
-            	return Integer.class;
-            case Types.BOOLEAN:
-            	return Boolean.class;
-            case Types.DECIMAL:
-            	return Double.class;
-            case Types.DOUBLE:
-            	return Double.class;
-            case Types.FLOAT:
-            	return Float.class;
-            case Types.CHAR:
-            	return Character.class;
-            case Types.VARCHAR:
-            	return String.class;
-            case Types.LONGVARCHAR:
-            	return String.class;
-        }
-        return NullValue.class;
-    }
-    
     /**
      * DOCUMENT ME!
      */
     public void stopEditing(FLyrVect layer) {
         try {
-            // WriterGT2Shp writer = new WriterGT2Shp(layer);
-        	AttributeType geom = AttributeTypeFactory.newAttributeType("the_geom", LineString.class);
-        	
-        	int numFields = layer.getRecordset().getFieldCount() + 1;
-        	AttributeType[] att = new AttributeType[numFields];
-        	att[0] = geom;
-        	for (int i=1; i < numFields; i++)
-        	{
-        		att[i] = AttributeTypeFactory.newAttributeType(
-        				layer.getRecordset().getFieldName(i-1),
-        				getClassBySqlTYPE(layer.getRecordset().getFieldType(i-1))); 
-        	}
-        	FeatureType featType = FeatureTypeBuilder.newFeatureType(att,"prueba");
-        	
-        	File file = new File("c:/prueba.shp");
-			URL theUrl = file.toURL();
-			ShapefileDataStore dataStore = new ShapefileDataStore(theUrl);
-			dataStore.createSchema(featType);
-			
-			String featureName = dataStore.getTypeNames()[0];
-			FeatureStore featStore = (FeatureStore) dataStore.getFeatureSource(featureName);
-			
-			// Necesitamos crear de verdad los ficheros antes de usarlos para meter las features
-			FeatureWriter featWriter = dataStore.getFeatureWriterAppend(featureName, featStore.getTransaction());
-			featWriter.close();
-			// Aquí ya tenemos un fichero vacío, listo para usar.
-			
-			
-			WriterGT2 writer = new WriterGT2(featStore);
-			
+            WriterGT2Shp writer = new WriterGT2Shp(layer);
             VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
             vea.stopEdition(writer);
             layer.setSource(vea.getOriginalAdapter());
