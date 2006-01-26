@@ -10,6 +10,7 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
@@ -43,12 +44,18 @@ public class StopEditingToShp implements Extension {
         ProjectView model = vista.getModel();
         FMap mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
-            if (s.equals("STOPEDITING")){
-            for (int i = 0; i < layers.getLayersCount(); i++) {
-                if (layers.getLayer(i) instanceof FLyrVect &&
-                        layers.getLayer(i).isEditing()) {
-                    FLyrVect lv = (FLyrVect) layers.getLayer(i);
-                    stopEditing(lv);
+            if (s.equals("STOPEDITING"))
+            {
+            	FLayer[] actives = layers.getActives();
+            	// TODO: Comprobar que solo hay una activa, o al menos
+            	// que solo hay una en edición que esté activa, etc, etc
+            	for (int i = 0; i < actives.length; i++)
+            	{
+            		if (actives[i] instanceof FLyrVect &&
+                        actives[i].isEditing()) 
+            		{
+            			FLyrVect lv = (FLyrVect) actives[i];
+            			stopEditing(lv);
 
                     return;
                 }
@@ -97,30 +104,10 @@ public class StopEditingToShp implements Extension {
      * @see com.iver.andami.plugins.Extension#isVisible()
      */
     public boolean isVisible() {
-        com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
-                                                             .getActiveView();
+        if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+        	return true;
+        else
+        	return false;
 
-        if (f == null) {
-            return false;
-        }
-
-        if (f.getClass() == View.class) {
-            View vista = (View) f;
-            ProjectView model = vista.getModel();
-            FMap mapa = model.getMapContext();
-
-            FLayers capas = mapa.getLayers();
-
-            for (int i = 0; i < capas.getLayersCount(); i++) {
-                if (capas.getLayer(i) instanceof FLyrVect &&
-                        capas.getLayer(i).isEditing() && capas.getLayer(i).isActive()) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        return false;
     }
 }

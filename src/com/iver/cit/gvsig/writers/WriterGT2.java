@@ -24,12 +24,17 @@ import org.geotools.filter.FilterFactory;
 
 import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.hardcode.gdbms.engine.values.NullValue;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPoint;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author fjp
@@ -40,6 +45,13 @@ import com.vividsolutions.jts.geom.LineString;
  *
  */
 public class WriterGT2 implements IWriter {
+
+	FilterFactory filterFactory = FilterFactory.createFilterFactory();
+	FeatureStore featStore;
+	AttributeType[] types;
+	Transaction t;
+	int numReg = 0;
+	private boolean bWriteAll;
 
     public static Class getClassBySqlTYPE(int type)
     {
@@ -69,8 +81,10 @@ public class WriterGT2 implements IWriter {
         return NullValue.class;
     }
 
-	public static FeatureType getFeatureType(FLyrVect layer, Class geometryType, String geomField, String featName) throws DriverException, com.iver.cit.gvsig.fmap.DriverException, FactoryConfigurationError, SchemaException {
-		AttributeType geom = AttributeTypeFactory.newAttributeType(geomField, geometryType);
+	public static FeatureType getFeatureType(FLyrVect layer, String geomField, String featName) throws DriverException, com.iver.cit.gvsig.fmap.DriverException, FactoryConfigurationError, SchemaException {
+		
+		Class geomType = findBestGeometryClass(layer.getShapeType());
+		AttributeType geom = AttributeTypeFactory.newAttributeType(geomField, geomType);
 		
 		int numFields = layer.getRecordset().getFieldCount() + 1;
 		AttributeType[] att = new AttributeType[numFields];
@@ -84,17 +98,37 @@ public class WriterGT2 implements IWriter {
 		FeatureType featType = FeatureTypeBuilder.newFeatureType(att,"prueba");
 		return featType;
 	}
-
 	
-	FilterFactory filterFactory = FilterFactory.createFilterFactory();
-	FeatureStore featStore;
-	AttributeType[] types;
-	Transaction t;
-	int numReg = 0;
+	  public static final Class findBestGeometryClass(int layerType) {
+		    Class best = Geometry.class;
+		    switch (layerType)
+		    {
+		    case FShape.LINE:		    	
+		      best = MultiLineString.class;
+		      break;
+		    case FShape.MULTIPOINT:
+		      best = MultiPoint.class;
+		      break;
+		    case FShape.POINT:
+		      best = Point.class;
+		      break;
+		    case FShape.POLYGON:
+		      best = MultiPolygon.class;
+		      break;
+		    case FShape.MULTI:
+			      best = Geometry.class;
+			      break;		      
+		    default:
+		      throw new RuntimeException("Unknown gvSigShapeType->GeometryClass : " + layerType);
+		    }
+		    return best;
+		  }
 	
-	public WriterGT2(FeatureStore featureStore) throws IOException
+	
+	public WriterGT2(FeatureStore featureStore, boolean writeAllFeatures) throws IOException
 	{
 		this.featStore = featureStore;
+		this.bWriteAll = writeAllFeatures;
 	}
 	
 	/* (non-Javadoc)
@@ -130,7 +164,7 @@ public class WriterGT2 implements IWriter {
 
 		Filter theFilter = filterFactory.createFidFilter(feat.getID()); 
         try {
-        	System.out.println("Escribiendo numReg=" + numReg + " con STATUS=" + row.getStatus());
+        	// System.out.println("Escribiendo numReg=" + numReg + " con STATUS=" + row.getStatus());
         	switch (row.getStatus())
         	{
         		case IRowEdited.STATUS_ADDED:        			
@@ -143,7 +177,13 @@ public class WriterGT2 implements IWriter {
         			featStore.modifyFeatures(types, values, theFilter);	
         			break;
         		case IRowEdited.STATUS_ORIGINAL:
-        			
+        			if (bWriteAll)
+        			{
+            			featGT2 = featStore.getSchema().create(values);
+            			reader = DataUtilities.reader(
+            					new Feature[] {featGT2});
+            			featStore.addFeatures(reader);
+        			}        				
         			break;
         		case IRowEdited.STATUS_DELETED:
             		featStore.removeFeatures(theFilter);        			
@@ -159,7 +199,7 @@ public class WriterGT2 implements IWriter {
 			e.printStackTrace();
 			throw new EditionException(e);
 		}
-				
+			
 		
 			
 

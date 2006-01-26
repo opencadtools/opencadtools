@@ -5,6 +5,7 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
@@ -43,12 +44,12 @@ public class StartEditing implements Extension {
             for (int i = 0; i < layers.getLayersCount(); i++) {
                 if (layers.getLayer(i) instanceof FLyrVect &&
                         layers.getLayer(i).isActive()) {
-                    for (int j = 0; j < i; j++) {
+                    /* for (int j = 0; j < i; j++) {
                         layers.getLayer(j).setVisible(false);
-                    }
+                    } */
 
                     FLyrVect lv = (FLyrVect) layers.getLayer(i);
-                    lv.setVisible(true);
+                    // lv.setVisible(true);
 
                     VectorialEditableAdapter vea = new VectorialEditableAdapter(lv.getSource());
                     try{
@@ -59,10 +60,10 @@ public class StartEditing implements Extension {
                     lv.setSource(vea);
                     CADExtension.getCADToolAdapter().setVectorialAdapter(vea,null);
                     lv.setEditing(true);
-                    if (!(layers.getLayer(0)==(lv))){
+                    /* if (!(layers.getLayer(0)==(lv))){
                     	layers.removeLayer(lv);
                     	layers.addLayer(lv);
-                    }
+                    } */
                     return;
                 }
             }
@@ -88,7 +89,7 @@ public class StartEditing implements Extension {
                }
                PluginServices.getMDIManager().restoreCursor();
              */
-            vista.getMapControl().drawMap(false);
+            // vista.getMapControl().drawMap(false);
         }
     }
 
@@ -96,31 +97,20 @@ public class StartEditing implements Extension {
      * @see com.iver.andami.plugins.Extension#isEnabled()
      */
     public boolean isEnabled() {
-        com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
-                                                             .getActiveView();
+		View f = (View) PluginServices.getMDIManager().getActiveView();
 
-        if (f == null) {
-            return false;
-        }
+		if (f == null) {
+			return false;
+		}
 
-        if (f.getClass() == View.class) {
-            View vista = (View) f;
-            ProjectView model = vista.getModel();
-            FMap mapa = model.getMapContext();
-
-            FLayers capas = mapa.getLayers();
-
-            for (int i = 0; i < capas.getLayersCount(); i++) {
-                if (capas.getLayer(i) instanceof FLyrVect &&
-                        capas.getLayer(i).isEditing()) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return false;
+		FLayer[] selected = f.getModel().getMapContext().getLayers().getActives();
+		if (selected.length == 1 && selected[0] instanceof FLyrVect){
+			if (selected[0].isEditing())
+				return false;
+			else
+				return true;
+		}
+		return false;
     }
 
     /**
