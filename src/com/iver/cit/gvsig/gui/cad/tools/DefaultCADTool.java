@@ -132,9 +132,14 @@ public abstract class DefaultCADTool implements CADTool {
      */
     public void addGeometry(IGeometry geometry) {
         this.geometry = geometry;
-        DefaultFeature df = new DefaultFeature(getGeometry(), null);
 
         try {
+    		// int numFields = vea.getRecordset().getFieldCount();
+    		// Value[] values = new Value[numFields]; 
+        	// TODO: Habilitar esto con más constructores para
+        	// que acepte valores por defecto, valores rellenados, etc
+            DefaultFeature df = new DefaultFeature(getGeometry(), null);
+        	
             vea.addRow(df);
         } catch (DriverIOException e) {
             // TODO Auto-generated catch block
