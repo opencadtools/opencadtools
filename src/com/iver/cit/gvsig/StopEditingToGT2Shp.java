@@ -7,11 +7,14 @@ import java.sql.Types;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.shapefile.ShapefileDataStore;
+import org.geotools.factory.FactoryConfigurationError;
 import org.geotools.feature.AttributeType;
 import org.geotools.feature.AttributeTypeFactory;
 import org.geotools.feature.FeatureType;
 import org.geotools.feature.FeatureTypeBuilder;
+import org.geotools.feature.SchemaException;
 
+import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.hardcode.gdbms.engine.values.NullValue;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
@@ -71,33 +74,6 @@ public class StopEditingToGT2Shp implements Extension {
 
     
     
-    private Class getClassBySqlTYPE(int type)
-    {
-        switch (type)
-        {
-            case Types.SMALLINT:
-                return Integer.class;
-            case Types.INTEGER:
-            	return Integer.class;
-            case Types.BIGINT:
-            	return Integer.class;
-            case Types.BOOLEAN:
-            	return Boolean.class;
-            case Types.DECIMAL:
-            	return Double.class;
-            case Types.DOUBLE:
-            	return Double.class;
-            case Types.FLOAT:
-            	return Float.class;
-            case Types.CHAR:
-            	return Character.class;
-            case Types.VARCHAR:
-            	return String.class;
-            case Types.LONGVARCHAR:
-            	return String.class;
-        }
-        return NullValue.class;
-    }
     
     /**
      * DOCUMENT ME!
@@ -105,18 +81,7 @@ public class StopEditingToGT2Shp implements Extension {
     public void stopEditing(FLyrVect layer) {
         try {
             // WriterGT2Shp writer = new WriterGT2Shp(layer);
-        	AttributeType geom = AttributeTypeFactory.newAttributeType("the_geom", LineString.class);
-        	
-        	int numFields = layer.getRecordset().getFieldCount() + 1;
-        	AttributeType[] att = new AttributeType[numFields];
-        	att[0] = geom;
-        	for (int i=1; i < numFields; i++)
-        	{
-        		att[i] = AttributeTypeFactory.newAttributeType(
-        				layer.getRecordset().getFieldName(i-1),
-        				getClassBySqlTYPE(layer.getRecordset().getFieldType(i-1))); 
-        	}
-        	FeatureType featType = FeatureTypeBuilder.newFeatureType(att,"prueba");
+        	FeatureType featType = WriterGT2.getFeatureType(layer, LineString.class, "the_geom", "prueba");
         	
         	File file = new File("c:/prueba.shp");
 			URL theUrl = file.toURL();
@@ -142,6 +107,7 @@ public class StopEditingToGT2Shp implements Extension {
             e.printStackTrace();
         }
     }
+
 
     /**
      * @see com.iver.andami.plugins.Extension#isVisible()

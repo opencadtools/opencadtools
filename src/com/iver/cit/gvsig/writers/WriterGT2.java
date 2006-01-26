@@ -4,22 +4,32 @@
 package com.iver.cit.gvsig.writers;
 
 import java.io.IOException;
+import java.sql.Types;
 
 import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
+import org.geotools.factory.FactoryConfigurationError;
 import org.geotools.feature.AttributeType;
+import org.geotools.feature.AttributeTypeFactory;
 import org.geotools.feature.Feature;
+import org.geotools.feature.FeatureType;
+import org.geotools.feature.FeatureTypeBuilder;
 import org.geotools.feature.IllegalAttributeException;
+import org.geotools.feature.SchemaException;
 import org.geotools.filter.Filter;
 import org.geotools.filter.FilterFactory;
 
+import com.hardcode.gdbms.engine.data.driver.DriverException;
+import com.hardcode.gdbms.engine.values.NullValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author fjp
@@ -31,6 +41,51 @@ import com.iver.cit.gvsig.fmap.edition.IWriter;
  */
 public class WriterGT2 implements IWriter {
 
+    public static Class getClassBySqlTYPE(int type)
+    {
+        switch (type)
+        {
+            case Types.SMALLINT:
+                return Integer.class;
+            case Types.INTEGER:
+            	return Integer.class;
+            case Types.BIGINT:
+            	return Integer.class;
+            case Types.BOOLEAN:
+            	return Boolean.class;
+            case Types.DECIMAL:
+            	return Double.class;
+            case Types.DOUBLE:
+            	return Double.class;
+            case Types.FLOAT:
+            	return Float.class;
+            case Types.CHAR:
+            	return Character.class;
+            case Types.VARCHAR:
+            	return String.class;
+            case Types.LONGVARCHAR:
+            	return String.class;
+        }
+        return NullValue.class;
+    }
+
+	public static FeatureType getFeatureType(FLyrVect layer, Class geometryType, String geomField, String featName) throws DriverException, com.iver.cit.gvsig.fmap.DriverException, FactoryConfigurationError, SchemaException {
+		AttributeType geom = AttributeTypeFactory.newAttributeType(geomField, geometryType);
+		
+		int numFields = layer.getRecordset().getFieldCount() + 1;
+		AttributeType[] att = new AttributeType[numFields];
+		att[0] = geom;
+		for (int i=1; i < numFields; i++)
+		{
+			att[i] = AttributeTypeFactory.newAttributeType(
+					layer.getRecordset().getFieldName(i-1),
+					getClassBySqlTYPE(layer.getRecordset().getFieldType(i-1))); 
+		}
+		FeatureType featType = FeatureTypeBuilder.newFeatureType(att,"prueba");
+		return featType;
+	}
+
+	
 	FilterFactory filterFactory = FilterFactory.createFilterFactory();
 	FeatureStore featStore;
 	AttributeType[] types;
