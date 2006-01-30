@@ -29,7 +29,6 @@ import com.iver.cit.gvsig.gui.View;
  */
 public class CADToolAdapter extends Behavior {
 	private Stack cadToolStack = new Stack();
-	private FBitSet selection;
 
 	//Para pasarle las coordenadas cuando se produce un evento textEntered
 	private int lastX;
@@ -61,7 +60,7 @@ public class CADToolAdapter extends Behavior {
 				p = getMapControl().getViewPort().toMapPoint(adjustedPoint);
 			}
 			((CADTool) cadToolStack.peek()).drawOperation(g,
-				selection, p.getX(), p.getY());
+				p.getX(), p.getY());
 		}
 	}
 
@@ -96,7 +95,7 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				p = vp.toMapPoint(adjustedPoint);
 			}
-			transition(vea, selection,
+			transition(vea,
 				new double[] { p.getX(), p.getY() });
 		}
 	}
@@ -315,16 +314,16 @@ public class CADToolAdapter extends Behavior {
 								Double.parseDouble(numbers[0]),
 								Double.parseDouble(numbers[1])
 							};
-						transition( vea, selection,
+						transition( vea,
 							values);
 					} else if (numbers.length == 1) {
 						//valor
 						values = new double[] { Double.parseDouble(numbers[0]) };
-						transition( vea, selection,
+						transition( vea,
 							values[0]);
 					}
 				} catch (NumberFormatException e) {
-					transition( vea, selection,
+					transition( vea,
 						text);
 				}
 			//}
@@ -337,7 +336,7 @@ public class CADToolAdapter extends Behavior {
 	 * @param text DOCUMENT ME!
 	 */
 	public void transition(String text) {
-		transition( vea, selection, text);
+		transition( vea, text);
 		configureMenu();
 	}
 
@@ -368,7 +367,7 @@ public class CADToolAdapter extends Behavior {
 	 * @param values DOCUMENT ME!
 	 */
 	private void transition( VectorialEditableAdapter source,
-		FBitSet sel, double[] values) {
+		double[] values) {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()){
 		    CADTool ct = (CADTool) cadToolStack.peek();
@@ -382,8 +381,7 @@ public class CADToolAdapter extends Behavior {
 		    if (!esta){
 		        askQuestion();
 		    }else{
-				ct.transition(sel,
-						values[0],values[1]);
+				ct.transition(values[0],values[1]);
 				//Si es la transición que finaliza una geometria hay que redibujar la vista.
 
 				askQuestion();
@@ -422,24 +420,22 @@ public class CADToolAdapter extends Behavior {
 	 * @param values DOCUMENT ME!
 	 */
 	private void transition( VectorialEditableAdapter source,
-		FBitSet sel, double value) {
+		double value) {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()){
 		    CADTool ct = (CADTool) cadToolStack.peek();
-		    ct.transition(sel,
-					value);
+		    ct.transition(value);
 			askQuestion();
 		    }
 
 		PluginServices.getMainFrame().enableControls();
 	}
-	private void transition( VectorialEditableAdapter source,
-			FBitSet sel, String option) {
+	private void transition(VectorialEditableAdapter source,
+			String option) {
 			questionAsked = true;
 			if (!cadToolStack.isEmpty()){
 			    CADTool ct = (CADTool) cadToolStack.peek();
-			    ct.transition(sel,
-						option);
+			    ct.transition(option);
 				askQuestion();
 			    }
 			PluginServices.getMainFrame().enableControls();
@@ -582,9 +578,8 @@ public class CADToolAdapter extends Behavior {
 	 * @param selection DOCUMENT ME!
 	 */
 	public void setVectorialAdapter(
-		VectorialEditableAdapter vea, FBitSet selection) {
+		VectorialEditableAdapter vea) {
 		this.vea = vea;
-		this.selection = selection;
 	}
 
 	/**
@@ -611,7 +606,7 @@ public class CADToolAdapter extends Behavior {
 	 */
 	private void delete() {
 		vea.startComplexRow();
-
+		FBitSet selection=getVectorialAdapter().getSelection();
 		try {
 			for (int i = selection.nextSetBit(0); i >= 0;
 					i = selection.nextSetBit(i + 1)) {
@@ -656,7 +651,7 @@ public class CADToolAdapter extends Behavior {
 			if (getMapControl().getCurrentMapTool() instanceof CADToolAdapter){
 				cadToolStack.clear();
 				/***pushCadTool(new SelectionCadTool());***/
-				selection.clear();
+				getVectorialAdapter().getSelection().clear();
 				getMapControl().drawMap(false);
 				/***PluginServices.getMainFrame().setSelectedTool("selection");***/
 				askQuestion();
