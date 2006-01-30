@@ -6,7 +6,6 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
 public final class RectangleCADToolContext
     extends statemap.FSMContext
@@ -24,18 +23,18 @@ public final class RectangleCADToolContext
         ExecuteMap.Initial.Entry(this);
     }
 
-    public void addOption(FBitSet sel, String s)
+    public void addOption(String s)
     {
         _transition = "addOption";
-        getState().addOption(this, sel, s);
+        getState().addOption(this, s);
         _transition = "";
         return;
     }
 
-    public void addPoint(FBitSet sel, double pointX, double pointY)
+    public void addPoint(double pointX, double pointY)
     {
         _transition = "addPoint";
-        getState().addPoint(this, sel, pointX, pointY);
+        getState().addPoint(this, pointX, pointY);
         _transition = "";
         return;
     }
@@ -82,12 +81,12 @@ public final class RectangleCADToolContext
         protected void Entry(RectangleCADToolContext context) {}
         protected void Exit(RectangleCADToolContext context) {}
 
-        protected void addOption(RectangleCADToolContext context, FBitSet sel, String s)
+        protected void addOption(RectangleCADToolContext context, String s)
         {
             Default(context);
         }
 
-        protected void addPoint(RectangleCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addPoint(RectangleCADToolContext context, double pointX, double pointY)
         {
             Default(context);
         }
@@ -177,7 +176,7 @@ public final class RectangleCADToolContext
                 return;
             }
 
-            protected void addPoint(RectangleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(RectangleCADToolContext context, double pointX, double pointY)
             {
                 RectangleCADTool ctxt = context.getOwner();
 
@@ -187,7 +186,7 @@ public final class RectangleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -214,7 +213,7 @@ public final class RectangleCADToolContext
                 super (name, id);
             }
 
-            protected void addOption(RectangleCADToolContext context, FBitSet sel, String s)
+            protected void addOption(RectangleCADToolContext context, String s)
             {
                 RectangleCADTool ctxt = context.getOwner();
 
@@ -224,7 +223,7 @@ public final class RectangleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar esquina opuesta");
-                    ctxt.addOption(sel, s);
+                    ctxt.addOption(s);
                 }
                 finally
                 {
@@ -234,7 +233,7 @@ public final class RectangleCADToolContext
                 return;
             }
 
-            protected void addPoint(RectangleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(RectangleCADToolContext context, double pointX, double pointY)
             {
                 RectangleCADTool ctxt = context.getOwner();
 
@@ -243,7 +242,7 @@ public final class RectangleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                     ctxt.end();
                 }
                 finally
@@ -271,7 +270,7 @@ public final class RectangleCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(RectangleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(RectangleCADToolContext context, double pointX, double pointY)
             {
                 RectangleCADTool ctxt = context.getOwner();
 
@@ -280,7 +279,7 @@ public final class RectangleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                     ctxt.end();
                 }
                 finally

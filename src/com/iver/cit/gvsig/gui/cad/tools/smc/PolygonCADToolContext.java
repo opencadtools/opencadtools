@@ -6,7 +6,6 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
 public final class PolygonCADToolContext
     extends statemap.FSMContext
@@ -24,26 +23,26 @@ public final class PolygonCADToolContext
         ExecuteMap.Initial.Entry(this);
     }
 
-    public void addOption(FBitSet sel, String s)
+    public void addOption(String s)
     {
         _transition = "addOption";
-        getState().addOption(this, sel, s);
+        getState().addOption(this, s);
         _transition = "";
         return;
     }
 
-    public void addPoint(FBitSet sel, double pointX, double pointY)
+    public void addPoint(double pointX, double pointY)
     {
         _transition = "addPoint";
-        getState().addPoint(this, sel, pointX, pointY);
+        getState().addPoint(this, pointX, pointY);
         _transition = "";
         return;
     }
 
-    public void addValue(FBitSet sel, double d)
+    public void addValue(double d)
     {
         _transition = "addValue";
-        getState().addValue(this, sel, d);
+        getState().addValue(this, d);
         _transition = "";
         return;
     }
@@ -90,17 +89,17 @@ public final class PolygonCADToolContext
         protected void Entry(PolygonCADToolContext context) {}
         protected void Exit(PolygonCADToolContext context) {}
 
-        protected void addOption(PolygonCADToolContext context, FBitSet sel, String s)
+        protected void addOption(PolygonCADToolContext context, String s)
         {
             Default(context);
         }
 
-        protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void addValue(PolygonCADToolContext context, FBitSet sel, double d)
+        protected void addValue(PolygonCADToolContext context, double d)
         {
             Default(context);
         }
@@ -190,7 +189,7 @@ public final class PolygonCADToolContext
                 return;
             }
 
-            protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -200,7 +199,7 @@ public final class PolygonCADToolContext
                 try
                 {
                     ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -210,7 +209,7 @@ public final class PolygonCADToolContext
                 return;
             }
 
-            protected void addValue(PolygonCADToolContext context, FBitSet sel, double d)
+            protected void addValue(PolygonCADToolContext context, double d)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -220,7 +219,7 @@ public final class PolygonCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar punto central del poligono");
-                    ctxt.addValue(sel, d);
+                    ctxt.addValue(d);
                 }
                 finally
                 {
@@ -247,7 +246,7 @@ public final class PolygonCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -257,7 +256,7 @@ public final class PolygonCADToolContext
                 try
                 {
                     ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]<C>");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -284,7 +283,7 @@ public final class PolygonCADToolContext
                 super (name, id);
             }
 
-            protected void addOption(PolygonCADToolContext context, FBitSet sel, String s)
+            protected void addOption(PolygonCADToolContext context, String s)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -294,7 +293,7 @@ public final class PolygonCADToolContext
                 try
                 {
                     ctxt.setQuestion("Precise r?dio(r)");
-                    ctxt.addOption(sel, s);
+                    ctxt.addOption(s);
                 }
                 finally
                 {
@@ -304,7 +303,7 @@ public final class PolygonCADToolContext
                 return;
             }
 
-            protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -313,7 +312,7 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                     ctxt.end();
                 }
                 finally
@@ -324,7 +323,7 @@ public final class PolygonCADToolContext
                 return;
             }
 
-            protected void addValue(PolygonCADToolContext context, FBitSet sel, double d)
+            protected void addValue(PolygonCADToolContext context, double d)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -333,7 +332,7 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addValue(sel, d);
+                    ctxt.addValue(d);
                     ctxt.end();
                 }
                 finally
@@ -361,7 +360,7 @@ public final class PolygonCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(PolygonCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -370,7 +369,7 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                     ctxt.end();
                 }
                 finally
@@ -381,7 +380,7 @@ public final class PolygonCADToolContext
                 return;
             }
 
-            protected void addValue(PolygonCADToolContext context, FBitSet sel, double d)
+            protected void addValue(PolygonCADToolContext context, double d)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -390,7 +389,7 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addValue(sel, d);
+                    ctxt.addValue(d);
                     ctxt.end();
                 }
                 finally

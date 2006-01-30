@@ -6,7 +6,6 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
 public final class LineCADToolContext
     extends statemap.FSMContext
@@ -24,18 +23,18 @@ public final class LineCADToolContext
         ExecuteMap.Initial.Entry(this);
     }
 
-    public void addPoint(FBitSet sel, double pointX, double pointY)
+    public void addPoint(double pointX, double pointY)
     {
         _transition = "addPoint";
-        getState().addPoint(this, sel, pointX, pointY);
+        getState().addPoint(this, pointX, pointY);
         _transition = "";
         return;
     }
 
-    public void addValue(FBitSet sel, double d)
+    public void addValue(double d)
     {
         _transition = "addValue";
-        getState().addValue(this, sel, d);
+        getState().addValue(this, d);
         _transition = "";
         return;
     }
@@ -82,12 +81,12 @@ public final class LineCADToolContext
         protected void Entry(LineCADToolContext context) {}
         protected void Exit(LineCADToolContext context) {}
 
-        protected void addPoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addPoint(LineCADToolContext context, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void addValue(LineCADToolContext context, FBitSet sel, double d)
+        protected void addValue(LineCADToolContext context, double d)
         {
             Default(context);
         }
@@ -181,7 +180,7 @@ public final class LineCADToolContext
                 return;
             }
 
-            protected void addPoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(LineCADToolContext context, double pointX, double pointY)
             {
                 LineCADTool ctxt = context.getOwner();
 
@@ -191,7 +190,7 @@ public final class LineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -218,7 +217,7 @@ public final class LineCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(LineCADToolContext context, double pointX, double pointY)
             {
                 LineCADTool ctxt = context.getOwner();
 
@@ -228,7 +227,7 @@ public final class LineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -237,7 +236,7 @@ public final class LineCADToolContext
                 return;
             }
 
-            protected void addValue(LineCADToolContext context, FBitSet sel, double d)
+            protected void addValue(LineCADToolContext context, double d)
             {
                 LineCADTool ctxt = context.getOwner();
 
@@ -247,7 +246,7 @@ public final class LineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar longitud o punto");
-                    ctxt.addValue(sel, d);
+                    ctxt.addValue(d);
                 }
                 finally
                 {
@@ -274,7 +273,7 @@ public final class LineCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(LineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(LineCADToolContext context, double pointX, double pointY)
             {
                 LineCADTool ctxt = context.getOwner();
 
@@ -284,7 +283,7 @@ public final class LineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -294,7 +293,7 @@ public final class LineCADToolContext
                 return;
             }
 
-            protected void addValue(LineCADToolContext context, FBitSet sel, double d)
+            protected void addValue(LineCADToolContext context, double d)
             {
                 LineCADTool ctxt = context.getOwner();
 
@@ -304,7 +303,7 @@ public final class LineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.addValue(sel, d);
+                    ctxt.addValue(d);
                 }
                 finally
                 {

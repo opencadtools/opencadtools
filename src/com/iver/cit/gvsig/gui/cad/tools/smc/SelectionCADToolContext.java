@@ -5,16 +5,17 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
-public final class ArcCADToolContext
+public final class SelectionCADToolContext
     extends statemap.FSMContext
 {
 //---------------------------------------------------------------
 // Member methods.
 //
 
-    public ArcCADToolContext(ArcCADTool owner)
+    public SelectionCADToolContext(SelectionCADTool owner)
     {
         super();
 
@@ -31,7 +32,7 @@ public final class ArcCADToolContext
         return;
     }
 
-    public ArcCADToolState getState()
+    public SelectionCADToolState getState()
         throws statemap.StateUndefinedException
     {
         if (_state == null)
@@ -40,10 +41,10 @@ public final class ArcCADToolContext
                 new statemap.StateUndefinedException());
         }
 
-        return ((ArcCADToolState) _state);
+        return ((SelectionCADToolState) _state);
     }
 
-    protected ArcCADTool getOwner()
+    protected SelectionCADTool getOwner()
     {
         return (_owner);
     }
@@ -52,33 +53,33 @@ public final class ArcCADToolContext
 // Member data.
 //
 
-    transient private ArcCADTool _owner;
+    transient private SelectionCADTool _owner;
 
 //---------------------------------------------------------------
 // Inner classes.
 //
 
-    public static abstract class ArcCADToolState
+    public static abstract class SelectionCADToolState
         extends statemap.State
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ArcCADToolState(String name, int id)
+        protected SelectionCADToolState(String name, int id)
         {
             super (name, id);
         }
 
-        protected void Entry(ArcCADToolContext context) {}
-        protected void Exit(ArcCADToolContext context) {}
+        protected void Entry(SelectionCADToolContext context) {}
+        protected void Exit(SelectionCADToolContext context) {}
 
-        protected void addPoint(ArcCADToolContext context, double pointX, double pointY)
+        protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void Default(ArcCADToolContext context)
+        protected void Default(SelectionCADToolContext context)
         {
             throw (
                 new statemap.TransitionUndefinedException(
@@ -110,6 +111,7 @@ public final class ArcCADToolContext
         /* package */ static ExecuteMap_Default.ExecuteMap_First First;
         /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
         /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
+        /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
         private static ExecuteMap_Default Default;
 
         static
@@ -118,13 +120,14 @@ public final class ArcCADToolContext
             First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
             Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
             Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
+            Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
             Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
         }
 
     }
 
     protected static class ExecuteMap_Default
-        extends ArcCADToolState
+        extends SelectionCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -152,25 +155,25 @@ public final class ArcCADToolContext
                 super (name, id);
             }
 
-            protected void Entry(ArcCADToolContext context)
+            protected void Entry(SelectionCADToolContext context)
             {
-                ArcCADTool ctxt = context.getOwner();
+                SelectionCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar primer punto");
+                ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
                 return;
             }
 
-            protected void addPoint(ArcCADToolContext context, double pointX, double pointY)
+            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
             {
-                ArcCADTool ctxt = context.getOwner();
+                SelectionCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto");
+                    ctxt.setQuestion("Precise segundo punto del rect?ngulo de seleccion");
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
@@ -198,16 +201,16 @@ public final class ArcCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(ArcCADToolContext context, double pointX, double pointY)
+            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
             {
-                ArcCADTool ctxt = context.getOwner();
+                SelectionCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar ultimo punto");
+                    ctxt.setQuestion("Precise punto de estiramiento");
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
@@ -235,17 +238,17 @@ public final class ArcCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(ArcCADToolContext context, double pointX, double pointY)
+            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
             {
-                ArcCADTool ctxt = context.getOwner();
+                SelectionCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
+                    ctxt.setQuestion("Precise punto de estiramiento");
                     ctxt.addPoint(pointX, pointY);
-                    ctxt.end();
                 }
                 finally
                 {
@@ -268,6 +271,45 @@ public final class ArcCADToolContext
         //
 
             private ExecuteMap_Third(String name, int id)
+            {
+                super (name, id);
+            }
+
+            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
+            {
+                SelectionCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.setQuestion("Precise punto de estiramiento");
+                    ctxt.addPoint(pointX, pointY);
+                    ctxt.end();
+                    ctxt.refresh();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Fourth);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+        //-------------------------------------------------------
+        // Member data.
+        //
+        }
+
+        private static final class ExecuteMap_Fourth
+            extends ExecuteMap_Default
+        {
+        //-------------------------------------------------------
+        // Member methods.
+        //
+
+            private ExecuteMap_Fourth(String name, int id)
             {
                 super (name, id);
             }

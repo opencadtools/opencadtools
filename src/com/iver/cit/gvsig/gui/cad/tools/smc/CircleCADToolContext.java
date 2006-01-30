@@ -6,7 +6,6 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
 public final class CircleCADToolContext
     extends statemap.FSMContext
@@ -24,26 +23,26 @@ public final class CircleCADToolContext
         ExecuteMap.Initial.Entry(this);
     }
 
-    public void addOption(FBitSet sel, String s)
+    public void addOption(String s)
     {
         _transition = "addOption";
-        getState().addOption(this, sel, s);
+        getState().addOption(this, s);
         _transition = "";
         return;
     }
 
-    public void addPoint(FBitSet sel, double pointX, double pointY)
+    public void addPoint(double pointX, double pointY)
     {
         _transition = "addPoint";
-        getState().addPoint(this, sel, pointX, pointY);
+        getState().addPoint(this, pointX, pointY);
         _transition = "";
         return;
     }
 
-    public void addValue(FBitSet sel, double d)
+    public void addValue(double d)
     {
         _transition = "addValue";
-        getState().addValue(this, sel, d);
+        getState().addValue(this, d);
         _transition = "";
         return;
     }
@@ -90,17 +89,17 @@ public final class CircleCADToolContext
         protected void Entry(CircleCADToolContext context) {}
         protected void Exit(CircleCADToolContext context) {}
 
-        protected void addOption(CircleCADToolContext context, FBitSet sel, String s)
+        protected void addOption(CircleCADToolContext context, String s)
         {
             Default(context);
         }
 
-        protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addPoint(CircleCADToolContext context, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void addValue(CircleCADToolContext context, FBitSet sel, double d)
+        protected void addValue(CircleCADToolContext context, double d)
         {
             Default(context);
         }
@@ -196,7 +195,7 @@ public final class CircleCADToolContext
                 return;
             }
 
-            protected void addOption(CircleCADToolContext context, FBitSet sel, String s)
+            protected void addOption(CircleCADToolContext context, String s)
             {
                 CircleCADTool ctxt = context.getOwner();
 
@@ -206,7 +205,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar primer punto");
-                    ctxt.addOption(sel, s);
+                    ctxt.addOption(s);
                 }
                 finally
                 {
@@ -216,7 +215,7 @@ public final class CircleCADToolContext
                 return;
             }
 
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(CircleCADToolContext context, double pointX, double pointY)
             {
                 CircleCADTool ctxt = context.getOwner();
 
@@ -226,7 +225,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar radio o segundo punto");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -253,7 +252,7 @@ public final class CircleCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(CircleCADToolContext context, double pointX, double pointY)
             {
                 CircleCADTool ctxt = context.getOwner();
 
@@ -262,7 +261,7 @@ public final class CircleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                     ctxt.end();
                 }
                 finally
@@ -273,7 +272,7 @@ public final class CircleCADToolContext
                 return;
             }
 
-            protected void addValue(CircleCADToolContext context, FBitSet sel, double d)
+            protected void addValue(CircleCADToolContext context, double d)
             {
                 CircleCADTool ctxt = context.getOwner();
 
@@ -282,7 +281,7 @@ public final class CircleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addValue(sel, d);
+                    ctxt.addValue(d);
                     ctxt.end();
                 }
                 finally
@@ -310,7 +309,7 @@ public final class CircleCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(CircleCADToolContext context, double pointX, double pointY)
             {
                 CircleCADTool ctxt = context.getOwner();
 
@@ -320,7 +319,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar tercer punto");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -347,7 +346,7 @@ public final class CircleCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(CircleCADToolContext context, double pointX, double pointY)
             {
                 CircleCADTool ctxt = context.getOwner();
 
@@ -356,7 +355,7 @@ public final class CircleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                     ctxt.end();
                 }
                 finally
@@ -435,7 +434,7 @@ public final class CircleCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(CircleCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(CircleCADToolContext context, double pointX, double pointY)
             {
                 CircleCADTool ctxt = context.getOwner();
 
@@ -445,7 +444,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar segundo punto");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {

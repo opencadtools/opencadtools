@@ -40,16 +40,16 @@
  */
 package com.iver.cit.gvsig.gui.cad.tools;
 
-import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
-import com.iver.cit.gvsig.gui.cad.CADTool;
-import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext.ArcCADToolState;
-
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+
+import com.iver.cit.gvsig.fmap.core.IGeometry;
+import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.gui.cad.CADTool;
+import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext;
+import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext.ArcCADToolState;
 
 
 /**
@@ -87,21 +87,21 @@ public class ArcCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
-    public void transition(FBitSet sel, double x, double y) {
-        _fsm.addPoint(sel, x, y);
+    public void transition(double x, double y) {
+        _fsm.addPoint(x, y);
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
      */
-    public void transition(FBitSet sel, double d) {
+    public void transition(double d) {
         //_fsm.addValue(sel,d);
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(FBitSet sel, String s) {
+    public void transition(String s) {
         //_fsm.addOption(sel,s);
     }
 
@@ -113,7 +113,7 @@ public class ArcCADTool extends DefaultCADTool {
      * @param x parámetro x del punto que se pase en esta transición.
      * @param y parámetro y del punto que se pase en esta transición.
      */
-    public void addPoint(FBitSet sel, double x, double y) {
+    public void addPoint(double x, double y) {
         ArcCADToolState actualState = (ArcCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
@@ -141,7 +141,7 @@ public class ArcCADTool extends DefaultCADTool {
      * @param x parámetro x del punto que se pase para dibujar.
      * @param y parámetro x del punto que se pase para dibujar.
      */
-    public void drawOperation(Graphics g, FBitSet selectedGeometries, double x,
+    public void drawOperation(Graphics g, double x,
         double y) {
         ArcCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
@@ -173,13 +173,13 @@ public class ArcCADTool extends DefaultCADTool {
      * @param sel DOCUMENT ME!
      * @param s Diferent option.
      */
-    public void addOption(FBitSet sel, String s) {
+    public void addOption(String s) {
         // TODO Auto-generated method stub
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
-    public void addValue(FBitSet sel, double d) {
+    public void addValue(double d) {
     }
 }

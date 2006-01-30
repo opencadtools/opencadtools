@@ -6,7 +6,6 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
 public final class PolylineCADToolContext
     extends statemap.FSMContext
@@ -24,18 +23,18 @@ public final class PolylineCADToolContext
         ExecuteMap.Initial.Entry(this);
     }
 
-    public void addOption(FBitSet sel, String s)
+    public void addOption(String s)
     {
         _transition = "addOption";
-        getState().addOption(this, sel, s);
+        getState().addOption(this, s);
         _transition = "";
         return;
     }
 
-    public void addPoint(FBitSet sel, double pointX, double pointY)
+    public void addPoint(double pointX, double pointY)
     {
         _transition = "addPoint";
-        getState().addPoint(this, sel, pointX, pointY);
+        getState().addPoint(this, pointX, pointY);
         _transition = "";
         return;
     }
@@ -82,12 +81,12 @@ public final class PolylineCADToolContext
         protected void Entry(PolylineCADToolContext context) {}
         protected void Exit(PolylineCADToolContext context) {}
 
-        protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
+        protected void addOption(PolylineCADToolContext context, String s)
         {
             Default(context);
         }
 
-        protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+        protected void addPoint(PolylineCADToolContext context, double pointX, double pointY)
         {
             Default(context);
         }
@@ -177,7 +176,7 @@ public final class PolylineCADToolContext
                 return;
             }
 
-            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PolylineCADToolContext context, double pointX, double pointY)
             {
                 PolylineCADTool ctxt = context.getOwner();
 
@@ -187,7 +186,7 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -214,7 +213,7 @@ public final class PolylineCADToolContext
                 super (name, id);
             }
 
-            protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
+            protected void addOption(PolylineCADToolContext context, String s)
             {
                 PolylineCADTool ctxt = context.getOwner();
 
@@ -226,7 +225,7 @@ public final class PolylineCADToolContext
                     try
                     {
                         ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-                        ctxt.addOption(sel, s);
+                        ctxt.addOption(s);
                     }
                     finally
                     {
@@ -241,7 +240,7 @@ public final class PolylineCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.addOption(sel, s);
+                        ctxt.addOption(s);
                         ctxt.end();
                     }
                     finally
@@ -251,13 +250,13 @@ public final class PolylineCADToolContext
                     }
                 }                else
                 {
-                    super.addOption(context, sel, s);
+                    super.addOption(context, s);
                 }
 
                 return;
             }
 
-            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PolylineCADToolContext context, double pointX, double pointY)
             {
                 PolylineCADTool ctxt = context.getOwner();
 
@@ -267,7 +266,7 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
@@ -293,7 +292,7 @@ public final class PolylineCADToolContext
                 super (name, id);
             }
 
-            protected void addOption(PolylineCADToolContext context, FBitSet sel, String s)
+            protected void addOption(PolylineCADToolContext context, String s)
             {
                 PolylineCADTool ctxt = context.getOwner();
 
@@ -305,7 +304,7 @@ public final class PolylineCADToolContext
                     try
                     {
                         ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-                        ctxt.addOption(sel, s);
+                        ctxt.addOption(s);
                     }
                     finally
                     {
@@ -320,7 +319,7 @@ public final class PolylineCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.addOption(sel, s);
+                        ctxt.addOption(s);
                         ctxt.end();
                     }
                     finally
@@ -330,13 +329,13 @@ public final class PolylineCADToolContext
                     }
                 }                else
                 {
-                    super.addOption(context, sel, s);
+                    super.addOption(context, s);
                 }
 
                 return;
             }
 
-            protected void addPoint(PolylineCADToolContext context, FBitSet sel, double pointX, double pointY)
+            protected void addPoint(PolylineCADToolContext context, double pointX, double pointY)
             {
                 PolylineCADTool ctxt = context.getOwner();
 
@@ -346,7 +345,7 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-                    ctxt.addPoint(sel, pointX, pointY);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
