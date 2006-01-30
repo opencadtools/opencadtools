@@ -80,7 +80,6 @@ public class UndoCommandExtension implements Extension {
 					if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing()){
 						VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
 						vea.undo();
-						return;
 					}
 				}
 			} catch (DriverIOException e) {

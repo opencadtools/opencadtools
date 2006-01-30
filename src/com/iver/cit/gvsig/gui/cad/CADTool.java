@@ -63,13 +63,14 @@ public interface CADTool {
 
 	public void init();
 	public void end();
-	public void transition(FBitSet sel, double x, double y);
-	public void transition(FBitSet sel,double d);
-	public void transition(FBitSet sel,String s);
+	public void transition(double x, double y);
+	public void transition(double d);
+	public void transition(String s);
 	public void setVectorialAdapter(VectorialEditableAdapter vea);
-	public void addPoint(FBitSet sel,double x,double y);
-	public void addValue(FBitSet sel,double d);
-	public void addOption(FBitSet sel,String s);
+	public VectorialEditableAdapter getVectorialAdapter();
+	public void addPoint(double x,double y);
+	public void addValue(double d);
+	public void addOption(String s);
 	public void setQuestion(String s);
 
 	/**
@@ -89,7 +90,7 @@ public interface CADTool {
 	 * @param x DOCUMENT ME!
 	 * @param y DOCUMENT ME!
 	 */
-	void drawOperation(Graphics g,FBitSet selectedGeometries, double x, double y);
+	void drawOperation(Graphics g,double x, double y);
 
 	/**
 	 * Obtiene la pregunta que saldrá en la consola relativa al estado en el

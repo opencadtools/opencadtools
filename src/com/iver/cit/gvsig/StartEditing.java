@@ -5,6 +5,7 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -58,7 +59,7 @@ public class StartEditing implements Extension {
 						// TODO: handle exception
 					}
                     lv.setSource(vea);
-                    CADExtension.getCADToolAdapter().setVectorialAdapter(vea,null);
+                    //CADExtension.getCADToolAdapter().setVectorialAdapter(vea,new FBitSet());
                     lv.setEditing(true);
                     /* if (!(layers.getLayer(0)==(lv))){
                     	layers.removeLayer(lv);

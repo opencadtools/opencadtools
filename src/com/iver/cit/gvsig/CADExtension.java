@@ -52,6 +52,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -67,6 +68,7 @@ import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.utiles.console.ResponseListener;
 /**
  * Extensión dedicada a controlar las diferentes operaciones sobre el editado
@@ -87,7 +89,8 @@ public class CADExtension implements Extension {
      * @see com.iver.andami.plugins.Extension#inicializar()
      */
     public void inicializar() {
-        LineCADTool line = new LineCADTool();
+        SelectionCADTool selection=new SelectionCADTool();
+    	LineCADTool line = new LineCADTool();
         PointCADTool point = new PointCADTool();
         CircleCADTool circle=new CircleCADTool();
         RectangleCADTool rectangle=new RectangleCADTool();
@@ -95,6 +98,7 @@ public class CADExtension implements Extension {
         EllipseCADTool ellipse=new EllipseCADTool();
         ArcCADTool arc=new ArcCADTool();
         PolygonCADTool polygon=new PolygonCADTool();
+        addCADTool("selection", selection);
         addCADTool("line", line);
         addCADTool("point", point);
         addCADTool("circle",circle);
@@ -130,7 +134,7 @@ public class CADExtension implements Extension {
         FLayers layers=mapControl.getMapContext().getLayers();
 		for (int i=0;i<layers.getLayersCount();i++){
 			if (layers.getLayer(i).isEditing() && layers.getLayer(i) instanceof FLyrVect){
-				adapter.setVectorialAdapter((VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource(),null);
+				adapter.setVectorialAdapter((VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource());
 				adapter.setMapControl(mapControl);
 			}
 		}
@@ -165,7 +169,7 @@ public class CADExtension implements Extension {
         } else if (s.compareTo("JOIN") == 0) {
         	setCADTool("join");
         } else if (s.compareTo("SELECT") == 0) {
-        	setCADTool("select");
+        	setCADTool("selection");
         } else if (s.compareTo("POINT") == 0) {
         	setCADTool("point");
         } else if (s.compareTo("LINE") == 0) {
