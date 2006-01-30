@@ -9,7 +9,6 @@
 %class PolylineCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool
-%import com.iver.cit.gvsig.fmap.layers.FBitSet
 
 %map ExecuteMap
 %%
@@ -25,50 +24,50 @@ Initial
 		}
 
 	{
-		addPoint(sel:FBitSet,pointX:double,pointY:double)
+		addPoint(pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-				addPoint(sel,pointX,pointY);
+				addPoint(pointX,pointY);
 				}
 
 	}
 First{
 
-	addOption(sel:FBitSet,s:String)
+	addOption(s:String)
 		[s.equals("A") ||  s.equals("a")]
 		Second {
 			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-			addOption(sel,s);
+			addOption(s);
 			}
-	addOption(sel:FBitSet,s:String)
+	addOption(s:String)
 		[s.equals("C") ||  s.equals("c")]
 		Third {
-			addOption(sel,s);
+			addOption(s);
 			end();
 			}
-	addPoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint(pointX:double,pointY:double)
 		First {
 			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-			addPoint(sel,pointX,pointY);
+			addPoint(pointX,pointY);
 			}
 
 }
 Second{
-	addPoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint(pointX:double,pointY:double)
 		Second {
 			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-			addPoint(sel,pointX,pointY);
+			addPoint(pointX,pointY);
 			}
-	addOption(sel:FBitSet,s:String)
+	addOption(s:String)
 		[s.equals("N") ||  s.equals("n")]
 		First {
 			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-			addOption(sel,s);
+			addOption(s);
 			}
-	addOption(sel:FBitSet,s:String)
+	addOption(s:String)
 		[s.equals("C") ||  s.equals("c")]
 		Third {
-			addOption(sel,s);
+			addOption(s);
 			end();
 			}
 	}

@@ -9,7 +9,6 @@
 %class LineCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.LineCADTool
-%import com.iver.cit.gvsig.fmap.layers.FBitSet
 
 %map ExecuteMap
 %%
@@ -27,36 +26,36 @@ Initial
 
 	{
 
-		addPoint(sel:FBitSet,pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar segundo punto o angulo");
-				addPoint(sel,pointX,pointY);
+				addPoint( pointX,pointY);
 				}
 
 	}
 First{
-	addPoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double)
 		First {
 			setQuestion("Insertar segundo punto o angulo");
-			addPoint(sel,pointX,pointY);
+			addPoint( pointX,pointY);
 			}
-	addValue(sel:FBitSet,d:double)
+	addValue( d:double)
 		Second {
 			setQuestion("Insertar longitud o punto");
-			addValue(sel,d);
+			addValue( d);
 			}
 
 }
 Second{
-	addPoint(sel:FBitSet,pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double)
 		First {
 			setQuestion("Insertar segundo punto o angulo");
-			addPoint(sel,pointX,pointY);
+			addPoint( pointX,pointY);
 			}
-	addValue(sel:FBitSet,d:double)
+	addValue( d:double)
 		First {
 			setQuestion("Insertar segundo punto o angulo");
-			addValue(sel,d);
+			addValue( d);
 			}
 	}
 Default
