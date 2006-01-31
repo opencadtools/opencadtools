@@ -19,44 +19,46 @@ Initial
 
 	Entry {
 		init();
-		setQuestion("Precise punto del rectángulo de selección");
+		setQuestion("SELECCION" + "\n" +
+		"Precise punto del rectángulo de selección");
 		}
 	Exit{
 		}
 
 	{
 		addPoint(pointX:double,pointY:double)
+			[!ctxt.isSelected(pointX,pointY)]
 			First {
 				setQuestion("Precise segundo punto del rectángulo de seleccion");
+				addPoint(pointX,pointY);
+				}
+		addPoint(pointX:double,pointY:double)
+			[ctxt.isSelected(pointX,pointY)]
+			Second {
+				setQuestion("Precise punto destino");
 				addPoint(pointX,pointY);
 				}
 }
 
 First{
 	addPoint(pointX:double,pointY:double)
-			Second {
-				setQuestion("Precise punto de estiramiento");
-				addPoint(pointX,pointY);
-				}
-}
-Second{
-	addPoint(pointX:double,pointY:double)
-			Third {
+			Initial {
 				setQuestion("Precise punto de estiramiento");
 				addPoint(pointX,pointY);
 				}
 
+
 }
-Third{
+Second{
 	addPoint(pointX:double,pointY:double)
-			Fourth {
-				setQuestion("Precise punto de estiramiento");
+			Third {
+				setQuestion("Precise punto destino");
 				addPoint(pointX,pointY);
 				end();
 				refresh();
 				}
 }
-Fourth{
+Third{
 }
 Default
 {

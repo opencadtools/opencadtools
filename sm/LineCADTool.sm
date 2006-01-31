@@ -18,7 +18,8 @@ Initial
 
 	Entry {
 		init();
-		setQuestion("Insertar primer punto");
+		setQuestion("LINEA" + "\n" +
+		"Insertar primer punto");
 		}
 	Exit{
 		end();

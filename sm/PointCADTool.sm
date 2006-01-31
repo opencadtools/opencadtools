@@ -19,7 +19,8 @@ Initial
 
 	Entry {
 		init();
-		setQuestion("Defina el punto");
+		setQuestion("PUNTO" + "\n" +
+		"Defina el punto");
 		}
 	Exit {
 		}

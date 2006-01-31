@@ -19,7 +19,8 @@ Initial
 
 	Entry {
 		init();
-		setQuestion("Insertar punto central o [3P]:");
+		setQuestion("CIRCULO" + "\n" +
+		"Insertar punto central o [3P]:");
 		}
 	Exit{
 		}
