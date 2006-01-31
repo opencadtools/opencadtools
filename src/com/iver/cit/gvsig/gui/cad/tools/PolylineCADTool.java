@@ -89,6 +89,9 @@ public class PolylineCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
      */
     public void end() {
+    	IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
+        FGeometryCollection fgc = new FGeometryCollection(geoms);
+        addGeometry(fgc);
         _fsm = new PolylineCADToolContext(this);
         firstPoint = null;
     }
@@ -394,29 +397,23 @@ public class PolylineCADTool extends DefaultCADTool {
             if (s.equals("A") || s.equals("a")) {
                 //Arco
             } else if (s.equals("C") || s.equals("c")) {
-                closeGeometry();
+            	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
+                elShape.moveTo(antPoint.getX(), antPoint.getY());
+                elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+                list.add(ShapeFactory.createPolyline2D(elShape));
+            	//closeGeometry();
             }
         } else if (status.equals("ExecuteMap.Second")) {
             if (s.equals("N") || s.equals("n")) {
                 //Línea
             } else if (s.equals("C") || s.equals("c")) {
-                closeGeometry();
+            	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
+                elShape.moveTo(antPoint.getX(), antPoint.getY());
+                elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+                list.add(ShapeFactory.createPolyline2D(elShape));
+                //closeGeometry();
             }
         }
-    }
-
-    /**
-     *
-     */
-    private void closeGeometry() {
-        GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
-        elShape.moveTo(antPoint.getX(), antPoint.getY());
-        elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-        list.add(ShapeFactory.createPolyline2D(elShape));
-
-        IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
-        FGeometryCollection fgc = new FGeometryCollection(geoms);
-        addGeometry(fgc);
     }
 
     /* (non-Javadoc)
