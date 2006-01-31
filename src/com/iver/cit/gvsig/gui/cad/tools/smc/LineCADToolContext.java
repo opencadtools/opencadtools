@@ -168,7 +168,8 @@ public final class LineCADToolContext
                 LineCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar primer punto");
+                ctxt.setQuestion("LINEA" + "\n" +
+		"Insertar primer punto");
                 return;
             }
 

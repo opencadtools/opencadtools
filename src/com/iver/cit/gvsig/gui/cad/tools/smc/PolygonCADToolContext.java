@@ -185,7 +185,8 @@ public final class PolygonCADToolContext
                 PolygonCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar numero de lados<5>");
+                ctxt.setQuestion("POLIGONO" + "\n" +
+		"Insertar numero de lados<5>");
                 return;
             }
 

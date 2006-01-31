@@ -172,7 +172,8 @@ public final class RectangleCADToolContext
                 RectangleCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar primer punto de esquina");
+                ctxt.setQuestion("RECTANGULO" + "\n" +
+		"Insertar primer punto de esquina");
                 return;
             }
 

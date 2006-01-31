@@ -46,6 +46,7 @@ import java.util.HashMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.FocusManager;
+import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 import com.iver.andami.PluginServices;
@@ -89,6 +90,10 @@ public class CADExtension implements Extension {
      * @see com.iver.andami.plugins.Extension#inicializar()
      */
     public void inicializar() {
+
+
+
+
         SelectionCADTool selection=new SelectionCADTool();
     	LineCADTool line = new LineCADTool();
         PointCADTool point = new PointCADTool();
@@ -131,6 +136,11 @@ public class CADExtension implements Extension {
      			}
      		});
         	registerKeyStrokes();
+        	view.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "elimina");
+            view.getActionMap().put("elimina", new MyAction("eliminar"));
+            view.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape");
+            view.getActionMap().put("escape", new MyAction("escape"));
+
         FLayers layers=mapControl.getMapContext().getLayers();
 		for (int i=0;i<layers.getLayersCount();i++){
 			if (layers.getLayer(i).isEditing() && layers.getLayer(i) instanceof FLyrVect){

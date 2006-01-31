@@ -72,7 +72,6 @@ public class SelectionCADTool extends DefaultCADTool {
     private SelectionCADToolContext _fsm;
     private Point2D firstPoint;
     private Point2D lastPoint;
-    private Point2D point;
     private ArrayList selectedHandler = new ArrayList();
     private ArrayList selectedRow = new ArrayList();
     private ArrayList selectedRowIndex = new ArrayList();
@@ -122,6 +121,108 @@ public class SelectionCADTool extends DefaultCADTool {
         //_fsm.addOption(sel,s);
     }
 
+
+    public boolean isSelected(double x, double y){
+    	firstPoint=new Point2D.Double(x,y);
+    	FBitSet selection=getVectorialAdapter().getSelection();
+    	if (selection.cardinality() > 0) {
+            //Se comprueba si se pincha un handler. El más cercano (o los más cercanos si hay empate)
+            selectedRow.clear();
+            selectedRowIndex.clear();
+            selectedHandler.clear();
+
+            double min = Double.MAX_VALUE;
+
+            for (int i = selection.nextSetBit(0); i >= 0;
+                    i = selection.nextSetBit(i + 1)) {
+                Handler[] handlers=null;
+				try {
+					handlers = getVectorialAdapter().getShape(i)
+					                         .getHandlers(IGeometry.SELECTHANDLER);
+				} catch (DriverIOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+                DefaultFeature fea = null;
+
+                for (int j = 0; j < handlers.length; j++) {
+                    Point2D handlerPoint = handlers[j].getPoint();
+                    double distance = firstPoint.distance(handlerPoint);
+                    if ((distance <= min) &&
+                            (distance < getCadToolAdapter()
+                                                .getMapControl()
+                                                .getViewPort()
+                                                .toMapDistance(tolerance))) {
+                        if (distance < min) {
+                            selectedRow.clear();
+                            selectedRowIndex.clear();
+                            selectedHandler.clear();
+                        }
+
+                        min = distance;
+
+                        if (fea == null) {
+                            IGeometry clonedGeometry=null;
+							try {
+								clonedGeometry = getVectorialAdapter()
+								                               .getShape(i)
+								                               .cloneGeometry();
+							} catch (DriverIOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+                            try {
+								fea = (DefaultFeature) getVectorialAdapter()
+								                           .getFeature(i);
+							} catch (DriverException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+                            selectedRow.add(new DefaultFeature(clonedGeometry,fea.getAttributes()));
+                            selectedHandler.add(clonedGeometry
+                                                   .getHandlers(IGeometry.SELECTHANDLER)[j]);
+                            selectedRowIndex.add(new Integer(i));
+                        }
+
+
+                    }
+                }
+            }
+
+        }
+
+        if ((selectedRow.size() == 0) ||
+                (selection.cardinality() == 0)) {
+            // Se comprueba si se pincha en una gemometría
+            PluginServices.getMDIManager().setWaitCursor();
+
+            double tam = getCadToolAdapter().getMapControl()
+                             .getViewPort().toMapDistance(tolerance);
+            Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() -
+                    tam, firstPoint.getY() - tam, tam * 2, tam * 2);
+            int[] indexes = getVectorialAdapter().getRowsIndexes(rect);
+
+            selection.clear();
+
+            for (int i = 0; i < indexes.length; i++) {
+                try {
+					if (getVectorialAdapter().getShape(indexes[i])
+					            .intersects(rect)) {
+					    // .intersects(rect,FLATNESS)) {
+					    selection.set(indexes[i], true);
+					}
+				} catch (DriverIOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+
+            PluginServices.getMDIManager().restoreCursor();
+        }
+        return selection.cardinality()>0;
+    }
+
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
      * editableFeatureSource que ya estará creado.
@@ -136,7 +237,7 @@ public class SelectionCADTool extends DefaultCADTool {
         FBitSet selection=getVectorialAdapter().getSelection();
         try {
             if (status.equals("ExecuteMap.Initial")) {
-                firstPoint = new Point2D.Double(x, y);
+                //firstPoint = new Point2D.Double(x, y);
             } else if (status.equals("ExecuteMap.First")) {
                 //PluginServices.getMDIManager().setWaitCursor();
                 lastPoint = new Point2D.Double(x, y);
@@ -186,83 +287,7 @@ public class SelectionCADTool extends DefaultCADTool {
                 PluginServices.getMDIManager().restoreCursor();
                 //cardinality = selection.cardinality();
             } else if (status.equals("ExecuteMap.Second")) {
-                point = new Point2D.Double(x, y);
-
-                if (selection.cardinality() > 0) {
-                    //Se comprueba si se pincha un handler. El más cercano (o los más cercanos si hay empate)
-                    selectedRow.clear();
-                    selectedRowIndex.clear();
-                    selectedHandler.clear();
-
-                    double min = Double.MAX_VALUE;
-
-                    for (int i = selection.nextSetBit(0); i >= 0;
-                            i = selection.nextSetBit(i + 1)) {
-                        Handler[] handlers = getVectorialAdapter().getShape(i)
-                                                 .getHandlers(IGeometry.SELECTHANDLER);
-
-                        DefaultFeature fea = null;
-
-                        for (int j = 0; j < handlers.length; j++) {
-                            Point2D handlerPoint = handlers[j].getPoint();
-                            double distance = point.distance(handlerPoint);
-                            if ((distance <= min) &&
-                                    (distance < getCadToolAdapter()
-                                                        .getMapControl()
-                                                        .getViewPort()
-                                                        .toMapDistance(tolerance))) {
-                                if (distance < min) {
-                                    selectedRow.clear();
-                                    selectedRowIndex.clear();
-                                    selectedHandler.clear();
-                                }
-
-                                min = distance;
-
-                                if (fea == null) {
-                                    IGeometry clonedGeometry = getVectorialAdapter()
-                                                                   .getShape(i)
-                                                                   .cloneGeometry();
-                                    fea = (DefaultFeature) getVectorialAdapter()
-                                                               .getFeature(i);
-                                    selectedRow.add(new DefaultFeature(clonedGeometry,fea.getAttributes()));
-                                    selectedHandler.add(clonedGeometry
-                                                           .getHandlers(IGeometry.SELECTHANDLER)[j]);
-                                    selectedRowIndex.add(new Integer(i));
-                                }
-
-
-                            }
-                        }
-                    }
-                }
-
-          /*      if ((selectedRow.size() == 0) ||
-                        (selection.cardinality() == 0)) {
-                    // Se comprueba si se pincha en una gemometría
-                    PluginServices.getMDIManager().setWaitCursor();
-
-                    double tam = getCadToolAdapter().getMapControl()
-                                     .getViewPort().toMapDistance(tolerance);
-                    Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() -
-                            tam, firstPoint.getY() - tam, tam * 2, tam * 2);
-                    int[] indexes = getVectorialAdapter().getRowsIndexes(rect);
-
-                    selection.clear();
-
-                    for (int i = 0; i < indexes.length; i++) {
-                        if (getVectorialAdapter().getShape(indexes[i])
-                                    .intersects(rect)) {
-                            // .intersects(rect,FLATNESS)) {
-                            selection.set(indexes[i], true);
-                        }
-                    }
-
-                    PluginServices.getMDIManager().restoreCursor();
-                    cardinality = selection.cardinality();
-                }
-*/            } else if (status.equals("ExecuteMap.Third")) {
-                for (int i = 0; i < selectedRow.size(); i++) {
+            	for (int i = 0; i < selectedRow.size(); i++) {
                     Handler h = (Handler) selectedHandler.get(i);
                     DefaultFeature row = (DefaultFeature) selectedRow.get(i);
                     int index = ((Integer) selectedRowIndex.get(i)).intValue();
@@ -271,16 +296,11 @@ public class SelectionCADTool extends DefaultCADTool {
                     //getVectorialAdapter().modifyRow(index, row);
                     modifyFeature(index,row);
                 }
-
-                //  			ret = ret | selectionStatus.transition("done");
             }
        // } catch (IOException e) {
             // TODO Auto-generated catch block
         //    e.printStackTrace();
         } catch (DriverIOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (DriverException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -318,7 +338,7 @@ public class SelectionCADTool extends DefaultCADTool {
             ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
                 CADTool.selectSymbol);
-        } else if (status.equals("ExecuteMap.Third")) {
+        } else if (status.equals("ExecuteMap.Second")) {
             for (int i = 0; i < selectedRow.size(); i++) {
                 Handler h = (Handler) selectedHandler.get(i);
                 IGeometry geom = ((IGeometry) ((DefaultFeature)selectedRow.get(i)).getGeometry()).cloneGeometry();

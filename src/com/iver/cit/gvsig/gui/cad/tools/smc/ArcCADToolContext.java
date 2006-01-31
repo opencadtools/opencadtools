@@ -157,7 +157,8 @@ public final class ArcCADToolContext
                 ArcCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar primer punto");
+                ctxt.setQuestion("ARCO" + "\n"+
+		"Insertar primer punto");
                 return;
             }
 

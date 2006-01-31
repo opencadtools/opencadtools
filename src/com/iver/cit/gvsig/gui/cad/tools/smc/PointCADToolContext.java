@@ -153,7 +153,8 @@ public final class PointCADToolContext
                 PointCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Defina el punto");
+                ctxt.setQuestion("PUNTO" + "\n" +
+		"Defina el punto");
                 return;
             }
 

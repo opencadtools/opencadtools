@@ -139,7 +139,7 @@ public abstract class DefaultCADTool implements CADTool {
             e.printStackTrace();
         }
 
-        draw(geometry);
+        draw(geometry.cloneGeometry());
     }
     /**
      * DOCUMENT ME!

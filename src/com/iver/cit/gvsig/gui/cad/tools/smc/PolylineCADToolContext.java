@@ -172,7 +172,8 @@ public final class PolylineCADToolContext
                 PolylineCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar primer punto");
+                ctxt.setQuestion("POLILINEA" + "\n" +
+		"Insertar primer punto");
                 return;
             }
 

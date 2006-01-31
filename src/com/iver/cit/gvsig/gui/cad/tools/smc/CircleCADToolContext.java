@@ -191,7 +191,8 @@ public final class CircleCADToolContext
                 CircleCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar punto central o [3P]:");
+                ctxt.setQuestion("CIRCULO" + "\n" +
+		"Insertar punto central o [3P]:");
                 return;
             }
 

@@ -111,7 +111,6 @@ public final class SelectionCADToolContext
         /* package */ static ExecuteMap_Default.ExecuteMap_First First;
         /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
         /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
         private static ExecuteMap_Default Default;
 
         static
@@ -120,7 +119,6 @@ public final class SelectionCADToolContext
             First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
             Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
             Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
-            Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
             Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
         }
 
@@ -160,7 +158,8 @@ public final class SelectionCADToolContext
                 SelectionCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
+                ctxt.setQuestion("SELECCION" + "\n" +
+		"Precise punto del rect?ngulo de selecci?n");
                 return;
             }
 
@@ -168,19 +167,42 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
+                if (!ctxt.isSelected(pointX,pointY))
+                {
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Precise segundo punto del rect?ngulo de seleccion");
-                    ctxt.addPoint(pointX, pointY);
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise segundo punto del rect?ngulo de seleccion");
+                        ctxt.addPoint(pointX, pointY);
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.First);
+                        (context.getState()).Entry(context);
+                    }
                 }
-                finally
+                else if (ctxt.isSelected(pointX,pointY))
                 {
-                    context.setState(ExecuteMap.First);
-                    (context.getState()).Entry(context);
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise punto destino");
+                        ctxt.addPoint(pointX, pointY);
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.Second);
+                        (context.getState()).Entry(context);
+                    }
+                }                else
+                {
+                    super.addPoint(context, pointX, pointY);
                 }
+
                 return;
             }
 
@@ -215,7 +237,7 @@ public final class SelectionCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(ExecuteMap.Initial);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -247,8 +269,10 @@ public final class SelectionCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precise punto de estiramiento");
+                    ctxt.setQuestion("Precise punto destino");
                     ctxt.addPoint(pointX, pointY);
+                    ctxt.end();
+                    ctxt.refresh();
                 }
                 finally
                 {
@@ -271,45 +295,6 @@ public final class SelectionCADToolContext
         //
 
             private ExecuteMap_Third(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
-            {
-                SelectionCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Precise punto de estiramiento");
-                    ctxt.addPoint(pointX, pointY);
-                    ctxt.end();
-                    ctxt.refresh();
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.Fourth);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Fourth
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Fourth(String name, int id)
             {
                 super (name, id);
             }

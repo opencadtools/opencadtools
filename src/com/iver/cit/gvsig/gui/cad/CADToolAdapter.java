@@ -21,6 +21,7 @@ import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 
 /**
  * DOCUMENT ME!
@@ -68,6 +69,7 @@ public class CADToolAdapter extends Behavior {
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
 	public void mouseClicked(MouseEvent e) throws BehaviorException {
+
 	}
 
 	/**
@@ -648,9 +650,11 @@ public class CADToolAdapter extends Behavior {
 		if (actionCommand.equals("eliminar")) {
 			delete();
 		} else if (actionCommand.equals("escape")) {
-			if (getMapControl().getCurrentMapTool() instanceof CADToolAdapter){
+			if (getMapControl().getTool().equals("cadtooladapter")){
+				CADTool ct = (CADTool) cadToolStack.peek();
+				ct.end();
 				cadToolStack.clear();
-				/***pushCadTool(new SelectionCadTool());***/
+				pushCadTool(new SelectionCADTool());
 				getVectorialAdapter().getSelection().clear();
 				getMapControl().drawMap(false);
 				/***PluginServices.getMainFrame().setSelectedTool("selection");***/

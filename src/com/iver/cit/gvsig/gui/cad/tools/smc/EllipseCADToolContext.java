@@ -172,7 +172,8 @@ public final class EllipseCADToolContext
                 EllipseCADTool ctxt = context.getOwner();
 
                 ctxt.init();
-                ctxt.setQuestion("Insertar punto inicial de eje de elipse");
+                ctxt.setQuestion("ELIPSE" + "\n" +
+		"Insertar punto inicial de eje de elipse");
                 return;
             }
 
