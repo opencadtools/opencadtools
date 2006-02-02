@@ -18,9 +18,9 @@
 Initial
 
 	Entry {
-		init();
 		setQuestion("CIRCULO" + "\n" +
 		"Insertar punto central o [3P]:");
+		setDescription(new String[]{"Cancelar","3P"});
 		}
 	Exit{
 		}
@@ -29,15 +29,17 @@ Initial
 	addPoint( pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar radio o segundo punto");
+				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY);
 				}
 	addOption( s:String)
+		[s.equals("3p") || s.equals("3P")]
 			Seventh{
 				setQuestion("Insertar primer punto");
+				setDescription(new String[]{"Cancelar"});
 				addOption( s);
 			}
-
-	}
+}
 First{
 	addPoint( pointX:double,pointY:double)
 		Sixth {
@@ -49,12 +51,12 @@ First{
 			addValue( d);
 			end();
 			}
-
 }
 Second{
 	addPoint( pointX:double,pointY:double)
 		Third {
 			setQuestion("Insertar tercer punto");
+			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 }
@@ -76,10 +78,17 @@ Seventh{
 	addPoint( pointX:double,pointY:double)
 		Second {
 			setQuestion("Insertar segundo punto");
+			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 }
-Default{
 
+Default
+{
+	addOption(s:String)
+		[s.equals("Cancelar")]
+		Initial{
+			end();
+			}
 }
 %%

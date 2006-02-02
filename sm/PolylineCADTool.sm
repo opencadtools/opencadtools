@@ -17,9 +17,9 @@
 Initial
 
 	Entry {
-		init();
 		setQuestion("POLILINEA" + "\n" +
 		"Insertar primer punto");
+		setDescription(new String[]{"Cancelar"});
 		}
 	Exit{
 		}
@@ -28,56 +28,68 @@ Initial
 		addPoint(pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+				setDescription(new String[]{"Arco","Cerrar","Cancelar"});
 				addPoint(pointX,pointY);
 				}
-
 	}
 First{
 
 	addOption(s:String)
-		[s.equals("A") ||  s.equals("a")]
+		[s.equals("A") ||  s.equals("a") || s.equals("Arco")]
 		Second {
 			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
+			setDescription(new String[]{"Linea","Cerrar","Cancelar"});
 			addOption(s);
 			}
 	addOption(s:String)
-		[s.equals("C") ||  s.equals("c")]
+		[s.equals("C") ||  s.equals("c") || s.equals("Cerrar")]
 		Third {
 			addOption(s);
+			closeGeometry();
+			endGeometry();
 			end();
 			}
 	addPoint(pointX:double,pointY:double)
 		First {
 			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+			setDescription(new String[]{"Arco","Cerrar","Cancelar"});
 			addPoint(pointX,pointY);
 			}
-
 }
 Second{
 	addPoint(pointX:double,pointY:double)
 		Second {
 			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
+			setDescription(new String[]{"Linea","Cerrar","Cancelar"});
 			addPoint(pointX,pointY);
 			}
 	addOption(s:String)
-		[s.equals("N") ||  s.equals("n")]
+		[s.equals("N") ||  s.equals("n") || s.equals("Linea")]
 		First {
 			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+			setDescription(new String[]{"Arco","Cerrar","Cancelar"});
 			addOption(s);
 			}
 	addOption(s:String)
-		[s.equals("C") ||  s.equals("c")]
+		[s.equals("C") ||  s.equals("c") || s.equals("Cerrar")]
 		Third {
 			addOption(s);
+			closeGeometry();
+			endGeometry();
 			end();
 			}
-	}
+}
 Third{
 }
 Fourth{
 }
 Default
 {
-
+	addOption(s:String)
+		[s.equals("Cancelar")]
+		Initial{
+			cancel();
+			end();
+			}
 }
 %%

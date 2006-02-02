@@ -17,9 +17,9 @@
 Initial
 
 	Entry {
-		init();
 		setQuestion("RECTANGULO" + "\n" +
 		"Insertar primer punto de esquina");
+		setDescription(new String[]{"Cancelar"});
 		}
 	Exit{
 		}
@@ -29,6 +29,7 @@ Initial
 		addPoint(pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
+				setDescription(new String[]{"Cuadrado","Cancelar"});
 				addPoint(pointX,pointY);
 				}
 
@@ -40,8 +41,10 @@ First{
 			end();
 			}
 	addOption(s:String)
+		[s.equals("c") || s.equals("C") || s.equals("Cuadrado")]
 		Second {
 			setQuestion("Insertar esquina opuesta");
+			setDescription(new String[]{"Cancelar"});
 			addOption(s);
 			}
 
@@ -59,6 +62,10 @@ Fourth{
 }
 Default
 {
-
+	addOption(s:String)
+		[s.equals("Cancelar")]
+		Initial{
+			end();
+			}
 }
 %%

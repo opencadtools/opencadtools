@@ -65,7 +65,7 @@ public class EllipseCADTool extends DefaultCADTool {
      * Crea un nuevo LineCADTool.
      */
     public EllipseCADTool() {
-        _fsm = new EllipseCADToolContext(this);
+
     }
 
     /**
@@ -73,13 +73,7 @@ public class EllipseCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
-        _fsm = new EllipseCADToolContext(this);
+    	 _fsm = new EllipseCADToolContext(this);
     }
 
     /* (non-Javadoc)
@@ -100,7 +94,7 @@ public class EllipseCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        //_fsm.addOption(sel,s);
+        _fsm.addOption(s);
     }
 
     /**
@@ -185,9 +179,10 @@ public class EllipseCADTool extends DefaultCADTool {
         EllipseCADToolState actualState = (EllipseCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Fourth")) {
+        if (status.equals("ExecuteMap.Second")) {
             double distance = d;
             addGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
         }
     }
+
 }

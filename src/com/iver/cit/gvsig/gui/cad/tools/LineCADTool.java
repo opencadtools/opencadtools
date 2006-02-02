@@ -67,7 +67,7 @@ public class LineCADTool extends DefaultCADTool {
      * Crea un nuevo LineCADTool.
      */
     public LineCADTool() {
-        _fsm = new LineCADToolContext(this);
+
     }
 
     /**
@@ -75,12 +75,7 @@ public class LineCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
+    	 _fsm = new LineCADToolContext(this);
     }
 
     /* (non-Javadoc)
@@ -101,7 +96,7 @@ public class LineCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        //_fsm.addOption(sel,s);
+        _fsm.addOption(s);
     }
 
     /**
@@ -202,4 +197,5 @@ public class LineCADTool extends DefaultCADTool {
             firstPoint = (Point2D) lastPoint.clone();
         }
     }
+
 }

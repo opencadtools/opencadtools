@@ -23,6 +23,14 @@ public final class EllipseCADToolContext
         ExecuteMap.Initial.Entry(this);
     }
 
+    public void addOption(String s)
+    {
+        _transition = "addOption";
+        getState().addOption(this, s);
+        _transition = "";
+        return;
+    }
+
     public void addPoint(double pointX, double pointY)
     {
         _transition = "addPoint";
@@ -80,6 +88,11 @@ public final class EllipseCADToolContext
 
         protected void Entry(EllipseCADToolContext context) {}
         protected void Exit(EllipseCADToolContext context) {}
+
+        protected void addOption(EllipseCADToolContext context, String s)
+        {
+            Default(context);
+        }
 
         protected void addPoint(EllipseCADToolContext context, double pointX, double pointY)
         {
@@ -150,6 +163,45 @@ public final class EllipseCADToolContext
             super (name, id);
         }
 
+        protected void addOption(EllipseCADToolContext context, String s)
+        {
+            EllipseCADTool ctxt = context.getOwner();
+
+            if (s.equals("Cancelar"))
+            {
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        ExecuteMap.Initial.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Initial);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
+            }
+            else
+            {
+                super.addOption(context, s);
+            }
+
+            return;
+        }
+
     //-----------------------------------------------------------
     // Inner classse.
     //
@@ -171,9 +223,9 @@ public final class EllipseCADToolContext
             {
                 EllipseCADTool ctxt = context.getOwner();
 
-                ctxt.init();
                 ctxt.setQuestion("ELIPSE" + "\n" +
 		"Insertar punto inicial de eje de elipse");
+                ctxt.setDescription(new String[]{"Cancelar"});
                 return;
             }
 
@@ -187,6 +239,7 @@ public final class EllipseCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar punto final de eje de elipse");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
@@ -224,6 +277,7 @@ public final class EllipseCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar distancia al otro eje");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally

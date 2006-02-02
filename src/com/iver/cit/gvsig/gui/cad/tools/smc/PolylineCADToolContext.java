@@ -150,6 +150,46 @@ public final class PolylineCADToolContext
             super (name, id);
         }
 
+        protected void addOption(PolylineCADToolContext context, String s)
+        {
+            PolylineCADTool ctxt = context.getOwner();
+
+            if (s.equals("Cancelar"))
+            {
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        ExecuteMap.Initial.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.cancel();
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Initial);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
+            }
+            else
+            {
+                super.addOption(context, s);
+            }
+
+            return;
+        }
+
     //-----------------------------------------------------------
     // Inner classse.
     //
@@ -171,9 +211,9 @@ public final class PolylineCADToolContext
             {
                 PolylineCADTool ctxt = context.getOwner();
 
-                ctxt.init();
                 ctxt.setQuestion("POLILINEA" + "\n" +
 		"Insertar primer punto");
+                ctxt.setDescription(new String[]{"Cancelar"});
                 return;
             }
 
@@ -187,6 +227,7 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+                    ctxt.setDescription(new String[]{"Arco", "Cerrar", "Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
@@ -218,7 +259,7 @@ public final class PolylineCADToolContext
             {
                 PolylineCADTool ctxt = context.getOwner();
 
-                if (s.equals("A") ||  s.equals("a"))
+                if (s.equals("A") ||  s.equals("a") || s.equals("Arco"))
                 {
 
                     (context.getState()).Exit(context);
@@ -226,6 +267,7 @@ public final class PolylineCADToolContext
                     try
                     {
                         ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
+                        ctxt.setDescription(new String[]{"Linea", "Cerrar", "Cancelar"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -234,7 +276,7 @@ public final class PolylineCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equals("C") ||  s.equals("c"))
+                else if (s.equals("C") ||  s.equals("c") || s.equals("Cerrar"))
                 {
 
                     (context.getState()).Exit(context);
@@ -242,6 +284,8 @@ public final class PolylineCADToolContext
                     try
                     {
                         ctxt.addOption(s);
+                        ctxt.closeGeometry();
+                        ctxt.endGeometry();
                         ctxt.end();
                     }
                     finally
@@ -267,6 +311,7 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+                    ctxt.setDescription(new String[]{"Arco", "Cerrar", "Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
@@ -297,7 +342,7 @@ public final class PolylineCADToolContext
             {
                 PolylineCADTool ctxt = context.getOwner();
 
-                if (s.equals("N") ||  s.equals("n"))
+                if (s.equals("N") ||  s.equals("n") || s.equals("Linea"))
                 {
 
                     (context.getState()).Exit(context);
@@ -305,6 +350,7 @@ public final class PolylineCADToolContext
                     try
                     {
                         ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
+                        ctxt.setDescription(new String[]{"Arco", "Cerrar", "Cancelar"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -313,7 +359,7 @@ public final class PolylineCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equals("C") ||  s.equals("c"))
+                else if (s.equals("C") ||  s.equals("c") || s.equals("Cerrar"))
                 {
 
                     (context.getState()).Exit(context);
@@ -321,6 +367,8 @@ public final class PolylineCADToolContext
                     try
                     {
                         ctxt.addOption(s);
+                        ctxt.closeGeometry();
+                        ctxt.endGeometry();
                         ctxt.end();
                     }
                     finally
@@ -346,6 +394,7 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
+                    ctxt.setDescription(new String[]{"Linea", "Cerrar", "Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally

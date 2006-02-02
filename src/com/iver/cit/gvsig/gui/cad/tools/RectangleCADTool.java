@@ -66,7 +66,7 @@ public class RectangleCADTool extends DefaultCADTool {
      * Crea un nuevo LineCADTool.
      */
     public RectangleCADTool() {
-        _fsm = new RectangleCADToolContext(this);
+
     }
 
     /**
@@ -74,14 +74,7 @@ public class RectangleCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
-        _fsm = new RectangleCADToolContext(this);
-        firstPoint = null;
+    	_fsm = new RectangleCADToolContext(this);
     }
 
     /* (non-Javadoc)
@@ -233,4 +226,5 @@ public class RectangleCADTool extends DefaultCADTool {
      */
     public void addValue(double d) {
     }
+
 }

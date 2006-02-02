@@ -150,6 +150,45 @@ public final class RectangleCADToolContext
             super (name, id);
         }
 
+        protected void addOption(RectangleCADToolContext context, String s)
+        {
+            RectangleCADTool ctxt = context.getOwner();
+
+            if (s.equals("Cancelar"))
+            {
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        ExecuteMap.Initial.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Initial);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
+            }
+            else
+            {
+                super.addOption(context, s);
+            }
+
+            return;
+        }
+
     //-----------------------------------------------------------
     // Inner classse.
     //
@@ -171,9 +210,9 @@ public final class RectangleCADToolContext
             {
                 RectangleCADTool ctxt = context.getOwner();
 
-                ctxt.init();
                 ctxt.setQuestion("RECTANGULO" + "\n" +
 		"Insertar primer punto de esquina");
+                ctxt.setDescription(new String[]{"Cancelar"});
                 return;
             }
 
@@ -187,6 +226,7 @@ public final class RectangleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
+                    ctxt.setDescription(new String[]{"Cuadrado", "Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
@@ -218,19 +258,28 @@ public final class RectangleCADToolContext
             {
                 RectangleCADTool ctxt = context.getOwner();
 
+                if (s.equals("c") || s.equals("C") || s.equals("Cuadrado"))
+                {
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Insertar esquina opuesta");
-                    ctxt.addOption(s);
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Insertar esquina opuesta");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.addOption(s);
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.Second);
+                        (context.getState()).Entry(context);
+                    }
                 }
-                finally
+                else
                 {
-                    context.setState(ExecuteMap.Second);
-                    (context.getState()).Entry(context);
+                    super.addOption(context, s);
                 }
+
                 return;
             }
 

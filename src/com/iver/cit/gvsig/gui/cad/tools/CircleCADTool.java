@@ -70,7 +70,6 @@ public class CircleCADTool extends DefaultCADTool {
      * Crea un nuevo LineCADTool.
      */
     public CircleCADTool() {
-        _fsm = new CircleCADToolContext(this);
     }
 
     /**
@@ -78,14 +77,7 @@ public class CircleCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
         _fsm = new CircleCADToolContext(this);
-        firstPoint = null;
     }
 
     /* (non-Javadoc)
@@ -99,16 +91,14 @@ public class CircleCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
      */
-    public void transition(double d)
-        throws TransitionUndefinedException {
+    public void transition(double d){
         _fsm.addValue(d);
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s)
-        throws TransitionUndefinedException {
+    public void transition(String s){
         _fsm.addOption(s);
     }
 
@@ -208,8 +198,9 @@ public class CircleCADTool extends DefaultCADTool {
         CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status == "ExecuteMap.Fiveth") {
+        if (status == "ExecuteMap.First") {
             addGeometry(ShapeFactory.createCircle(center, d));
         }
     }
+
 }

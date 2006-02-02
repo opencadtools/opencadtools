@@ -67,7 +67,6 @@ public class ArcCADTool extends DefaultCADTool {
      * Crea un nuevo LineCADTool.
      */
     public ArcCADTool() {
-        _fsm = new ArcCADToolContext(this);
     }
 
     /**
@@ -75,13 +74,7 @@ public class ArcCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
-        _fsm = new ArcCADToolContext(this);
+    	_fsm = new ArcCADToolContext(this);
     }
 
     /* (non-Javadoc)
@@ -102,7 +95,7 @@ public class ArcCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        //_fsm.addOption(sel,s);
+        ((ArcCADToolContext)_fsm).addOption(s);
     }
 
     /**
@@ -182,4 +175,5 @@ public class ArcCADTool extends DefaultCADTool {
      */
     public void addValue(double d) {
     }
+
 }

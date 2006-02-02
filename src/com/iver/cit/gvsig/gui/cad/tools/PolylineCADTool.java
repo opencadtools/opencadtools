@@ -75,7 +75,7 @@ public class PolylineCADTool extends DefaultCADTool {
      * Crea un nuevo PolylineCADTool.
      */
     public PolylineCADTool() {
-        _fsm = new PolylineCADToolContext(this);
+
     }
 
     /**
@@ -83,24 +83,32 @@ public class PolylineCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
+    	_fsm = new PolylineCADToolContext(this);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
+    public void endGeometry() {
     	IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
         FGeometryCollection fgc = new FGeometryCollection(geoms);
         addGeometry(fgc);
         _fsm = new PolylineCADToolContext(this);
-        firstPoint = null;
+        list.clear();
+        antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
+    public void closeGeometry(){
+    	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+				2);
+		elShape.moveTo(antPoint.getX(), antPoint.getY());
+		elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 
+		list.add(ShapeFactory.createPolyline2D(elShape));
+		list.add(ShapeFactory.createPolyline2D(elShape));
+
+    }
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
     public void transition(double x, double y) {
-        _fsm.addPoint(x, y);
+        ((PolylineCADToolContext)_fsm).addPoint(x, y);
     }
 
     /* (non-Javadoc)
@@ -114,7 +122,7 @@ public class PolylineCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        _fsm.addOption(s);
+        ((PolylineCADToolContext)_fsm).addOption(s);
     }
 
     /**
@@ -126,7 +134,7 @@ public class PolylineCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(double x, double y) {
-        PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
+    	PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
         if (status.equals("ExecuteMap.Initial")) {
@@ -269,7 +277,7 @@ public class PolylineCADTool extends DefaultCADTool {
      */
     public void drawOperation(Graphics g, double x,
         double y) {
-        PolylineCADToolState actualState = _fsm.getState();
+        PolylineCADToolState actualState = ((PolylineCADToolContext)_fsm).getState();
         String status = actualState.getName();
 
         if (status.equals("ExecuteMap.First")) {
@@ -420,5 +428,10 @@ public class PolylineCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
     public void addValue(double d) {
+    }
+
+    public void cancel(){
+    	list.clear();
+    	antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
 }

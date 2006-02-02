@@ -48,6 +48,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
@@ -75,7 +76,7 @@ public class SelectionCADTool extends DefaultCADTool {
     private ArrayList selectedHandler = new ArrayList();
     private ArrayList selectedRow = new ArrayList();
     private ArrayList selectedRowIndex = new ArrayList();
-    //private int cardinality;
+    private String tool="selection";
 
     //double FLATNESS=getCadToolAdapter().getMapControl().getViewPort().toMapDistance(2);
 
@@ -83,7 +84,7 @@ public class SelectionCADTool extends DefaultCADTool {
      * Crea un nuevo LineCADTool.
      */
     public SelectionCADTool() {
-        _fsm = new SelectionCADToolContext(this);
+
     }
 
     /**
@@ -91,20 +92,15 @@ public class SelectionCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
-        _fsm = new SelectionCADToolContext(this);
+    	_fsm = new SelectionCADToolContext(this);
+    	setNextTool("selection");
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
     public void transition(double x, double y) {
-        _fsm.addPoint(x, y);
+    	((SelectionCADToolContext)_fsm).addPoint(x, y);
     }
 
     /* (non-Javadoc)
@@ -118,13 +114,13 @@ public class SelectionCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        //_fsm.addOption(sel,s);
+        _fsm.addOption(s);
     }
 
 
     public boolean isSelected(double x, double y){
     	firstPoint=new Point2D.Double(x,y);
-    	FBitSet selection=getVectorialAdapter().getSelection();
+    	FBitSet selection=getCadToolAdapter().getVectorialAdapter().getSelection();
     	if (selection.cardinality() > 0) {
             //Se comprueba si se pincha un handler. El más cercano (o los más cercanos si hay empate)
             selectedRow.clear();
@@ -137,7 +133,7 @@ public class SelectionCADTool extends DefaultCADTool {
                     i = selection.nextSetBit(i + 1)) {
                 Handler[] handlers=null;
 				try {
-					handlers = getVectorialAdapter().getShape(i)
+					handlers = getCadToolAdapter().getVectorialAdapter().getShape(i)
 					                         .getHandlers(IGeometry.SELECTHANDLER);
 				} catch (DriverIOException e) {
 					// TODO Auto-generated catch block
@@ -165,7 +161,7 @@ public class SelectionCADTool extends DefaultCADTool {
                         if (fea == null) {
                             IGeometry clonedGeometry=null;
 							try {
-								clonedGeometry = getVectorialAdapter()
+								clonedGeometry = getCadToolAdapter().getVectorialAdapter()
 								                               .getShape(i)
 								                               .cloneGeometry();
 							} catch (DriverIOException e) {
@@ -173,7 +169,7 @@ public class SelectionCADTool extends DefaultCADTool {
 								e.printStackTrace();
 							}
                             try {
-								fea = (DefaultFeature) getVectorialAdapter()
+								fea = (DefaultFeature) getCadToolAdapter().getVectorialAdapter()
 								                           .getFeature(i);
 							} catch (DriverException e) {
 								// TODO Auto-generated catch block
@@ -201,13 +197,13 @@ public class SelectionCADTool extends DefaultCADTool {
                              .getViewPort().toMapDistance(tolerance);
             Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() -
                     tam, firstPoint.getY() - tam, tam * 2, tam * 2);
-            int[] indexes = getVectorialAdapter().getRowsIndexes(rect);
+            int[] indexes = getCadToolAdapter().getVectorialAdapter().getRowsIndexes(rect);
 
             selection.clear();
 
             for (int i = 0; i < indexes.length; i++) {
                 try {
-					if (getVectorialAdapter().getShape(indexes[i])
+					if (getCadToolAdapter().getVectorialAdapter().getShape(indexes[i])
 					            .intersects(rect)) {
 					    // .intersects(rect,FLATNESS)) {
 					    selection.set(indexes[i], true);
@@ -234,7 +230,7 @@ public class SelectionCADTool extends DefaultCADTool {
     public void addPoint(double x, double y) {
         SelectionCADToolState actualState = (SelectionCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-        FBitSet selection=getVectorialAdapter().getSelection();
+        FBitSet selection=getCadToolAdapter().getVectorialAdapter().getSelection();
         try {
             if (status.equals("ExecuteMap.Initial")) {
                 //firstPoint = new Point2D.Double(x, y);
@@ -266,18 +262,18 @@ public class SelectionCADTool extends DefaultCADTool {
 
                 Rectangle2D rect = new Rectangle2D.Double(x1, y1, w1, h1);
 
-                int[] indexes = getVectorialAdapter().getRowsIndexes(new Rectangle2D.Double(
+                int[] indexes = getCadToolAdapter().getVectorialAdapter().getRowsIndexes(new Rectangle2D.Double(
                             x1, y1, w1, h1));
 
                 for (int i = 0; i < indexes.length; i++) {
                     if (firstPoint.getX() < lastPoint.getX()) {
-                        if (rect.contains(getVectorialAdapter()
+                        if (rect.contains(getCadToolAdapter().getVectorialAdapter()
                                                   .getShape(indexes[i])
                                                   .getBounds2D())) {
                             selection.set(indexes[i], true);
                         }
                     } else {
-                        if (getVectorialAdapter().getShape(indexes[i])
+                        if (getCadToolAdapter().getVectorialAdapter().getShape(indexes[i])
                                     .intersects(rect)) { //, 0.1)){
                             selection.set(indexes[i], true);
                         }
@@ -317,9 +313,9 @@ public class SelectionCADTool extends DefaultCADTool {
      */
     public void drawOperation(Graphics g, double x,
         double y) {
-        SelectionCADToolState actualState = _fsm.getState();
+    	SelectionCADToolState actualState = ((SelectionCADToolContext)_fsm).getState();
         String status = actualState.getName();
-        FBitSet selection=getVectorialAdapter().getSelection();
+        FBitSet selection=getCadToolAdapter().getVectorialAdapter().getSelection();
         try {
 			drawHandlers(g, selection, getCadToolAdapter().getMapControl().getViewPort().getAffineTransform());
 		} catch (DriverIOException e) {
@@ -379,5 +375,26 @@ public class SelectionCADTool extends DefaultCADTool {
         return this.selectedRow.size();
     }
 
+    public String getStatus(){
+    	try{
+    	SelectionCADToolState actualState = (SelectionCADToolState) _fsm.getPreviousState();
+         String status = actualState.getName();
+         return status;
+    	}catch (NullPointerException e) {
+			return "ExecuteMap.Initial";
+		}
+    }
+
+
+    public String getTool() {
+		return tool;
+	}
+
+	public void setNextTool(String tool) {
+		this.tool = tool;
+	}
+	public void end() {
+    	CADExtension.setCADTool(getTool());
+    }
 
 }

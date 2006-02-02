@@ -70,7 +70,7 @@ public class PolygonCADTool extends DefaultCADTool {
      * Crea un nuevo PolygonCADTool.
      */
     public PolygonCADTool() {
-        _fsm = new PolygonCADToolContext(this);
+
     }
 
     /**
@@ -78,13 +78,7 @@ public class PolygonCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
-        _fsm = new PolygonCADToolContext(this);
+    	_fsm = new PolygonCADToolContext(this);
     }
 
     /* (non-Javadoc)
@@ -98,7 +92,7 @@ public class PolygonCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
      */
     public void transition(double d) {
-        //_fsm.addValue(sel,d);
+        _fsm.addValue(d);
     }
 
     /* (non-Javadoc)
@@ -127,7 +121,6 @@ public class PolygonCADTool extends DefaultCADTool {
         } else if (status.equals("ExecuteMap.Second") ||
                 status.equals("ExecuteMap.Third")) {
             Point2D point = new Point2D.Double(x, y);
-
             //Polígono a partir de la circunferencia.
             if (isI) {
                 addGeometry(getIPolygon(point, point.distance(center)));
@@ -184,9 +177,9 @@ public class PolygonCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status.equals("ExecuteMap.Second")) {
-            if (s.equals("C") || s.equals("c")) {
+            if (s.equals("C") || s.equals("c") || s.equals("Circunscrito")) {
                 isI = false;
-            } else if (s.equals("I") || s.equals("i")) {
+            } else if (s.equals("I") || s.equals("i") || s.equals("Inscrito")) {
                 isI = true;
             }
         }
@@ -291,4 +284,5 @@ public class PolygonCADTool extends DefaultCADTool {
 
         return new FGeometryCollection(geoms);
     }
+
 }

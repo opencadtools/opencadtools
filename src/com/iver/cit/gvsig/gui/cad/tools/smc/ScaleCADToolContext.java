@@ -5,16 +5,16 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 
-public final class PolygonCADToolContext
+public final class ScaleCADToolContext
     extends statemap.FSMContext
 {
 //---------------------------------------------------------------
 // Member methods.
 //
 
-    public PolygonCADToolContext(PolygonCADTool owner)
+    public ScaleCADToolContext(ScaleCADTool owner)
     {
         super();
 
@@ -47,7 +47,7 @@ public final class PolygonCADToolContext
         return;
     }
 
-    public PolygonCADToolState getState()
+    public ScaleCADToolState getState()
         throws statemap.StateUndefinedException
     {
         if (_state == null)
@@ -56,10 +56,10 @@ public final class PolygonCADToolContext
                 new statemap.StateUndefinedException());
         }
 
-        return ((PolygonCADToolState) _state);
+        return ((ScaleCADToolState) _state);
     }
 
-    protected PolygonCADTool getOwner()
+    protected ScaleCADTool getOwner()
     {
         return (_owner);
     }
@@ -68,43 +68,43 @@ public final class PolygonCADToolContext
 // Member data.
 //
 
-    transient private PolygonCADTool _owner;
+    transient private ScaleCADTool _owner;
 
 //---------------------------------------------------------------
 // Inner classes.
 //
 
-    public static abstract class PolygonCADToolState
+    public static abstract class ScaleCADToolState
         extends statemap.State
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected PolygonCADToolState(String name, int id)
+        protected ScaleCADToolState(String name, int id)
         {
             super (name, id);
         }
 
-        protected void Entry(PolygonCADToolContext context) {}
-        protected void Exit(PolygonCADToolContext context) {}
+        protected void Entry(ScaleCADToolContext context) {}
+        protected void Exit(ScaleCADToolContext context) {}
 
-        protected void addOption(PolygonCADToolContext context, String s)
+        protected void addOption(ScaleCADToolContext context, String s)
         {
             Default(context);
         }
 
-        protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
+        protected void addPoint(ScaleCADToolContext context, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void addValue(PolygonCADToolContext context, double d)
+        protected void addValue(ScaleCADToolContext context, double d)
         {
             Default(context);
         }
 
-        protected void Default(PolygonCADToolContext context)
+        protected void Default(ScaleCADToolContext context)
         {
             throw (
                 new statemap.TransitionUndefinedException(
@@ -137,6 +137,8 @@ public final class PolygonCADToolContext
         /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
         /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
         /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
+        /* package */ static ExecuteMap_Default.ExecuteMap_Fiveth Fiveth;
+        /* package */ static ExecuteMap_Default.ExecuteMap_Last Last;
         private static ExecuteMap_Default Default;
 
         static
@@ -146,13 +148,15 @@ public final class PolygonCADToolContext
             Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
             Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
             Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
+            Fiveth = new ExecuteMap_Default.ExecuteMap_Fiveth("ExecuteMap.Fiveth", 5);
+            Last = new ExecuteMap_Default.ExecuteMap_Last("ExecuteMap.Last", 6);
             Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
         }
 
     }
 
     protected static class ExecuteMap_Default
-        extends PolygonCADToolState
+        extends ScaleCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -163,9 +167,9 @@ public final class PolygonCADToolContext
             super (name, id);
         }
 
-        protected void addOption(PolygonCADToolContext context, String s)
+        protected void addOption(ScaleCADToolContext context, String s)
         {
-            PolygonCADTool ctxt = context.getOwner();
+            ScaleCADTool ctxt = context.getOwner();
 
             if (s.equals("Cancelar"))
             {
@@ -219,49 +223,29 @@ public final class PolygonCADToolContext
                 super (name, id);
             }
 
-            protected void Entry(PolygonCADToolContext context)
+            protected void Entry(ScaleCADToolContext context)
             {
-                PolygonCADTool ctxt = context.getOwner();
+                ScaleCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("POLIGONO" + "\n" +
-		"Insertar numero de lados<5>");
+                ctxt.selection();
+                ctxt.setQuestion("ESCALAR" + "\n" +
+		"Precise punto base");
                 ctxt.setDescription(new String[]{"Cancelar"});
                 return;
             }
 
-            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
+            protected void addPoint(ScaleCADToolContext context, double pointX, double pointY)
             {
-                PolygonCADTool ctxt = context.getOwner();
+                ScaleCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]<C>");
-                    ctxt.setDescription(new String[]{"Inscrito", "Circunscrito", "Cancelar"});
+                    ctxt.setQuestion("Precise factor de escala<2> o Referencia[R]");
+                    ctxt.setDescription(new String[]{"Referencia", "Cancelar"});
                     ctxt.addPoint(pointX, pointY);
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.Second);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-            protected void addValue(PolygonCADToolContext context, double d)
-            {
-                PolygonCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Insertar punto central del poligono");
-                    ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addValue(d);
                 }
                 finally
                 {
@@ -288,22 +272,88 @@ public final class PolygonCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
+            protected void addOption(ScaleCADToolContext context, String s)
             {
-                PolygonCADTool ctxt = context.getOwner();
+                ScaleCADTool ctxt = context.getOwner();
+
+                if (s.equals(null) || s.equals(""))
+                {
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.addOption(s);
+                        ctxt.end();
+                        ctxt.refresh();
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.Last);
+                        (context.getState()).Entry(context);
+                    }
+                }
+                else if (s.equals("R") || s.equals("r") || s.equals("Referencia"))
+                {
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise punto origen recta referencia o Factor de escala[F]");
+                        ctxt.setDescription(new String[]{"Factor escala", "Cancelar"});
+                        ctxt.addOption(s);
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.Second);
+                        (context.getState()).Entry(context);
+                    }
+                }                else
+                {
+                    super.addOption(context, s);
+                }
+
+                return;
+            }
+
+            protected void addPoint(ScaleCADToolContext context, double pointX, double pointY)
+            {
+                ScaleCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]<C>");
-                    ctxt.setDescription(new String[]{"Inscrito", "Circunscrito", "Cancelar"});
                     ctxt.addPoint(pointX, pointY);
+                    ctxt.end();
+                    ctxt.refresh();
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(ExecuteMap.Last);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+            protected void addValue(ScaleCADToolContext context, double d)
+            {
+                ScaleCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.addValue(d);
+                    ctxt.end();
+                    ctxt.refresh();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Last);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -326,62 +376,51 @@ public final class PolygonCADToolContext
                 super (name, id);
             }
 
-            protected void addOption(PolygonCADToolContext context, String s)
+            protected void addOption(ScaleCADToolContext context, String s)
             {
-                PolygonCADTool ctxt = context.getOwner();
+                ScaleCADTool ctxt = context.getOwner();
+
+                if (s.equals("F") || s.equals("f") || s.equals("Factor escala"))
+                {
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise factor de escala<2> o Referencia[R]");
+                        ctxt.setDescription(new String[]{"Referencia", "Cancelar"});
+                        ctxt.addOption(s);
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.Initial);
+                        (context.getState()).Entry(context);
+                    }
+                }
+                else
+                {
+                    super.addOption(context, s);
+                }
+
+                return;
+            }
+
+            protected void addPoint(ScaleCADToolContext context, double pointX, double pointY)
+            {
+                ScaleCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precise r?dio(r)");
+                    ctxt.setQuestion("Precise punto final recta referencia");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addOption(s);
+                    ctxt.addPoint(pointX, pointY);
                 }
                 finally
                 {
                     context.setState(ExecuteMap.Third);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
-            {
-                PolygonCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.addPoint(pointX, pointY);
-                    ctxt.end();
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.Fourth);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-            protected void addValue(PolygonCADToolContext context, double d)
-            {
-                PolygonCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.addValue(d);
-                    ctxt.end();
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.Fourth);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -404,37 +443,18 @@ public final class PolygonCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
+            protected void addPoint(ScaleCADToolContext context, double pointX, double pointY)
             {
-                PolygonCADTool ctxt = context.getOwner();
+                ScaleCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
+                    ctxt.setQuestion("Precise punto origen recta escala");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
-                    ctxt.end();
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.Fourth);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-            protected void addValue(PolygonCADToolContext context, double d)
-            {
-                PolygonCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.addValue(d);
-                    ctxt.end();
                 }
                 finally
                 {
@@ -457,6 +477,82 @@ public final class PolygonCADToolContext
         //
 
             private ExecuteMap_Fourth(String name, int id)
+            {
+                super (name, id);
+            }
+
+            protected void addPoint(ScaleCADToolContext context, double pointX, double pointY)
+            {
+                ScaleCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.setQuestion("Precise punto final recta escala");
+                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.addPoint(pointX, pointY);
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Fiveth);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+        //-------------------------------------------------------
+        // Member data.
+        //
+        }
+
+        private static final class ExecuteMap_Fiveth
+            extends ExecuteMap_Default
+        {
+        //-------------------------------------------------------
+        // Member methods.
+        //
+
+            private ExecuteMap_Fiveth(String name, int id)
+            {
+                super (name, id);
+            }
+
+            protected void addPoint(ScaleCADToolContext context, double pointX, double pointY)
+            {
+                ScaleCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.addPoint(pointX, pointY);
+                    ctxt.end();
+                    ctxt.refresh();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Last);
+                    (context.getState()).Entry(context);
+                }
+                return;
+            }
+
+        //-------------------------------------------------------
+        // Member data.
+        //
+        }
+
+        private static final class ExecuteMap_Last
+            extends ExecuteMap_Default
+        {
+        //-------------------------------------------------------
+        // Member methods.
+        //
+
+            private ExecuteMap_Last(String name, int id)
             {
                 super (name, id);
             }

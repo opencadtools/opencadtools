@@ -17,12 +17,11 @@
 Initial
 
 	Entry {
-		init();
 		setQuestion("LINEA" + "\n" +
 		"Insertar primer punto");
+		setDescription(new String[]{"Cancelar"});
 		}
 	Exit{
-		end();
 		}
 
 	{
@@ -30,6 +29,7 @@ Initial
 		addPoint( pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar segundo punto o angulo");
+				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY);
 				}
 
@@ -38,11 +38,13 @@ First{
 	addPoint( pointX:double,pointY:double)
 		First {
 			setQuestion("Insertar segundo punto o angulo");
+			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 	addValue( d:double)
 		Second {
 			setQuestion("Insertar longitud o punto");
+			setDescription(new String[]{"Cancelar"});
 			addValue( d);
 			}
 
@@ -51,16 +53,22 @@ Second{
 	addPoint( pointX:double,pointY:double)
 		First {
 			setQuestion("Insertar segundo punto o angulo");
+			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 	addValue( d:double)
 		First {
 			setQuestion("Insertar segundo punto o angulo");
+			setDescription(new String[]{"Cancelar"});
 			addValue( d);
 			}
 	}
 Default
 {
-
+	addOption(s:String)
+		[s.equals("Cancelar")]
+		Initial{
+			end();
+			}
 }
 %%

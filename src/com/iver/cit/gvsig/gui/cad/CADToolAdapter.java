@@ -3,15 +3,24 @@ package com.iver.cit.gvsig.gui.cad;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.MemoryImageSource;
 import java.io.IOException;
 import java.util.Stack;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.ViewPort;
+import com.iver.cit.gvsig.fmap.core.Handler;
+import com.iver.cit.gvsig.fmap.core.IFeature;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
@@ -23,11 +32,6 @@ import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 
-/**
- * DOCUMENT ME!
- *
- * @author Fernando González Cortés
- */
 public class CADToolAdapter extends Behavior {
 	private Stack cadToolStack = new Stack();
 
@@ -42,6 +46,7 @@ public class CADToolAdapter extends Behavior {
 	private boolean adjustSnapping = false;
 	private VectorialEditableAdapter vea;
 	private CADGrid cadgrid=new CADGrid();
+
 	/**
 	 * Pinta de alguna manera especial las geometrias seleccionadas para la
 	 * edición. En caso de que el snapping esté activado, pintará el efecto
@@ -52,7 +57,7 @@ public class CADToolAdapter extends Behavior {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		drawCursor(g);
-
+		getGrid().drawGrid(g);
 		if (adjustedPoint != null) {
 			Point2D p=null;
 			if (mapAdjustedPoint != null) {
@@ -69,7 +74,9 @@ public class CADToolAdapter extends Behavior {
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
 	public void mouseClicked(MouseEvent e) throws BehaviorException {
-
+		if (e.getButton()==MouseEvent.BUTTON3){
+			CADExtension.showPopup(e);
+		}
 	}
 
 	/**
@@ -113,7 +120,7 @@ public class CADToolAdapter extends Behavior {
 	 */
 	private double adjustToHandler(Point2D point,
 		Point2D mapHandlerAdjustedPoint) {
-	/***	//if (selection.cardinality() > 0) {
+		//if (selection.cardinality() > 0) {
 		double rw=getMapControl().getViewPort().toMapDistance(5);
 		try {
 			Point2D mapPoint = point;
@@ -127,17 +134,16 @@ public class CADToolAdapter extends Behavior {
 			Point2D mapArgmin = null;
 
 			for (int i = 0; i < indexes.length; i++) {
-				IFeature fea;
-				fea = vea.getFeature(indexes[i]);
-
-				Handler[] handlers = fea.getGeometry().getHandlers(FGeometry.SELECTHANDLER);
+				IFeature fea=null;
+					fea = vea.getFeature(indexes[i]);
+				Handler[] handlers = fea.getGeometry().getHandlers(IGeometry.SELECTHANDLER);
 
 				for (int j = 0; j < handlers.length; j++) {
 					Point2D handlerPoint = handlers[j].getPoint();
 					//System.err.println("handlerPoint= "+ handlerPoint);
 					Point2D handlerImagePoint = handlerPoint;
 					double dist = handlerImagePoint.distance(point);
-					if ((dist < getMapControl().getViewPort().toMapDistance(SelectionCadTool.tolerance)) &&
+					if ((dist < getMapControl().getViewPort().toMapDistance(SelectionCADTool.tolerance)) &&
 							(dist < min)) {
 						min = dist;
 						argmin = handlerImagePoint;
@@ -156,12 +162,10 @@ public class CADToolAdapter extends Behavior {
 
 				return min;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (DriverIOException e) {
+		} catch (DriverException e) {
 			e.printStackTrace();
 		}
-	***/
+
 		return Double.MAX_VALUE;
 
 	}
@@ -170,6 +174,7 @@ public class CADToolAdapter extends Behavior {
 	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 	 */
 	public void mouseReleased(MouseEvent e) throws BehaviorException {
+		getMapControl().repaint();
 	}
 
 	/**
@@ -186,6 +191,7 @@ public class CADToolAdapter extends Behavior {
 	 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
 	 */
 	public void mouseMoved(MouseEvent e) throws BehaviorException {
+
 		lastX = e.getX();
 		lastY = e.getY();
 
@@ -193,13 +199,23 @@ public class CADToolAdapter extends Behavior {
 
 		getMapControl().repaint();
 	}
-
+	private void clearMouseImage(){
+		int[] pixels = new int[16 * 16];
+		Image image = Toolkit.getDefaultToolkit().createImage(
+			new MemoryImageSource(16, 16, pixels, 0, 16));
+		Cursor transparentCursor =
+			Toolkit.getDefaultToolkit().createCustomCursor
+			    (image, new Point(0,0), "invisiblecursor");
+		View view=CADExtension.getView();
+		view.setCursor(transparentCursor);
+	}
 	/**
 	 * DOCUMENT ME!
 	 *
 	 * @param g DOCUMENT ME!
 	 */
 	private void drawCursor(Graphics g) {
+		clearMouseImage();
 		Point2D p = adjustedPoint;
 
 		if (p == null) {
@@ -218,8 +234,8 @@ public class CADToolAdapter extends Behavior {
 		if (adjustedPoint != null) {
 			if (adjustSnapping) {
 				g.setColor(Color.ORANGE);
-				g.drawRect((int) (adjustedPoint.getX() - 5),
-					(int) (adjustedPoint.getY() - 5), 10, 10);
+				g.drawRect((int) (adjustedPoint.getX() - 6),
+					(int) (adjustedPoint.getY() - 6), 12, 12);
 				g.drawRect((int) (adjustedPoint.getX() - 3),
 					(int) (adjustedPoint.getY() - 3), 6, 6);
 				g.setColor(Color.MAGENTA);
@@ -244,12 +260,12 @@ public class CADToolAdapter extends Behavior {
 
 		Point2D gridAdjustedPoint = getMapControl().getViewPort().toMapPoint(point);
 		double minDistance = Double.MAX_VALUE;
-
-	/***	if (cadToolStack.peek() instanceof SelectionCadTool && ((SelectionCadTool)cadToolStack.peek()).getAutomaton().getStatus()==0){
+		CADTool ct=(CADTool)cadToolStack.peek();
+		if (ct instanceof SelectionCADTool && ((SelectionCADTool)ct).getStatus().equals("ExecuteMap.Initial")){
 			mapAdjustedPoint=gridAdjustedPoint;
 			adjustedPoint=(Point2D)point.clone();
 		}else{
-***/
+
 			minDistance= getGrid().adjustToGrid(gridAdjustedPoint);
 			if (minDistance < Double.MAX_VALUE) {
 				adjustedPoint = getMapControl().getViewPort().fromMapPoint(gridAdjustedPoint);
@@ -257,7 +273,7 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				mapAdjustedPoint = null;
 			}
-	/***	}***/
+		}
 		Point2D handlerAdjustedPoint = null;
 
 		//Se comprueba el ajuste a los handlers
@@ -330,6 +346,7 @@ public class CADToolAdapter extends Behavior {
 				}
 			//}
 		}
+
 	}
 
 	/**
@@ -339,25 +356,23 @@ public class CADToolAdapter extends Behavior {
 	 */
 	public void transition(String text) {
 		transition( vea, text);
-		configureMenu();
+
 	}
 
 	/**
 	 * DOCUMENT ME!
 	 */
-	private void configureMenu() {
-	/***	String[] desc = ((CADTool) cadToolStack.peek()).getAutomaton()
-						 .getCurrentTransitionDescriptions();
-		String[] labels = ((CADTool) cadToolStack.peek()).getAutomaton()
-						   .getCurrentTransitions();
-		getMapControl().clearMenu();
+	public void configureMenu() {
+		String[] desc = ((CADTool) cadToolStack.peek()).getDescriptions();
+		//String[] labels = ((CADTool) cadToolStack.peek()).getCurrentTransitions();
+		CADExtension.clearMenu();
 
 		for (int i = 0; i < desc.length; i++) {
 			if (desc[i] != null) {
-				getMapControl().addMenuEntry(desc[i], labels[i]);
+				CADExtension.addMenuEntry(desc[i]);//, labels[i]);
 			}
 		}
-		***/
+
 	}
 
 	/**
@@ -411,7 +426,8 @@ public class CADToolAdapter extends Behavior {
 				configureMenu();*/
 		    }
 		}
-		PluginServices.getMainFrame().enableControls();
+		configureMenu();
+		//PluginServices.getMainFrame().enableControls();
 	}
 	/**
 	 * DOCUMENT ME!
@@ -429,7 +445,7 @@ public class CADToolAdapter extends Behavior {
 		    ct.transition(value);
 			askQuestion();
 		    }
-
+		configureMenu();
 		PluginServices.getMainFrame().enableControls();
 	}
 	private void transition(VectorialEditableAdapter source,
@@ -440,7 +456,8 @@ public class CADToolAdapter extends Behavior {
 			    ct.transition(option);
 				askQuestion();
 			    }
-			PluginServices.getMainFrame().enableControls();
+			configureMenu();
+			//PluginServices.getMainFrame().enableControls();
 	}
 	/**
 	 * DOCUMENT ME!
@@ -511,7 +528,7 @@ public class CADToolAdapter extends Behavior {
 		cadToolStack.push(cadTool);
 		cadTool.setCadToolAdapter(this);
 		//cadTool.initializeStatus();
-		cadTool.setVectorialAdapter(vea);
+		//cadTool.setVectorialAdapter(vea);
 		/*int ret = cadTool.transition(null, editableFeatureSource, selection,
 				new double[0]);
 
@@ -657,7 +674,7 @@ public class CADToolAdapter extends Behavior {
 				pushCadTool(new SelectionCADTool());
 				getVectorialAdapter().getSelection().clear();
 				getMapControl().drawMap(false);
-				/***PluginServices.getMainFrame().setSelectedTool("selection");***/
+				PluginServices.getMainFrame().setSelectedTool("SELCAD");
 				askQuestion();
 			}
 		}

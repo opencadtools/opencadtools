@@ -6,41 +6,43 @@
 %}
 
 %start ExecuteMap::Initial
-%class PointCADTool
+%class CopyCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
-%import com.iver.cit.gvsig.gui.cad.tools.PointCADTool
-
+%import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool
 
 %map ExecuteMap
 %%
 // A task begins life in suspended animation.
 
 Initial
-
 	Entry {
-		setQuestion("PUNTO" + "\n" +
-		"Defina el punto");
+		selection();
+		setQuestion("COPIAR" + "\n" +
+		"Precisar punto de desplazamiento");
 		setDescription(new String[]{"Cancelar"});
+
 		}
-	Exit {
+	Exit{
 		}
 
 	{
-
-		addPoint( pointX:double,pointY:double)
+		addPoint(pointX:double,pointY:double)
 			First {
-				setQuestion("Insertar punto");
+				setQuestion("Precisar segundo punto del desplazamiento");
 				setDescription(new String[]{"Cancelar"});
-				addPoint( pointX,pointY);
+				addPoint(pointX,pointY);
 				}
 	}
 First{
-	addPoint( pointX:double,pointY:double)
-		First {
-			setQuestion("Insertar punto");
+	addPoint(pointX:double,pointY:double)
+		Second {
 			setDescription(new String[]{"Cancelar"});
-			addPoint( pointX,pointY);
+			addPoint(pointX,pointY);
+			end();
+			refresh();
 			}
+}
+Second{
 }
 Default
 {

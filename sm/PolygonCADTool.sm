@@ -17,9 +17,9 @@
 Initial
 
 	Entry {
-		init();
 		setQuestion("POLIGONO" + "\n" +
 		"Insertar numero de lados<5>");
+		setDescription(new String[]{"Cancelar"});
 		}
 	Exit{
 		}
@@ -28,11 +28,13 @@ Initial
 		addValue(d:double)
 			First {
 				setQuestion("Insertar punto central del poligono");
+				setDescription(new String[]{"Cancelar"});
 				addValue(d);
 				}
 		addPoint(pointX:double,pointY:double)
 			Second {
-				setQuestion("Inscrito en el círculo[I] o Circunscrito[C]");
+				setQuestion("Inscrito en el círculo[I] o Circunscrito[C]<C>");
+				setDescription(new String[]{"Inscrito","Circunscrito","Cancelar"});
 				addPoint(pointX,pointY);
 				}
 
@@ -41,6 +43,7 @@ First{
 	addPoint(pointX:double,pointY:double)
 		Second {
 			setQuestion("Inscrito en el círculo[I] o Circunscrito[C]<C>");
+			setDescription(new String[]{"Inscrito","Circunscrito","Cancelar"});
 			addPoint(pointX,pointY);
 			}
 }
@@ -48,6 +51,7 @@ Second{
 	addOption(s:String)
 		Third {
 			setQuestion("Precise rádio(r)");
+			setDescription(new String[]{"Cancelar"});
 			addOption(s);
 			}
 	addValue(d:double)
@@ -77,6 +81,10 @@ Fourth{
 }
 Default
 {
-
+	addOption(s:String)
+		[s.equals("Cancelar")]
+		Initial{
+			end();
+			}
 }
 %%

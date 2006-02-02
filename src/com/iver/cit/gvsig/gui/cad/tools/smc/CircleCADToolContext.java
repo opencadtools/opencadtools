@@ -169,6 +169,45 @@ public final class CircleCADToolContext
             super (name, id);
         }
 
+        protected void addOption(CircleCADToolContext context, String s)
+        {
+            CircleCADTool ctxt = context.getOwner();
+
+            if (s.equals("Cancelar"))
+            {
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        ExecuteMap.Initial.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Initial);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
+            }
+            else
+            {
+                super.addOption(context, s);
+            }
+
+            return;
+        }
+
     //-----------------------------------------------------------
     // Inner classse.
     //
@@ -190,9 +229,9 @@ public final class CircleCADToolContext
             {
                 CircleCADTool ctxt = context.getOwner();
 
-                ctxt.init();
                 ctxt.setQuestion("CIRCULO" + "\n" +
 		"Insertar punto central o [3P]:");
+                ctxt.setDescription(new String[]{"Cancelar", "3P"});
                 return;
             }
 
@@ -200,19 +239,28 @@ public final class CircleCADToolContext
             {
                 CircleCADTool ctxt = context.getOwner();
 
+                if (s.equals("3p") || s.equals("3P"))
+                {
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Insertar primer punto");
-                    ctxt.addOption(s);
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Insertar primer punto");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.addOption(s);
+                    }
+                    finally
+                    {
+                        context.setState(ExecuteMap.Seventh);
+                        (context.getState()).Entry(context);
+                    }
                 }
-                finally
+                else
                 {
-                    context.setState(ExecuteMap.Seventh);
-                    (context.getState()).Entry(context);
+                    super.addOption(context, s);
                 }
+
                 return;
             }
 
@@ -226,6 +274,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar radio o segundo punto");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
@@ -320,6 +369,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar tercer punto");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
@@ -445,6 +495,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar segundo punto");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally

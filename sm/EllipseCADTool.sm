@@ -17,9 +17,9 @@
 Initial
 
 	Entry {
-		init();
 		setQuestion("ELIPSE" + "\n" +
 		"Insertar punto inicial de eje de elipse");
+		setDescription(new String[]{"Cancelar"});
 		}
 	Exit{
 		}
@@ -28,6 +28,7 @@ Initial
 		addPoint( pointX:double,pointY:double)
 			First {
 				setQuestion("Insertar punto final de eje de elipse");
+				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY);
 				}
 
@@ -36,6 +37,7 @@ First{
 	addPoint( pointX:double,pointY:double)
 		Second {
 			setQuestion("Insertar distancia al otro eje");
+			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 
@@ -58,6 +60,10 @@ Fourth{
 }
 Default
 {
-
+	addOption(s:String)
+		[s.equals("Cancelar")]
+		Initial{
+			end();
+			}
 }
 %%

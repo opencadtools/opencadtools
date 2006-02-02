@@ -60,7 +60,7 @@ public class PointCADTool extends DefaultCADTool {
      * Crea un nuevo PointCADTool.
      */
     public PointCADTool() {
-        _fsm = new PointCADToolContext(this);
+
     }
 
     /**
@@ -68,6 +68,7 @@ public class PointCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
+    	_fsm = new PointCADToolContext(this);
     }
 
     /**
@@ -92,7 +93,7 @@ public class PointCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        // TODO Auto-generated method stub
+        _fsm.addOption(s);
     }
 
     /**
@@ -137,16 +138,10 @@ public class PointCADTool extends DefaultCADTool {
     }
 
     /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
-        // TODO Auto-generated method stub
-    }
-
-    /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
     public void addValue(double d) {
         // TODO Auto-generated method stub
     }
+
 }

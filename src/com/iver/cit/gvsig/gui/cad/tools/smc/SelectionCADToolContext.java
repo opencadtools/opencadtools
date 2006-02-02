@@ -24,6 +24,14 @@ public final class SelectionCADToolContext
         ExecuteMap.Initial.Entry(this);
     }
 
+    public void addOption(String s)
+    {
+        _transition = "addOption";
+        getState().addOption(this, s);
+        _transition = "";
+        return;
+    }
+
     public void addPoint(double pointX, double pointY)
     {
         _transition = "addPoint";
@@ -73,6 +81,11 @@ public final class SelectionCADToolContext
 
         protected void Entry(SelectionCADToolContext context) {}
         protected void Exit(SelectionCADToolContext context) {}
+
+        protected void addOption(SelectionCADToolContext context, String s)
+        {
+            Default(context);
+        }
 
         protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
         {
@@ -136,6 +149,45 @@ public final class SelectionCADToolContext
             super (name, id);
         }
 
+        protected void addOption(SelectionCADToolContext context, String s)
+        {
+            SelectionCADTool ctxt = context.getOwner();
+
+            if (s.equals("Cancelar"))
+            {
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        ExecuteMap.Initial.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Initial);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
+            }
+            else
+            {
+                super.addOption(context, s);
+            }
+
+            return;
+        }
+
     //-----------------------------------------------------------
     // Inner classse.
     //
@@ -157,9 +209,9 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                ctxt.init();
                 ctxt.setQuestion("SELECCION" + "\n" +
 		"Precise punto del rect?ngulo de selecci?n");
+                ctxt.setDescription(new String[]{"Cancelar"});
                 return;
             }
 
@@ -175,6 +227,7 @@ public final class SelectionCADToolContext
                     try
                     {
                         ctxt.setQuestion("Precise segundo punto del rect?ngulo de seleccion");
+                        ctxt.setDescription(new String[]{"Cancelar"});
                         ctxt.addPoint(pointX, pointY);
                     }
                     finally
@@ -191,6 +244,7 @@ public final class SelectionCADToolContext
                     try
                     {
                         ctxt.setQuestion("Precise punto destino");
+                        ctxt.setDescription(new String[]{"Cancelar"});
                         ctxt.addPoint(pointX, pointY);
                     }
                     finally
@@ -233,7 +287,9 @@ public final class SelectionCADToolContext
                 try
                 {
                     ctxt.setQuestion("Precise punto de estiramiento");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
+                    ctxt.end();
                 }
                 finally
                 {
@@ -270,6 +326,7 @@ public final class SelectionCADToolContext
                 try
                 {
                     ctxt.setQuestion("Precise punto destino");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                     ctxt.end();
                     ctxt.refresh();

@@ -39,13 +39,12 @@
  *   dac@iver.es
  */
 package com.iver.cit.gvsig.gui.cad;
+import java.awt.Color;
+import java.awt.Graphics;
+
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
-
-import java.awt.Color;
-import java.awt.Graphics;
 
 
 /**
@@ -66,8 +65,6 @@ public interface CADTool {
 	public void transition(double x, double y);
 	public void transition(double d);
 	public void transition(String s);
-	public void setVectorialAdapter(VectorialEditableAdapter vea);
-	public VectorialEditableAdapter getVectorialAdapter();
 	public void addPoint(double x,double y);
 	public void addValue(double d);
 	public void addOption(String s);
@@ -113,4 +110,6 @@ public interface CADTool {
 	 * @return DOCUMENT ME!
 	 */
 	public CADToolAdapter getCadToolAdapter();
+	public String[] getDescriptions();
+	public void setDescription(String[] descriptions);
 }

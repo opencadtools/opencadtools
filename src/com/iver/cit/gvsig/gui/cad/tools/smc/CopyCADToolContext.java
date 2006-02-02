@@ -5,16 +5,16 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 
-public final class PointCADToolContext
+public final class CopyCADToolContext
     extends statemap.FSMContext
 {
 //---------------------------------------------------------------
 // Member methods.
 //
 
-    public PointCADToolContext(PointCADTool owner)
+    public CopyCADToolContext(CopyCADTool owner)
     {
         super();
 
@@ -39,7 +39,7 @@ public final class PointCADToolContext
         return;
     }
 
-    public PointCADToolState getState()
+    public CopyCADToolState getState()
         throws statemap.StateUndefinedException
     {
         if (_state == null)
@@ -48,10 +48,10 @@ public final class PointCADToolContext
                 new statemap.StateUndefinedException());
         }
 
-        return ((PointCADToolState) _state);
+        return ((CopyCADToolState) _state);
     }
 
-    protected PointCADTool getOwner()
+    protected CopyCADTool getOwner()
     {
         return (_owner);
     }
@@ -60,38 +60,38 @@ public final class PointCADToolContext
 // Member data.
 //
 
-    transient private PointCADTool _owner;
+    transient private CopyCADTool _owner;
 
 //---------------------------------------------------------------
 // Inner classes.
 //
 
-    public static abstract class PointCADToolState
+    public static abstract class CopyCADToolState
         extends statemap.State
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected PointCADToolState(String name, int id)
+        protected CopyCADToolState(String name, int id)
         {
             super (name, id);
         }
 
-        protected void Entry(PointCADToolContext context) {}
-        protected void Exit(PointCADToolContext context) {}
+        protected void Entry(CopyCADToolContext context) {}
+        protected void Exit(CopyCADToolContext context) {}
 
-        protected void addOption(PointCADToolContext context, String s)
+        protected void addOption(CopyCADToolContext context, String s)
         {
             Default(context);
         }
 
-        protected void addPoint(PointCADToolContext context, double pointX, double pointY)
+        protected void addPoint(CopyCADToolContext context, double pointX, double pointY)
         {
             Default(context);
         }
 
-        protected void Default(PointCADToolContext context)
+        protected void Default(CopyCADToolContext context)
         {
             throw (
                 new statemap.TransitionUndefinedException(
@@ -121,19 +121,21 @@ public final class PointCADToolContext
         //
         /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
         /* package */ static ExecuteMap_Default.ExecuteMap_First First;
+        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
         private static ExecuteMap_Default Default;
 
         static
         {
             Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
             First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
+            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
             Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
         }
 
     }
 
     protected static class ExecuteMap_Default
-        extends PointCADToolState
+        extends CopyCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -144,9 +146,9 @@ public final class PointCADToolContext
             super (name, id);
         }
 
-        protected void addOption(PointCADToolContext context, String s)
+        protected void addOption(CopyCADToolContext context, String s)
         {
-            PointCADTool ctxt = context.getOwner();
+            CopyCADTool ctxt = context.getOwner();
 
             if (s.equals("Cancelar"))
             {
@@ -200,26 +202,27 @@ public final class PointCADToolContext
                 super (name, id);
             }
 
-            protected void Entry(PointCADToolContext context)
+            protected void Entry(CopyCADToolContext context)
             {
-                PointCADTool ctxt = context.getOwner();
+                CopyCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("PUNTO" + "\n" +
-		"Defina el punto");
+                ctxt.selection();
+                ctxt.setQuestion("COPIAR" + "\n" +
+		"Precisar punto de desplazamiento");
                 ctxt.setDescription(new String[]{"Cancelar"});
                 return;
             }
 
-            protected void addPoint(PointCADToolContext context, double pointX, double pointY)
+            protected void addPoint(CopyCADToolContext context, double pointX, double pointY)
             {
-                PointCADTool ctxt = context.getOwner();
+                CopyCADTool ctxt = context.getOwner();
 
 
                 (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar punto");
+                    ctxt.setQuestion("Precisar segundo punto del desplazamiento");
                     ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
@@ -248,24 +251,43 @@ public final class PointCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(PointCADToolContext context, double pointX, double pointY)
+            protected void addPoint(CopyCADToolContext context, double pointX, double pointY)
             {
-                PointCADTool ctxt = context.getOwner();
+                CopyCADTool ctxt = context.getOwner();
 
-                PointCADToolState endState = context.getState();
 
+                (context.getState()).Exit(context);
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar punto");
                     ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
+                    ctxt.end();
+                    ctxt.refresh();
                 }
                 finally
                 {
-                    context.setState(endState);
+                    context.setState(ExecuteMap.Second);
+                    (context.getState()).Entry(context);
                 }
                 return;
+            }
+
+        //-------------------------------------------------------
+        // Member data.
+        //
+        }
+
+        private static final class ExecuteMap_Second
+            extends ExecuteMap_Default
+        {
+        //-------------------------------------------------------
+        // Member methods.
+        //
+
+            private ExecuteMap_Second(String name, int id)
+            {
+                super (name, id);
             }
 
         //-------------------------------------------------------

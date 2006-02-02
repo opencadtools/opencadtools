@@ -18,9 +18,9 @@
 Initial
 
 	Entry {
-		init();
 		setQuestion("SELECCION" + "\n" +
 		"Precise punto del rectángulo de selección");
+		setDescription(new String[]{"Cancelar"});
 		}
 	Exit{
 		}
@@ -30,12 +30,14 @@ Initial
 			[!ctxt.isSelected(pointX,pointY)]
 			First {
 				setQuestion("Precise segundo punto del rectángulo de seleccion");
+				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				}
 		addPoint(pointX:double,pointY:double)
 			[ctxt.isSelected(pointX,pointY)]
 			Second {
 				setQuestion("Precise punto destino");
+				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				}
 }
@@ -44,7 +46,9 @@ First{
 	addPoint(pointX:double,pointY:double)
 			Initial {
 				setQuestion("Precise punto de estiramiento");
+				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
+				end();
 				}
 
 
@@ -53,6 +57,7 @@ Second{
 	addPoint(pointX:double,pointY:double)
 			Third {
 				setQuestion("Precise punto destino");
+				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				end();
 				refresh();
@@ -62,6 +67,10 @@ Third{
 }
 Default
 {
-
+	addOption(s:String)
+		[s.equals("Cancelar")]
+		Initial{
+			end();
+			}
 }
 %%

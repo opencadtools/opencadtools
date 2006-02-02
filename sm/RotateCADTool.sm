@@ -6,49 +6,50 @@
 %}
 
 %start ExecuteMap::Initial
-%class ArcCADTool
+%class RotateCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
-%import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool
+%import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool
 
 %map ExecuteMap
 %%
 // A task begins life in suspended animation.
 
 Initial
-
 	Entry {
-		setQuestion("ARCO" + "\n"+
-		"Insertar primer punto");
+		selection();
+		setQuestion("ROTAR" + "\n" +
+		"Precise punto base");
 		setDescription(new String[]{"Cancelar"});
+
 		}
 	Exit{
 		}
 
 	{
-		addPoint( pointX:double,pointY:double)
+		addPoint(pointX:double,pointY:double)
 			First {
-				setQuestion("Insertar segundo punto");
+				setQuestion("Precise angulo de rotacion");
 				setDescription(new String[]{"Cancelar"});
-				addPoint( pointX,pointY);
+				addPoint(pointX,pointY);
 				}
-
 	}
 First{
-	addPoint( pointX:double,pointY:double)
-		Second {
-			setQuestion("Insertar ultimo punto");
+	addValue(d:double)
+		Second{
 			setDescription(new String[]{"Cancelar"});
-			addPoint( pointX,pointY);
+			addValue(d);
+			end();
+			refresh();
+			}
+	addPoint(pointX:double,pointY:double)
+		Second {
+			setDescription(new String[]{"Cancelar"});
+			addPoint(pointX,pointY);
+			end();
+			refresh();
 			}
 }
 Second{
-	addPoint( pointX:double,pointY:double)
-		Third {
-			addPoint(pointX,pointY);
-			end();
-			}
-}
-Third{
 }
 Default
 {

@@ -40,28 +40,26 @@
  */
 package com.iver.cit.gvsig.gui.cad;
 
-import com.hardcode.gdbms.engine.values.Value;
-
-import com.iver.cit.gvsig.fmap.ViewPort;
-import com.iver.cit.gvsig.fmap.core.DefaultFeature;
-import com.iver.cit.gvsig.fmap.core.GeneralPathX;
-import com.iver.cit.gvsig.fmap.core.Handler;
-import com.iver.cit.gvsig.fmap.core.IFeature;
-import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
-import com.iver.cit.gvsig.fmap.edition.IRowEdited;
-import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
-
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-
 import java.io.IOException;
+
+import com.hardcode.gdbms.engine.values.Value;
+import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.ViewPort;
+import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.Handler;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
+import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
 
 /**
@@ -71,8 +69,8 @@ import java.io.IOException;
  */
 public abstract class DefaultCADTool implements CADTool {
     private CADToolAdapter cadToolAdapter;
-    private VectorialEditableAdapter vea;
     private String question;
+    private String[] currentdescriptions;
 
     /**
      * DOCUMENT ME!
@@ -130,7 +128,7 @@ public abstract class DefaultCADTool implements CADTool {
         DefaultFeature df = new DefaultFeature(geometry, null);
 
         try {
-            vea.addRow(df);
+            getCadToolAdapter().getVectorialAdapter().addRow(df);
         } catch (DriverIOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -148,7 +146,7 @@ public abstract class DefaultCADTool implements CADTool {
      */
     public void modifyFeature(int index,DefaultFeature row) {
     	try {
-			vea.modifyRow(index, row);
+			getCadToolAdapter().getVectorialAdapter().modifyRow(index, row);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -166,16 +164,6 @@ public abstract class DefaultCADTool implements CADTool {
      */
     public void addGeometry(IGeometry geometry, Value[] values) {
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param vea DOCUMENT ME!
-     */
-    public void setVectorialAdapter(VectorialEditableAdapter vea) {
-        this.vea = vea;
-    }
-
 
     /**
      * Devuelve la cadena que corresponde al estado en el que nos encontramos.
@@ -202,16 +190,28 @@ public abstract class DefaultCADTool implements CADTool {
         getCadToolAdapter().getMapControl().drawMap(false);
     }
 
-	public VectorialEditableAdapter getVectorialAdapter() {
-		return vea;
-	}
 	public void drawHandlers(Graphics g,FBitSet sel,AffineTransform at) throws DriverIOException{
 		 for (int i = sel.nextSetBit(0); i >= 0;
          i = sel.nextSetBit(i + 1)) {
-			IGeometry ig = getVectorialAdapter().getShape(i).cloneGeometry();
+			IGeometry ig = getCadToolAdapter().getVectorialAdapter().getShape(i).cloneGeometry();
 			if (ig == null) continue;
 				Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
 				FGraphicUtilities.DrawHandlers((Graphics2D)g,at,handlers);
 		}
 	}
+
+	public void setDescription(String[] currentdescriptions) {
+		this.currentdescriptions = currentdescriptions;
+	}
+	public String[] getDescriptions(){
+		return currentdescriptions;
+	}
+	/* (non-Javadoc)
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
+     */
+    public void end() {
+    	CADExtension.setCADTool("selection");
+    	PluginServices.getMainFrame().setSelectedTool("SELCAD");
+    }
+
 }

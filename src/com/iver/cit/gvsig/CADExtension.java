@@ -41,19 +41,22 @@
 package com.iver.cit.gvsig;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.FocusManager;
 import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -63,12 +66,15 @@ import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.utiles.console.ResponseListener;
 /**
@@ -80,9 +86,8 @@ import com.iver.utiles.console.ResponseListener;
 public class CADExtension implements Extension {
    private static CADToolAdapter adapter=new CADToolAdapter();
    private static HashMap namesCadTools = new HashMap();
-   private boolean isLoad =false;
    private MapControl mapControl;
-   private View view;
+   private static View view;
    public static CADToolAdapter getCADToolAdapter(){
 	   return adapter;
    }
@@ -90,10 +95,6 @@ public class CADExtension implements Extension {
      * @see com.iver.andami.plugins.Extension#inicializar()
      */
     public void inicializar() {
-
-
-
-
         SelectionCADTool selection=new SelectionCADTool();
     	LineCADTool line = new LineCADTool();
         PointCADTool point = new PointCADTool();
@@ -103,6 +104,9 @@ public class CADExtension implements Extension {
         EllipseCADTool ellipse=new EllipseCADTool();
         ArcCADTool arc=new ArcCADTool();
         PolygonCADTool polygon=new PolygonCADTool();
+        CopyCADTool copy=new CopyCADTool();
+        RotateCADTool rotate=new RotateCADTool();
+        ScaleCADTool scale=new ScaleCADTool();
         addCADTool("selection", selection);
         addCADTool("line", line);
         addCADTool("point", point);
@@ -112,6 +116,9 @@ public class CADExtension implements Extension {
         addCADTool("ellipse", ellipse);
         addCADTool("arc", arc);
         addCADTool("polygon", polygon);
+        addCADTool("copy",copy);
+        addCADTool("rotate",rotate);
+        addCADTool("scale",scale);
     }
 
     /**
@@ -120,10 +127,9 @@ public class CADExtension implements Extension {
     public void execute(String s) {
         view = (View) PluginServices.getMDIManager().getActiveView();
         mapControl = (MapControl) view.getMapControl();
-        if (!isLoad){
-        	mapControl.addMapTool("cadtooladapter", new Behavior[]{adapter});
-        	isLoad=true;
-        }
+        if (!mapControl.getNamesMapTools().containsKey("cadtooladapter"))
+        	mapControl.addMapTool("cadtooladapter",adapter);
+        	view.getMapControl().setTool("cadtooladapter");
         	view.addConsoleListener("cad", new ResponseListener() {
      			public void acceptResponse(String response) {
      				adapter.textEntered(response);
@@ -146,10 +152,12 @@ public class CADExtension implements Extension {
 			if (layers.getLayer(i).isEditing() && layers.getLayer(i) instanceof FLyrVect){
 				adapter.setVectorialAdapter((VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource());
 				adapter.setMapControl(mapControl);
+
 			}
 		}
 
         view.getMapControl().setTool("cadtooladapter");
+
         if (s.compareTo("SPLINE") == 0) {
         	setCADTool("spline");
         } else if (s.compareTo("COPY") == 0) {
@@ -161,7 +169,7 @@ public class CADExtension implements Extension {
         } else if (s.compareTo("SYMMETRY") == 0) {
         	setCADTool("symmetry");
         } else if (s.compareTo("ROTATION") == 0) {
-        	setCADTool("rotation");
+        	setCADTool("rotate");
         } else if (s.compareTo("STRETCHING") == 0) {
         	setCADTool("stretching");
         } else if (s.compareTo("SCALE") == 0) {
@@ -178,7 +186,7 @@ public class CADExtension implements Extension {
         	setCADTool("chaflan");
         } else if (s.compareTo("JOIN") == 0) {
         	setCADTool("join");
-        } else if (s.compareTo("SELECT") == 0) {
+        } else if (s.compareTo("SELCAD") == 0) {
         	setCADTool("selection");
         } else if (s.compareTo("POINT") == 0) {
         	setCADTool("point");
@@ -197,7 +205,7 @@ public class CADExtension implements Extension {
         } else if (s.compareTo("POLYGON") == 0) {
         	setCADTool("polygon");
         }
-
+        adapter.configureMenu();
         //ViewControls.CANCELED=false;
     }
     public void addCADTool(String name, CADTool c){
@@ -206,8 +214,10 @@ public class CADExtension implements Extension {
     public static void setCADTool(String text){
 		CADTool ct = (CADTool) namesCadTools.get(text);
 		if (ct == null) throw new RuntimeException("No such cad tool");
-		ct.init();
 		adapter.setCadTool(ct);
+		ct.init();
+		//PluginServices.getMainFrame().setSelectedTool("SELECT");
+		//PluginServices.getMainFrame().enableControls();
 	}
     /**
      * @see com.iver.andami.plugins.Extension#isEnabled()
@@ -308,5 +318,31 @@ public class CADExtension implements Extension {
 		Character keyChar = new Character(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0).getKeyChar());
 		mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),keyChar);
 		mapControl.getActionMap().put(keyChar, new KeyAction(""));
+	}
+
+	private static JPopupMenu popup = new JPopupMenu();
+	public static  void clearMenu(){
+		popup.removeAll();
+	}
+
+	public static void addMenuEntry(String text){
+		JMenuItem menu = new JMenuItem(text);
+		menu.setActionCommand(text);
+		menu.setEnabled(true);
+		menu.setVisible(true);
+		menu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				adapter.transition(e.getActionCommand());
+			}
+		});
+
+		popup.add(menu);
+	}
+	public static void showPopup(MouseEvent e) {
+		    popup.show(e.getComponent(),
+                       e.getX(), e.getY());
+    }
+	public static View getView() {
+		return view;
 	}
 }

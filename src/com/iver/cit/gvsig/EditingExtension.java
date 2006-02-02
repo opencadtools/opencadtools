@@ -12,7 +12,7 @@ import com.iver.cit.gvsig.project.ProjectView;
 
 /**
  * DOCUMENT ME!
- * 
+ *
  * @author Vicente Caballero Navarro
  */
 public class EditingExtension implements Extension {
@@ -48,13 +48,17 @@ public class EditingExtension implements Extension {
 				}
 			}
 		} else if (s.equals("SHOWGRID")) {
-			// vista.getMapControl().getCadToolAdapter().setGrid(true);
+			CADExtension.getCADToolAdapter().setMapControl(vista.getMapControl());
+			CADExtension.getCADToolAdapter().setGrid(true);
 		} else if (s.equals("HIDEGRID")) {
-			// vista.getMapControl().getCadToolAdapter().setGrid(false);
+			CADExtension.getCADToolAdapter().setMapControl(vista.getMapControl());
+			CADExtension.getCADToolAdapter().setGrid(false);
 		} else if (s.equals("SETADJUSTGRID")) {
-			// vista.getMapControl().getCadToolAdapter().setAdjustGrid(true);
+			CADExtension.getCADToolAdapter().setMapControl(vista.getMapControl());
+			CADExtension.getCADToolAdapter().setAdjustGrid(true);
 		} else if (s.equals("NOTADJUSTGRID")) {
-			// vista.getMapControl().getCadToolAdapter().setAdjustGrid(false);
+			CADExtension.getCADToolAdapter().setMapControl(vista.getMapControl());
+			CADExtension.getCADToolAdapter().setAdjustGrid(false);
 		}
 
 		PluginServices.getMainFrame().enableControls();

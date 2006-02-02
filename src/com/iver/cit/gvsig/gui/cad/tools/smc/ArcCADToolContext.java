@@ -23,6 +23,14 @@ public final class ArcCADToolContext
         ExecuteMap.Initial.Entry(this);
     }
 
+    public void addOption(String s)
+    {
+        _transition = "addOption";
+        getState().addOption(this, s);
+        _transition = "";
+        return;
+    }
+
     public void addPoint(double pointX, double pointY)
     {
         _transition = "addPoint";
@@ -72,6 +80,11 @@ public final class ArcCADToolContext
 
         protected void Entry(ArcCADToolContext context) {}
         protected void Exit(ArcCADToolContext context) {}
+
+        protected void addOption(ArcCADToolContext context, String s)
+        {
+            Default(context);
+        }
 
         protected void addPoint(ArcCADToolContext context, double pointX, double pointY)
         {
@@ -135,6 +148,45 @@ public final class ArcCADToolContext
             super (name, id);
         }
 
+        protected void addOption(ArcCADToolContext context, String s)
+        {
+            ArcCADTool ctxt = context.getOwner();
+
+            if (s.equals("Cancelar"))
+            {
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        ExecuteMap.Initial.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(ExecuteMap.Initial);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
+            }
+            else
+            {
+                super.addOption(context, s);
+            }
+
+            return;
+        }
+
     //-----------------------------------------------------------
     // Inner classse.
     //
@@ -156,9 +208,9 @@ public final class ArcCADToolContext
             {
                 ArcCADTool ctxt = context.getOwner();
 
-                ctxt.init();
                 ctxt.setQuestion("ARCO" + "\n"+
 		"Insertar primer punto");
+                ctxt.setDescription(new String[]{"Cancelar"});
                 return;
             }
 
@@ -172,6 +224,7 @@ public final class ArcCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar segundo punto");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
@@ -209,6 +262,7 @@ public final class ArcCADToolContext
                 try
                 {
                     ctxt.setQuestion("Insertar ultimo punto");
+                    ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY);
                 }
                 finally
