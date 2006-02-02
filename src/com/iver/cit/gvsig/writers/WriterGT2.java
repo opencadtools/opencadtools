@@ -70,7 +70,7 @@ public class WriterGT2 implements IWriter {
             case Types.DOUBLE:
             	return Double.class;
             case Types.FLOAT:
-            	return Float.class;
+            	return Double.class;
             case Types.CHAR:
             	return Character.class;
             case Types.VARCHAR:
@@ -84,8 +84,8 @@ public class WriterGT2 implements IWriter {
 	public static FeatureType getFeatureType(FLyrVect layer, String geomField, String featName) throws DriverException, com.iver.cit.gvsig.fmap.DriverException, FactoryConfigurationError, SchemaException {
 		
 		Class geomType = findBestGeometryClass(layer.getShapeType());
+		// geomType = Geometry.class;
 		AttributeType geom = AttributeTypeFactory.newAttributeType(geomField, geomType);
-		
 		int numFields = layer.getRecordset().getFieldCount() + 1;
 		AttributeType[] att = new AttributeType[numFields];
 		att[0] = geom;
@@ -95,7 +95,7 @@ public class WriterGT2 implements IWriter {
 					layer.getRecordset().getFieldName(i-1),
 					getClassBySqlTYPE(layer.getRecordset().getFieldType(i-1))); 
 		}
-		FeatureType featType = FeatureTypeBuilder.newFeatureType(att,"prueba");
+		FeatureType featType = FeatureTypeBuilder.newFeatureType(att,featName);
 		return featType;
 	}
 	
@@ -157,6 +157,8 @@ public class WriterGT2 implements IWriter {
 	public void process(IRowEdited row) throws EditionException {
 		
 		IFeature feat = (IFeature) row.getLinkedRow();
+		// FeatureType featType = featStore.getSchema();
+		// TODO: OJO CON EL ORDEN DE LOS CAMPOS, QUE NO ES EL MISMO
 		Object[] values = new Object[types.length];
 		values[0] = feat.getGeometry().toJTSGeometry();
 		for (int i=1; i < types.length; i++)

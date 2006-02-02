@@ -46,6 +46,7 @@ import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
@@ -55,6 +56,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.CopyCADToolContext.CopyCADToolState;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 import java.io.IOException;
@@ -145,9 +147,9 @@ public class CopyCADTool extends DefaultCADTool {
                     DefaultFeature fea = (DefaultFeature) vea.getRow(i)
                                                              .getLinkedRow()
                                                              .cloneRow();
-                    fea.getGeometry().move(lastPoint.getX() -
-                        firstPoint.getX(), lastPoint.getY() -
-                        firstPoint.getY());
+                    // Movemos la geometría
+                    UtilFunctions.moveGeom(fea.getGeometry(), lastPoint.getX() -
+                            firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
 
                     vea.addRow(fea);
                 }
@@ -200,7 +202,9 @@ public class CopyCADTool extends DefaultCADTool {
                 for (int i = selection.nextSetBit(0); i >= 0;
                         i = selection.nextSetBit(i + 1)) {
                     IGeometry geometry = vea.getShape(i).cloneGeometry();
-                    geometry.move(x - firstPoint.getX(), y - firstPoint.getY());
+                    // Movemos la geometría
+                    UtilFunctions.moveGeom(geometry, x - firstPoint.getX(), y - firstPoint.getY());
+                    // geometry.move(x - firstPoint.getX(), y - firstPoint.getY());
                     geometry.draw((Graphics2D) g,
                         getCadToolAdapter().getMapControl().getViewPort(),
                         CADTool.drawingSymbol);

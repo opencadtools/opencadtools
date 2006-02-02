@@ -42,8 +42,6 @@ package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.IOException;
@@ -51,11 +49,9 @@ import java.io.IOException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
-import com.iver.cit.gvsig.fmap.core.GeneralPathX;
-import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
@@ -208,8 +204,10 @@ public class ScaleCADTool extends DefaultCADTool {
     				for (int i = selection.nextSetBit(0); i >= 0;
     						i = selection.nextSetBit(i + 1)) {
     					DefaultFeature fea = (DefaultFeature)getCadToolAdapter().getVectorialAdapter().getRow(i).cloneRow();
-    					fea.getGeometry().rotate(-Math.atan2(w, h) + (Math.PI / 2),
+    					UtilFunctions.rotateGeom(fea.getGeometry(), -Math.atan2(w, h) + (Math.PI / 2),
     						firstPoint.getX(), firstPoint.getY());
+    					// fea.getGeometry().rotate(-Math.atan2(w, h) + (Math.PI / 2),
+    					// 	firstPoint.getX(), firstPoint.getY());
     					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea);
     				}
 
@@ -246,9 +244,9 @@ public class ScaleCADTool extends DefaultCADTool {
 					if (selection.get(i)) {
 						IGeometry geometry = vea.getShape(i);
 						double size=getCadToolAdapter().getMapControl().getViewPort().toMapDistance(getCadToolAdapter().getMapControl().getWidth());
-						geometry.scale(firstPoint,
-							firstPoint.distance(currentPoint)/(size/40),
-							firstPoint.distance(currentPoint)/(size/40));
+						UtilFunctions.scaleGeom(geometry, firstPoint, 
+								firstPoint.distance(currentPoint)/(size/40),
+								firstPoint.distance(currentPoint)/(size/40));
 						geometry.draw((Graphics2D) g,
 							getCadToolAdapter().getMapControl().getViewPort(),
 							CADTool.modifySymbol);
@@ -272,7 +270,8 @@ public class ScaleCADTool extends DefaultCADTool {
 						double distre = ore.distance(currentPoint);
 						double escalado = distre / distrr;
 
-						geometry.scale(scalePoint, escalado, escalado);
+						UtilFunctions.scaleGeom(geometry, scalePoint, escalado, escalado);
+						// geometry.scale(scalePoint, escalado, escalado);
 						geometry.draw((Graphics2D) g,
 							getCadToolAdapter().getMapControl().getViewPort(),
 							CADTool.modifySymbol);
@@ -333,7 +332,8 @@ public class ScaleCADTool extends DefaultCADTool {
     		for (int i = 0; i < vea.getRowCount(); i++) {
     			if (selection.get(i)) {
     				DefaultFeature df=vea.getRow(i).cloneRow();
-    				df.getGeometry().scale(scalePoint, scaleFactor, scaleFactor);
+    				UtilFunctions.scaleGeom(df.getGeometry(), scalePoint, scaleFactor, scaleFactor);
+    				// df.getGeometry().scale(scalePoint, scaleFactor, scaleFactor);
     				vea.modifyRow(i, df);
     			}
     		}

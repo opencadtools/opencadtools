@@ -55,6 +55,7 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
@@ -152,8 +153,12 @@ public class RotateCADTool extends DefaultCADTool {
     				for (int i = selection.nextSetBit(0); i >= 0;
     						i = selection.nextSetBit(i + 1)) {
     					DefaultFeature fea = (DefaultFeature)getCadToolAdapter().getVectorialAdapter().getRow(i).cloneRow();
-    					fea.getGeometry().rotate(-Math.atan2(w, h) + (Math.PI / 2),
-    						firstPoint.getX(), firstPoint.getY());
+						// Rotamos la geometry
+						UtilFunctions.rotateGeom(fea.getGeometry(), -Math.atan2(w, h) + (Math.PI / 2),
+	    						firstPoint.getX(), firstPoint.getY());
+    					
+    					/* fea.getGeometry().rotate(-Math.atan2(w, h) + (Math.PI / 2),
+    						firstPoint.getX(), firstPoint.getY()); */
     					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea);
     				}
 
@@ -214,8 +219,10 @@ public class RotateCADTool extends DefaultCADTool {
 			           i >= 0;
 			           i = selection.nextSetBit(i + 1)){
 			                   IGeometry geometry = getCadToolAdapter().getVectorialAdapter().getShape(i);
+								// Rotamos la geometry
+								UtilFunctions.rotateGeom(geometry, -Math.atan2(w,h)+Math.PI/2,firstPoint.getX(),firstPoint.getY());
 
-			                   geometry.rotate(-Math.atan2(w,h)+Math.PI/2,firstPoint.getX(),firstPoint.getY());
+			                   // geometry.rotate(-Math.atan2(w,h)+Math.PI/2,firstPoint.getX(),firstPoint.getY());
 			                   geometry.draw((Graphics2D) g,
 			                                   getCadToolAdapter().getMapControl().getViewPort(),
 			                                   CADTool.drawingSymbol);
@@ -258,8 +265,13 @@ public class RotateCADTool extends DefaultCADTool {
 				for (int i = 0; i < getCadToolAdapter().getVectorialAdapter().getRowCount(); i++) {
 					if (selection.get(i)) {
 						DefaultFeature fea = (DefaultFeature)getCadToolAdapter().getVectorialAdapter().getRow(i).cloneRow();
-    					fea.getGeometry().rotate(Math.toRadians(d),
-    						firstPoint.getX(), firstPoint.getY());
+						// Rotamos la geometry
+						AffineTransform at = new AffineTransform();
+						at.rotate(Math.toRadians(d),
+	    						firstPoint.getX(), firstPoint.getY());
+						fea.getGeometry().transform(at);
+    					// fea.getGeometry().rotate(Math.toRadians(d),
+    					// 	firstPoint.getX(), firstPoint.getY());
     					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea);
 					}
 				}
