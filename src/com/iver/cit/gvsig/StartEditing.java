@@ -52,7 +52,8 @@ public class StartEditing implements Extension {
                     FLyrVect lv = (FLyrVect) layers.getLayer(i);
                     // lv.setVisible(true);
 
-                    VectorialEditableAdapter vea = new VectorialEditableAdapter(lv.getSource());
+                    VectorialEditableAdapter vea = new VectorialEditableAdapter();
+                    vea.setOriginalVectorialAdapter(lv.getSource());
                     try{
                     vea.startEdition();
                     }catch (EditionException e) {
