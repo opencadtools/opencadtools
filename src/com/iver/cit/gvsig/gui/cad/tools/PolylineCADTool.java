@@ -50,7 +50,9 @@ import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
+import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext;
@@ -151,7 +153,8 @@ public class PolylineCADTool extends DefaultCADTool {
                         2);
                 elShape.moveTo(antPoint.getX(), antPoint.getY());
                 elShape.lineTo(point.getX(), point.getY());
-                list.add(ShapeFactory.createPolyline2D(elShape));
+				list.add(ShapeFactory.createPolyline2D(elShape));
+                
             }
 
             if (antPoint != null) {

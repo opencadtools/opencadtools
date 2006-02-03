@@ -81,11 +81,13 @@ public class StopEditingToShp implements Extension {
             SimpleFileFilter filterShp = new SimpleFileFilter("shp", "Ficheros .shp");
             jfc.setFileFilter(filterShp);
             if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
-        		    File newFile = jfc.getSelectedFile();
+        		    File newFile = jfc.getSelectedFile(); 
+        			VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
+        			// File newFile = vea.getDriver(). 
 
                     ShpWriter writer = new ShpWriter(newFile, layer);
 
-                    VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
+                    
                     vea.stopEdition(writer);
                     layer.setSource(vea.getOriginalAdapter());
                     layer.setEditing(false);

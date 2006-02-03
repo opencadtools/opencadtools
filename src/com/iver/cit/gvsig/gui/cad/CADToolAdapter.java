@@ -17,6 +17,7 @@ import java.util.Stack;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.DriverException;
+import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
@@ -83,6 +84,7 @@ public class CADToolAdapter extends Behavior {
 	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
 	 */
 	public void mouseEntered(MouseEvent e) throws BehaviorException {
+		clearMouseImage();
 	}
 
 	/**
@@ -210,8 +212,8 @@ public class CADToolAdapter extends Behavior {
 		Cursor transparentCursor =
 			Toolkit.getDefaultToolkit().createCustomCursor
 			    (image, new Point(0,0), "invisiblecursor");
-		View view=CADExtension.getView();
-		view.setCursor(transparentCursor);
+		
+		getMapControl().setCursor(transparentCursor);
 	}
 	/**
 	 * DOCUMENT ME!
@@ -219,7 +221,7 @@ public class CADToolAdapter extends Behavior {
 	 * @param g DOCUMENT ME!
 	 */
 	private void drawCursor(Graphics g) {
-		clearMouseImage();
+		
 		Point2D p = adjustedPoint;
 
 		if (p == null) {

@@ -52,6 +52,7 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
@@ -125,10 +126,17 @@ public abstract class DefaultCADTool implements CADTool {
      * @param geometry DOCUMENT ME!
      */
     public void addGeometry(IGeometry geometry) {
-        DefaultFeature df = new DefaultFeature(geometry, null);
-
+    	VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter(); 
         try {
-            getCadToolAdapter().getVectorialAdapter().addRow(df);
+        	if (vea.getShapeType() == FShape.POLYGON)
+        	{
+        		GeneralPathX gp = new GeneralPathX();
+        		gp.append(geometry.getGeneralPathXIterator(), true);
+        		geometry = ShapeFactory.createPolygon2D(gp);
+        	}
+        			
+        	DefaultFeature df = new DefaultFeature(geometry, null);
+            vea.addRow(df);
         } catch (DriverIOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
