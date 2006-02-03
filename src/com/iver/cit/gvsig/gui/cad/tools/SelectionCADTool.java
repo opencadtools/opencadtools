@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
@@ -169,9 +170,10 @@ public class SelectionCADTool extends DefaultCADTool {
 								e.printStackTrace();
 							}
                             try {
-								fea = (DefaultFeature) getCadToolAdapter().getVectorialAdapter()
-								                           .getFeature(i);
-							} catch (DriverException e) {
+								fea = (DefaultFeature) getCadToolAdapter().getVectorialAdapter().getRow(i).getLinkedRow();
+							} catch (IOException e) {
+								e.printStackTrace();
+							} catch (DriverIOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}

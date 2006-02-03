@@ -135,7 +135,7 @@ public class CADToolAdapter extends Behavior {
 
 			for (int i = 0; i < indexes.length; i++) {
 				IFeature fea=null;
-					fea = vea.getFeature(indexes[i]);
+					fea = (IFeature) vea.getRow(indexes[i]).getLinkedRow();//getFeature(indexes[i]);
 				Handler[] handlers = fea.getGeometry().getHandlers(IGeometry.SELECTHANDLER);
 
 				for (int j = 0; j < handlers.length; j++) {
@@ -162,7 +162,11 @@ public class CADToolAdapter extends Behavior {
 
 				return min;
 			}
-		} catch (DriverException e) {
+		} catch (DriverIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
