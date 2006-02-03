@@ -15,6 +15,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.project.ProjectView;
+import com.iver.utiles.SimpleFileFilter;
 
 
 
@@ -77,12 +78,8 @@ public class StopEditingToShp implements Extension {
     public void stopEditing(FLyrVect layer) {
         try {
             JFileChooser jfc = new JFileChooser();
-           // if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            /*   FLyrVect layer = (FLyrVect) test.createLayer("prueba",
-                        (VectorialFileDriver) driverManager.getDriver(
-                            "gvSIG shp driver"), original,
-                        ProjectionPool.get("EPSG:23030"));
-*/
+            SimpleFileFilter filterShp = new SimpleFileFilter("shp", "Ficheros .shp");
+            jfc.setFileFilter(filterShp);
             if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
         		    File newFile = jfc.getSelectedFile();
 
