@@ -311,6 +311,37 @@ public class CADToolAdapter extends Behavior {
 	 * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
 	 */
 	public void mouseWheelMoved(MouseWheelEvent e) throws BehaviorException {
+		getMapControl().cancelDrawing();
+		ViewPort vp = getMapControl().getViewPort();
+		// Point2D pReal = vp.toMapPoint(e.getPoint());
+		
+		Point2D pReal = new Point2D.Double(vp.getAdjustedExtent().getCenterX()
+				, vp.getAdjustedExtent().getCenterY());
+		int amount = e.getWheelRotation(); 
+        double nuevoX;
+        double nuevoY;
+        double factor;
+
+		if (amount > 0) // nos acercamos
+		{
+			factor = 0.9;
+		}
+		else // nos alejamos
+		{
+			factor = 1.2;
+		}
+        Rectangle2D.Double r = new Rectangle2D.Double();
+        if (vp.getExtent()!=null)
+        {
+	        nuevoX = pReal.getX() - ((vp.getExtent().getWidth() * factor) / 2.0);
+	        nuevoY = pReal.getY() - ((vp.getExtent().getHeight() * factor) / 2.0);
+	        r.x = nuevoX;
+	        r.y = nuevoY;
+	        r.width = vp.getExtent().getWidth() * factor;
+	        r.height = vp.getExtent().getHeight() * factor;
+	
+	        vp.setExtent(r);
+        }				
 	}
 
 	/**
