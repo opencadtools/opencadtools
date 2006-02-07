@@ -5,17 +5,17 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Selection::FirstPoint
 %class SelectionCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool
 %import com.iver.cit.gvsig.fmap.layers.FBitSet
 
-%map ExecuteMap
+%map Selection
 %%
 // A task begins life in suspended animation.
 
-Initial
+FirstPoint
 
 	Entry {
 		setQuestion("SELECCION" + "\n" +
@@ -28,23 +28,23 @@ Initial
 	{
 		addPoint(pointX:double,pointY:double)
 			[!ctxt.isSelected(pointX,pointY)]
-			First {
+			SecondPoint{
 				setQuestion("Precise segundo punto del rectángulo de seleccion");
 				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				}
 		addPoint(pointX:double,pointY:double)
 			[ctxt.isSelected(pointX,pointY)]
-			Second {
+			EndPoint {
 				setQuestion("Precise punto destino");
 				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				}
 }
 
-First{
+SecondPoint{
 	addPoint(pointX:double,pointY:double)
-			Initial {
+			FirstPoint {
 				setQuestion("Precise punto de estiramiento");
 				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
@@ -53,9 +53,9 @@ First{
 
 
 }
-Second{
+EndPoint{
 	addPoint(pointX:double,pointY:double)
-			Third {
+			FirstPoint {
 				setQuestion("Precise punto destino");
 				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
@@ -63,13 +63,12 @@ Second{
 				refresh();
 				}
 }
-Third{
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		FirstPoint{
 			end();
 			}
 }

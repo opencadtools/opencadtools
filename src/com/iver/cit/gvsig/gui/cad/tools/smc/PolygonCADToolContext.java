@@ -19,8 +19,8 @@ public final class PolygonCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Polygon.NumberOrCenterPoint);
+        Polygon.NumberOrCenterPoint.Entry(this);
     }
 
     public void addOption(String s)
@@ -119,7 +119,7 @@ public final class PolygonCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Polygon
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -132,33 +132,31 @@ public final class PolygonCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
-        private static ExecuteMap_Default Default;
+        /* package */ static Polygon_Default.Polygon_NumberOrCenterPoint NumberOrCenterPoint;
+        /* package */ static Polygon_Default.Polygon_CenterPoint CenterPoint;
+        /* package */ static Polygon_Default.Polygon_OptionOrRadiusOrPoint OptionOrRadiusOrPoint;
+        /* package */ static Polygon_Default.Polygon_RadiusOrPoint RadiusOrPoint;
+        private static Polygon_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
-            Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            NumberOrCenterPoint = new Polygon_Default.Polygon_NumberOrCenterPoint("Polygon.NumberOrCenterPoint", 0);
+            CenterPoint = new Polygon_Default.Polygon_CenterPoint("Polygon.CenterPoint", 1);
+            OptionOrRadiusOrPoint = new Polygon_Default.Polygon_OptionOrRadiusOrPoint("Polygon.OptionOrRadiusOrPoint", 2);
+            RadiusOrPoint = new Polygon_Default.Polygon_RadiusOrPoint("Polygon.RadiusOrPoint", 3);
+            Default = new Polygon_Default("Polygon.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Polygon_Default
         extends PolygonCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Polygon_Default(String name, int id)
         {
             super (name, id);
         }
@@ -171,7 +169,7 @@ public final class PolygonCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Polygon.NumberOrCenterPoint.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -185,7 +183,7 @@ public final class PolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Polygon.NumberOrCenterPoint);
 
                     if (loopbackFlag == false)
                     {
@@ -207,14 +205,14 @@ public final class PolygonCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Polygon_NumberOrCenterPoint
+            extends Polygon_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Polygon_NumberOrCenterPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -244,7 +242,7 @@ public final class PolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(Polygon.OptionOrRadiusOrPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -265,7 +263,7 @@ public final class PolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Polygon.CenterPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -276,14 +274,14 @@ public final class PolygonCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Polygon_CenterPoint
+            extends Polygon_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Polygon_CenterPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -303,7 +301,7 @@ public final class PolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(Polygon.OptionOrRadiusOrPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -314,14 +312,14 @@ public final class PolygonCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
+        private static final class Polygon_OptionOrRadiusOrPoint
+            extends Polygon_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Second(String name, int id)
+            private Polygon_OptionOrRadiusOrPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -341,7 +339,7 @@ public final class PolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Third);
+                    context.setState(Polygon.RadiusOrPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -361,7 +359,7 @@ public final class PolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fourth);
+                    context.setState(Polygon.NumberOrCenterPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -381,7 +379,7 @@ public final class PolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fourth);
+                    context.setState(Polygon.NumberOrCenterPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -392,14 +390,14 @@ public final class PolygonCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Third
-            extends ExecuteMap_Default
+        private static final class Polygon_RadiusOrPoint
+            extends Polygon_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Third(String name, int id)
+            private Polygon_RadiusOrPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -418,7 +416,7 @@ public final class PolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fourth);
+                    context.setState(Polygon.NumberOrCenterPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -438,27 +436,10 @@ public final class PolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fourth);
+                    context.setState(Polygon.NumberOrCenterPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Fourth
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Fourth(String name, int id)
-            {
-                super (name, id);
             }
 
         //-------------------------------------------------------

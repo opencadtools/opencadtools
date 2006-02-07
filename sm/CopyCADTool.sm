@@ -5,16 +5,16 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Copy::FirstPointToMove
 %class CopyCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool
 
-%map ExecuteMap
+%map Copy
 %%
 // A task begins life in suspended animation.
 
-Initial
+FirstPointToMove
 	Entry {
 		selection();
 		setQuestion("COPIAR" + "\n" +
@@ -27,28 +27,27 @@ Initial
 
 	{
 		addPoint(pointX:double,pointY:double)
-			First {
+			SecondPointToMove {
 				setQuestion("Precisar segundo punto del desplazamiento");
 				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				}
 	}
-First{
+SecondPointToMove{
 	addPoint(pointX:double,pointY:double)
-		Second {
+		FirstPointToMove {
 			setDescription(new String[]{"Cancelar"});
 			addPoint(pointX,pointY);
 			end();
 			refresh();
 			}
 }
-Second{
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		FirstPointToMove{
 			end();
 			}
 }

@@ -5,16 +5,16 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Ellipse::FirstPointAxis
 %class EllipseCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool
 
-%map ExecuteMap
+%map Ellipse
 %%
 // A task begins life in suspended animation.
 
-Initial
+FirstPointAxis
 
 	Entry {
 		setQuestion("ELIPSE" + "\n" +
@@ -26,43 +26,40 @@ Initial
 
 	{
 		addPoint( pointX:double,pointY:double)
-			First {
+			SecondPointAxis {
 				setQuestion("Insertar punto final de eje de elipse");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY);
 				}
 
 	}
-First{
+SecondPointAxis{
 	addPoint( pointX:double,pointY:double)
-		Second {
+		DistanceOtherAxis {
 			setQuestion("Insertar distancia al otro eje");
 			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 
 }
-Second{
+DistanceOtherAxis{
 	addPoint( pointX:double,pointY:double)
-		Third {
+		FirstPointAxis {
 			addPoint( pointX,pointY);
 			end();
 			}
 	addValue( d:double)
-		Fourth {
+		FirstPointAxis {
 			addValue( d);
 			end();
 			}
 }
-Third{
-}
-Fourth{
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		FirstPointAxis{
 			end();
 			}
 }

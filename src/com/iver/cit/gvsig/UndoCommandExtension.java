@@ -71,27 +71,33 @@ public class UndoCommandExtension implements Extension {
 	 */
 	public void execute(String s) {
 		View vista = (View) PluginServices.getMDIManager().getActiveView();
-		MapControl mapControl = (MapControl) vista.getMapControl();
+
 
 		if (s.compareTo("UNDO") == 0) {
-			try {
-				FLayers layers=mapControl.getMapContext().getLayers();
-				for (int i=0;i<layers.getLayersCount();i++){
-					if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing()){
-						VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
-						vea.undo();
-					}
-				}
-			} catch (DriverIOException e) {
-				NotificationManager.addError("Error accediendo a los Drivers para deshacer un comando",
-					e);
-			} catch (IOException e) {
-				NotificationManager.addError("Error accediendo al fichero para deshacer un comando",
-					e);
-			}
-
-			vista.getMapControl().drawMap(false);
+			undo(vista);
 		}
+	}
+
+	private void undo(View vista) {
+		MapControl mapControl = (MapControl) vista.getMapControl();
+		try {
+			FLayers layers=mapControl.getMapContext().getLayers();
+			for (int i=0;i<layers.getLayersCount();i++){
+				if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing()){
+					VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
+					vea.undo();
+				}
+			}
+		} catch (DriverIOException e) {
+			NotificationManager.addError("Error accediendo a los Drivers para deshacer un comando",
+				e);
+		} catch (IOException e) {
+			NotificationManager.addError("Error accediendo al fichero para deshacer un comando",
+				e);
+		}
+		//vista.getMapControl().cancelDrawing();
+		vista.getMapControl().drawMap(false);
+
 	}
 
 	/**
@@ -102,7 +108,7 @@ public class UndoCommandExtension implements Extension {
 		MapControl mapControl = (MapControl) vista.getMapControl();
 		FLayers layers=mapControl.getMapContext().getLayers();
 		for (int i=0;i<layers.getLayersCount();i++){
-			if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing()){
+			if (layers.getLayer(i) instanceof FLyrVect && ((FLyrVect)layers.getLayer(i)).getSource() instanceof VectorialEditableAdapter && layers.getLayer(i).isEditing()){
 				VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
 				if (vea==null)return false;
 				return vea.moreUndoCommands();

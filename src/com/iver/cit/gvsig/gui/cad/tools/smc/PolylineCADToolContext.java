@@ -19,8 +19,8 @@ public final class PolylineCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Polyline.FirstPoint);
+        Polyline.FirstPoint.Entry(this);
     }
 
     public void addOption(String s)
@@ -106,7 +106,7 @@ public final class PolylineCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Polyline
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -119,33 +119,29 @@ public final class PolylineCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
-        private static ExecuteMap_Default Default;
+        /* package */ static Polyline_Default.Polyline_FirstPoint FirstPoint;
+        /* package */ static Polyline_Default.Polyline_NextPointOrArcOrClose NextPointOrArcOrClose;
+        /* package */ static Polyline_Default.Polyline_NextPointOrLineOrClose NextPointOrLineOrClose;
+        private static Polyline_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
-            Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            FirstPoint = new Polyline_Default.Polyline_FirstPoint("Polyline.FirstPoint", 0);
+            NextPointOrArcOrClose = new Polyline_Default.Polyline_NextPointOrArcOrClose("Polyline.NextPointOrArcOrClose", 1);
+            NextPointOrLineOrClose = new Polyline_Default.Polyline_NextPointOrLineOrClose("Polyline.NextPointOrLineOrClose", 2);
+            Default = new Polyline_Default("Polyline.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Polyline_Default
         extends PolylineCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Polyline_Default(String name, int id)
         {
             super (name, id);
         }
@@ -158,7 +154,7 @@ public final class PolylineCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Polyline.FirstPoint.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -173,7 +169,7 @@ public final class PolylineCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Polyline.FirstPoint);
 
                     if (loopbackFlag == false)
                     {
@@ -195,14 +191,14 @@ public final class PolylineCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Polyline_FirstPoint
+            extends Polyline_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Polyline_FirstPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -232,7 +228,7 @@ public final class PolylineCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Polyline.NextPointOrArcOrClose);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -243,14 +239,14 @@ public final class PolylineCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Polyline_NextPointOrArcOrClose
+            extends Polyline_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Polyline_NextPointOrArcOrClose(String name, int id)
             {
                 super (name, id);
             }
@@ -272,7 +268,7 @@ public final class PolylineCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.Second);
+                        context.setState(Polyline.NextPointOrLineOrClose);
                         (context.getState()).Entry(context);
                     }
                 }
@@ -290,7 +286,7 @@ public final class PolylineCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.Third);
+                        context.setState(Polyline.FirstPoint);
                         (context.getState()).Entry(context);
                     }
                 }                else
@@ -326,14 +322,14 @@ public final class PolylineCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
+        private static final class Polyline_NextPointOrLineOrClose
+            extends Polyline_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Second(String name, int id)
+            private Polyline_NextPointOrLineOrClose(String name, int id)
             {
                 super (name, id);
             }
@@ -355,7 +351,7 @@ public final class PolylineCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.First);
+                        context.setState(Polyline.NextPointOrArcOrClose);
                         (context.getState()).Entry(context);
                     }
                 }
@@ -373,7 +369,7 @@ public final class PolylineCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.Third);
+                        context.setState(Polyline.FirstPoint);
                         (context.getState()).Entry(context);
                     }
                 }                else
@@ -402,40 +398,6 @@ public final class PolylineCADToolContext
                     context.setState(endState);
                 }
                 return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Third
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Third(String name, int id)
-            {
-                super (name, id);
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Fourth
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Fourth(String name, int id)
-            {
-                super (name, id);
             }
 
         //-------------------------------------------------------

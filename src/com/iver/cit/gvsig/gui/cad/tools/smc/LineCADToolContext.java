@@ -19,8 +19,8 @@ public final class LineCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Line.FirstPoint);
+        Line.FirstPoint.Entry(this);
     }
 
     public void addOption(String s)
@@ -119,7 +119,7 @@ public final class LineCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Line
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -132,29 +132,29 @@ public final class LineCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        private static ExecuteMap_Default Default;
+        /* package */ static Line_Default.Line_FirstPoint FirstPoint;
+        /* package */ static Line_Default.Line_SecondPointOrAngle SecondPointOrAngle;
+        /* package */ static Line_Default.Line_LenghtOrPoint LenghtOrPoint;
+        private static Line_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            FirstPoint = new Line_Default.Line_FirstPoint("Line.FirstPoint", 0);
+            SecondPointOrAngle = new Line_Default.Line_SecondPointOrAngle("Line.SecondPointOrAngle", 1);
+            LenghtOrPoint = new Line_Default.Line_LenghtOrPoint("Line.LenghtOrPoint", 2);
+            Default = new Line_Default("Line.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Line_Default
         extends LineCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Line_Default(String name, int id)
         {
             super (name, id);
         }
@@ -167,7 +167,7 @@ public final class LineCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Line.FirstPoint.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -181,7 +181,7 @@ public final class LineCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Line.FirstPoint);
 
                     if (loopbackFlag == false)
                     {
@@ -203,14 +203,14 @@ public final class LineCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Line_FirstPoint
+            extends Line_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Line_FirstPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -240,7 +240,7 @@ public final class LineCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Line.SecondPointOrAngle);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -251,14 +251,14 @@ public final class LineCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Line_SecondPointOrAngle
+            extends Line_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Line_SecondPointOrAngle(String name, int id)
             {
                 super (name, id);
             }
@@ -298,7 +298,7 @@ public final class LineCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(Line.LenghtOrPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -309,14 +309,14 @@ public final class LineCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
+        private static final class Line_LenghtOrPoint
+            extends Line_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Second(String name, int id)
+            private Line_LenghtOrPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -336,7 +336,7 @@ public final class LineCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Line.SecondPointOrAngle);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -357,7 +357,7 @@ public final class LineCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Line.SecondPointOrAngle);
                     (context.getState()).Entry(context);
                 }
                 return;

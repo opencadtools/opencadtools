@@ -19,8 +19,8 @@ public final class ArcCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Arc.FirstPoint);
+        Arc.FirstPoint.Entry(this);
     }
 
     public void addOption(String s)
@@ -106,7 +106,7 @@ public final class ArcCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Arc
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -119,31 +119,29 @@ public final class ArcCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
-        private static ExecuteMap_Default Default;
+        /* package */ static Arc_Default.Arc_FirstPoint FirstPoint;
+        /* package */ static Arc_Default.Arc_SecondPoint SecondPoint;
+        /* package */ static Arc_Default.Arc_ThirdPoint ThirdPoint;
+        private static Arc_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            FirstPoint = new Arc_Default.Arc_FirstPoint("Arc.FirstPoint", 0);
+            SecondPoint = new Arc_Default.Arc_SecondPoint("Arc.SecondPoint", 1);
+            ThirdPoint = new Arc_Default.Arc_ThirdPoint("Arc.ThirdPoint", 2);
+            Default = new Arc_Default("Arc.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Arc_Default
         extends ArcCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Arc_Default(String name, int id)
         {
             super (name, id);
         }
@@ -156,7 +154,7 @@ public final class ArcCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Arc.FirstPoint.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -170,7 +168,7 @@ public final class ArcCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Arc.FirstPoint);
 
                     if (loopbackFlag == false)
                     {
@@ -192,14 +190,14 @@ public final class ArcCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Arc_FirstPoint
+            extends Arc_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Arc_FirstPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -229,7 +227,7 @@ public final class ArcCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Arc.SecondPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -240,14 +238,14 @@ public final class ArcCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Arc_SecondPoint
+            extends Arc_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Arc_SecondPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -267,7 +265,7 @@ public final class ArcCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(Arc.ThirdPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -278,14 +276,14 @@ public final class ArcCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
+        private static final class Arc_ThirdPoint
+            extends Arc_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Second(String name, int id)
+            private Arc_ThirdPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -304,27 +302,10 @@ public final class ArcCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Third);
+                    context.setState(Arc.FirstPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Third
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Third(String name, int id)
-            {
-                super (name, id);
             }
 
         //-------------------------------------------------------

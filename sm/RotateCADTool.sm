@@ -5,16 +5,16 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Rotate::PointMain
 %class RotateCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool
 
-%map ExecuteMap
+%map Rotate
 %%
 // A task begins life in suspended animation.
 
-Initial
+PointMain
 	Entry {
 		selection();
 		setQuestion("ROTAR" + "\n" +
@@ -27,35 +27,34 @@ Initial
 
 	{
 		addPoint(pointX:double,pointY:double)
-			First {
+			AngleOrPoint {
 				setQuestion("Precise angulo de rotacion");
 				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				}
 	}
-First{
+AngleOrPoint{
 	addValue(d:double)
-		Second{
+		PointMain{
 			setDescription(new String[]{"Cancelar"});
 			addValue(d);
 			end();
 			refresh();
 			}
 	addPoint(pointX:double,pointY:double)
-		Second {
+		PointMain {
 			setDescription(new String[]{"Cancelar"});
 			addPoint(pointX,pointY);
 			end();
 			refresh();
 			}
 }
-Second{
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		PointMain{
 			end();
 			}
 }

@@ -5,16 +5,16 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Rectangle::FirstPoint
 %class RectangleCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool
 
-%map ExecuteMap
+%map Rectangle
 %%
 // A task begins life in suspended animation.
 
-Initial
+FirstPoint
 
 	Entry {
 		setQuestion("RECTANGULO" + "\n" +
@@ -27,44 +27,41 @@ Initial
 	{
 
 		addPoint(pointX:double,pointY:double)
-			First {
+			SecondPointOrSquare {
 				setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
 				setDescription(new String[]{"Cuadrado","Cancelar"});
 				addPoint(pointX,pointY);
 				}
 
 	}
-First{
+SecondPointOrSquare{
 	addPoint(pointX:double,pointY:double)
-		Third {
+		FirstPoint {
 			addPoint(pointX,pointY);
 			end();
 			}
 	addOption(s:String)
 		[s.equals("c") || s.equals("C") || s.equals("Cuadrado")]
-		Second {
+		SecondPointSquare {
 			setQuestion("Insertar esquina opuesta");
 			setDescription(new String[]{"Cancelar"});
 			addOption(s);
 			}
 
 }
-Second{
+SecondPointSquare{
 	addPoint(pointX:double,pointY:double)
-		Fourth {
+		FirstPoint {
 			addPoint(pointX,pointY);
 			end();
 			}
 }
-Third{
-}
-Fourth{
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		FirstPoint{
 			end();
 			}
 }

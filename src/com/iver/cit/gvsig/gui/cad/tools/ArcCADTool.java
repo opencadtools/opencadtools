@@ -110,11 +110,11 @@ public class ArcCADTool extends DefaultCADTool {
         ArcCADToolState actualState = (ArcCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Arc.FirstPoint")) {
             p1 = new Point2D.Double(x, y);
-        } else if (status.equals("ExecuteMap.First")) {
+        } else if (status.equals("Arc.SecondPoint")) {
             p2 = new Point2D.Double(x, y);
-        } else if (status.equals("ExecuteMap.Second")) {
+        } else if (status.equals("Arc.ThirdPoint")) {
             p3 = new Point2D.Double(x, y);
 
             IGeometry ig = ShapeFactory.createArc(p1, p2, p3);
@@ -139,9 +139,9 @@ public class ArcCADTool extends DefaultCADTool {
         ArcCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.First")) {
+        if (status.equals("Arc.SecondPoint")) {
             drawLine((Graphics2D) g, p1, new Point2D.Double(x, y));
-        } else if (status.equals("ExecuteMap.Second")) {
+        } else if (status.equals("Arc.ThirdPoint")) {
             Point2D current = new Point2D.Double(x, y);
             IGeometry ig = ShapeFactory.createArc(p1, p2, current);
 

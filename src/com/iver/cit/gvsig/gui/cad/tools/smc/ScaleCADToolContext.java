@@ -19,8 +19,8 @@ public final class ScaleCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Scale.PointMain);
+        Scale.PointMain.Entry(this);
     }
 
     public void addOption(String s)
@@ -119,7 +119,7 @@ public final class ScaleCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Scale
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -132,37 +132,35 @@ public final class ScaleCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fiveth Fiveth;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Last Last;
-        private static ExecuteMap_Default Default;
+        /* package */ static Scale_Default.Scale_PointMain PointMain;
+        /* package */ static Scale_Default.Scale_ScaleFactorOrReference ScaleFactorOrReference;
+        /* package */ static Scale_Default.Scale_PointOriginOrScaleFactor PointOriginOrScaleFactor;
+        /* package */ static Scale_Default.Scale_EndPointReference EndPointReference;
+        /* package */ static Scale_Default.Scale_OriginPointScale OriginPointScale;
+        /* package */ static Scale_Default.Scale_EndPointScale EndPointScale;
+        private static Scale_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
-            Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
-            Fiveth = new ExecuteMap_Default.ExecuteMap_Fiveth("ExecuteMap.Fiveth", 5);
-            Last = new ExecuteMap_Default.ExecuteMap_Last("ExecuteMap.Last", 6);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            PointMain = new Scale_Default.Scale_PointMain("Scale.PointMain", 0);
+            ScaleFactorOrReference = new Scale_Default.Scale_ScaleFactorOrReference("Scale.ScaleFactorOrReference", 1);
+            PointOriginOrScaleFactor = new Scale_Default.Scale_PointOriginOrScaleFactor("Scale.PointOriginOrScaleFactor", 2);
+            EndPointReference = new Scale_Default.Scale_EndPointReference("Scale.EndPointReference", 3);
+            OriginPointScale = new Scale_Default.Scale_OriginPointScale("Scale.OriginPointScale", 4);
+            EndPointScale = new Scale_Default.Scale_EndPointScale("Scale.EndPointScale", 5);
+            Default = new Scale_Default("Scale.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Scale_Default
         extends ScaleCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Scale_Default(String name, int id)
         {
             super (name, id);
         }
@@ -175,7 +173,7 @@ public final class ScaleCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Scale.PointMain.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -189,7 +187,7 @@ public final class ScaleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Scale.PointMain);
 
                     if (loopbackFlag == false)
                     {
@@ -211,14 +209,14 @@ public final class ScaleCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Scale_PointMain
+            extends Scale_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Scale_PointMain(String name, int id)
             {
                 super (name, id);
             }
@@ -249,7 +247,7 @@ public final class ScaleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Scale.ScaleFactorOrReference);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -260,14 +258,14 @@ public final class ScaleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Scale_ScaleFactorOrReference
+            extends Scale_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Scale_ScaleFactorOrReference(String name, int id)
             {
                 super (name, id);
             }
@@ -289,7 +287,7 @@ public final class ScaleCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.Last);
+                        context.setState(Scale.PointMain);
                         (context.getState()).Entry(context);
                     }
                 }
@@ -306,7 +304,7 @@ public final class ScaleCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.Second);
+                        context.setState(Scale.PointOriginOrScaleFactor);
                         (context.getState()).Entry(context);
                     }
                 }                else
@@ -332,7 +330,7 @@ public final class ScaleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Last);
+                    context.setState(Scale.PointMain);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -353,7 +351,7 @@ public final class ScaleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Last);
+                    context.setState(Scale.PointMain);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -364,14 +362,14 @@ public final class ScaleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
+        private static final class Scale_PointOriginOrScaleFactor
+            extends Scale_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Second(String name, int id)
+            private Scale_PointOriginOrScaleFactor(String name, int id)
             {
                 super (name, id);
             }
@@ -393,7 +391,7 @@ public final class ScaleCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.Initial);
+                        context.setState(Scale.PointMain);
                         (context.getState()).Entry(context);
                     }
                 }
@@ -420,7 +418,7 @@ public final class ScaleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Third);
+                    context.setState(Scale.EndPointReference);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -431,14 +429,14 @@ public final class ScaleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Third
-            extends ExecuteMap_Default
+        private static final class Scale_EndPointReference
+            extends Scale_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Third(String name, int id)
+            private Scale_EndPointReference(String name, int id)
             {
                 super (name, id);
             }
@@ -458,7 +456,7 @@ public final class ScaleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fourth);
+                    context.setState(Scale.OriginPointScale);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -469,14 +467,14 @@ public final class ScaleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Fourth
-            extends ExecuteMap_Default
+        private static final class Scale_OriginPointScale
+            extends Scale_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Fourth(String name, int id)
+            private Scale_OriginPointScale(String name, int id)
             {
                 super (name, id);
             }
@@ -496,7 +494,7 @@ public final class ScaleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fiveth);
+                    context.setState(Scale.EndPointScale);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -507,14 +505,14 @@ public final class ScaleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Fiveth
-            extends ExecuteMap_Default
+        private static final class Scale_EndPointScale
+            extends Scale_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Fiveth(String name, int id)
+            private Scale_EndPointScale(String name, int id)
             {
                 super (name, id);
             }
@@ -534,27 +532,10 @@ public final class ScaleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Last);
+                    context.setState(Scale.PointMain);
                     (context.getState()).Entry(context);
                 }
                 return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Last
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Last(String name, int id)
-            {
-                super (name, id);
             }
 
         //-------------------------------------------------------

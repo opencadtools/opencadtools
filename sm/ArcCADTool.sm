@@ -5,16 +5,16 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Arc::FirstPoint
 %class ArcCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool
 
-%map ExecuteMap
+%map Arc
 %%
 // A task begins life in suspended animation.
 
-Initial
+FirstPoint
 
 	Entry {
 		setQuestion("ARCO" + "\n"+
@@ -26,35 +26,34 @@ Initial
 
 	{
 		addPoint( pointX:double,pointY:double)
-			First {
+			SecondPoint {
 				setQuestion("Insertar segundo punto");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY);
 				}
 
 	}
-First{
+SecondPoint{
 	addPoint( pointX:double,pointY:double)
-		Second {
+		ThirdPoint {
 			setQuestion("Insertar ultimo punto");
 			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 }
-Second{
+ThirdPoint{
 	addPoint( pointX:double,pointY:double)
-		Third {
+		FirstPoint {
 			addPoint(pointX,pointY);
 			end();
 			}
 }
-Third{
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		FirstPoint{
 			end();
 			}
 }

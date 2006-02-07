@@ -108,8 +108,7 @@ public class PointCADTool extends DefaultCADTool {
         PointCADToolState actualState = (PointCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Initial") ||
-                (status == "ExecuteMap.First")) {
+        if (status.equals("Point.FirstPoint")) {
             addGeometry(ShapeFactory.createPoint2D(x, y));
         }
     }

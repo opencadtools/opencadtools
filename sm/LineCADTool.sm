@@ -5,16 +5,16 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Line::FirstPoint
 %class LineCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.LineCADTool
 
-%map ExecuteMap
+%map Line
 %%
 // A task begins life in suspended animation.
 
-Initial
+FirstPoint
 
 	Entry {
 		setQuestion("LINEA" + "\n" +
@@ -27,37 +27,37 @@ Initial
 	{
 
 		addPoint( pointX:double,pointY:double)
-			First {
+			SecondPointOrAngle {
 				setQuestion("Insertar segundo punto o angulo");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY);
 				}
 
 	}
-First{
+SecondPointOrAngle{
 	addPoint( pointX:double,pointY:double)
-		First {
+		SecondPointOrAngle {
 			setQuestion("Insertar segundo punto o angulo");
 			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 	addValue( d:double)
-		Second {
+		LenghtOrPoint {
 			setQuestion("Insertar longitud o punto");
 			setDescription(new String[]{"Cancelar"});
 			addValue( d);
 			}
 
 }
-Second{
+LenghtOrPoint{
 	addPoint( pointX:double,pointY:double)
-		First {
+		SecondPointOrAngle {
 			setQuestion("Insertar segundo punto o angulo");
 			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 	addValue( d:double)
-		First {
+		SecondPointOrAngle {
 			setQuestion("Insertar segundo punto o angulo");
 			setDescription(new String[]{"Cancelar"});
 			addValue( d);
@@ -67,7 +67,7 @@ Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		FirstPoint{
 			end();
 			}
 }

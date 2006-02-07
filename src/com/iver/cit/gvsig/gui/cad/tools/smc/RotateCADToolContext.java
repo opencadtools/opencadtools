@@ -19,8 +19,8 @@ public final class RotateCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Rotate.PointMain);
+        Rotate.PointMain.Entry(this);
     }
 
     public void addOption(String s)
@@ -119,7 +119,7 @@ public final class RotateCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Rotate
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -132,29 +132,27 @@ public final class RotateCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        private static ExecuteMap_Default Default;
+        /* package */ static Rotate_Default.Rotate_PointMain PointMain;
+        /* package */ static Rotate_Default.Rotate_AngleOrPoint AngleOrPoint;
+        private static Rotate_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            PointMain = new Rotate_Default.Rotate_PointMain("Rotate.PointMain", 0);
+            AngleOrPoint = new Rotate_Default.Rotate_AngleOrPoint("Rotate.AngleOrPoint", 1);
+            Default = new Rotate_Default("Rotate.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Rotate_Default
         extends RotateCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Rotate_Default(String name, int id)
         {
             super (name, id);
         }
@@ -167,7 +165,7 @@ public final class RotateCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Rotate.PointMain.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -181,7 +179,7 @@ public final class RotateCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Rotate.PointMain);
 
                     if (loopbackFlag == false)
                     {
@@ -203,14 +201,14 @@ public final class RotateCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Rotate_PointMain
+            extends Rotate_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Rotate_PointMain(String name, int id)
             {
                 super (name, id);
             }
@@ -241,7 +239,7 @@ public final class RotateCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Rotate.AngleOrPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -252,14 +250,14 @@ public final class RotateCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Rotate_AngleOrPoint
+            extends Rotate_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Rotate_AngleOrPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -280,7 +278,7 @@ public final class RotateCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(Rotate.PointMain);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -302,27 +300,10 @@ public final class RotateCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(Rotate.PointMain);
                     (context.getState()).Entry(context);
                 }
                 return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Second(String name, int id)
-            {
-                super (name, id);
             }
 
         //-------------------------------------------------------

@@ -19,8 +19,8 @@ public final class CopyCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Copy.FirstPointToMove);
+        Copy.FirstPointToMove.Entry(this);
     }
 
     public void addOption(String s)
@@ -106,7 +106,7 @@ public final class CopyCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Copy
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -119,29 +119,27 @@ public final class CopyCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        private static ExecuteMap_Default Default;
+        /* package */ static Copy_Default.Copy_FirstPointToMove FirstPointToMove;
+        /* package */ static Copy_Default.Copy_SecondPointToMove SecondPointToMove;
+        private static Copy_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            FirstPointToMove = new Copy_Default.Copy_FirstPointToMove("Copy.FirstPointToMove", 0);
+            SecondPointToMove = new Copy_Default.Copy_SecondPointToMove("Copy.SecondPointToMove", 1);
+            Default = new Copy_Default("Copy.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Copy_Default
         extends CopyCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Copy_Default(String name, int id)
         {
             super (name, id);
         }
@@ -154,7 +152,7 @@ public final class CopyCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Copy.FirstPointToMove.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -168,7 +166,7 @@ public final class CopyCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Copy.FirstPointToMove);
 
                     if (loopbackFlag == false)
                     {
@@ -190,14 +188,14 @@ public final class CopyCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Copy_FirstPointToMove
+            extends Copy_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Copy_FirstPointToMove(String name, int id)
             {
                 super (name, id);
             }
@@ -228,7 +226,7 @@ public final class CopyCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Copy.SecondPointToMove);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -239,14 +237,14 @@ public final class CopyCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Copy_SecondPointToMove
+            extends Copy_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Copy_SecondPointToMove(String name, int id)
             {
                 super (name, id);
             }
@@ -267,27 +265,10 @@ public final class CopyCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(Copy.FirstPointToMove);
                     (context.getState()).Entry(context);
                 }
                 return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Second(String name, int id)
-            {
-                super (name, id);
             }
 
         //-------------------------------------------------------

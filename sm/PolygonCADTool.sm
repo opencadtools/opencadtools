@@ -5,16 +5,16 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Polygon::NumberOrCenterPoint
 %class PolygonCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool
 
-%map ExecuteMap
+%map Polygon
 %%
 // A task begins life in suspended animation.
 
-Initial
+NumberOrCenterPoint
 
 	Entry {
 		setQuestion("POLIGONO" + "\n" +
@@ -26,64 +26,63 @@ Initial
 
 	{
 		addValue(d:double)
-			First {
+			CenterPoint {
 				setQuestion("Insertar punto central del poligono");
 				setDescription(new String[]{"Cancelar"});
 				addValue(d);
 				}
 		addPoint(pointX:double,pointY:double)
-			Second {
+			OptionOrRadiusOrPoint {
 				setQuestion("Inscrito en el círculo[I] o Circunscrito[C]<C>");
 				setDescription(new String[]{"Inscrito","Circunscrito","Cancelar"});
 				addPoint(pointX,pointY);
 				}
 
 	}
-First{
+CenterPoint{
 	addPoint(pointX:double,pointY:double)
-		Second {
+		OptionOrRadiusOrPoint {
 			setQuestion("Inscrito en el círculo[I] o Circunscrito[C]<C>");
 			setDescription(new String[]{"Inscrito","Circunscrito","Cancelar"});
 			addPoint(pointX,pointY);
 			}
 }
-Second{
+OptionOrRadiusOrPoint{
 	addOption(s:String)
-		Third {
+		RadiusOrPoint {
 			setQuestion("Precise rádio(r)");
 			setDescription(new String[]{"Cancelar"});
 			addOption(s);
 			}
 	addValue(d:double)
-		Fourth{
+		NumberOrCenterPoint{
 			addValue(d);
 			end();
 			}
 	addPoint(pointX:double,pointY:double)
-		Fourth {
+		NumberOrCenterPoint {
 			addPoint(pointX,pointY);
 			end();
 			}
 }
-Third{
+RadiusOrPoint{
 	addPoint(pointX:double,pointY:double)
-		Fourth {
+		NumberOrCenterPoint {
 			addPoint(pointX,pointY);
 			end();
 			}
 	addValue(d:double)
-		Fourth{
+		NumberOrCenterPoint{
 			addValue(d);
 			end();
 			}
 }
-Fourth{
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		NumberOrCenterPoint{
 			end();
 			}
 }

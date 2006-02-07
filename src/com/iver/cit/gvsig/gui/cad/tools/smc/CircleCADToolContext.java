@@ -19,8 +19,8 @@ public final class CircleCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Circle.CenterPointOr3p);
+        Circle.CenterPointOr3p.Entry(this);
     }
 
     public void addOption(String s)
@@ -119,7 +119,7 @@ public final class CircleCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Circle
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -132,39 +132,33 @@ public final class CircleCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fiveth Fiveth;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Sixth Sixth;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Seventh Seventh;
-        private static ExecuteMap_Default Default;
+        /* package */ static Circle_Default.Circle_CenterPointOr3p CenterPointOr3p;
+        /* package */ static Circle_Default.Circle_PointOrRadius PointOrRadius;
+        /* package */ static Circle_Default.Circle_SecondPoint SecondPoint;
+        /* package */ static Circle_Default.Circle_ThirdPoint ThirdPoint;
+        /* package */ static Circle_Default.Circle_FirstPoint FirstPoint;
+        private static Circle_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
-            Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
-            Fiveth = new ExecuteMap_Default.ExecuteMap_Fiveth("ExecuteMap.Fiveth", 5);
-            Sixth = new ExecuteMap_Default.ExecuteMap_Sixth("ExecuteMap.Sixth", 6);
-            Seventh = new ExecuteMap_Default.ExecuteMap_Seventh("ExecuteMap.Seventh", 7);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            CenterPointOr3p = new Circle_Default.Circle_CenterPointOr3p("Circle.CenterPointOr3p", 0);
+            PointOrRadius = new Circle_Default.Circle_PointOrRadius("Circle.PointOrRadius", 1);
+            SecondPoint = new Circle_Default.Circle_SecondPoint("Circle.SecondPoint", 2);
+            ThirdPoint = new Circle_Default.Circle_ThirdPoint("Circle.ThirdPoint", 3);
+            FirstPoint = new Circle_Default.Circle_FirstPoint("Circle.FirstPoint", 4);
+            Default = new Circle_Default("Circle.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Circle_Default
         extends CircleCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Circle_Default(String name, int id)
         {
             super (name, id);
         }
@@ -177,7 +171,7 @@ public final class CircleCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Circle.CenterPointOr3p.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -191,7 +185,7 @@ public final class CircleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Circle.CenterPointOr3p);
 
                     if (loopbackFlag == false)
                     {
@@ -213,14 +207,14 @@ public final class CircleCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Circle_CenterPointOr3p
+            extends Circle_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Circle_CenterPointOr3p(String name, int id)
             {
                 super (name, id);
             }
@@ -252,7 +246,7 @@ public final class CircleCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.Seventh);
+                        context.setState(Circle.FirstPoint);
                         (context.getState()).Entry(context);
                     }
                 }
@@ -279,7 +273,7 @@ public final class CircleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Circle.PointOrRadius);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -290,14 +284,14 @@ public final class CircleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Circle_PointOrRadius
+            extends Circle_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Circle_PointOrRadius(String name, int id)
             {
                 super (name, id);
             }
@@ -316,7 +310,7 @@ public final class CircleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Sixth);
+                    context.setState(Circle.CenterPointOr3p);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -336,7 +330,7 @@ public final class CircleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fiveth);
+                    context.setState(Circle.CenterPointOr3p);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -347,14 +341,14 @@ public final class CircleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
+        private static final class Circle_SecondPoint
+            extends Circle_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Second(String name, int id)
+            private Circle_SecondPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -374,7 +368,7 @@ public final class CircleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Third);
+                    context.setState(Circle.ThirdPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -385,14 +379,14 @@ public final class CircleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Third
-            extends ExecuteMap_Default
+        private static final class Circle_ThirdPoint
+            extends Circle_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Third(String name, int id)
+            private Circle_ThirdPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -411,7 +405,7 @@ public final class CircleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fourth);
+                    context.setState(Circle.CenterPointOr3p);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -422,65 +416,14 @@ public final class CircleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Fourth
-            extends ExecuteMap_Default
+        private static final class Circle_FirstPoint
+            extends Circle_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Fourth(String name, int id)
-            {
-                super (name, id);
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Fiveth
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Fiveth(String name, int id)
-            {
-                super (name, id);
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Sixth
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Sixth(String name, int id)
-            {
-                super (name, id);
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Seventh
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Seventh(String name, int id)
+            private Circle_FirstPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -500,7 +443,7 @@ public final class CircleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(Circle.SecondPoint);
                     (context.getState()).Entry(context);
                 }
                 return;

@@ -114,12 +114,12 @@ public class PolygonCADTool extends DefaultCADTool {
         PolygonCADToolState actualState = (PolygonCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Polygon.NumberOrCenterPoint")) {
             center = new Point2D.Double(x, y);
-        } else if (status.equals("ExecuteMap.First")) {
+        } else if (status.equals("Polygon.CenterPoint")) {
             center = new Point2D.Double(x, y);
-        } else if (status.equals("ExecuteMap.Second") ||
-                status.equals("ExecuteMap.Third")) {
+        } else if (status.equals("Polygon.OptionOrRadiusOrPoint") ||
+                status.equals("Polygon.RadiusOrPoint")) {
             Point2D point = new Point2D.Double(x, y);
             //Polígono a partir de la circunferencia.
             if (isI) {
@@ -144,9 +144,9 @@ public class PolygonCADTool extends DefaultCADTool {
         PolygonCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.First") ||
-                status.equals("ExecuteMap.Second") ||
-                status.equals("ExecuteMap.Third")) {
+        if (status.equals("Polygon.CenterPoint") ||
+                status.equals("Polygon.OptionOrRadiusOrPoint") ||
+                status.equals("Polygon.RadiusOrPoint")) {
             Point2D point = new Point2D.Double(x, y);
             drawLine((Graphics2D) g, center, point);
 
@@ -176,7 +176,7 @@ public class PolygonCADTool extends DefaultCADTool {
         PolygonCADToolState actualState = (PolygonCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Second")) {
+        if (status.equals("Polygon.OptionOrRadiusOrPoint")) {
             if (s.equals("C") || s.equals("c") || s.equals("Circunscrito")) {
                 isI = false;
             } else if (s.equals("I") || s.equals("i") || s.equals("Inscrito")) {
@@ -192,10 +192,10 @@ public class PolygonCADTool extends DefaultCADTool {
         PolygonCADToolState actualState = (PolygonCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Polygon.NumberOrCenterPoint")) {
             numLines = (int) d;
-        } else if (status.equals("ExecuteMap.Second") ||
-                status.equals("ExecuteMap.Third")) {
+        } else if (status.equals("Polygon.OptionOrRadiusOrPoint") ||
+                status.equals("Polygon.RadiusOrPoint")) {
             double radio = d;
 
             //Polígono a partir de radio.

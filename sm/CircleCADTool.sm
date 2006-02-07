@@ -5,17 +5,17 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Circle::CenterPointOr3p
 %class CircleCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool
 
 
-%map ExecuteMap
+%map Circle
 %%
 // A task begins life in suspended animation.
 
-Initial
+CenterPointOr3p
 
 	Entry {
 		setQuestion("CIRCULO" + "\n" +
@@ -27,56 +27,50 @@ Initial
 
 	{
 	addPoint( pointX:double,pointY:double)
-			First {
+			PointOrRadius {
 				setQuestion("Insertar radio o segundo punto");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY);
 				}
 	addOption( s:String)
 		[s.equals("3p") || s.equals("3P")]
-			Seventh{
+			FirstPoint{
 				setQuestion("Insertar primer punto");
 				setDescription(new String[]{"Cancelar"});
 				addOption( s);
 			}
 }
-First{
+PointOrRadius{
 	addPoint( pointX:double,pointY:double)
-		Sixth {
+		CenterPointOr3p {
 			addPoint( pointX,pointY);
 			end();
 			}
 	addValue( d:double)
-		Fiveth {
+		CenterPointOr3p {
 			addValue( d);
 			end();
 			}
 }
-Second{
+SecondPoint{
 	addPoint( pointX:double,pointY:double)
-		Third {
+		ThirdPoint {
 			setQuestion("Insertar tercer punto");
 			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
 			}
 }
-Third{
+ThirdPoint{
 	addPoint( pointX:double,pointY:double)
-		Fourth {
+		CenterPointOr3p {
 			addPoint( pointX,pointY);
 			end();
 			}
 }
 
-Fourth{
-}
-Fiveth{
-}
-Sixth{
-}
-Seventh{
+FirstPoint{
 	addPoint( pointX:double,pointY:double)
-		Second {
+		SecondPoint {
 			setQuestion("Insertar segundo punto");
 			setDescription(new String[]{"Cancelar"});
 			addPoint( pointX,pointY);
@@ -87,7 +81,7 @@ Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		CenterPointOr3p{
 			end();
 			}
 }

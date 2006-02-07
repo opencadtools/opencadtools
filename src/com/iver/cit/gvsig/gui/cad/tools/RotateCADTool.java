@@ -42,7 +42,6 @@ package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.io.IOException;
@@ -51,7 +50,6 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
-import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
@@ -136,9 +134,9 @@ public class RotateCADTool extends DefaultCADTool {
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
         FBitSet selection = vea.getSelection();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Rotate.PointMain")) {
         	firstPoint = new Point2D.Double(x, y);
-    		} else if (status.equals("ExecuteMap.First")) {
+    		} else if (status.equals("Rotate.AngleOrPoint")) {
     			PluginServices.getMDIManager().setWaitCursor();
     			lastPoint = new Point2D.Double(x,y);
 
@@ -156,7 +154,7 @@ public class RotateCADTool extends DefaultCADTool {
 						// Rotamos la geometry
 						UtilFunctions.rotateGeom(fea.getGeometry(), -Math.atan2(w, h) + (Math.PI / 2),
 	    						firstPoint.getX(), firstPoint.getY());
-    					
+
     					/* fea.getGeometry().rotate(-Math.atan2(w, h) + (Math.PI / 2),
     						firstPoint.getX(), firstPoint.getY()); */
     					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea);
@@ -195,7 +193,7 @@ public class RotateCADTool extends DefaultCADTool {
             e.printStackTrace();
         }
 
-        if (status.equals("ExecuteMap.First")) {
+        if (status.equals("Rotate.AngleOrPoint")) {
 			Point2D point = getCadToolAdapter().getMapControl().getViewPort()
 								.fromMapPoint(firstPoint.getX(),
 					firstPoint.getY());
@@ -260,7 +258,7 @@ public class RotateCADTool extends DefaultCADTool {
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
         FBitSet selection = vea.getSelection();
 
-    	if (status.equals("ExecuteMap.First")) {
+    	if (status.equals("Rotate.AngleOrPoint")) {
 			try {
 				for (int i = 0; i < getCadToolAdapter().getVectorialAdapter().getRowCount(); i++) {
 					if (selection.get(i)) {

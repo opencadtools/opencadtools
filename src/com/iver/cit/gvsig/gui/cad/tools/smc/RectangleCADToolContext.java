@@ -19,8 +19,8 @@ public final class RectangleCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Rectangle.FirstPoint);
+        Rectangle.FirstPoint.Entry(this);
     }
 
     public void addOption(String s)
@@ -106,7 +106,7 @@ public final class RectangleCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Rectangle
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -119,33 +119,29 @@ public final class RectangleCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
-        private static ExecuteMap_Default Default;
+        /* package */ static Rectangle_Default.Rectangle_FirstPoint FirstPoint;
+        /* package */ static Rectangle_Default.Rectangle_SecondPointOrSquare SecondPointOrSquare;
+        /* package */ static Rectangle_Default.Rectangle_SecondPointSquare SecondPointSquare;
+        private static Rectangle_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
-            Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            FirstPoint = new Rectangle_Default.Rectangle_FirstPoint("Rectangle.FirstPoint", 0);
+            SecondPointOrSquare = new Rectangle_Default.Rectangle_SecondPointOrSquare("Rectangle.SecondPointOrSquare", 1);
+            SecondPointSquare = new Rectangle_Default.Rectangle_SecondPointSquare("Rectangle.SecondPointSquare", 2);
+            Default = new Rectangle_Default("Rectangle.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Rectangle_Default
         extends RectangleCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Rectangle_Default(String name, int id)
         {
             super (name, id);
         }
@@ -158,7 +154,7 @@ public final class RectangleCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Rectangle.FirstPoint.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -172,7 +168,7 @@ public final class RectangleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Rectangle.FirstPoint);
 
                     if (loopbackFlag == false)
                     {
@@ -194,14 +190,14 @@ public final class RectangleCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Rectangle_FirstPoint
+            extends Rectangle_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Rectangle_FirstPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -231,7 +227,7 @@ public final class RectangleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Rectangle.SecondPointOrSquare);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -242,14 +238,14 @@ public final class RectangleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Rectangle_SecondPointOrSquare
+            extends Rectangle_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Rectangle_SecondPointOrSquare(String name, int id)
             {
                 super (name, id);
             }
@@ -271,7 +267,7 @@ public final class RectangleCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.Second);
+                        context.setState(Rectangle.SecondPointSquare);
                         (context.getState()).Entry(context);
                     }
                 }
@@ -297,7 +293,7 @@ public final class RectangleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Third);
+                    context.setState(Rectangle.FirstPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -308,14 +304,14 @@ public final class RectangleCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
+        private static final class Rectangle_SecondPointSquare
+            extends Rectangle_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Second(String name, int id)
+            private Rectangle_SecondPointSquare(String name, int id)
             {
                 super (name, id);
             }
@@ -334,44 +330,10 @@ public final class RectangleCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fourth);
+                    context.setState(Rectangle.FirstPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Third
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Third(String name, int id)
-            {
-                super (name, id);
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Fourth
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Fourth(String name, int id)
-            {
-                super (name, id);
             }
 
         //-------------------------------------------------------

@@ -19,8 +19,8 @@ public final class EllipseCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Ellipse.FirstPointAxis);
+        Ellipse.FirstPointAxis.Entry(this);
     }
 
     public void addOption(String s)
@@ -119,7 +119,7 @@ public final class EllipseCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Ellipse
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -132,33 +132,29 @@ public final class EllipseCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Fourth Fourth;
-        private static ExecuteMap_Default Default;
+        /* package */ static Ellipse_Default.Ellipse_FirstPointAxis FirstPointAxis;
+        /* package */ static Ellipse_Default.Ellipse_SecondPointAxis SecondPointAxis;
+        /* package */ static Ellipse_Default.Ellipse_DistanceOtherAxis DistanceOtherAxis;
+        private static Ellipse_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
-            Fourth = new ExecuteMap_Default.ExecuteMap_Fourth("ExecuteMap.Fourth", 4);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            FirstPointAxis = new Ellipse_Default.Ellipse_FirstPointAxis("Ellipse.FirstPointAxis", 0);
+            SecondPointAxis = new Ellipse_Default.Ellipse_SecondPointAxis("Ellipse.SecondPointAxis", 1);
+            DistanceOtherAxis = new Ellipse_Default.Ellipse_DistanceOtherAxis("Ellipse.DistanceOtherAxis", 2);
+            Default = new Ellipse_Default("Ellipse.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Ellipse_Default
         extends EllipseCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Ellipse_Default(String name, int id)
         {
             super (name, id);
         }
@@ -171,7 +167,7 @@ public final class EllipseCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Ellipse.FirstPointAxis.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -185,7 +181,7 @@ public final class EllipseCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Ellipse.FirstPointAxis);
 
                     if (loopbackFlag == false)
                     {
@@ -207,14 +203,14 @@ public final class EllipseCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Ellipse_FirstPointAxis
+            extends Ellipse_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Ellipse_FirstPointAxis(String name, int id)
             {
                 super (name, id);
             }
@@ -244,7 +240,7 @@ public final class EllipseCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.First);
+                    context.setState(Ellipse.SecondPointAxis);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -255,14 +251,14 @@ public final class EllipseCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Ellipse_SecondPointAxis
+            extends Ellipse_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Ellipse_SecondPointAxis(String name, int id)
             {
                 super (name, id);
             }
@@ -282,7 +278,7 @@ public final class EllipseCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Second);
+                    context.setState(Ellipse.DistanceOtherAxis);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -293,14 +289,14 @@ public final class EllipseCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
+        private static final class Ellipse_DistanceOtherAxis
+            extends Ellipse_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Second(String name, int id)
+            private Ellipse_DistanceOtherAxis(String name, int id)
             {
                 super (name, id);
             }
@@ -319,7 +315,7 @@ public final class EllipseCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Third);
+                    context.setState(Ellipse.FirstPointAxis);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -339,44 +335,10 @@ public final class EllipseCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Fourth);
+                    context.setState(Ellipse.FirstPointAxis);
                     (context.getState()).Entry(context);
                 }
                 return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Third
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Third(String name, int id)
-            {
-                super (name, id);
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Fourth
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Fourth(String name, int id)
-            {
-                super (name, id);
             }
 
         //-------------------------------------------------------

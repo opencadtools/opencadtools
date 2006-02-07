@@ -234,9 +234,9 @@ public class SelectionCADTool extends DefaultCADTool {
         String status = actualState.getName();
         FBitSet selection=getCadToolAdapter().getVectorialAdapter().getSelection();
         try {
-            if (status.equals("ExecuteMap.Initial")) {
+            if (status.equals("Selection.FirstPoint")) {
                 //firstPoint = new Point2D.Double(x, y);
-            } else if (status.equals("ExecuteMap.First")) {
+            } else if (status.equals("Selection.SecondPoint")) {
                 //PluginServices.getMDIManager().setWaitCursor();
                 lastPoint = new Point2D.Double(x, y);
                 selection.clear();
@@ -284,7 +284,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
                 PluginServices.getMDIManager().restoreCursor();
                 //cardinality = selection.cardinality();
-            } else if (status.equals("ExecuteMap.Second")) {
+            } else if (status.equals("Selection.EndPoint")) {
             	for (int i = 0; i < selectedRow.size(); i++) {
                     Handler h = (Handler) selectedHandler.get(i);
                     DefaultFeature row = (DefaultFeature) selectedRow.get(i);
@@ -315,7 +315,7 @@ public class SelectionCADTool extends DefaultCADTool {
      */
     public void drawOperation(Graphics g, double x,
         double y) {
-    	SelectionCADToolState actualState = ((SelectionCADToolContext)_fsm).getState();
+    	SelectionCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
         FBitSet selection=getCadToolAdapter().getVectorialAdapter().getSelection();
         try {
@@ -325,7 +325,7 @@ public class SelectionCADTool extends DefaultCADTool {
 			e.printStackTrace();
 		}
 
-        if (status.equals("ExecuteMap.First")) {
+        if (status.equals("Selection.SecondPoint")) {
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
                     4);
             elShape.moveTo(firstPoint.getX(), firstPoint.getY());
@@ -336,7 +336,7 @@ public class SelectionCADTool extends DefaultCADTool {
             ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
                 CADTool.selectSymbol);
-        } else if (status.equals("ExecuteMap.Second")) {
+        } else if (status.equals("Selection.EndPoint")) {
             for (int i = 0; i < selectedRow.size(); i++) {
                 Handler h = (Handler) selectedHandler.get(i);
                 IGeometry geom = ((IGeometry) ((DefaultFeature)selectedRow.get(i)).getGeometry()).cloneGeometry();

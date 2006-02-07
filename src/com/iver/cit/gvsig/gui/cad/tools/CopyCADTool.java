@@ -40,8 +40,12 @@
  */
 package com.iver.cit.gvsig.gui.cad.tools;
 
-import com.iver.andami.PluginServices;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.io.IOException;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
@@ -53,13 +57,6 @@ import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CopyCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CopyCADToolContext.CopyCADToolState;
-
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-
-import java.io.IOException;
 
 
 /**
@@ -134,9 +131,9 @@ public class CopyCADTool extends DefaultCADTool {
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
         FBitSet selection = vea.getSelection();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Copy.FirstPointToMove")) {
             firstPoint = new Point2D.Double(x, y);
-        } else if (status.equals("ExecuteMap.First")) {
+        } else if (status.equals("Copy.SecondPointToMove")) {
             PluginServices.getMDIManager().setWaitCursor();
             lastPoint = new Point2D.Double(x, y);
             vea.startComplexRow();
@@ -193,7 +190,7 @@ public class CopyCADTool extends DefaultCADTool {
             e.printStackTrace();
         }
 
-        if (status.equals("ExecuteMap.First")) {
+        if (status.equals("Copy.SecondPointToMove")) {
             ///int dx = getCadToolAdapter().getMapControl().getViewPort().fromMapDistance(x - firstPoint.getX());
             ///int dy = -getCadToolAdapter().getMapControl().getViewPort().fromMapDistance(y - firstPoint.getY());
             ///Image img = getCadToolAdapter().getVectorialAdapter().getImage();

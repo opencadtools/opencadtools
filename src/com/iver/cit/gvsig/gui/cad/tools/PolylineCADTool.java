@@ -139,13 +139,13 @@ public class PolylineCADTool extends DefaultCADTool {
     	PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Polyline.FirstPoint")) {
             antPoint = new Point2D.Double(x, y);
 
             if (firstPoint == null) {
                 firstPoint = (Point2D) antPoint.clone();
             }
-        } else if (status.equals("ExecuteMap.First")) {
+        } else if (status.equals("Polyline.NextPointOrArcOrClose")) {
             Point2D point = new Point2D.Double(x, y);
 
             if (antPoint != null) {
@@ -154,7 +154,7 @@ public class PolylineCADTool extends DefaultCADTool {
                 elShape.moveTo(antPoint.getX(), antPoint.getY());
                 elShape.lineTo(point.getX(), point.getY());
 				list.add(ShapeFactory.createPolyline2D(elShape));
-                
+
             }
 
             if (antPoint != null) {
@@ -162,7 +162,7 @@ public class PolylineCADTool extends DefaultCADTool {
             }
 
             antPoint = point;
-        } else if (status.equals("ExecuteMap.Second")) {
+        } else if (status.equals("Polyline.NextPointOrLineOrClose")) {
             Point2D point = new Point2D.Double(x, y);
             Point2D lastp = antPoint; //(Point2D)points.get(i-1);
 
@@ -283,7 +283,7 @@ public class PolylineCADTool extends DefaultCADTool {
         PolylineCADToolState actualState = ((PolylineCADToolContext)_fsm).getState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.First")) {
+        if (status.equals("Polyline.NextPointOrArcOrClose")) {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
@@ -291,7 +291,7 @@ public class PolylineCADTool extends DefaultCADTool {
             }
 
             drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
-        } else if ((status.equals("ExecuteMap.Second"))) {
+        } else if ((status.equals("Polyline.NextPointOrLineOrClose"))) {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
@@ -404,7 +404,7 @@ public class PolylineCADTool extends DefaultCADTool {
         PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.First")) {
+        if (status.equals("Polyline.NextPointOrArcOrClose")) {
             if (s.equals("A") || s.equals("a")) {
                 //Arco
             } else if (s.equals("C") || s.equals("c")) {
@@ -414,7 +414,7 @@ public class PolylineCADTool extends DefaultCADTool {
                 list.add(ShapeFactory.createPolyline2D(elShape));
             	//closeGeometry();
             }
-        } else if (status.equals("ExecuteMap.Second")) {
+        } else if (status.equals("Polyline.NextPointOrLineOrClose")) {
             if (s.equals("N") || s.equals("n")) {
                 //Línea
             } else if (s.equals("C") || s.equals("c")) {

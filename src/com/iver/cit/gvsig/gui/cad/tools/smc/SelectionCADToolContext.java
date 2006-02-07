@@ -20,8 +20,8 @@ public final class SelectionCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Selection.FirstPoint);
+        Selection.FirstPoint.Entry(this);
     }
 
     public void addOption(String s)
@@ -107,7 +107,7 @@ public final class SelectionCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Selection
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -120,31 +120,29 @@ public final class SelectionCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Second Second;
-        /* package */ static ExecuteMap_Default.ExecuteMap_Third Third;
-        private static ExecuteMap_Default Default;
+        /* package */ static Selection_Default.Selection_FirstPoint FirstPoint;
+        /* package */ static Selection_Default.Selection_SecondPoint SecondPoint;
+        /* package */ static Selection_Default.Selection_EndPoint EndPoint;
+        private static Selection_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Second = new ExecuteMap_Default.ExecuteMap_Second("ExecuteMap.Second", 2);
-            Third = new ExecuteMap_Default.ExecuteMap_Third("ExecuteMap.Third", 3);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            FirstPoint = new Selection_Default.Selection_FirstPoint("Selection.FirstPoint", 0);
+            SecondPoint = new Selection_Default.Selection_SecondPoint("Selection.SecondPoint", 1);
+            EndPoint = new Selection_Default.Selection_EndPoint("Selection.EndPoint", 2);
+            Default = new Selection_Default("Selection.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Selection_Default
         extends SelectionCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Selection_Default(String name, int id)
         {
             super (name, id);
         }
@@ -157,7 +155,7 @@ public final class SelectionCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Selection.FirstPoint.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -171,7 +169,7 @@ public final class SelectionCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Selection.FirstPoint);
 
                     if (loopbackFlag == false)
                     {
@@ -193,14 +191,14 @@ public final class SelectionCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Selection_FirstPoint
+            extends Selection_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Selection_FirstPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -232,7 +230,7 @@ public final class SelectionCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.First);
+                        context.setState(Selection.SecondPoint);
                         (context.getState()).Entry(context);
                     }
                 }
@@ -249,7 +247,7 @@ public final class SelectionCADToolContext
                     }
                     finally
                     {
-                        context.setState(ExecuteMap.Second);
+                        context.setState(Selection.EndPoint);
                         (context.getState()).Entry(context);
                     }
                 }                else
@@ -265,14 +263,14 @@ public final class SelectionCADToolContext
         //
         }
 
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
+        private static final class Selection_SecondPoint
+            extends Selection_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_First(String name, int id)
+            private Selection_SecondPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -293,7 +291,7 @@ public final class SelectionCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Selection.FirstPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
@@ -304,14 +302,14 @@ public final class SelectionCADToolContext
         //
         }
 
-        private static final class ExecuteMap_Second
-            extends ExecuteMap_Default
+        private static final class Selection_EndPoint
+            extends Selection_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Second(String name, int id)
+            private Selection_EndPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -333,27 +331,10 @@ public final class SelectionCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Third);
+                    context.setState(Selection.FirstPoint);
                     (context.getState()).Entry(context);
                 }
                 return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_Third
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_Third(String name, int id)
-            {
-                super (name, id);
             }
 
         //-------------------------------------------------------

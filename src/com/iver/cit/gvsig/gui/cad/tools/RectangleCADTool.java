@@ -111,9 +111,9 @@ public class RectangleCADTool extends DefaultCADTool {
 
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Rectangle.FirstPoint")) {
             firstPoint = new Point2D.Double(x, y);
-        } else if (status == "ExecuteMap.First") {
+        } else if (status == "Rectangle.SecondPointOrSquare") {
             lastPoint = new Point2D.Double(x, y);
 
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
@@ -125,7 +125,7 @@ public class RectangleCADTool extends DefaultCADTool {
             elShape.lineTo(firstPoint.getX(), firstPoint.getY());
             addGeometry(ShapeFactory.createPolyline2D(elShape));
             firstPoint = (Point2D) lastPoint.clone();
-        } else if (status == "ExecuteMap.Second") {
+        } else if (status == "Rectangle.SecondPointSquare") {
             lastPoint = new Point2D.Double(x, y);
 
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
@@ -168,7 +168,7 @@ public class RectangleCADTool extends DefaultCADTool {
         RectangleCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
-        if (status == "ExecuteMap.First") {
+        if (status == "Rectangle.SecondPointOrSquare") {
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
                     4);
             elShape.moveTo(firstPoint.getX(), firstPoint.getY());
@@ -179,7 +179,7 @@ public class RectangleCADTool extends DefaultCADTool {
             ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
                 CADTool.modifySymbol);
-        } else if (status == "ExecuteMap.Second") {
+        } else if (status == "Rectangle.SecondPointSquare") {
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
                     4);
             elShape.moveTo(firstPoint.getX(), firstPoint.getY());
@@ -214,7 +214,7 @@ public class RectangleCADTool extends DefaultCADTool {
         RectangleCADToolState actualState = (RectangleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status == "ExecuteMap.First") {
+        if (status == "Rectangle.SecondPointOrSquare") {
             if (s.equals("C") || s.equals("c")) {
                 //Opción correcta
             }

@@ -138,10 +138,10 @@ public class ScaleCADTool extends DefaultCADTool {
         FBitSet selection = vea.getSelection();
 
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Scale.PointMain")) {
 				firstPoint = new Point2D.Double(x, y);
 			    scalePoint = firstPoint;
-		} else if (status.equals("ExecuteMap.First")) {
+		} else if (status.equals("Scale.ScaleFactorOrReference")) {
 			PluginServices.getMDIManager().setWaitCursor();
 			lastPoint = new Point2D.Double(x, y);
 
@@ -160,14 +160,14 @@ public class ScaleCADTool extends DefaultCADTool {
 			}
 
 			PluginServices.getMDIManager().restoreCursor();
-		} else if (status.equals("ExecuteMap.Second")) {
+		} else if (status.equals("Scale.PointOriginOrScaleFactor")) {
 			orr = new Point2D.Double(x, y);
-		} else if (status.equals("ExecuteMap.Third")) {
+		} else if (status.equals("Scale.EndPointReference")) {
 			frr = new Point2D.Double(x, y);
-		} else if (status.equals("ExecuteMap.Fourth")) {
+		} else if (status.equals("Scale.OriginPointScale")) {
 			ore = new Point2D.Double(x, y);
 			firstPoint = ore;
-		} else if (status.equals("ExecuteMap.Fiveth")) {
+		} else if (status.equals("Scale.EndPointScale")) {
 			fre = new Point2D.Double(x, y);
 
 			double distrr = orr.distance(frr);
@@ -184,42 +184,6 @@ public class ScaleCADTool extends DefaultCADTool {
 
 		}
 
-
-
-
-        if (status.equals("ExecuteMap.Initial")) {
-        	firstPoint = new Point2D.Double(x, y);
-    		} else if (status.equals("ExecuteMap.First")) {
-    			PluginServices.getMDIManager().setWaitCursor();
-    			lastPoint = new Point2D.Double(x,y);
-
-    			double w;
-    			double h;
-    			w = lastPoint.getX() - firstPoint.getX();
-    			h = lastPoint.getY() - firstPoint.getY();
-
-    			try {
-    				getCadToolAdapter().getVectorialAdapter().startComplexRow();
-
-    				for (int i = selection.nextSetBit(0); i >= 0;
-    						i = selection.nextSetBit(i + 1)) {
-    					DefaultFeature fea = (DefaultFeature)getCadToolAdapter().getVectorialAdapter().getRow(i).cloneRow();
-    					UtilFunctions.rotateGeom(fea.getGeometry(), -Math.atan2(w, h) + (Math.PI / 2),
-    						firstPoint.getX(), firstPoint.getY());
-    					// fea.getGeometry().rotate(-Math.atan2(w, h) + (Math.PI / 2),
-    					// 	firstPoint.getX(), firstPoint.getY());
-    					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea);
-    				}
-
-    				getCadToolAdapter().getVectorialAdapter().endComplexRow();
-    			} catch (DriverIOException e) {
-    				e.printStackTrace();
-    			} catch (IOException e1) {
-    				e1.printStackTrace();
-    			}
-
-    			PluginServices.getMDIManager().restoreCursor();
-    		}
     }
 
     /**
@@ -238,13 +202,13 @@ public class ScaleCADTool extends DefaultCADTool {
         Point2D currentPoint = new Point2D.Double(x, y);
 
 
-        if (status.equals("ExecuteMap.First")) {
+        if (status.equals("Scale.ScaleFactorOrReference")) {
         	try {
 				for (int i = 0; i < vea.getRowCount(); i++) {
 					if (selection.get(i)) {
 						IGeometry geometry = vea.getShape(i);
 						double size=getCadToolAdapter().getMapControl().getViewPort().toMapDistance(getCadToolAdapter().getMapControl().getWidth());
-						UtilFunctions.scaleGeom(geometry, firstPoint, 
+						UtilFunctions.scaleGeom(geometry, firstPoint,
 								firstPoint.distance(currentPoint)/(size/40),
 								firstPoint.distance(currentPoint)/(size/40));
 						geometry.draw((Graphics2D) g,
@@ -259,7 +223,7 @@ public class ScaleCADTool extends DefaultCADTool {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else if (status.equals("ExecuteMap.Fiveth")) {
+		} else if (status.equals("Scale.EndPointScale")) {
 			try {
 				for (int i = 0; i < vea.getRowCount(); i++) {
 					if (selection.get(i)) {
@@ -295,7 +259,7 @@ public class ScaleCADTool extends DefaultCADTool {
     public void addOption(String s) {
     	ScaleCADToolState actualState = (ScaleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-       if (status.equals("ExecuteMap.First")) {
+       if (status.equals("Scale.ScaleFactorOrReference")) {
 			try {
 				scale(2);
 			} catch (DriverIOException e) {
@@ -314,7 +278,7 @@ public class ScaleCADTool extends DefaultCADTool {
     public void addValue(double d) {
     	ScaleCADToolState actualState = (ScaleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-        if (status.equals("ExecuteMap.First")) {
+        if (status.equals("Scale.ScaleFactorOrReference")) {
     			try {
     				scale(d);
     			} catch (DriverIOException e) {

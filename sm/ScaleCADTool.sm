@@ -5,16 +5,16 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Scale::PointMain
 %class ScaleCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool
 
-%map ExecuteMap
+%map Scale
 %%
 // A task begins life in suspended animation.
 
-Initial
+PointMain
 	Entry {
 		selection();
 		setQuestion("ESCALAR" + "\n" +
@@ -27,86 +27,85 @@ Initial
 
 	{
 		addPoint(pointX:double,pointY:double)
-			First {
+			ScaleFactorOrReference {
 				setQuestion("Precise factor de escala<2> o Referencia[R]");
 				setDescription(new String[]{"Referencia","Cancelar"});
 				addPoint(pointX,pointY);
 				}
 	}
-First{
+ScaleFactorOrReference{
 	addValue(d:double)
-		Last{
+		PointMain{
 			addValue(d);
 			end();
 			refresh();
 			}
 	addOption(s:String)
 		[s.equals(null) || s.equals("")]
-		Last{
+		PointMain{
 			addOption(s);
 			end();
 			refresh();
 			}
 	addOption(s:String)
 		[s.equals("R") || s.equals("r") || s.equals("Referencia")]
-		Second{
+		PointOriginOrScaleFactor{
 			setQuestion("Precise punto origen recta referencia o Factor de escala[F]");
 			setDescription(new String[]{"Factor escala","Cancelar"});
 			addOption(s);
 			}
 	addPoint(pointX:double,pointY:double)
-		Last {
+		PointMain {
 			addPoint(pointX,pointY);
 			end();
 			refresh();
 			}
 }
-Second{
+PointOriginOrScaleFactor{
 	addOption(s:String)
 		[s.equals("F") || s.equals("f") || s.equals("Factor escala")]
-		Initial{
+		PointMain{
 			setQuestion("Precise factor de escala<2> o Referencia[R]");
 			setDescription(new String[]{"Referencia","Cancelar"});
 			addOption(s);
 			}
 	addPoint(pointX:double,pointY:double)
-		Third {
+		EndPointReference {
 			setQuestion("Precise punto final recta referencia");
 			setDescription(new String[]{"Cancelar"});
 			addPoint(pointX,pointY);
 			}
 }
-Third{
+EndPointReference{
 	addPoint(pointX:double,pointY:double)
-		Fourth {
+		OriginPointScale {
 			setQuestion("Precise punto origen recta escala");
 			setDescription(new String[]{"Cancelar"});
 			addPoint(pointX,pointY);
 			}
 }
-Fourth{
+OriginPointScale{
 	addPoint(pointX:double,pointY:double)
-		Fiveth {
+		EndPointScale {
 			setQuestion("Precise punto final recta escala");
 			setDescription(new String[]{"Cancelar"});
 			addPoint(pointX,pointY);
 			}
 }
-Fiveth{
+EndPointScale{
 	addPoint(pointX:double,pointY:double)
-		Last {
+		PointMain {
 			addPoint(pointX,pointY);
 			end();
 			refresh();
 			}
 }
-Last{
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		PointMain{
 			end();
 			}
 }

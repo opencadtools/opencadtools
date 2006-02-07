@@ -111,9 +111,9 @@ public class LineCADTool extends DefaultCADTool {
         LineCADToolState actualState = (LineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Line.FirstPoint")) {
             firstPoint = new Point2D.Double(x, y);
-        } else if (status == "ExecuteMap.First") {
+        } else if (status == "Line.SecondPointOrAngle") {
             lastPoint = new Point2D.Double(x, y);
 
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
@@ -122,7 +122,7 @@ public class LineCADTool extends DefaultCADTool {
             elShape.lineTo(lastPoint.getX(), lastPoint.getY());
             addGeometry(ShapeFactory.createPolyline2D(elShape));
             firstPoint = (Point2D) lastPoint.clone();
-        } else if (status == "ExecuteMap.Fourth") {
+        } else if (status == "Line.LenghtOrPoint") {
             length = firstPoint.distance(x, y);
 
             double w = (Math.cos(Math.toRadians(angle))) * length;
@@ -154,7 +154,7 @@ public class LineCADTool extends DefaultCADTool {
         LineCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
-        if ((status != "ExecuteMap.Initial")) { // || (status == "5")) {
+        if ((status != "Line.FirstPoint")) { // || (status == "5")) {
 
             if (firstPoint != null) {
                 drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
@@ -179,9 +179,9 @@ public class LineCADTool extends DefaultCADTool {
         LineCADToolState actualState = (LineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status == "ExecuteMap.Second") {
+        if (status == "Line.SecondPointOrAngle") {
             angle = d;
-        } else if (status == "ExecuteMap.Third") {
+        } else if (status == "Line.LenghtOrPoint") {
             length = d;
 
             double w = Math.cos(Math.toRadians(angle)) * length;

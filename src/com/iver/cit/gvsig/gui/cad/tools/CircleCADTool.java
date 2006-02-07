@@ -114,22 +114,19 @@ public class CircleCADTool extends DefaultCADTool {
         CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Circle.CenterPointOr3p")) {
             center = new Point2D.Double(x, y);
-        } else if (status == "ExecuteMap.First") {
+        } else if (status == "Circle.PointOrRadius") {
             addGeometry(ShapeFactory.createCircle(center,
                     new Point2D.Double(x, y)));
-        } else if (status == "ExecuteMap.Seventh") {
+        } else if (status == "Circle.FirstPoint") {
             firstPoint = new Point2D.Double(x, y);
-        } else if (status == "ExecuteMap.Second") {
+        } else if (status == "Circle.SecondPoint") {
             secondPoint = new Point2D.Double(x, y);
-        } else if (status == "ExecuteMap.Third") {
+        } else if (status == "Circle.ThirdPoint") {
             thirdPoint = new Point2D.Double(x, y);
             addGeometry(ShapeFactory.createCircle(firstPoint, secondPoint,
                     thirdPoint));
-        } else if (status == "ExecuteMap.Sixth") {
-            addGeometry(ShapeFactory.createCircle(center,
-                    new Point2D.Double(x, y)));
         }
     }
 
@@ -147,21 +144,21 @@ public class CircleCADTool extends DefaultCADTool {
         CircleCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
-        if ((status == "ExecuteMap.Initial")) { // || (status == "5")) {
+        if ((status == "Circle.CenterPointOr3p")) { // || (status == "5")) {
 
             if (firstPoint != null) {
                 drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
             }
         }
 
-        if (status == "ExecuteMap.First") {
+        if (status == "Circle.PointOrRadius") {
             Point2D currentPoint = new Point2D.Double(x, y);
             ShapeFactory.createCircle(center, currentPoint).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
                 CADTool.modifySymbol);
-        } else if (status == "ExecuteMap.Second") {
+        } else if (status == "Circle.SecondPoint") {
             drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
-        } else if (status == "ExecuteMap.Third") {
+        } else if (status == "Circle.ThirdPoint") {
             Point2D currentPoint = new Point2D.Double(x, y);
             IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint,
                     currentPoint);
@@ -184,7 +181,7 @@ public class CircleCADTool extends DefaultCADTool {
         CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status == "ExecuteMap.Initial") {
+        if (status == "Circle.CenterPointOr3p") {
             if (s.equals("3p") || s.equals("3P")) {
                 //Opción correcta.
             }
@@ -198,7 +195,7 @@ public class CircleCADTool extends DefaultCADTool {
         CircleCADToolState actualState = (CircleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status == "ExecuteMap.First") {
+        if (status == "Circle.PointOrRadius") {
             addGeometry(ShapeFactory.createCircle(center, d));
         }
     }

@@ -5,16 +5,16 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Polyline::FirstPoint
 %class PolylineCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool
 
-%map ExecuteMap
+%map Polyline
 %%
 // A task begins life in suspended animation.
 
-Initial
+FirstPoint
 
 	Entry {
 		setQuestion("POLILINEA" + "\n" +
@@ -26,68 +26,65 @@ Initial
 
 	{
 		addPoint(pointX:double,pointY:double)
-			First {
+			NextPointOrArcOrClose{
 				setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
 				setDescription(new String[]{"Arco","Cerrar","Cancelar"});
 				addPoint(pointX,pointY);
 				}
 	}
-First{
+NextPointOrArcOrClose{
 
 	addOption(s:String)
 		[s.equals("A") ||  s.equals("a") || s.equals("Arco")]
-		Second {
+		NextPointOrLineOrClose {
 			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
 			setDescription(new String[]{"Linea","Cerrar","Cancelar"});
 			addOption(s);
 			}
 	addOption(s:String)
 		[s.equals("C") ||  s.equals("c") || s.equals("Cerrar")]
-		Third {
+		FirstPoint {
 			addOption(s);
 			closeGeometry();
 			endGeometry();
 			end();
 			}
 	addPoint(pointX:double,pointY:double)
-		First {
+		NextPointOrArcOrClose {
 			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
 			setDescription(new String[]{"Arco","Cerrar","Cancelar"});
 			addPoint(pointX,pointY);
 			}
 }
-Second{
+NextPointOrLineOrClose{
 	addPoint(pointX:double,pointY:double)
-		Second {
+		NextPointOrLineOrClose {
 			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
 			setDescription(new String[]{"Linea","Cerrar","Cancelar"});
 			addPoint(pointX,pointY);
 			}
 	addOption(s:String)
 		[s.equals("N") ||  s.equals("n") || s.equals("Linea")]
-		First {
+		NextPointOrArcOrClose {
 			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
 			setDescription(new String[]{"Arco","Cerrar","Cancelar"});
 			addOption(s);
 			}
 	addOption(s:String)
 		[s.equals("C") ||  s.equals("c") || s.equals("Cerrar")]
-		Third {
+		FirstPoint {
 			addOption(s);
 			closeGeometry();
 			endGeometry();
 			end();
 			}
 }
-Third{
-}
-Fourth{
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		FirstPoint{
 			cancel();
 			end();
 			}

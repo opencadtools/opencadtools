@@ -109,17 +109,11 @@ public class EllipseCADTool extends DefaultCADTool {
         EllipseCADToolState actualState = (EllipseCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Initial")) {
+        if (status.equals("Ellipse.FirstPointAxis")) {
             startAxis = new Point2D.Double(x, y);
-        } else if (status.equals("ExecuteMap.First")) {
+        } else if (status.equals("Ellipse.SecondPointAxis")) {
             endAxis = new Point2D.Double(x, y);
-        } else if (status.equals("ExecuteMap.Second")) {
-            Point2D middle = new Point2D.Double((startAxis.getX() +
-                    endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
-            Point2D third = new Point2D.Double(x, y);
-            double distance = middle.distance(third);
-            addGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
-        } else if (status.equals("ExecuteMap.Third")) {
+        } else if (status.equals("Ellipse.DistanceOtherAxis")) {
             Point2D middle = new Point2D.Double((startAxis.getX() +
                     endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
             Point2D third = new Point2D.Double(x, y);
@@ -142,9 +136,9 @@ public class EllipseCADTool extends DefaultCADTool {
         EllipseCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.First")) {
+        if (status.equals("Ellipse.SecondPointAxis")) {
             drawLine((Graphics2D) g, startAxis, new Point2D.Double(x, y));
-        } else if (status.equals("ExecuteMap.Second")) {
+        } else if (status.equals("Ellipse.DistanceOtherAxis")) {
             Point2D middle = new Point2D.Double((startAxis.getX() +
                     endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
 
@@ -179,7 +173,7 @@ public class EllipseCADTool extends DefaultCADTool {
         EllipseCADToolState actualState = (EllipseCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("ExecuteMap.Second")) {
+        if (status.equals("Ellipse.DistanceOtherAxis")) {
             double distance = d;
             addGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
         }

@@ -19,8 +19,8 @@ public final class PointCADToolContext
         super();
 
         _owner = owner;
-        setState(ExecuteMap.Initial);
-        ExecuteMap.Initial.Entry(this);
+        setState(Point.FirstPoint);
+        Point.FirstPoint.Entry(this);
     }
 
     public void addOption(String s)
@@ -106,7 +106,7 @@ public final class PointCADToolContext
     //
     }
 
-    /* package */ static abstract class ExecuteMap
+    /* package */ static abstract class Point
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -119,27 +119,25 @@ public final class PointCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static ExecuteMap_Default.ExecuteMap_Initial Initial;
-        /* package */ static ExecuteMap_Default.ExecuteMap_First First;
-        private static ExecuteMap_Default Default;
+        /* package */ static Point_Default.Point_FirstPoint FirstPoint;
+        private static Point_Default Default;
 
         static
         {
-            Initial = new ExecuteMap_Default.ExecuteMap_Initial("ExecuteMap.Initial", 0);
-            First = new ExecuteMap_Default.ExecuteMap_First("ExecuteMap.First", 1);
-            Default = new ExecuteMap_Default("ExecuteMap.Default", -1);
+            FirstPoint = new Point_Default.Point_FirstPoint("Point.FirstPoint", 0);
+            Default = new Point_Default("Point.Default", -1);
         }
 
     }
 
-    protected static class ExecuteMap_Default
+    protected static class Point_Default
         extends PointCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected ExecuteMap_Default(String name, int id)
+        protected Point_Default(String name, int id)
         {
             super (name, id);
         }
@@ -152,7 +150,7 @@ public final class PointCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        ExecuteMap.Initial.getName());
+                        Point.FirstPoint.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -166,7 +164,7 @@ public final class PointCADToolContext
                 }
                 finally
                 {
-                    context.setState(ExecuteMap.Initial);
+                    context.setState(Point.FirstPoint);
 
                     if (loopbackFlag == false)
                     {
@@ -188,14 +186,14 @@ public final class PointCADToolContext
     //
 
 
-        private static final class ExecuteMap_Initial
-            extends ExecuteMap_Default
+        private static final class Point_FirstPoint
+            extends Point_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private ExecuteMap_Initial(String name, int id)
+            private Point_FirstPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -208,44 +206,6 @@ public final class PointCADToolContext
 		"Defina el punto");
                 ctxt.setDescription(new String[]{"Cancelar"});
                 return;
-            }
-
-            protected void addPoint(PointCADToolContext context, double pointX, double pointY)
-            {
-                PointCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Insertar punto");
-                    ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
-                }
-                finally
-                {
-                    context.setState(ExecuteMap.First);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class ExecuteMap_First
-            extends ExecuteMap_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private ExecuteMap_First(String name, int id)
-            {
-                super (name, id);
             }
 
             protected void addPoint(PointCADToolContext context, double pointX, double pointY)

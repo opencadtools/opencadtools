@@ -5,17 +5,17 @@
 // Vicente Caballero Navarro
 %}
 
-%start ExecuteMap::Initial
+%start Point::FirstPoint
 %class PointCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.PointCADTool
 
 
-%map ExecuteMap
+%map Point
 %%
 // A task begins life in suspended animation.
 
-Initial
+FirstPoint
 
 	Entry {
 		setQuestion("PUNTO" + "\n" +
@@ -28,25 +28,18 @@ Initial
 	{
 
 		addPoint( pointX:double,pointY:double)
-			First {
+			FirstPoint {
 				setQuestion("Insertar punto");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY);
 				}
 	}
-First{
-	addPoint( pointX:double,pointY:double)
-		First {
-			setQuestion("Insertar punto");
-			setDescription(new String[]{"Cancelar"});
-			addPoint( pointX,pointY);
-			}
-}
+
 Default
 {
 	addOption(s:String)
 		[s.equals("Cancelar")]
-		Initial{
+		FirstPoint{
 			end();
 			}
 }
