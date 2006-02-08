@@ -136,9 +136,9 @@ public class CADToolAdapter extends Behavior {
 			Point2D mapArgmin = null;
 
 			for (int i = 0; i < indexes.length; i++) {
-				IFeature fea=null;
-					fea = (IFeature) vea.getRow(indexes[i]).getLinkedRow();//getFeature(indexes[i]);
-				Handler[] handlers = fea.getGeometry().getHandlers(IGeometry.SELECTHANDLER);
+				IGeometry geometry=null;
+					geometry = vea.getShape(indexes[i]);//getFeature(indexes[i]);
+				Handler[] handlers = geometry.getHandlers(IGeometry.SELECTHANDLER);
 
 				for (int j = 0; j < handlers.length; j++) {
 					Point2D handlerPoint = handlers[j].getPoint();
@@ -165,9 +165,6 @@ public class CADToolAdapter extends Behavior {
 				return min;
 			}
 		} catch (DriverIOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -212,7 +209,7 @@ public class CADToolAdapter extends Behavior {
 		Cursor transparentCursor =
 			Toolkit.getDefaultToolkit().createCustomCursor
 			    (image, new Point(0,0), "invisiblecursor");
-		
+
 		getMapControl().setCursor(transparentCursor);
 	}
 	/**
@@ -221,7 +218,7 @@ public class CADToolAdapter extends Behavior {
 	 * @param g DOCUMENT ME!
 	 */
 	private void drawCursor(Graphics g) {
-		
+
 		Point2D p = adjustedPoint;
 
 		if (p == null) {
@@ -314,10 +311,10 @@ public class CADToolAdapter extends Behavior {
 		getMapControl().cancelDrawing();
 		ViewPort vp = getMapControl().getViewPort();
 		// Point2D pReal = vp.toMapPoint(e.getPoint());
-		
+
 		Point2D pReal = new Point2D.Double(vp.getAdjustedExtent().getCenterX()
 				, vp.getAdjustedExtent().getCenterY());
-		int amount = e.getWheelRotation(); 
+		int amount = e.getWheelRotation();
         double nuevoX;
         double nuevoY;
         double factor;
@@ -339,9 +336,9 @@ public class CADToolAdapter extends Behavior {
 	        r.y = nuevoY;
 	        r.width = vp.getExtent().getWidth() * factor;
 	        r.height = vp.getExtent().getHeight() * factor;
-	
+
 	        vp.setExtent(r);
-        }				
+        }
 	}
 
 	/**
