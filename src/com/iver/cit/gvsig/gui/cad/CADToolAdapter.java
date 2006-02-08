@@ -661,9 +661,15 @@ public class CADToolAdapter extends Behavior {
 		vea.startComplexRow();
 		FBitSet selection=getVectorialAdapter().getSelection();
 		try {
+			int[] indexesToDel=new int[selection.cardinality()];
+			int j=0;
 			for (int i = selection.nextSetBit(0); i >= 0;
 					i = selection.nextSetBit(i + 1)) {
-				vea.removeRow(i);
+				indexesToDel[j++]=i;
+				///vea.removeRow(i);
+			}
+			for (j=indexesToDel.length-1;j>=0;j--){
+				vea.removeRow(j);
 			}
 		} catch (DriverIOException e) {
 			e.printStackTrace();
@@ -678,7 +684,7 @@ public class CADToolAdapter extends Behavior {
 				e1.printStackTrace();
 			}
 		}
-
+		System.out.println("clear Selection");
 		selection.clear();
 		getMapControl().drawMap(false);
 	}
