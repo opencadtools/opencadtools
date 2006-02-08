@@ -165,7 +165,6 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.cancel();
-                    ctxt.end();
                 }
                 finally
                 {
@@ -178,7 +177,33 @@ public final class PolylineCADToolContext
 
                 }
             }
-            else
+            else if (s.equals(""))
+            {
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Polyline.FirstPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.endGeometry();
+                }
+                finally
+                {
+                    context.setState(Polyline.FirstPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
+            }            else
             {
                 super.addOption(context, s);
             }

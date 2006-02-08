@@ -45,6 +45,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
@@ -437,4 +439,9 @@ public class PolylineCADTool extends DefaultCADTool {
     	list.clear();
     	antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
+
+	public void end() {
+		/* CADExtension.setCADTool("polyline");
+    	PluginServices.getMainFrame().setSelectedTool("POLYLINE"); */
+	}
 }

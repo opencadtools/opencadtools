@@ -86,7 +86,12 @@ Default
 		[s.equals("Cancelar")]
 		FirstPoint{
 			cancel();
-			end();
 			}
+	addOption(s:String)
+		[s.equals("")]
+		FirstPoint{
+			endGeometry();
+			}
+				
 }
 %%

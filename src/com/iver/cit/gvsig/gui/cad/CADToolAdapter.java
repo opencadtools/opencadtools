@@ -380,17 +380,17 @@ public class CADToolAdapter extends Behavior {
 				}
 			//}
 		}
-
+		getMapControl().repaint();
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * Transición por comando ("cancel", actionCommand de una herramienta, etc).
 	 *
 	 * @param text DOCUMENT ME!
 	 */
 	public void transition(String text) {
 		transition( vea, text);
-
+		// getMapControl().repaint();
 	}
 
 	/**
