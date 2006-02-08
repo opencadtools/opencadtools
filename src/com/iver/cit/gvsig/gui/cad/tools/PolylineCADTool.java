@@ -103,7 +103,7 @@ public class PolylineCADTool extends DefaultCADTool {
 		elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 
 		list.add(ShapeFactory.createPolyline2D(elShape));
-		list.add(ShapeFactory.createPolyline2D(elShape));
+		// list.add(ShapeFactory.createPolyline2D(elShape));
 
     }
     /* (non-Javadoc)
@@ -287,7 +287,7 @@ public class PolylineCADTool extends DefaultCADTool {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.modifySymbol);
+                    CADTool.drawingSymbol);
             }
 
             drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
@@ -295,7 +295,7 @@ public class PolylineCADTool extends DefaultCADTool {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.modifySymbol);
+                    CADTool.drawingSymbol);
             }
 
             Point2D point = new Point2D.Double(x, y);

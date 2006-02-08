@@ -54,9 +54,9 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
  */
 public interface CADTool {
 	public static FSymbol drawingSymbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT,
-			Color.RED);
+			new Color(255, 0,0, 100)); // Le ponemos una transparencia
 	public static FSymbol modifySymbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT,
-			Color.GRAY);
+			new Color(100, 100, 100, 100));
 	public static FSymbol selectSymbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT,
 			Color.ORANGE);
 

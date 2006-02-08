@@ -40,6 +40,7 @@
  */
 package com.iver.cit.gvsig.gui.cad;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -221,5 +222,12 @@ public abstract class DefaultCADTool implements CADTool {
     	CADExtension.setCADTool("selection");
     	PluginServices.getMainFrame().setSelectedTool("SELCAD");
     }
+
+	public void init() {
+		CADTool.drawingSymbol.setOutlined(true);
+		CADTool.drawingSymbol.setOutlineColor(Color.GREEN);
+		
+		
+	}
 
 }

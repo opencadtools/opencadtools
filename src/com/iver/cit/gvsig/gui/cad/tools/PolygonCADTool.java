@@ -153,16 +153,16 @@ public class PolygonCADTool extends DefaultCADTool {
             if (isI) {
                 getIPolygon(point, point.distance(center)).draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.modifySymbol);
+                    CADTool.drawingSymbol);
             } else {
                 getCPolygon(point, point.distance(center)).draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.modifySymbol);
+                    CADTool.drawingSymbol);
             }
 
             ShapeFactory.createCircle(center, point.distance(center)).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.drawingSymbol);
+                CADTool.modifySymbol);
         }
     }
 
