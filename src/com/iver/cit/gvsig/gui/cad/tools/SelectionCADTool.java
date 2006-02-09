@@ -136,7 +136,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		_fsm.addOption(s);
 	}
 
-	public boolean isSelected(double x, double y) {
+	public String select(double x, double y) {
 		firstPoint = new Point2D.Double(x, y);
 		FBitSet selection = getCadToolAdapter().getVectorialAdapter()
 				.getSelection();
@@ -219,7 +219,12 @@ public class SelectionCADTool extends DefaultCADTool {
 		}
 
 		PluginServices.getMDIManager().restoreCursor();
-		return selection.cardinality() > 0;
+		if (selection.cardinality() > 0 && selectedHandler.size()>0){
+			return "Selection.EndPoint";
+		}else if (selection.cardinality() > 0){
+			return "Selection.FirstPoint";
+		}
+		return "Selection.SecondPoint";
 	}
 
 	/**

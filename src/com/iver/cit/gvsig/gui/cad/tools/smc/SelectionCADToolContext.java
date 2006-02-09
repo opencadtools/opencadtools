@@ -217,7 +217,7 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                if (!ctxt.isSelected(pointX,pointY))
+                if (ctxt.select(pointX,pointY).equals("Selection.SecondPoint"))
                 {
 
                     (context.getState()).Exit(context);
@@ -234,7 +234,23 @@ public final class SelectionCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (ctxt.isSelected(pointX,pointY))
+                else if (ctxt.select(pointX,pointY).equals("Selection.FirstPoint"))
+                {
+                    SelectionCADToolState endState = context.getState();
+
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise punto");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.addPoint(pointX, pointY);
+                    }
+                    finally
+                    {
+                        context.setState(endState);
+                    }
+                }
+                else if (ctxt.select(pointX,pointY).equals("Selection.EndPoint"))
                 {
 
                     (context.getState()).Exit(context);

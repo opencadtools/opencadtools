@@ -27,14 +27,21 @@ FirstPoint
 
 	{
 		addPoint(pointX:double,pointY:double)
-			[!ctxt.isSelected(pointX,pointY)]
+			[ctxt.select(pointX,pointY).equals("Selection.SecondPoint")]
 			SecondPoint{
 				setQuestion("Precise segundo punto del rectángulo de seleccion");
 				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				}
 		addPoint(pointX:double,pointY:double)
-			[ctxt.isSelected(pointX,pointY)]
+			[ctxt.select(pointX,pointY).equals("Selection.FirstPoint")]
+			FirstPoint {
+				setQuestion("Precise punto");
+				setDescription(new String[]{"Cancelar"});
+				addPoint(pointX,pointY);
+				}
+		addPoint(pointX:double,pointY:double)
+			[ctxt.select(pointX,pointY).equals("Selection.EndPoint")]
 			EndPoint {
 				setQuestion("Precise punto destino");
 				setDescription(new String[]{"Cancelar"});
