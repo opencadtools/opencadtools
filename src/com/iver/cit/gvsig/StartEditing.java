@@ -10,6 +10,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.project.ProjectTable;
 import com.iver.cit.gvsig.project.ProjectView;
 
 
@@ -60,12 +61,13 @@ public class StartEditing implements Extension {
 						// TODO: handle exception
 					}
                     lv.setSource(vea);
-                    //CADExtension.getCADToolAdapter().setVectorialAdapter(vea,new FBitSet());
                     lv.setEditing(true);
-                    /* if (!(layers.getLayer(0)==(lv))){
-                    	layers.removeLayer(lv);
-                    	layers.addLayer(lv);
-                    } */
+
+                    //Si existe una tabla asociada a esta capa se cambia su modelo por el VectorialEditableAdapter.
+                    ProjectExtension pe=(ProjectExtension)PluginServices.getExtension(ProjectExtension.class);
+                    ProjectTable pt=pe.getProject().getTable(lv);
+                    pt.setModel(vea);
+
                     return;
                 }
             }

@@ -59,7 +59,7 @@ import com.iver.cit.gvsig.gui.View;
  *
  * @author Vicente Caballero Navarro
  */
-public class UndoCommandExtension implements Extension {
+public class UndoViewExtension implements Extension {
 	/**
 	 * @see com.iver.andami.plugins.Extension#inicializar()
 	 */

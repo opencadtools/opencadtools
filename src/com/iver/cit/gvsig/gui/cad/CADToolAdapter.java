@@ -461,7 +461,7 @@ public class CADToolAdapter extends Behavior {
 		    }
 		}
 		configureMenu();
-		//PluginServices.getMainFrame().enableControls();
+		PluginServices.getMainFrame().enableControls();
 	}
 	/**
 	 * DOCUMENT ME!
@@ -491,7 +491,7 @@ public class CADToolAdapter extends Behavior {
 				askQuestion();
 			    }
 			configureMenu();
-			//PluginServices.getMainFrame().enableControls();
+			PluginServices.getMainFrame().enableControls();
 	}
 	/**
 	 * DOCUMENT ME!
@@ -669,7 +669,7 @@ public class CADToolAdapter extends Behavior {
 				///vea.removeRow(i);
 			}
 			for (j=indexesToDel.length-1;j>=0;j--){
-				vea.removeRow(j);
+				vea.removeRow(indexesToDel[j]);
 			}
 		} catch (DriverIOException e) {
 			e.printStackTrace();

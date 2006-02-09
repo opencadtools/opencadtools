@@ -48,6 +48,8 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import com.hardcode.driverManager.DriverLoadException;
+import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
@@ -127,7 +129,7 @@ public abstract class DefaultCADTool implements CADTool {
      * @param geometry DOCUMENT ME!
      */
     public void addGeometry(IGeometry geometry) {
-    	VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter(); 
+    	VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
         try {
         	if (vea.getShapeType() == FShape.POLYGON)
         	{
@@ -135,8 +137,8 @@ public abstract class DefaultCADTool implements CADTool {
         		gp.append(geometry.getGeneralPathXIterator(), true);
         		geometry = ShapeFactory.createPolygon2D(gp);
         	}
-        			
-        	DefaultFeature df = new DefaultFeature(geometry, null);
+
+        	DefaultFeature df = new DefaultFeature(geometry,new Value[getCadToolAdapter().getVectorialAdapter().getRecordset().getFieldCount()]);
             vea.addRow(df);
         } catch (DriverIOException e) {
             // TODO Auto-generated catch block
@@ -144,7 +146,13 @@ public abstract class DefaultCADTool implements CADTool {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
+        } catch (DriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DriverLoadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         draw(geometry.cloneGeometry());
     }
@@ -226,8 +234,8 @@ public abstract class DefaultCADTool implements CADTool {
 	public void init() {
 		CADTool.drawingSymbol.setOutlined(true);
 		CADTool.drawingSymbol.setOutlineColor(Color.GREEN);
-		
-		
+
+
 	}
 
 }

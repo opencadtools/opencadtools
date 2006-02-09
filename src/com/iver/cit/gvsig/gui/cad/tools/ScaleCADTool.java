@@ -295,7 +295,7 @@ public class ScaleCADTool extends DefaultCADTool {
     		FBitSet selection=vea.getSelection();
     		for (int i = 0; i < vea.getRowCount(); i++) {
     			if (selection.get(i)) {
-    				DefaultFeature df=vea.getRow(i).cloneRow();
+    				DefaultFeature df=(DefaultFeature)vea.getRow(i).cloneRow();
     				UtilFunctions.scaleGeom(df.getGeometry(), scalePoint, scaleFactor, scaleFactor);
     				// df.getGeometry().scale(scalePoint, scaleFactor, scaleFactor);
     				vea.modifyRow(i, df);

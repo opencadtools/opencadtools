@@ -40,18 +40,15 @@
  */
 package com.iver.cit.gvsig;
 
+import java.io.IOException;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-
-import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
-import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.View;
-
-import java.io.IOException;
+import com.iver.cit.gvsig.fmap.edition.IEditableSource;
+//import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.gui.Table;
 
 
 /**
@@ -60,7 +57,7 @@ import java.io.IOException;
  *
  * @author Vicente Caballero Navarro
  */
-public class RedoCommandExtension implements Extension {
+public class RedoTableExtension implements Extension {
 	/**
 	 * @see com.iver.andami.plugins.Extension#inicializar()
 	 */
@@ -71,29 +68,26 @@ public class RedoCommandExtension implements Extension {
 	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
-		MapControl mapControl = (MapControl) vista.getMapControl();
+		Table tabla = (Table) PluginServices.getMDIManager().getActiveView();
 
 		if (s.compareTo("REDO") == 0) {
-			try {
-					FLayers layers=mapControl.getMapContext().getLayers();
-					for (int i=0;i<layers.getLayersCount();i++){
-						if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing()){
-							VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
-							vea.redo();
+
+						if (tabla.isEditing()){
+							IEditableSource vea=(IEditableSource)tabla.getModel().getModelo();
+							try {
+								vea.redo();
+							} catch (DriverIOException e) {
+								NotificationManager.addError("Error accediendo a los Drivers para rehacer un comando",
+										e);
+							} catch (IOException e) {
+								NotificationManager.addError("Error accediendo a los Drivers para rehacer un comando",
+										e);
+							}
 							vea.getSelection().clear();
 						}
 
-					}
-			} catch (DriverIOException e) {
-				NotificationManager.addError("Error accediendo a los Drivers para rehacer un comando",
-					e);
-			} catch (IOException e) {
-				NotificationManager.addError("Error accediendo al fichero para rehacer un comando",
-					e);
-			}
 
-			vista.getMapControl().drawMap(false);
+
 		}
 	}
 
@@ -101,17 +95,17 @@ public class RedoCommandExtension implements Extension {
 	 * @see com.iver.andami.plugins.Extension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
-		MapControl mapControl = (MapControl) vista.getMapControl();
-		FLayers layers=mapControl.getMapContext().getLayers();
-		for (int i=0;i<layers.getLayersCount();i++){
-			if (layers.getLayer(i) instanceof FLyrVect && ((FLyrVect)layers.getLayer(i)).getSource() instanceof VectorialEditableAdapter && layers.getLayer(i).isEditing()){
-				VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
+		Table tabla = (Table) PluginServices.getMDIManager().getActiveView();
+		//MapControl mapControl = (MapControl) vista.getMapControl();
+		//FLayers layers=mapControl.getMapContext().getLayers();
+		//for (int i=0;i<layers.getLayersCount();i++){
+			if (tabla.getModel().getModelo() instanceof IEditableSource && tabla.isEditing()){
+				IEditableSource vea=(IEditableSource)tabla.getModel().getModelo();
 				if (vea==null)return false;
 				return vea.moreRedoCommands();
 			}
 
-		}
+		//}
 		return false;
 	}
 
@@ -126,7 +120,7 @@ public class RedoCommandExtension implements Extension {
 			return false;
 		}
 
-		if (f.getClass() == View.class) {
+		if (f.getClass() == Table.class) {
 			return true;
 		} else {
 			return false;
