@@ -78,7 +78,7 @@ public class RedoViewExtension implements Extension {
 			try {
 					FLayers layers=mapControl.getMapContext().getLayers();
 					for (int i=0;i<layers.getLayersCount();i++){
-						if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing()){
+						if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing() && layers.getLayer(i).isActive()){
 							VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
 							vea.redo();
 							vea.getSelection().clear();
@@ -105,7 +105,7 @@ public class RedoViewExtension implements Extension {
 		MapControl mapControl = (MapControl) vista.getMapControl();
 		FLayers layers=mapControl.getMapContext().getLayers();
 		for (int i=0;i<layers.getLayersCount();i++){
-			if (layers.getLayer(i) instanceof FLyrVect && ((FLyrVect)layers.getLayer(i)).getSource() instanceof VectorialEditableAdapter && layers.getLayer(i).isEditing()){
+			if (layers.getLayer(i) instanceof FLyrVect && ((FLyrVect)layers.getLayer(i)).getSource() instanceof VectorialEditableAdapter && layers.getLayer(i).isEditing() && layers.getLayer(i).isActive()){
 				VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
 				if (vea==null)return false;
 				return vea.moreRedoCommands();

@@ -66,6 +66,7 @@ public class StartEditing implements Extension {
                     //Si existe una tabla asociada a esta capa se cambia su modelo por el VectorialEditableAdapter.
                     ProjectExtension pe=(ProjectExtension)PluginServices.getExtension(ProjectExtension.class);
                     ProjectTable pt=pe.getProject().getTable(lv);
+                    if (pt!=null)
                     pt.setModel(vea);
 
                     return;

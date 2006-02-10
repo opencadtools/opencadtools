@@ -87,6 +87,8 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	private IGeometry clonedGeometry = null;
 
+	private String state;
+
 	// double
 	// FLATNESS=getCadToolAdapter().getMapControl().getViewPort().toMapDistance(2);
 
@@ -135,8 +137,10 @@ public class SelectionCADTool extends DefaultCADTool {
 	public void transition(String s) {
 		_fsm.addOption(s);
 	}
-
-	public String select(double x, double y) {
+	public String getState(){
+		return state;
+	}
+	public boolean select(double x, double y) {
 		firstPoint = new Point2D.Double(x, y);
 		FBitSet selection = getCadToolAdapter().getVectorialAdapter()
 				.getSelection();
@@ -152,6 +156,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		int[] indexes = getCadToolAdapter().getVectorialAdapter()
 				.getRowsIndexes(rect);
 
+		FBitSet prevSelection=(FBitSet)selection.clone();
 		selection.clear();
 
 		for (int i = 0; i < indexes.length; i++) {
@@ -166,7 +171,12 @@ public class SelectionCADTool extends DefaultCADTool {
 				e.printStackTrace();
 			}
 		}
-
+		boolean isTheSame=false;
+		if (prevSelection.cardinality()!=0 && selection.intersects(prevSelection) && !selection.equals(prevSelection)){
+			selection=prevSelection;
+			getCadToolAdapter().getVectorialAdapter().setSelection(selection);
+			isTheSame=true;
+		}
 		if (selection.cardinality() > 0) {
 			// Se comprueba si se pincha un handler. El más cercano (o los más
 			// cercanos si hay empate)
@@ -216,15 +226,17 @@ public class SelectionCADTool extends DefaultCADTool {
 				}
 			}
 
-		}
 
-		PluginServices.getMDIManager().restoreCursor();
-		if (selection.cardinality() > 0 && selectedHandler.size()>0){
-			return "Selection.EndPoint";
-		}else if (selection.cardinality() > 0){
-			return "Selection.FirstPoint";
 		}
-		return "Selection.SecondPoint";
+		PluginServices.getMDIManager().restoreCursor();
+		if ((selection.cardinality() > 0 && selectedHandler.size()>0) || isTheSame){
+			state = "Selection.EndPoint";
+		}else if (selection.cardinality() > 0){
+			state ="Selection.FirstPoint";
+		}else {
+			state = "Selection.SecondPoint";
+		}
+		return true;
 	}
 
 	/**
