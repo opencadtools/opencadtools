@@ -12,7 +12,7 @@
 	<classpathentry kind="lib" path="lib/gt2-shapefile.jar"/>
 	<classpathentry kind="lib" path="lib/jdom-1.0b10.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/gt2-main.jar"/>
-	<classpathentry kind="lib" path="/libFMap/lib/jts-1.6.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/cms.jar"/>
+	<classpathentry kind="lib" path="/libFMap/lib/jts-1.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
