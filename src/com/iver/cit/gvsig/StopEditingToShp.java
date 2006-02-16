@@ -8,6 +8,7 @@ import javax.swing.JFileChooser;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -53,10 +54,11 @@ public class StopEditingToShp implements Extension {
             	for (int i = 0; i < actives.length; i++)
             	{
             		if (actives[i] instanceof FLyrVect &&
-                        actives[i].isEditing()) 
+                        actives[i].isEditing())
             		{
             			FLyrVect lv = (FLyrVect) actives[i];
-            			stopEditing(lv);
+            			MapControl mapControl = (MapControl) vista.getMapControl();
+            			stopEditing(lv,mapControl);
 
                     return;
                 }
@@ -75,20 +77,21 @@ public class StopEditingToShp implements Extension {
     /**
      * DOCUMENT ME!
      */
-    public void stopEditing(FLyrVect layer) {
+    public void stopEditing(FLyrVect layer,MapControl mapControl) {
         try {
             JFileChooser jfc = new JFileChooser();
             SimpleFileFilter filterShp = new SimpleFileFilter("shp", "Ficheros .shp");
             jfc.setFileFilter(filterShp);
             if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
-        		    File newFile = jfc.getSelectedFile(); 
+        		    File newFile = jfc.getSelectedFile();
         			VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
-        			// File newFile = vea.getDriver(). 
+        			// File newFile = vea.getDriver().
 
                     ShpWriter writer = new ShpWriter(newFile, layer);
 
-                    
+
                     vea.stopEdition(writer);
+                    vea.getCommandRecord().removeExecuteCommand(mapControl);
                     layer.setSource(vea.getOriginalAdapter());
                     layer.setEditing(false);
                     vista.hideConsole();

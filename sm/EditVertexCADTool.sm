@@ -1,0 +1,45 @@
+// -*- tab-width: 4; -*-
+
+%{
+//
+// Vicente Caballero Navarro
+%}
+
+%start EditVertex::SelectVertexOrDelete
+%class EditVertexCADTool
+%package com.iver.cit.gvsig.gui.cad.tools.smc
+%import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool
+
+%map EditVertex
+%%
+// A task begins life in suspended animation.
+
+SelectVertexOrDelete
+	Entry {
+		selection();
+		setQuestion("EDITAR VERTICES" + "\n" +
+		"Siguiente vertice, Anterior o Eliminar");
+		setDescription(new String[]{"Siguiente","Anterior","Eliminar","Cancelar"});
+
+		}
+	Exit{
+		}
+
+	{
+		addOption(s:String)
+			SelectVertexOrDelete {
+				setQuestion("Siguiente vertice, Anterior o Eliminar");
+				setDescription(new String[]{"Siguiente","Anterior","Eliminar","Cancelar"});
+				addOption(s);
+				}
+	}
+
+Default
+{
+	addOption(s:String)
+		[s.equals("Cancelar")]
+		SelectVertexOrDelete{
+			end();
+			}
+}
+%%

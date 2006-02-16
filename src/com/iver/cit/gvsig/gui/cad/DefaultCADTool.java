@@ -51,6 +51,7 @@ import java.io.IOException;
 import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.hardcode.gdbms.engine.values.Value;
+import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -137,9 +138,13 @@ public abstract class DefaultCADTool implements CADTool {
         		gp.append(geometry.getGeneralPathXIterator(), true);
         		geometry = ShapeFactory.createPolygon2D(gp);
         	}
-
-        	DefaultFeature df = new DefaultFeature(geometry,new Value[getCadToolAdapter().getVectorialAdapter().getRecordset().getFieldCount()]);
-            vea.addRow(df);
+        	int numAttr=getCadToolAdapter().getVectorialAdapter().getRecordset().getFieldCount();
+        	Value[] values=new Value[numAttr];
+        	for (int i=0;i<numAttr;i++){
+        		values[i]=ValueFactory.createNullValue();
+        	}
+        	DefaultFeature df = new DefaultFeature(geometry,values);
+            vea.addRow(df,getName());
         } catch (DriverIOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -163,7 +168,7 @@ public abstract class DefaultCADTool implements CADTool {
      */
     public void modifyFeature(int index,DefaultFeature row) {
     	try {
-			getCadToolAdapter().getVectorialAdapter().modifyRow(index, row);
+			getCadToolAdapter().getVectorialAdapter().modifyRow(index, row,getName());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

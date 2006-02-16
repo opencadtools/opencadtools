@@ -200,4 +200,8 @@ public class CircleCADTool extends DefaultCADTool {
         }
     }
 
+	public String getName() {
+		return "CIRCULO";
+	}
+
 }

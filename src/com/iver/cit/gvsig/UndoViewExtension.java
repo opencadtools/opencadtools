@@ -86,6 +86,7 @@ public class UndoViewExtension implements Extension {
 				if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing() && layers.getLayer(i).isActive()){
 					VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
 					vea.undo();
+					vea.getCommandRecord().fireExecuteCommands(null);
 				}
 			}
 		} catch (DriverIOException e) {
@@ -96,7 +97,8 @@ public class UndoViewExtension implements Extension {
 				e);
 		}
 		//vista.getMapControl().cancelDrawing();
-		vista.getMapControl().drawMap(false);
+		//vista.getMapControl().drawMap(false);
+
 	}
 
 	/**

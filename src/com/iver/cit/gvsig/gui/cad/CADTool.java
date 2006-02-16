@@ -112,4 +112,5 @@ public interface CADTool {
 	public CADToolAdapter getCadToolAdapter();
 	public String[] getDescriptions();
 	public void setDescription(String[] descriptions);
+	public String getName();
 }

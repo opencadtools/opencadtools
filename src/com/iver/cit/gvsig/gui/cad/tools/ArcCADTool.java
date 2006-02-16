@@ -176,4 +176,8 @@ public class ArcCADTool extends DefaultCADTool {
     public void addValue(double d) {
     }
 
+	public String getName() {
+		return "ARCO";
+	}
+
 }

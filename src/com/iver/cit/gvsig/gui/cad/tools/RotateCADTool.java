@@ -157,7 +157,7 @@ public class RotateCADTool extends DefaultCADTool {
 
     					/* fea.getGeometry().rotate(-Math.atan2(w, h) + (Math.PI / 2),
     						firstPoint.getX(), firstPoint.getY()); */
-    					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea);
+    					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea,getName());
     				}
 
     				getCadToolAdapter().getVectorialAdapter().endComplexRow();
@@ -270,7 +270,7 @@ public class RotateCADTool extends DefaultCADTool {
 						fea.getGeometry().transform(at);
     					// fea.getGeometry().rotate(Math.toRadians(d),
     					// 	firstPoint.getX(), firstPoint.getY());
-    					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea);
+    					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea,getName());
 					}
 				}
 			} catch (DriverIOException e) {
@@ -281,4 +281,8 @@ public class RotateCADTool extends DefaultCADTool {
 
 		}
     }
+
+	public String getName() {
+		return "ROTAR";
+	}
 }

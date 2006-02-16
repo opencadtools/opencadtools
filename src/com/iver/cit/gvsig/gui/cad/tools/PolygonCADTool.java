@@ -285,4 +285,8 @@ public class PolygonCADTool extends DefaultCADTool {
         return new FGeometryCollection(geoms);
     }
 
+	public String getName() {
+		return "POLIGONO";
+	}
+
 }

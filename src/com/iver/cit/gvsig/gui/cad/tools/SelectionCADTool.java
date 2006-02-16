@@ -240,7 +240,7 @@ public class SelectionCADTool extends DefaultCADTool {
 	}
 
 	/**
-	 * Equivale al transition del prototipo pero sin pasarle como parámetro el
+	 * Equivale al transition del prototipo pero sin pasarle como pará metro el
 	 * editableFeatureSource que ya estará creado.
 	 *
 	 * @param selection
@@ -442,6 +442,10 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	public void end() {
 		CADExtension.setCADTool(getTool());
+	}
+
+	public String getName() {
+		return "SELECCION";
 	}
 
 }

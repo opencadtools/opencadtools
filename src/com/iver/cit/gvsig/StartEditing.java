@@ -3,6 +3,7 @@ package com.iver.cit.gvsig;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
@@ -39,6 +40,7 @@ public class StartEditing implements Extension {
         if (f instanceof View) {
             View vista = (View) f;
             vista.showConsole();
+            MapControl mapControl = (MapControl) vista.getMapControl();
             ProjectView model = vista.getModel();
             FMap mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
@@ -57,6 +59,7 @@ public class StartEditing implements Extension {
                     vea.setOriginalVectorialAdapter(lv.getSource());
                     try{
                     vea.startEdition();
+                    vea.getCommandRecord().addExecuteCommand(mapControl);
                     }catch (EditionException e) {
 						// TODO: handle exception
 					}

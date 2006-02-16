@@ -179,4 +179,8 @@ public class EllipseCADTool extends DefaultCADTool {
         }
     }
 
+	public String getName() {
+		return "ELIPSE";
+	}
+
 }

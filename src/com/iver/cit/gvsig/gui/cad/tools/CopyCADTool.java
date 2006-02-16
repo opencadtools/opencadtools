@@ -148,7 +148,7 @@ public class CopyCADTool extends DefaultCADTool {
                     UtilFunctions.moveGeom(fea.getGeometry(), lastPoint.getX() -
                             firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
 
-                    vea.addRow(fea);
+                    vea.addRow(fea,getName());
                 }
 
                 vea.endComplexRow();
@@ -225,4 +225,8 @@ public class CopyCADTool extends DefaultCADTool {
      */
     public void addValue(double d) {
     }
+
+	public String getName() {
+		return "COPIAR";
+	}
 }

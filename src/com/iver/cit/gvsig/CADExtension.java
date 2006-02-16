@@ -67,6 +67,7 @@ import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
@@ -107,6 +108,7 @@ public class CADExtension implements Extension {
         CopyCADTool copy=new CopyCADTool();
         RotateCADTool rotate=new RotateCADTool();
         ScaleCADTool scale=new ScaleCADTool();
+        EditVertexCADTool editvertex=new EditVertexCADTool();
         addCADTool("selection", selection);
         addCADTool("line", line);
         addCADTool("point", point);
@@ -119,6 +121,7 @@ public class CADExtension implements Extension {
         addCADTool("copy",copy);
         addCADTool("rotate",rotate);
         addCADTool("scale",scale);
+        addCADTool("editvertex",editvertex);
     }
 
     /**
@@ -204,6 +207,8 @@ public class CADExtension implements Extension {
         	setCADTool("rectangle");
         } else if (s.compareTo("POLYGON") == 0) {
         	setCADTool("polygon");
+        } else if (s.compareTo("EDITVERTEX") == 0) {
+        	setCADTool("editvertex");
         }
         adapter.configureMenu();
         //ViewControls.CANCELED=false;

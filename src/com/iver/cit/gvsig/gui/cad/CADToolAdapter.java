@@ -63,7 +63,7 @@ public class CADToolAdapter extends Behavior {
 	 * Pinta de alguna manera especial las geometrias seleccionadas para la
 	 * edición. En caso de que el snapping esté activado, pintará el efecto del
 	 * mismo.
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#paintComponent(java.awt.Graphics)
 	 */
 	public void paintComponent(Graphics g) {
@@ -124,11 +124,11 @@ public class CADToolAdapter extends Behavior {
 	/**
 	 * Ajusta un punto de la imagen que se pasa como parámetro al grid si éste
 	 * está activo y devuelve la distancia de un punto al punto ajustado
-	 * 
+	 *
 	 * @param point
 	 * @param mapHandlerAdjustedPoint
 	 *            DOCUMENT ME!
-	 * 
+	 *
 	 * @return Distancia del punto que se pasa como parámetro al punto ajustado
 	 */
 	private double adjustToHandler(Point2D point,
@@ -224,7 +224,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param g
 	 *            DOCUMENT ME!
 	 */
@@ -266,7 +266,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param point
 	 */
 	private void calculateSnapPoint(Point point) {
@@ -361,7 +361,7 @@ public class CADToolAdapter extends Behavior {
 	/**
 	 * Método que realiza las transiciones en las herramientas en función de un
 	 * texto introducido en la consola
-	 * 
+	 *
 	 * @param text
 	 *            DOCUMENT ME!
 	 */
@@ -398,7 +398,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * Transición por comando ("cancel", actionCommand de una herramienta, etc).
-	 * 
+	 *
 	 * @param text
 	 *            DOCUMENT ME!
 	 */
@@ -426,7 +426,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param text
 	 *            DOCUMENT ME!
 	 * @param source
@@ -457,20 +457,20 @@ public class CADToolAdapter extends Behavior {
 				/*
 				 * if ((ret & Automaton.AUTOMATON_FINISHED) ==
 				 * Automaton.AUTOMATON_FINISHED) { popCadTool();
-				 * 
+				 *
 				 * if (cadToolStack.isEmpty()) { pushCadTool(new
 				 * com.iver.cit.gvsig.gui.cad.smc.gen.CADTool());//new
 				 * SelectionCadTool());
 				 * PluginServices.getMainFrame().setSelectedTool("selection"); }
-				 * 
+				 *
 				 * askQuestion();
-				 * 
+				 *
 				 * getMapControl().drawMap(false); } else { if (((CadTool)
 				 * cadToolStack.peek()).getAutomaton().checkState('c')) {
 				 * getMapControl().drawMap(false); }
-				 * 
+				 *
 				 * if (!questionAsked) { askQuestion(); } }
-				 * 
+				 *
 				 * configureMenu();
 				 */
 			}
@@ -481,7 +481,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param text
 	 *            DOCUMENT ME!
 	 * @param source
@@ -515,7 +515,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param value
 	 *            DOCUMENT ME!
 	 */
@@ -527,7 +527,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param activated
 	 *            DOCUMENT ME!
 	 */
@@ -537,7 +537,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param x
 	 *            DOCUMENT ME!
 	 * @param y
@@ -571,7 +571,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @return DOCUMENT ME!
 	 */
 	public CADTool getCadTool() {
@@ -580,7 +580,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param cadTool
 	 *            DOCUMENT ME!
 	 */
@@ -592,17 +592,17 @@ public class CADToolAdapter extends Behavior {
 		/*
 		 * int ret = cadTool.transition(null, editableFeatureSource, selection,
 		 * new double[0]);
-		 * 
+		 *
 		 * if ((ret & Automaton.AUTOMATON_FINISHED) ==
 		 * Automaton.AUTOMATON_FINISHED) { popCadTool();
-		 * 
+		 *
 		 * if (cadToolStack.isEmpty()) { pushCadTool(new
 		 * com.iver.cit.gvsig.gui.cad.smc.gen.CADTool());//new
 		 * SelectionCadTool());
 		 * PluginServices.getMainFrame().setSelectedTool("selection"); }
-		 * 
+		 *
 		 * askQuestion();
-		 * 
+		 *
 		 * getMapControl().drawMap(false); }
 		 */
 	}
@@ -634,7 +634,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param cadTool
 	 *            DOCUMENT ME!
 	 */
@@ -646,7 +646,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @return DOCUMENT ME!
 	 */
 	public VectorialEditableAdapter getVectorialAdapter() {
@@ -655,7 +655,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param editableFeatureSource
 	 *            DOCUMENT ME!
 	 * @param selection
@@ -667,7 +667,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @return DOCUMENT ME!
 	 */
 	/*
@@ -675,7 +675,7 @@ public class CADToolAdapter extends Behavior {
 	 */
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param cadMapControl
 	 *            DOCUMENT ME!
 	 */
@@ -699,7 +699,7 @@ public class CADToolAdapter extends Behavior {
 				// /vea.removeRow(i);
 			}
 			for (j = indexesToDel.length - 1; j >= 0; j--) {
-				vea.removeRow(indexesToDel[j]);
+				vea.removeRow(indexesToDel[j],"Feature eliminada");
 			}
 		} catch (DriverIOException e) {
 			e.printStackTrace();
@@ -721,7 +721,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param b
 	 */
 	public void setAdjustGrid(boolean b) {
@@ -730,7 +730,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param actionCommand
 	 */
 	public void keyPressed(String actionCommand) {

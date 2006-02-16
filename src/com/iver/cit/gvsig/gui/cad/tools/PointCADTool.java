@@ -143,4 +143,8 @@ public class PointCADTool extends DefaultCADTool {
         // TODO Auto-generated method stub
     }
 
+	public String getName() {
+		return "PUNTO";
+	}
+
 }

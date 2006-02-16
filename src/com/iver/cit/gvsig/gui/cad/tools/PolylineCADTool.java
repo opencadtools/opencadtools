@@ -444,4 +444,8 @@ public class PolylineCADTool extends DefaultCADTool {
 		/* CADExtension.setCADTool("polyline");
     	PluginServices.getMainFrame().setSelectedTool("POLYLINE"); */
 	}
+
+	public String getName() {
+		return "POLILINEA";
+	}
 }

@@ -227,4 +227,8 @@ public class RectangleCADTool extends DefaultCADTool {
     public void addValue(double d) {
     }
 
+	public String getName() {
+		return "RECTANGULO";
+	}
+
 }

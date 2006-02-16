@@ -198,4 +198,8 @@ public class LineCADTool extends DefaultCADTool {
         }
     }
 
+	public String getName() {
+		return "LINEA";
+	}
+
 }

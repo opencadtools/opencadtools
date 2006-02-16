@@ -298,9 +298,13 @@ public class ScaleCADTool extends DefaultCADTool {
     				DefaultFeature df=(DefaultFeature)vea.getRow(i).cloneRow();
     				UtilFunctions.scaleGeom(df.getGeometry(), scalePoint, scaleFactor, scaleFactor);
     				// df.getGeometry().scale(scalePoint, scaleFactor, scaleFactor);
-    				vea.modifyRow(i, df);
+    				vea.modifyRow(i, df,getName());
     			}
     		}
     		vea.endComplexRow();
     	}
+
+	public String getName() {
+		return "ESCALAR";
+	}
 }
