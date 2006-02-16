@@ -17,12 +17,16 @@ import java.util.Stack;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.Handler;
+import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
+import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.tools.BehaviorException;
@@ -32,8 +36,11 @@ import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.SpatialIndex;
+import com.vividsolutions.jts.index.quadtree.Quadtree;
 
 public class CADToolAdapter extends Behavior {
+	public static int MAX_ENTITIES_IN_SPATIAL_CACHE = 5000; 
+	
 	private Stack cadToolStack = new Stack();
 
 	// Para pasarle las coordenadas cuando se produce un evento textEntered
@@ -134,14 +141,16 @@ public class CADToolAdapter extends Behavior {
 	private double adjustToHandler(Point2D point,
 			Point2D mapHandlerAdjustedPoint) {
 		// if (selection.cardinality() > 0) {
+		if (getSpatialCache() == null)
+			return Double.MAX_VALUE;
+		
 		double rw = getMapControl().getViewPort().toMapDistance(5);
 		Point2D mapPoint = point;
 		Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - rw / 2,
 				mapPoint.getY() - rw / 2, rw, rw);
 
 		// int[] indexes = vea.getRowsIndexes(r);
-		Envelope e = new Envelope(r.getX(), r.getX() + r.getWidth(), r.getY(),
-				r.getY() + r.getHeight());
+		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
 		List l = getSpatialCache().query(e);
 		double min = Double.MAX_VALUE;
 		Point2D argmin = null;
@@ -765,10 +774,43 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * @param spatialCache
-	 *            The spatialCache to set.
+	 * Se usa para rellenar la cache de entidades
+	 * con la que queremos trabajar (para hacer snapping,
+	 * por ejemplo. Lo normal será
+	 * rellenarla cada vez que cambie el extent, y 
+	 * basándonos en el futuro EditionManager para saber
+	 * de cuántos temas hay que leer. Si el numero de entidades
+	 * supera MAX_ENTITIES_IN_SPATIAL_CACHE, lo pondremos
+	 * a nulo.
+	 * @throws DriverException 
 	 */
-	public void setSpatialCache(SpatialIndex spatialCache) {
-		this.spatialCache = spatialCache;
+	public void createSpatialCache() throws DriverException {
+		ViewPort vp = getMapControl().getViewPort();
+		Rectangle2D extent = vp.getAdjustedExtent();
+		// TODO: Por ahora cogemos el VectorialAdapter
+		// de aquí, pero deberíamos tener un método que
+		// le pregunte al EditionManager el tema sobre
+		// el que estamos pintando.
+		String strEPSG = vp.getProjection().getAbrev().substring(5);
+		IRowEdited[] feats = getVectorialAdapter().getFeatures(extent, strEPSG);
+		if (feats.length > MAX_ENTITIES_IN_SPATIAL_CACHE)
+			this.spatialCache = null;
+		else
+			this.spatialCache = new Quadtree();
+		for (int i=0; i < feats.length; i++)
+		{
+			IFeature feat =  (IFeature)feats[i].getLinkedRow();
+			IGeometry geom = feat.getGeometry();
+			// TODO: EL getBounds2D del IGeometry ralentiza innecesariamente
+			// Podríamos hacer que GeneralPathX lo tenga guardado, 
+			// y tenga un constructor en el que se lo fijes.
+			// De esta forma, el driver, a la vez que recupera
+			// las geometrías podría calcular el boundingbox
+			// y asignarlo. Luego habría que poner un método
+			// que recalcule el bounding box bajo demanda.
+			
+			Envelope e = FConverter.convertRectangle2DtoEnvelope(geom.getBounds2D());
+			spatialCache.insert(e, geom);
+		}
 	}
 }

@@ -50,6 +50,7 @@ import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
@@ -57,6 +58,8 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
+import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
@@ -153,13 +156,33 @@ public class SelectionCADTool extends DefaultCADTool {
 				.toMapDistance(tolerance);
 		Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() - tam,
 				firstPoint.getY() - tam, tam * 2, tam * 2);
-		int[] indexes = getCadToolAdapter().getVectorialAdapter()
-				.getRowsIndexes(rect);
-
+		// int[] indexes = getCadToolAdapter().getVectorialAdapter()
+		// 		.getRowsIndexes(rect);
+		VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
+		String strEPSG = getCadToolAdapter().getMapControl().
+						getViewPort().getProjection()
+						.getAbrev().substring(5);
+		IRowEdited[] feats;
 		FBitSet prevSelection=(FBitSet)selection.clone();
-		selection.clear();
 
-		for (int i = 0; i < indexes.length; i++) {
+		try {
+			feats = vea.getFeatures(rect, strEPSG);
+			selection.clear();
+	
+			for (int i = 0; i < feats.length; i++) {
+				IFeature feat = (IFeature)feats[i].getLinkedRow();
+				IGeometry geom = feat.getGeometry(); 
+				if (geom.intersects(rect)) { // , 0.1)){
+					selection.set(feats[i].getIndex(), true);
+				}
+			}
+		} catch (DriverException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+
+		/* for (int i = 0; i < indexes.length; i++) {
 			try {
 				if (getCadToolAdapter().getVectorialAdapter().getShape(
 						indexes[i]).intersects(rect)) {
@@ -170,7 +193,7 @@ public class SelectionCADTool extends DefaultCADTool {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		} */
 		boolean isTheSame=false;
 		if (prevSelection.cardinality()!=0 && selection.intersects(prevSelection) && !selection.equals(prevSelection)){
 			selection=prevSelection;
@@ -287,20 +310,23 @@ public class SelectionCADTool extends DefaultCADTool {
 
 				Rectangle2D rect = new Rectangle2D.Double(x1, y1, w1, h1);
 
-				int[] indexes = getCadToolAdapter().getVectorialAdapter()
-						.getRowsIndexes(new Rectangle2D.Double(x1, y1, w1, h1));
+				/* int[] indexes = getCadToolAdapter().getVectorialAdapter()
+						.getRowsIndexes(new Rectangle2D.Double(x1, y1, w1, h1)); */
+				VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
+				String strEPSG = getCadToolAdapter().getMapControl().
+								getViewPort().getProjection()
+								.getAbrev().substring(5);
+				IRowEdited[] feats = vea.getFeatures(rect, strEPSG);
 
-				for (int i = 0; i < indexes.length; i++) {
+				for (int i = 0; i < feats.length; i++) {
+					IGeometry geom = ((IFeature)feats[i].getLinkedRow()).getGeometry(); 
 					if (firstPoint.getX() < lastPoint.getX()) {
-						if (rect.contains(getCadToolAdapter()
-								.getVectorialAdapter().getShape(indexes[i])
-								.getBounds2D())) {
-							selection.set(indexes[i], true);
+						if (rect.contains(geom.getBounds2D())) {
+							selection.set(feats[i].getIndex(), true);
 						}
 					} else {
-						if (getCadToolAdapter().getVectorialAdapter().getShape(
-								indexes[i]).intersects(rect)) { // , 0.1)){
-							selection.set(indexes[i], true);
+						if (geom.intersects(rect)) { // , 0.1)){
+							selection.set(feats[i].getIndex(), true);
 						}
 					}
 				}
@@ -329,7 +355,7 @@ public class SelectionCADTool extends DefaultCADTool {
 			// } catch (IOException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
-		} catch (DriverIOException e) {
+		} catch (DriverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
