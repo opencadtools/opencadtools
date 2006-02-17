@@ -9,11 +9,14 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
+//import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.project.ProjectView;
 import com.iver.utiles.SimpleFileFilter;
@@ -87,8 +90,8 @@ public class StopEditingToShp implements Extension {
         			VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
         			// File newFile = vea.getDriver().
 
-                    ShpWriter writer = new ShpWriter(newFile, layer);
-
+        			ShpWriter writer= (ShpWriter)LayerFactory.getWM().getWriter("Shape Writer");
+        			writer.initialize(newFile,layer);
 
                     vea.stopEdition(writer);
                     vea.getCommandRecord().removeExecuteCommand(mapControl);
