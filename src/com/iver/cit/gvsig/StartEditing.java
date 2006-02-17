@@ -59,7 +59,7 @@ public class StartEditing implements Extension {
                     vea.setOriginalVectorialAdapter(lv.getSource());
                     try{
                     vea.startEdition();
-                    vea.getCommandRecord().addExecuteCommand(mapControl);
+                    vea.getCommandRecord().addCommandListener(mapControl);
                     }catch (EditionException e) {
 						// TODO: handle exception
 					}

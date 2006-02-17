@@ -81,7 +81,7 @@ public class RedoViewExtension implements Extension {
 						if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing() && layers.getLayer(i).isActive()){
 							VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
 							vea.redo();
-							vea.getCommandRecord().fireExecuteCommands(null);
+							vea.getCommandRecord().fireCommandsRepaint(null);
 							vea.getSelection().clear();
 						}
 

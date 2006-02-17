@@ -39,10 +39,10 @@ public class TableCommandStackExtension implements Extension {
 
 			if (model.getAssociatedTable()!=null){
 				cr=((IEditableSource)((FLyrVect)model.getAssociatedTable()).getSource()).getCommandRecord();
-				cr.addExecuteCommand(table);
+				cr.addCommandListener(table);
 			}else{
 				cr=model.getModelo().getCommandRecord();
-				cr.addExecuteCommand(table);
+				cr.addCommandListener(table);
 			}
 			CommandStackDialog csd = new CommandStackDialog(cr);
 			PluginServices.getMDIManager().addView(csd);
