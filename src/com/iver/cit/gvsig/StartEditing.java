@@ -65,6 +65,10 @@ public class StartEditing implements Extension {
 					}
                     lv.setSource(vea);
                     lv.setEditing(true);
+                    
+                    // TODO: Provisional, para que al poner
+                    // un tema en edición el CADToolAdapter se entere
+                    CADExtension.getCADToolAdapter().setVectorialAdapter(vea);
 
                     //Si existe una tabla asociada a esta capa se cambia su modelo por el VectorialEditableAdapter.
                     ProjectExtension pe=(ProjectExtension)PluginServices.getExtension(ProjectExtension.class);

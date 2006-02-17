@@ -142,14 +142,14 @@ public class CADToolAdapter extends Behavior {
 			Point2D mapHandlerAdjustedPoint) {
 		// if (selection.cardinality() > 0) {
 		if (getSpatialCache() == null)
-			return Double.MAX_VALUE;
+			return Double.MAX_VALUE; 
 		
 		double rw = getMapControl().getViewPort().toMapDistance(5);
 		Point2D mapPoint = point;
 		Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - rw / 2,
 				mapPoint.getY() - rw / 2, rw, rw);
 
-		// int[] indexes = vea.getRowsIndexes(r);
+		// int[] indexes = vea.getRowsIndexes_OLD(r);
 		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
 		List l = getSpatialCache().query(e);
 		double min = Double.MAX_VALUE;
@@ -157,7 +157,14 @@ public class CADToolAdapter extends Behavior {
 		Point2D mapArgmin = null;
 
 		for (int i = 0; i < l.size(); i++) {
+		// for (int i = 0; i < indexes.length; i++) {
 			IGeometry geometry = null;
+			/* try {
+				geometry = vea.getShape(indexes[i]);
+			} catch (DriverIOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} */
 			geometry = (IGeometry) l.get(i);// getFeature(indexes[i]);
 			Handler[] handlers = geometry.getHandlers(IGeometry.SELECTHANDLER);
 

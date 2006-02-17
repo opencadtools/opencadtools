@@ -47,6 +47,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.gdbms.engine.data.driver.DriverException;
@@ -59,10 +60,12 @@ import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
+import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
@@ -221,6 +224,18 @@ public abstract class DefaultCADTool implements CADTool {
 				FGraphicUtilities.DrawHandlers((Graphics2D)g,at,handlers);
 		}
 	}
+	public void drawHandlers(Graphics g, ArrayList selectedRows, AffineTransform at) {
+		 for (int i = 0; i < selectedRows.size(); i++)
+		 {
+			//IRowEdited edRow = (IRowEdited) selectedRows.get(i);
+			// IFeature feat = (IFeature) edRow.getLinkedRow();
+			IFeature feat = (IFeature) selectedRows.get(i);
+			IGeometry ig = feat.getGeometry().cloneGeometry();
+			if (ig == null) continue;
+				Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
+				FGraphicUtilities.DrawHandlers((Graphics2D)g,at,handlers);
+		}	}
+	
 
 	public void setDescription(String[] currentdescriptions) {
 		this.currentdescriptions = currentdescriptions;
