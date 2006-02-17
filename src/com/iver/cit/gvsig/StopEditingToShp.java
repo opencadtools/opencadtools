@@ -95,7 +95,7 @@ public class StopEditingToShp implements Extension {
 
                     vea.stopEdition(writer);
                     vea.getCommandRecord().removeCommandListener(mapControl);
-                    layer.setSource(vea.getOriginalAdapter());
+                    
                     layer.setEditing(false);
                     vista.hideConsole();
                 }

@@ -2,10 +2,13 @@ package com.iver.cit.gvsig;
 
 import java.util.ArrayList;
 
+import com.iver.cit.gvsig.fmap.AtomicEvent;
+import com.iver.cit.gvsig.fmap.AtomicEventListener;
+import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerListener;
-import com.iver.cit.gvsig.layers.DefaultLayerEdited;
+import com.iver.cit.gvsig.layers.FactoryLayerEdited;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 
 /**
@@ -24,11 +27,21 @@ import com.iver.cit.gvsig.layers.ILayerEdited;
  * LayerEdited es un wrapper alrededor de un tema que guarda
  * las propiedades de la edición.
  * 
+ * TODO: Poner todo lo referente al EditionManager dentro de una vista.
+ * para permitir tener varias vistas con temas en edición
+ * 
  */
 public class EditionManager implements LayerListener {
 
 	private ArrayList editedLayers = new ArrayList();
+	private ILayerEdited activeLayerEdited = null; 
+	private MapControl mapCtrl = null;
 	
+		
+	/**
+	 * @param lyr
+	 * @return 
+	 */
 	public ILayerEdited getLayerEdited(FLayer lyr)
 	{
 		ILayerEdited aux = null;
@@ -45,6 +58,26 @@ public class EditionManager implements LayerListener {
 	}
 
 	public void activationChanged(LayerEvent e) {
+		// Aquí controlamos que solo exista un tema activo y en edición
+		// a la vez. Recorremos los temas en edición, y dejamos el primero que encontremos
+		// activado, mientras el resto los desactivamos.
+		ILayerEdited aux = null;
+		boolean bFirst = true;
+		mapCtrl.getMapContext().beginAtomicEvent();
+		for (int i=0; i < editedLayers.size(); i++)
+		{
+			aux = (ILayerEdited) editedLayers.get(i);
+			if (aux.getLayer().isActive())
+			{
+				if (!bFirst)
+					aux.getLayer().setActive(false);
+				else
+					activeLayerEdited = aux;
+				bFirst = false;
+			}
+		}
+		mapCtrl.getMapContext().endAtomicEvent();		
+
 	}
 
 	public void nameChanged(LayerEvent e) {
@@ -56,9 +89,35 @@ public class EditionManager implements LayerListener {
 		// y lo añadimos
 		if ((lyrEdit == null) && e.getSource().isEditing())
 		{
-			DefaultLayerEdited newLayerEdited = new DefaultLayerEdited(e.getSource());			
-			editedLayers.add(newLayerEdited);
+			lyrEdit = FactoryLayerEdited.createLayerEdited(e.getSource());
+			editedLayers.add(lyrEdit);
 		}
 	}
+
+	/**
+	 * @return Returns the activeLayerEdited. Null if there isn't any active AND edited
+	 */
+	public ILayerEdited getActiveLayerEdited() {
+		return activeLayerEdited;
+	}
+
+	/**
+	 * @return Returns the mapCtrl.
+	 */
+	public MapControl getMapControl() {
+		return mapCtrl;
+	}
+
+	/**
+	 * @param mapCtrl The mapCtrl to set.
+	 */
+	public void setMapControl(MapControl mapCtrl) {
+		if (mapCtrl != null)
+		{
+			this.mapCtrl = mapCtrl;
+			mapCtrl.getMapContext().getLayers().addLayerListener(this);
+		}
+	}
+
 	
 }

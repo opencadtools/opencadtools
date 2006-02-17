@@ -86,11 +86,12 @@ import com.iver.utiles.console.ResponseListener;
  */
 public class CADExtension implements Extension {
    private static CADToolAdapter adapter=new CADToolAdapter();
+   private static EditionManager editionManager = new EditionManager();
    private static HashMap namesCadTools = new HashMap();
    private MapControl mapControl;
    private static View view;
    public static CADToolAdapter getCADToolAdapter(){
-	   return adapter;
+	    return adapter;
    }
    /**
      * @see com.iver.andami.plugins.Extension#inicializar()
@@ -150,14 +151,14 @@ public class CADExtension implements Extension {
             view.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape");
             view.getActionMap().put("escape", new MyAction("escape"));
 
-        FLayers layers=mapControl.getMapContext().getLayers();
+        /* FLayers layers=mapControl.getMapContext().getLayers();
 		for (int i=0;i<layers.getLayersCount();i++){
 			if (layers.getLayer(i).isEditing() && layers.getLayer(i) instanceof FLyrVect){
 				adapter.setVectorialAdapter((VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource());
 				adapter.setMapControl(mapControl);
 
 			}
-		}
+		} */
 
         view.getMapControl().setTool("cadtooladapter");
 
@@ -228,7 +229,7 @@ public class CADExtension implements Extension {
      * @see com.iver.andami.plugins.Extension#isEnabled()
      */
     public boolean isEnabled() {
-        com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+        /* com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
                                                              .getActiveView();
 
         if (f == null) {
@@ -246,7 +247,16 @@ public class CADExtension implements Extension {
             }
         }
 
-        return false;
+        return false; */
+		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+		{
+			// Queremos que siempre que haya edición esto esté funcionando.
+	        editionManager.setMapControl(mapControl);
+			return true;
+		}
+		else
+			return false;
+    	
     }
 
     /**
@@ -323,6 +333,13 @@ public class CADExtension implements Extension {
 		Character keyChar = new Character(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0).getKeyChar());
 		mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),keyChar);
 		mapControl.getActionMap().put(keyChar, new KeyAction(""));
+		
+		// El espacio como si fuera INTRO
+		Character keyCharSpace = new Character(' ');
+		mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(' '), keyCharSpace);
+		mapControl.getActionMap().put(keyCharSpace, new KeyAction(""));
+
+		
 	}
 
 	private static JPopupMenu popup = new JPopupMenu();
@@ -349,5 +366,12 @@ public class CADExtension implements Extension {
     }
 	public static View getView() {
 		return view;
+	}
+
+	/**
+	 * @return Returns the editionManager.
+	 */
+	public static EditionManager getEditionManager() {
+		return editionManager;
 	}
 }

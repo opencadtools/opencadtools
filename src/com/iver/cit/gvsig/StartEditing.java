@@ -55,21 +55,12 @@ public class StartEditing implements Extension {
                     FLyrVect lv = (FLyrVect) layers.getLayer(i);
                     // lv.setVisible(true);
 
-                    VectorialEditableAdapter vea = new VectorialEditableAdapter();
-                    vea.setOriginalVectorialAdapter(lv.getSource());
-                    try{
-                    vea.startEdition();
-                    vea.getCommandRecord().addCommandListener(mapControl);
-                    }catch (EditionException e) {
-						// TODO: handle exception
-					}
-                    lv.setSource(vea);
                     lv.setEditing(true);
-                    
+                    VectorialEditableAdapter vea = (VectorialEditableAdapter) lv.getSource();
                     // TODO: Provisional, para que al poner
                     // un tema en edición el CADToolAdapter se entere
                     CADExtension.getCADToolAdapter().setVectorialAdapter(vea);
-
+                    vea.getCommandRecord().addCommandListener(mapControl);
                     //Si existe una tabla asociada a esta capa se cambia su modelo por el VectorialEditableAdapter.
                     ProjectExtension pe=(ProjectExtension)PluginServices.getExtension(ProjectExtension.class);
                     ProjectTable pt=pe.getProject().getTable(lv);

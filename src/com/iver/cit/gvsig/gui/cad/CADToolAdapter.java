@@ -124,7 +124,7 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				p = vp.toMapPoint(adjustedPoint);
 			}
-			transition(vea, new double[] { p.getX(), p.getY() });
+			transition(new double[] { p.getX(), p.getY() });
 		}
 	}
 
@@ -398,30 +398,20 @@ public class CADToolAdapter extends Behavior {
 					// punto
 					values = new double[] { Double.parseDouble(numbers[0]),
 							Double.parseDouble(numbers[1]) };
-					transition(vea, values);
+					transition(values);
 				} else if (numbers.length == 1) {
 					// valor
 					values = new double[] { Double.parseDouble(numbers[0]) };
-					transition(vea, values[0]);
+					transition(values[0]);
 				}
 			} catch (NumberFormatException e) {
-				transition(vea, text);
+				transition(text);
 			}
 			// }
 		}
 		getMapControl().repaint();
 	}
 
-	/**
-	 * Transición por comando ("cancel", actionCommand de una herramienta, etc).
-	 *
-	 * @param text
-	 *            DOCUMENT ME!
-	 */
-	public void transition(String text) {
-		transition(vea, text);
-		// getMapControl().repaint();
-	}
 
 	/**
 	 * DOCUMENT ME!
@@ -452,7 +442,7 @@ public class CADToolAdapter extends Behavior {
 	 * @param values
 	 *            DOCUMENT ME!
 	 */
-	private void transition(VectorialEditableAdapter source, double[] values) {
+	private void transition(double[] values) {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()) {
 			CADTool ct = (CADTool) cadToolStack.peek();
@@ -507,7 +497,7 @@ public class CADToolAdapter extends Behavior {
 	 * @param values
 	 *            DOCUMENT ME!
 	 */
-	private void transition(VectorialEditableAdapter source, double value) {
+	private void transition(double value) {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()) {
 			CADTool ct = (CADTool) cadToolStack.peek();
@@ -518,7 +508,7 @@ public class CADToolAdapter extends Behavior {
 		PluginServices.getMainFrame().enableControls();
 	}
 
-	private void transition(VectorialEditableAdapter source, String option) {
+	public void transition(String option) {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()) {
 			CADTool ct = (CADTool) cadToolStack.peek();
