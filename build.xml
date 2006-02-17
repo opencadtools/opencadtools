@@ -7,7 +7,7 @@
   <property name="build" location="bin"/>
   <property name="dist"  location="dist"/>
   <property name="plugin" value="com.iver.cit.gvsig.cad"/>
-  <property name="extensionDir" location="../fwAndami/gvSIG/extensiones"/>
+  <property name="extensionDir" location="../_fwAndami/gvSIG/extensiones"/>
 <property name="mainplugin" value="com.iver.cit.gvsig"/>
   <target name="init">
     <!-- Create the time stamp -->
