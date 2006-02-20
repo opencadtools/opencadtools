@@ -234,4 +234,8 @@ public class WriterGT2 implements IWriter {
 
 	}
 
+	public String getName() {
+		return "JDBC Writer from Geotools";
+	}
+
 }

@@ -61,22 +61,22 @@ public class EditionManager implements LayerListener {
 		// Aquí controlamos que solo exista un tema activo y en edición
 		// a la vez. Recorremos los temas en edición, y dejamos el primero que encontremos
 		// activado, mientras el resto los desactivamos.
-		ILayerEdited aux = null;
-		boolean bFirst = true;
-		mapCtrl.getMapContext().beginAtomicEvent();
-		for (int i=0; i < editedLayers.size(); i++)
-		{
-			aux = (ILayerEdited) editedLayers.get(i);
-			if (aux.getLayer().isActive())
-			{
-				if (!bFirst)
-					aux.getLayer().setActive(false);
-				else
-					activeLayerEdited = aux;
-				bFirst = false;
-			}
-		}
-		mapCtrl.getMapContext().endAtomicEvent();		
+//		ILayerEdited aux = null;
+//		boolean bFirst = true;
+//		mapCtrl.getMapContext().beginAtomicEvent();
+//		for (int i=0; i < editedLayers.size(); i++)
+//		{
+//			aux = (ILayerEdited) editedLayers.get(i);
+//			if (aux.getLayer().isActive())
+//			{
+//				if (!bFirst)
+//					aux.getLayer().setActive(false);
+//				else
+//					activeLayerEdited = aux;
+//				bFirst = false;
+//			}
+//		}
+//		mapCtrl.getMapContext().endAtomicEvent();		
 
 	}
 

@@ -40,9 +40,9 @@ public class EditingExtension implements Extension {
 						&& layers.getLayer(i).isEditing()) {
 					FLyrVect lv = (FLyrVect) layers.getLayer(i);
 					// stopEditing(lv);
-					VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) layers
-							.getLayer(i)).getSource();
-					lv.setSource(vea.getOriginalAdapter());
+					// VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) layers
+					// 		.getLayer(i)).getSource();
+					// lv.setSource(vea.getOriginalAdapter());
 					lv.setEditing(false);
 					return;
 				}

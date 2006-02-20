@@ -149,4 +149,8 @@ public class WriterGT2Shp implements IWriter {
 
 	}
 
+	public String getName() {
+		return "Shp Writer from Geotools";
+	}
+
 }
