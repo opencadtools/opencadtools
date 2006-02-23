@@ -409,6 +409,12 @@ public class SelectionCADTool extends DefaultCADTool {
 		String status = actualState.getName();
 		FBitSet selection = getCadToolAdapter().getVectorialAdapter()
 				.getSelection();
+		if (selection.cardinality() == 0)
+		{
+			selectedRow.clear();
+			selectedRowIndex.clear();
+			selectedHandler.clear();
+		}
 		// try {
 			// drawHandlers(g, selection, getCadToolAdapter().getMapControl()
 			// 		.getViewPort().getAffineTransform());
