@@ -521,4 +521,11 @@ public class SelectionCADTool extends DefaultCADTool {
 		return "SELECCION";
 	}
 
+	public void clearSelection() {
+		// Limpiamos la selección cacheada
+		selectedHandler.clear();
+		selectedRow.clear();
+		selectedRowIndex.clear();
+	}
+
 }

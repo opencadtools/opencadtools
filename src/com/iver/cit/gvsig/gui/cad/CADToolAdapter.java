@@ -722,6 +722,11 @@ public class CADToolAdapter extends Behavior {
 		}
 		System.out.println("clear Selection");
 		selection.clear();
+		if (getCadTool() instanceof SelectionCADTool)
+		{
+			SelectionCADTool selTool = (SelectionCADTool) getCadTool();
+			selTool.clearSelection();
+		}
 		getMapControl().drawMap(false);
 	}
 
