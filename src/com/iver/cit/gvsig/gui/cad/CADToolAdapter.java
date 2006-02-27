@@ -752,8 +752,12 @@ public class CADToolAdapter extends Behavior {
 				CADTool ct = (CADTool) cadToolStack.peek();
 				ct.end();
 				cadToolStack.clear();
-				pushCadTool(new SelectionCADTool());
-				getVectorialAdapter().getSelection().clear();
+				SelectionCADTool selCad = new SelectionCADTool();
+				selCad.init();
+				selCad.clearSelection();
+				
+				pushCadTool(selCad);
+				// getVectorialAdapter().getSelection().clear();
 				getMapControl().drawMap(false);
 				PluginServices.getMainFrame().setSelectedTool("SELCAD");
 				askQuestion();

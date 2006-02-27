@@ -87,6 +87,12 @@ public class StopEditingToShp implements Extension {
             jfc.setFileFilter(filterShp);
             if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
         		    File newFile = jfc.getSelectedFile();
+        		    String path = newFile.getAbsolutePath();
+        		    if (!(path.toLowerCase().endsWith(".shp")))
+        		    {
+        		    	path = path + ".shp";
+        		    }
+        		    newFile = new File(path);
         			VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
         			// File newFile = vea.getDriver().
 

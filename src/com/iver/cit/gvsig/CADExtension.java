@@ -40,6 +40,8 @@
  */
 package com.iver.cit.gvsig;
 
+import java.awt.KeyEventPostProcessor;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -51,6 +53,7 @@ import javax.swing.FocusManager;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 import com.iver.andami.PluginServices;
@@ -123,6 +126,9 @@ public class CADExtension implements Extension {
         addCADTool("rotate",rotate);
         addCADTool("scale",scale);
         addCADTool("editvertex",editvertex);
+        
+        KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
     }
 
     /**
@@ -137,19 +143,20 @@ public class CADExtension implements Extension {
         	view.addConsoleListener("cad", new ResponseListener() {
      			public void acceptResponse(String response) {
      				adapter.textEntered(response);
-     				FocusManager fm=FocusManager.getCurrentManager();
-     				fm.focusPreviousComponent(mapControl);
+     				// TODO:
+     				// FocusManager fm=FocusManager.getCurrentManager();
+     				// fm.focusPreviousComponent(mapControl);
      				/*if (popup.isShowing()){
      				    popup.setVisible(false);
      				}*/
 
      			}
      		});
-        	registerKeyStrokes();
-        	view.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "elimina");
+        	// registerKeyStrokes();
+        	/* view.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "elimina");
             view.getActionMap().put("elimina", new MyAction("eliminar"));
             view.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape");
-            view.getActionMap().put("escape", new MyAction("escape"));
+            view.getActionMap().put("escape", new MyAction("escape")); */
 
         /* FLayers layers=mapControl.getMapContext().getLayers();
 		for (int i=0;i<layers.getLayersCount();i++){
@@ -310,6 +317,43 @@ public class CADExtension implements Extension {
 			adapter.keyPressed(actionCommand);
 		}
 
+	}
+	
+	/**
+	 * @author fjp
+	 *
+	 * La idea es usar esto para recibir lo que el usuario escribe y enviarlo
+	 * a la consola de la vista para que salga por allí.
+	 */
+	private class myKeyEventPostProcessor implements KeyEventPostProcessor
+	{
+
+		public boolean postProcessKeyEvent(KeyEvent e) {
+			// System.out.println("KeyEvent e = " + e);
+			if ((adapter==null) ||  (view == null)) return false;
+        	if (e.getKeyCode() == KeyEvent.VK_DELETE)
+        		adapter.keyPressed("eliminar");
+        	else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+        		adapter.keyPressed("escape");
+        	else if (e.getKeyCode() == KeyEvent.VK_ENTER)
+        		view.focusConsole("");
+        	else
+        	{
+        		if (!(e.getComponent() instanceof JTextArea))
+        		{
+	        		if ((e.getID() == KeyEvent.KEY_TYPED) && (!e.isActionKey()))
+	        		{
+		    			if (Character.isLetterOrDigit(e.getKeyChar()))
+		    			{        				
+		    				Character keyChar = new Character(e.getKeyChar());
+		    				view.focusConsole(keyChar+"");
+		        		}
+	        		}
+        		}
+        	}
+			return false;
+		}
+		
 	}
 
 	private void registerKeyStrokes(){
