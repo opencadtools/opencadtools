@@ -14,5 +14,7 @@
 	<classpathentry kind="lib" path="/libFMap/lib/driver-manager-1.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/_fwAndami"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/appgvSIG"/>
+	<classpathentry kind="lib" path="lib/gt2-postgis.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/extJDBC"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
