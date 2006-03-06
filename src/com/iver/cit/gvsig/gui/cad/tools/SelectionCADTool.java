@@ -375,6 +375,14 @@ public class SelectionCADTool extends DefaultCADTool {
 					DefaultFeature row = (DefaultFeature) selectedRow.get(i);
 					int index = ((Integer) selectedRowIndex.get(i)).intValue();
 					// System.out.println(row.getGeometry().getBounds2D());
+					// Movemos los handlers que hemos seleccionado
+					// previamente dentro del método select()
+					for (int k = 0; k < selectedHandler.size(); k++) {
+						Handler h = (Handler) selectedHandler.get(k);
+						h.set(x, y);
+						// System.out.println(h.getPoint());
+					}
+					
 					// h.set(x, y);
 					// getVectorialAdapter().modifyRow(index, row);
 
@@ -527,5 +535,13 @@ public class SelectionCADTool extends DefaultCADTool {
 		selectedRow.clear();
 		selectedRowIndex.clear();
 	}
+
+	/**
+	 * @return Returns the selectedRow.
+	 */
+	public IFeature[] getSelectedRowsCache() {
+		return (IFeature[]) selectedRow.toArray(new IFeature[0]);
+	}
+
 
 }
