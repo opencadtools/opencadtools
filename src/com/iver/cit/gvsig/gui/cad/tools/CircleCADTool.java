@@ -86,7 +86,7 @@ public class CircleCADTool extends DefaultCADTool {
      */
     public void transition(double x, double y, InputEvent event)
         throws TransitionUndefinedException {
-        _fsm.addPoint(x, y);
+        _fsm.addPoint(x, y, event);
     }
 
     /* (non-Javadoc)

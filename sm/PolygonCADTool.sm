@@ -9,6 +9,7 @@
 %class PolygonCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool
+%import java.awt.event.InputEvent
 
 %map Polygon
 %%
@@ -31,7 +32,7 @@ NumberOrCenterPoint
 				setDescription(new String[]{"Cancelar"});
 				addValue(d);
 				}
-		addPoint(pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			OptionOrRadiusOrPoint {
 				setQuestion("Inscrito en el círculo[I] o Circunscrito[C]<C>");
 				setDescription(new String[]{"Inscrito","Circunscrito","Cancelar"});
@@ -40,7 +41,7 @@ NumberOrCenterPoint
 
 	}
 CenterPoint{
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		OptionOrRadiusOrPoint {
 			setQuestion("Inscrito en el círculo[I] o Circunscrito[C]<C>");
 			setDescription(new String[]{"Inscrito","Circunscrito","Cancelar"});
@@ -59,14 +60,14 @@ OptionOrRadiusOrPoint{
 			addValue(d);
 			end();
 			}
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NumberOrCenterPoint {
 			addPoint(pointX,pointY);
 			end();
 			}
 }
 RadiusOrPoint{
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NumberOrCenterPoint {
 			addPoint(pointX,pointY);
 			end();

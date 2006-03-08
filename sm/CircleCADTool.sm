@@ -9,7 +9,7 @@
 %class CircleCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool
-
+%import java.awt.event.InputEvent
 
 %map Circle
 %%
@@ -26,7 +26,7 @@ CenterPointOr3p
 		}
 
 	{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 			PointOrRadius {
 				setQuestion("Insertar radio o segundo punto");
 				setDescription(new String[]{"Cancelar"});
@@ -41,7 +41,7 @@ CenterPointOr3p
 			}
 }
 PointOrRadius{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		CenterPointOr3p {
 			addPoint( pointX,pointY);
 			end();
@@ -53,7 +53,7 @@ PointOrRadius{
 			}
 }
 SecondPoint{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		ThirdPoint {
 			setQuestion("Insertar tercer punto");
 			setDescription(new String[]{"Cancelar"});
@@ -61,7 +61,7 @@ SecondPoint{
 			}
 }
 ThirdPoint{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		CenterPointOr3p {
 			addPoint( pointX,pointY);
 			end();
@@ -69,7 +69,7 @@ ThirdPoint{
 }
 
 FirstPoint{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		SecondPoint {
 			setQuestion("Insertar segundo punto");
 			setDescription(new String[]{"Cancelar"});

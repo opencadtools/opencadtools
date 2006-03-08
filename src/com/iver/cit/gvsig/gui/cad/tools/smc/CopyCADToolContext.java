@@ -6,6 +6,7 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
+import java.awt.event.InputEvent;
 
 public final class CopyCADToolContext
     extends statemap.FSMContext
@@ -31,10 +32,10 @@ public final class CopyCADToolContext
         return;
     }
 
-    public void addPoint(double pointX, double pointY)
+    public void addPoint(double pointX, double pointY, InputEvent event)
     {
         _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY);
+        getState().addPoint(this, pointX, pointY, event);
         _transition = "";
         return;
     }
@@ -86,7 +87,7 @@ public final class CopyCADToolContext
             Default(context);
         }
 
-        protected void addPoint(CopyCADToolContext context, double pointX, double pointY)
+        protected void addPoint(CopyCADToolContext context, double pointX, double pointY, InputEvent event)
         {
             Default(context);
         }
@@ -211,7 +212,7 @@ public final class CopyCADToolContext
                 return;
             }
 
-            protected void addPoint(CopyCADToolContext context, double pointX, double pointY)
+            protected void addPoint(CopyCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 CopyCADTool ctxt = context.getOwner();
 
@@ -249,7 +250,7 @@ public final class CopyCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(CopyCADToolContext context, double pointX, double pointY)
+            protected void addPoint(CopyCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 CopyCADTool ctxt = context.getOwner();
 

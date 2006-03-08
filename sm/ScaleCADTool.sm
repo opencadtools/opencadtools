@@ -9,6 +9,7 @@
 %class ScaleCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool
+%import java.awt.event.InputEvent
 
 %map Scale
 %%
@@ -26,7 +27,7 @@ PointMain
 		}
 
 	{
-		addPoint(pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			ScaleFactorOrReference {
 				setQuestion("Precise factor de escala<2> o Referencia[R]");
 				setDescription(new String[]{"Referencia","Cancelar"});
@@ -54,7 +55,7 @@ ScaleFactorOrReference{
 			setDescription(new String[]{"Factor escala","Cancelar"});
 			addOption(s);
 			}
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		PointMain {
 			addPoint(pointX,pointY);
 			end();
@@ -69,7 +70,7 @@ PointOriginOrScaleFactor{
 			setDescription(new String[]{"Referencia","Cancelar"});
 			addOption(s);
 			}
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		EndPointReference {
 			setQuestion("Precise punto final recta referencia");
 			setDescription(new String[]{"Cancelar"});
@@ -77,7 +78,7 @@ PointOriginOrScaleFactor{
 			}
 }
 EndPointReference{
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		OriginPointScale {
 			setQuestion("Precise punto origen recta escala");
 			setDescription(new String[]{"Cancelar"});
@@ -85,7 +86,7 @@ EndPointReference{
 			}
 }
 OriginPointScale{
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		EndPointScale {
 			setQuestion("Precise punto final recta escala");
 			setDescription(new String[]{"Cancelar"});
@@ -93,7 +94,7 @@ OriginPointScale{
 			}
 }
 EndPointScale{
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		PointMain {
 			addPoint(pointX,pointY);
 			end();

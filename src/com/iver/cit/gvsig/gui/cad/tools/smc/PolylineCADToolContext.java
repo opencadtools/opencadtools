@@ -6,6 +6,7 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
+import java.awt.event.InputEvent;
 
 public final class PolylineCADToolContext
     extends statemap.FSMContext
@@ -31,10 +32,10 @@ public final class PolylineCADToolContext
         return;
     }
 
-    public void addPoint(double pointX, double pointY)
+    public void addPoint(double pointX, double pointY, InputEvent event)
     {
         _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY);
+        getState().addPoint(this, pointX, pointY, event);
         _transition = "";
         return;
     }
@@ -86,7 +87,7 @@ public final class PolylineCADToolContext
             Default(context);
         }
 
-        protected void addPoint(PolylineCADToolContext context, double pointX, double pointY)
+        protected void addPoint(PolylineCADToolContext context, double pointX, double pointY, InputEvent event)
         {
             Default(context);
         }
@@ -238,7 +239,7 @@ public final class PolylineCADToolContext
                 return;
             }
 
-            protected void addPoint(PolylineCADToolContext context, double pointX, double pointY)
+            protected void addPoint(PolylineCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 PolylineCADTool ctxt = context.getOwner();
 
@@ -322,7 +323,7 @@ public final class PolylineCADToolContext
                 return;
             }
 
-            protected void addPoint(PolylineCADToolContext context, double pointX, double pointY)
+            protected void addPoint(PolylineCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 PolylineCADTool ctxt = context.getOwner();
 
@@ -405,7 +406,7 @@ public final class PolylineCADToolContext
                 return;
             }
 
-            protected void addPoint(PolylineCADToolContext context, double pointX, double pointY)
+            protected void addPoint(PolylineCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 PolylineCADTool ctxt = context.getOwner();
 

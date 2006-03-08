@@ -6,6 +6,7 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool;
+import java.awt.event.InputEvent;
 
 public final class ArcCADToolContext
     extends statemap.FSMContext
@@ -31,10 +32,10 @@ public final class ArcCADToolContext
         return;
     }
 
-    public void addPoint(double pointX, double pointY)
+    public void addPoint(double pointX, double pointY, InputEvent event)
     {
         _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY);
+        getState().addPoint(this, pointX, pointY, event);
         _transition = "";
         return;
     }
@@ -86,7 +87,7 @@ public final class ArcCADToolContext
             Default(context);
         }
 
-        protected void addPoint(ArcCADToolContext context, double pointX, double pointY)
+        protected void addPoint(ArcCADToolContext context, double pointX, double pointY, InputEvent event)
         {
             Default(context);
         }
@@ -212,7 +213,7 @@ public final class ArcCADToolContext
                 return;
             }
 
-            protected void addPoint(ArcCADToolContext context, double pointX, double pointY)
+            protected void addPoint(ArcCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 ArcCADTool ctxt = context.getOwner();
 
@@ -250,7 +251,7 @@ public final class ArcCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(ArcCADToolContext context, double pointX, double pointY)
+            protected void addPoint(ArcCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 ArcCADTool ctxt = context.getOwner();
 
@@ -288,7 +289,7 @@ public final class ArcCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(ArcCADToolContext context, double pointX, double pointY)
+            protected void addPoint(ArcCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 ArcCADTool ctxt = context.getOwner();
 

@@ -6,6 +6,7 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
+import java.awt.event.InputEvent;
 
 public final class LineCADToolContext
     extends statemap.FSMContext
@@ -31,10 +32,10 @@ public final class LineCADToolContext
         return;
     }
 
-    public void addPoint(double pointX, double pointY)
+    public void addPoint(double pointX, double pointY, InputEvent event)
     {
         _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY);
+        getState().addPoint(this, pointX, pointY, event);
         _transition = "";
         return;
     }
@@ -94,7 +95,7 @@ public final class LineCADToolContext
             Default(context);
         }
 
-        protected void addPoint(LineCADToolContext context, double pointX, double pointY)
+        protected void addPoint(LineCADToolContext context, double pointX, double pointY, InputEvent event)
         {
             Default(context);
         }
@@ -225,7 +226,7 @@ public final class LineCADToolContext
                 return;
             }
 
-            protected void addPoint(LineCADToolContext context, double pointX, double pointY)
+            protected void addPoint(LineCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 LineCADTool ctxt = context.getOwner();
 
@@ -263,7 +264,7 @@ public final class LineCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(LineCADToolContext context, double pointX, double pointY)
+            protected void addPoint(LineCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 LineCADTool ctxt = context.getOwner();
 
@@ -321,7 +322,7 @@ public final class LineCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(LineCADToolContext context, double pointX, double pointY)
+            protected void addPoint(LineCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 LineCADTool ctxt = context.getOwner();
 

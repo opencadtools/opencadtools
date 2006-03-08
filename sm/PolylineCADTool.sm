@@ -9,6 +9,7 @@
 %class PolylineCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool
+%import java.awt.event.InputEvent
 
 %map Polyline
 %%
@@ -25,7 +26,7 @@ FirstPoint
 		}
 
 	{
-		addPoint(pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			NextPointOrArcOrClose{
 				setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
 				setDescription(new String[]{"Arco","Cerrar","Cancelar"});
@@ -49,7 +50,7 @@ NextPointOrArcOrClose{
 			endGeometry();
 			end();
 			}
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrArcOrClose {
 			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
 			setDescription(new String[]{"Arco","Cerrar","Cancelar"});
@@ -57,7 +58,7 @@ NextPointOrArcOrClose{
 			}
 }
 NextPointOrLineOrClose{
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrLineOrClose {
 			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
 			setDescription(new String[]{"Linea","Cerrar","Cancelar"});
@@ -92,6 +93,6 @@ Default
 		FirstPoint{
 			endGeometry();
 			}
-				
+
 }
 %%

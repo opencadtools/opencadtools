@@ -91,7 +91,7 @@ public class RotateCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
     public void transition(double x, double y, InputEvent event) {
-        _fsm.addPoint(x, y);
+        _fsm.addPoint(x, y, event);
     }
 
     /* (non-Javadoc)
@@ -195,9 +195,9 @@ public class RotateCADTool extends DefaultCADTool {
         }
 
         if (status.equals("Rotate.AngleOrPoint")) {
-			Point2D point = getCadToolAdapter().getMapControl().getViewPort()
+			/*Point2D point = getCadToolAdapter().getMapControl().getViewPort()
 								.fromMapPoint(firstPoint.getX(),
-					firstPoint.getY());
+					firstPoint.getY());*/
 			double w;
 			double h;
 			w = x - firstPoint.getX();

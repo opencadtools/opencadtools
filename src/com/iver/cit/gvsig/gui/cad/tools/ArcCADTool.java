@@ -82,7 +82,7 @@ public class ArcCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
     public void transition(double x, double y, InputEvent event) {
-        _fsm.addPoint(x, y);
+        _fsm.addPoint(x, y,event);
     }
 
     /* (non-Javadoc)

@@ -9,6 +9,7 @@
 %class ArcCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool
+%import java.awt.event.InputEvent
 
 %map Arc
 %%
@@ -25,7 +26,7 @@ FirstPoint
 		}
 
 	{
-		addPoint( pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SecondPoint {
 				setQuestion("Insertar segundo punto");
 				setDescription(new String[]{"Cancelar"});
@@ -34,7 +35,7 @@ FirstPoint
 
 	}
 SecondPoint{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		ThirdPoint {
 			setQuestion("Insertar ultimo punto");
 			setDescription(new String[]{"Cancelar"});
@@ -42,7 +43,7 @@ SecondPoint{
 			}
 }
 ThirdPoint{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPoint {
 			addPoint(pointX,pointY);
 			end();

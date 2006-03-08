@@ -79,7 +79,7 @@ public class PointCADTool extends DefaultCADTool {
      * @param sel DOCUMENT ME!
      */
     public void transition(double x, double y, InputEvent event) {
-        _fsm.addPoint(x, y);
+        _fsm.addPoint(x, y, event);
     }
 
     /* (non-Javadoc)

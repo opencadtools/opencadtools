@@ -6,6 +6,7 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
+import java.awt.event.InputEvent;
 
 public final class PointCADToolContext
     extends statemap.FSMContext
@@ -31,10 +32,10 @@ public final class PointCADToolContext
         return;
     }
 
-    public void addPoint(double pointX, double pointY)
+    public void addPoint(double pointX, double pointY, InputEvent event)
     {
         _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY);
+        getState().addPoint(this, pointX, pointY, event);
         _transition = "";
         return;
     }
@@ -86,7 +87,7 @@ public final class PointCADToolContext
             Default(context);
         }
 
-        protected void addPoint(PointCADToolContext context, double pointX, double pointY)
+        protected void addPoint(PointCADToolContext context, double pointX, double pointY, InputEvent event)
         {
             Default(context);
         }
@@ -208,7 +209,7 @@ public final class PointCADToolContext
                 return;
             }
 
-            protected void addPoint(PointCADToolContext context, double pointX, double pointY)
+            protected void addPoint(PointCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 PointCADTool ctxt = context.getOwner();
 

@@ -191,8 +191,8 @@ public final class EditVertexCADToolContext
 
                 ctxt.selection();
                 ctxt.setQuestion("EDITAR VERTICES" + "\n" +
-		"Siguiente vertice, Anterior o Eliminar");
-                ctxt.setDescription(new String[]{"Siguiente", "Anterior", "Eliminar", "Cancelar"});
+		"Siguiente vertice, Anterior, Anyadir o Eliminar");
+                ctxt.setDescription(new String[]{"Siguiente", "Anterior", "Anyadir", "Eliminar", "Cancelar"});
                 return;
             }
 
@@ -205,8 +205,8 @@ public final class EditVertexCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Siguiente vertice, Anterior o Eliminar");
-                    ctxt.setDescription(new String[]{"Siguiente", "Anterior", "Eliminar", "Cancelar"});
+                    ctxt.setQuestion("Siguiente vertice, aNyadir, Anterior o Eliminar");
+                    ctxt.setDescription(new String[]{"Siguiente", "Anterior", "Anyadir", "Eliminar", "Cancelar"});
                     ctxt.addOption(s);
                 }
                 finally

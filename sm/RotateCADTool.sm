@@ -9,6 +9,7 @@
 %class RotateCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool
+%import java.awt.event.InputEvent
 
 %map Rotate
 %%
@@ -26,7 +27,7 @@ PointMain
 		}
 
 	{
-		addPoint(pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			AngleOrPoint {
 				setQuestion("Precise angulo de rotacion");
 				setDescription(new String[]{"Cancelar"});
@@ -41,7 +42,7 @@ AngleOrPoint{
 			end();
 			refresh();
 			}
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		PointMain {
 			setDescription(new String[]{"Cancelar"});
 			addPoint(pointX,pointY);

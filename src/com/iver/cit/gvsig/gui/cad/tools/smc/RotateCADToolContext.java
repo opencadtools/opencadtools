@@ -6,6 +6,7 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
+import java.awt.event.InputEvent;
 
 public final class RotateCADToolContext
     extends statemap.FSMContext
@@ -31,10 +32,10 @@ public final class RotateCADToolContext
         return;
     }
 
-    public void addPoint(double pointX, double pointY)
+    public void addPoint(double pointX, double pointY, InputEvent event)
     {
         _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY);
+        getState().addPoint(this, pointX, pointY, event);
         _transition = "";
         return;
     }
@@ -94,7 +95,7 @@ public final class RotateCADToolContext
             Default(context);
         }
 
-        protected void addPoint(RotateCADToolContext context, double pointX, double pointY)
+        protected void addPoint(RotateCADToolContext context, double pointX, double pointY, InputEvent event)
         {
             Default(context);
         }
@@ -224,7 +225,7 @@ public final class RotateCADToolContext
                 return;
             }
 
-            protected void addPoint(RotateCADToolContext context, double pointX, double pointY)
+            protected void addPoint(RotateCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 RotateCADTool ctxt = context.getOwner();
 
@@ -262,7 +263,7 @@ public final class RotateCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(RotateCADToolContext context, double pointX, double pointY)
+            protected void addPoint(RotateCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 RotateCADTool ctxt = context.getOwner();
 

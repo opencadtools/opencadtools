@@ -44,7 +44,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -70,7 +69,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext.SelectionCAD
 
 /**
  * DOCUMENT ME!
- * 
+ *
  * @author Vicente Caballero Navarro
  */
 public class SelectionCADTool extends DefaultCADTool {
@@ -90,7 +89,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	private String tool = "selection";
 
-	private IGeometry clonedGeometry = null;
+	//private IGeometry clonedGeometry = null;
 
 	private String state;
 
@@ -115,19 +114,19 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
 	 *      double, double)
 	 */
 	public void transition(double x, double y, InputEvent event) {
 		System.out.println("TRANSICION DESDE ESTADO " + getState() + " x= " + x
 				+ " y=" + y);
-		((SelectionCADToolContext) _fsm).addPoint(x, y);
+		_fsm.addPoint(x, y, event);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
 	 *      double)
 	 */
@@ -137,7 +136,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
 	 *      java.lang.String)
 	 */
@@ -283,7 +282,7 @@ public class SelectionCADTool extends DefaultCADTool {
 	/**
 	 * Equivale al transition del prototipo pero sin pasarle como pará metro el
 	 * editableFeatureSource que ya estará creado.
-	 * 
+	 *
 	 * @param selection
 	 *            Bitset con las geometrías que estén seleccionadas.
 	 * @param x
@@ -383,7 +382,7 @@ public class SelectionCADTool extends DefaultCADTool {
 						h.set(x, y);
 						// System.out.println(h.getPoint());
 					}
-					
+
 					// h.set(x, y);
 					// getVectorialAdapter().modifyRow(index, row);
 
@@ -403,7 +402,7 @@ public class SelectionCADTool extends DefaultCADTool {
 	/**
 	 * Método para dibujar la lo necesario para el estado en el que nos
 	 * encontremos.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics sobre el que dibujar.
 	 * @param selectedGeometries
@@ -476,7 +475,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/**
 	 * Add a diferent option.
-	 * 
+	 *
 	 * @param sel
 	 *            DOCUMENT ME!
 	 * @param s
@@ -488,7 +487,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
 	 */
 	public void addValue(double d) {
@@ -496,7 +495,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @return DOCUMENT ME!
 	 */
 	public int getSelectedRowSize() {

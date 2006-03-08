@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import java.awt.event.InputEvent;
 
 public final class SelectionCADToolContext
     extends statemap.FSMContext
@@ -32,10 +33,10 @@ public final class SelectionCADToolContext
         return;
     }
 
-    public void addPoint(double pointX, double pointY)
+    public void addPoint(double pointX, double pointY, InputEvent event)
     {
         _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY);
+        getState().addPoint(this, pointX, pointY, event);
         _transition = "";
         return;
     }
@@ -87,7 +88,7 @@ public final class SelectionCADToolContext
             Default(context);
         }
 
-        protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
+        protected void addPoint(SelectionCADToolContext context, double pointX, double pointY, InputEvent event)
         {
             Default(context);
         }
@@ -213,7 +214,7 @@ public final class SelectionCADToolContext
                 return;
             }
 
-            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
+            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 SelectionCADTool ctxt = context.getOwner();
 
@@ -268,7 +269,7 @@ public final class SelectionCADToolContext
                     }
                 }                else
                 {
-                    super.addPoint(context, pointX, pointY);
+                    super.addPoint(context, pointX, pointY, event);
                 }
 
                 return;
@@ -291,7 +292,7 @@ public final class SelectionCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
+            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 SelectionCADTool ctxt = context.getOwner();
 
@@ -330,7 +331,7 @@ public final class SelectionCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY)
+            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 SelectionCADTool ctxt = context.getOwner();
 

@@ -10,6 +10,8 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool
 %import com.iver.cit.gvsig.fmap.layers.FBitSet
+%import java.awt.event.InputEvent
+
 
 %map Selection
 %%
@@ -26,21 +28,21 @@ FirstPoint
 		}
 
 	{
-		addPoint(pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			[ctxt.select(pointX,pointY) && ctxt.getState().equals("Selection.SecondPoint")]
 			SecondPoint{
 				setQuestion("Precise segundo punto del rectángulo de seleccion");
 				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				}
-		addPoint(pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			[ctxt.getState().equals("Selection.FirstPoint")]
 			FirstPoint {
 				setQuestion("Precise punto");
 				setDescription(new String[]{"Cancelar"});
 				addPoint(pointX,pointY);
 				}
-		addPoint(pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			[ctxt.getState().equals("Selection.EndPoint")]
 			EndPoint {
 				setQuestion("Precise punto destino");
@@ -50,7 +52,7 @@ FirstPoint
 }
 
 SecondPoint{
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 			FirstPoint {
 				setQuestion("Precise punto de estiramiento");
 				setDescription(new String[]{"Cancelar"});
@@ -61,7 +63,7 @@ SecondPoint{
 
 }
 EndPoint{
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 			FirstPoint {
 				setQuestion("Precise punto destino");
 				setDescription(new String[]{"Cancelar"});

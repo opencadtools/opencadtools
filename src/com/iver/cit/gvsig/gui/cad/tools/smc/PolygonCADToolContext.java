@@ -6,6 +6,7 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
+import java.awt.event.InputEvent;
 
 public final class PolygonCADToolContext
     extends statemap.FSMContext
@@ -31,10 +32,10 @@ public final class PolygonCADToolContext
         return;
     }
 
-    public void addPoint(double pointX, double pointY)
+    public void addPoint(double pointX, double pointY, InputEvent event)
     {
         _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY);
+        getState().addPoint(this, pointX, pointY, event);
         _transition = "";
         return;
     }
@@ -94,7 +95,7 @@ public final class PolygonCADToolContext
             Default(context);
         }
 
-        protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
+        protected void addPoint(PolygonCADToolContext context, double pointX, double pointY, InputEvent event)
         {
             Default(context);
         }
@@ -227,7 +228,7 @@ public final class PolygonCADToolContext
                 return;
             }
 
-            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
+            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -286,7 +287,7 @@ public final class PolygonCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
+            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -345,7 +346,7 @@ public final class PolygonCADToolContext
                 return;
             }
 
-            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
+            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 PolygonCADTool ctxt = context.getOwner();
 
@@ -402,7 +403,7 @@ public final class PolygonCADToolContext
                 super (name, id);
             }
 
-            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY)
+            protected void addPoint(PolygonCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 PolygonCADTool ctxt = context.getOwner();
 

@@ -9,6 +9,7 @@
 %class CopyCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool
+%import java.awt.event.InputEvent
 
 %map Copy
 %%
@@ -26,7 +27,7 @@ FirstPointToMove
 		}
 
 	{
-		addPoint(pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SecondPointToMove {
 				setQuestion("Precisar segundo punto del desplazamiento");
 				setDescription(new String[]{"Cancelar"});
@@ -34,7 +35,7 @@ FirstPointToMove
 				}
 	}
 SecondPointToMove{
-	addPoint(pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPointToMove {
 			setDescription(new String[]{"Cancelar"});
 			addPoint(pointX,pointY);

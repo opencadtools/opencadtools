@@ -9,6 +9,7 @@
 %class LineCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.LineCADTool
+%import java.awt.event.InputEvent
 
 %map Line
 %%
@@ -26,7 +27,7 @@ FirstPoint
 
 	{
 
-		addPoint( pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SecondPointOrAngle {
 				setQuestion("Insertar segundo punto o angulo");
 				setDescription(new String[]{"Cancelar"});
@@ -35,7 +36,7 @@ FirstPoint
 
 	}
 SecondPointOrAngle{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		SecondPointOrAngle {
 			setQuestion("Insertar segundo punto o angulo");
 			setDescription(new String[]{"Cancelar"});
@@ -50,7 +51,7 @@ SecondPointOrAngle{
 
 }
 LenghtOrPoint{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		SecondPointOrAngle {
 			setQuestion("Insertar segundo punto o angulo");
 			setDescription(new String[]{"Cancelar"});

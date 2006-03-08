@@ -9,6 +9,7 @@
 %class EllipseCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool
+%import java.awt.event.InputEvent
 
 %map Ellipse
 %%
@@ -25,7 +26,7 @@ FirstPointAxis
 		}
 
 	{
-		addPoint( pointX:double,pointY:double)
+		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SecondPointAxis {
 				setQuestion("Insertar punto final de eje de elipse");
 				setDescription(new String[]{"Cancelar"});
@@ -34,7 +35,7 @@ FirstPointAxis
 
 	}
 SecondPointAxis{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		DistanceOtherAxis {
 			setQuestion("Insertar distancia al otro eje");
 			setDescription(new String[]{"Cancelar"});
@@ -43,7 +44,7 @@ SecondPointAxis{
 
 }
 DistanceOtherAxis{
-	addPoint( pointX:double,pointY:double)
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPointAxis {
 			addPoint( pointX,pointY);
 			end();
