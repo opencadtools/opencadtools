@@ -16,5 +16,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/appgvSIG"/>
 	<classpathentry kind="lib" path="lib/gt2-postgis.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extJDBC"/>
+	<classpathentry sourcepath="/JWizardComponent" kind="lib" path="lib/JWizardComponent.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

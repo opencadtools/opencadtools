@@ -9,6 +9,12 @@
 			active="true">
 			<menu text="Capa/comenzar_edicion" action-command="STARTEDITING"/>
 		</extension>
+		<extension class-name="com.iver.cit.gvsig.NewTheme"
+			description="Crear un nuevo tema."
+			active="true">
+			<menu text="Vista/new_theme" action-command="NEWTHEME"/>
+		</extension>
+		
 		<extension class-name="com.iver.cit.gvsig.StopEditingToShp"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla en un shapefile."
 			active="true">
