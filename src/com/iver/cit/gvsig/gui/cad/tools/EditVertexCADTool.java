@@ -42,6 +42,7 @@ package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.InputEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
@@ -69,6 +70,7 @@ import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EditVertexCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EditVertexCADToolContext.EditVertexCADToolState;
+import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
@@ -98,8 +100,8 @@ public class EditVertexCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
-    public void transition(double x, double y) {
-        //_fsm.addPoint(x, y);
+    public void transition(double x, double y, InputEvent event) {
+        addPoint(x, y);
     }
 
     /* (non-Javadoc)
@@ -138,9 +140,48 @@ public class EditVertexCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(double x, double y) {
+    	IGeometry geom = getSelectedGeometry();
+    	Geometry jtsGeom = geom.toJTSGeometry();
+    	
+		/* IRow newRow=new DefaultFeature(newGeometry,row.getAttributes());
+		try {
+			vea.modifyRow(selection.nextSetBit(0),newRow,getName());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DriverIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} */
+		getCadToolAdapter().getMapControl().drawMap(false);    	
+    	
+    	
     }
 
-    /**
+    private IGeometry getSelectedGeometry() {
+        VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
+        FBitSet selection = vea.getSelection();
+        IRowEdited row=null;
+        IGeometry ig=null;
+        if (selection.cardinality()==1){
+
+			try {
+				row = getCadToolAdapter().getVectorialAdapter().getRow(selection.nextSetBit(0));
+			} catch (DriverIOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	ig=((IFeature)row.getLinkedRow()).getGeometry().cloneGeometry();
+        	return ig;
+        }
+
+		return null;
+	}
+
+	/**
      * Método para dibujar la lo necesario para el estado en el que nos
      * encontremos.
      *
@@ -239,7 +280,7 @@ public class EditVertexCADTool extends DefaultCADTool {
         	}
         }
     }
-    public void drawVertex(Graphics g,FBitSet sel,AffineTransform at) throws DriverIOException{
+    private void drawVertex(Graphics g,FBitSet sel,AffineTransform at) throws DriverIOException{
 		 for (int i = sel.nextSetBit(0); i >= 0;
 		 		i = sel.nextSetBit(i + 1)) {
 			IGeometry ig = getCadToolAdapter().getVectorialAdapter().getShape(i).cloneGeometry();

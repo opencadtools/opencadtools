@@ -43,6 +43,7 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.InputEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -118,7 +119,7 @@ public class SelectionCADTool extends DefaultCADTool {
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
 	 *      double, double)
 	 */
-	public void transition(double x, double y) {
+	public void transition(double x, double y, InputEvent event) {
 		System.out.println("TRANSICION DESDE ESTADO " + getState() + " x= " + x
 				+ " y=" + y);
 		((SelectionCADToolContext) _fsm).addPoint(x, y);

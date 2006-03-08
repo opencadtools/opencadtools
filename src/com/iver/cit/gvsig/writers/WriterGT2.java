@@ -28,7 +28,7 @@ import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
-import com.iver.cit.gvsig.fmap.edition.IWriter;
+import com.iver.cit.gvsig.fmap.edition.writers.AbstractWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiLineString;
@@ -44,7 +44,7 @@ import com.vividsolutions.jts.geom.Point;
  * get the featureStore. Then create this class with it.
  *
  */
-public class WriterGT2 implements IWriter {
+public class WriterGT2 extends AbstractWriter {
 
 	FilterFactory filterFactory = FilterFactory.createFilterFactory();
 	FeatureStore featStore;
@@ -238,4 +238,48 @@ public class WriterGT2 implements IWriter {
 		return "JDBC Writer from Geotools";
 	}
 
+	public boolean canWriteGeometry(int gvSIGgeometryType) {
+		switch (gvSIGgeometryType)
+		{
+		case FShape.POINT:
+			return true;
+		case FShape.LINE:
+			return true;
+		case FShape.POLYGON:
+			return true;
+		case FShape.ARC:
+			return false;
+		case FShape.ELLIPSE:
+			return false;			
+		case FShape.MULTIPOINT:
+			return true;			
+		case FShape.TEXT:
+			return false;						
+		}
+		return false;
+	}
+
+	public boolean canWriteAttribute(int sqlType) {
+		switch (sqlType)
+		{
+		case Types.DOUBLE:
+		case Types.FLOAT: 
+		case Types.INTEGER:
+		case Types.BIGINT:
+			return true;
+		case Types.DATE:
+			return true;
+		case Types.BIT:
+		case Types.BOOLEAN:
+			return true;			
+		case Types.VARCHAR:
+		case Types.CHAR: 
+		case Types.LONGVARCHAR:
+			return true; // TODO: Revisar esto, porque no creo que admita campos muy grandes
+
+		}
+		
+		return false;
+	}
+	
 }

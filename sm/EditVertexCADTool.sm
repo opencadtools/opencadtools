@@ -18,8 +18,8 @@ SelectVertexOrDelete
 	Entry {
 		selection();
 		setQuestion("EDITAR VERTICES" + "\n" +
-		"Siguiente vertice, Anterior o Eliminar");
-		setDescription(new String[]{"Siguiente","Anterior","Eliminar","Cancelar"});
+		"Siguiente vertice, Anterior, Anyadir o Eliminar");
+		setDescription(new String[]{"Siguiente","Anterior","Anyadir","Eliminar","Cancelar"});
 
 		}
 	Exit{
@@ -28,11 +28,12 @@ SelectVertexOrDelete
 	{
 		addOption(s:String)
 			SelectVertexOrDelete {
-				setQuestion("Siguiente vertice, Anterior o Eliminar");
-				setDescription(new String[]{"Siguiente","Anterior","Eliminar","Cancelar"});
+				setQuestion("Siguiente vertice, aNyadir, Anterior o Eliminar");
+				setDescription(new String[]{"Siguiente","Anterior","Anyadir","Eliminar","Cancelar"});
 				addOption(s);
 				}
 	}
+	
 
 Default
 {

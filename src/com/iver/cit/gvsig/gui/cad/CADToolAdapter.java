@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
@@ -124,7 +125,7 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				p = vp.toMapPoint(adjustedPoint);
 			}
-			transition(new double[] { p.getX(), p.getY() });
+			transition(new double[] { p.getX(), p.getY() }, e);
 		}
 	}
 
@@ -398,7 +399,7 @@ public class CADToolAdapter extends Behavior {
 					// punto
 					values = new double[] { Double.parseDouble(numbers[0]),
 							Double.parseDouble(numbers[1]) };
-					transition(values);
+					transition(values, null);
 				} else if (numbers.length == 1) {
 					// valor
 					values = new double[] { Double.parseDouble(numbers[0]) };
@@ -431,18 +432,15 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param text
-	 *            DOCUMENT ME!
-	 * @param source
-	 *            DOCUMENT ME!
-	 * @param sel
-	 *            DOCUMENT ME!
+	 * Recibe los valores de la transición (normalmente un punto) y el evento
+	 * con el que se generó (si fue de ratón será MouseEvent, el que viene
+	 * en el pressed) y si es de teclado, será un KeyEvent.
+	 * Del evento se puede sacar información acerca de si estaba pulsada la tecla
+	 * CTRL, o Alt, etc.
 	 * @param values
-	 *            DOCUMENT ME!
+	 * @param event
 	 */
-	private void transition(double[] values) {
+	private void transition(double[] values, InputEvent event) {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()) {
 			CADTool ct = (CADTool) cadToolStack.peek();
@@ -455,7 +453,7 @@ public class CADToolAdapter extends Behavior {
 			if (!esta) {
 				askQuestion();
 			} else {
-				ct.transition(values[0], values[1]);
+				ct.transition(values[0], values[1], event);
 				// Si es la transición que finaliza una geometria hay que
 				// redibujar la vista.
 

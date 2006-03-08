@@ -41,6 +41,7 @@
 package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics;
+import java.awt.event.InputEvent;
 
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
@@ -73,12 +74,11 @@ public class PointCADTool extends DefaultCADTool {
 
     /**
      * DOCUMENT ME!
-     *
-     * @param sel DOCUMENT ME!
      * @param x DOCUMENT ME!
      * @param y DOCUMENT ME!
+     * @param sel DOCUMENT ME!
      */
-    public void transition(double x, double y) {
+    public void transition(double x, double y, InputEvent event) {
         _fsm.addPoint(x, y);
     }
 

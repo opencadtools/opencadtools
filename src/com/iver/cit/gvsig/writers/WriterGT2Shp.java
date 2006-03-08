@@ -6,6 +6,7 @@ package com.iver.cit.gvsig.writers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Types;
 
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureStore;
@@ -15,6 +16,7 @@ import org.geotools.feature.AttributeType;
 import org.geotools.filter.Filter;
 import org.geotools.filter.FilterFactory;
 
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
@@ -22,6 +24,7 @@ import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.edition.writers.AbstractWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 
 /**
@@ -34,7 +37,7 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
  * shapefile.
  *
  */
-public class WriterGT2Shp implements IWriter {
+public class WriterGT2Shp extends AbstractWriter {
 
 	FilterFactory filterFactory = FilterFactory.createFilterFactory();
 	FLyrVect lyrVect;
@@ -153,4 +156,48 @@ public class WriterGT2Shp implements IWriter {
 		return "Shp Writer from Geotools";
 	}
 
+	public boolean canWriteGeometry(int gvSIGgeometryType) {
+		switch (gvSIGgeometryType)
+		{
+		case FShape.POINT:
+			return true;
+		case FShape.LINE:
+			return true;
+		case FShape.POLYGON:
+			return true;
+		case FShape.ARC:
+			return false;
+		case FShape.ELLIPSE:
+			return false;			
+		case FShape.MULTIPOINT:
+			return true;			
+		case FShape.TEXT:
+			return false;						
+		}
+		return false;
+	}
+
+	public boolean canWriteAttribute(int sqlType) {
+		switch (sqlType)
+		{
+		case Types.DOUBLE:
+		case Types.FLOAT: 
+		case Types.INTEGER:
+		case Types.BIGINT:
+			return true;
+		case Types.DATE:
+			return true;
+		case Types.BIT:
+		case Types.BOOLEAN:
+			return true;			
+		case Types.VARCHAR:
+		case Types.CHAR: 
+		case Types.LONGVARCHAR:
+			return true; // TODO: Revisar esto, porque no creo que admita campos muy grandes
+
+		}
+		
+		return false;
+	}
+	
 }

@@ -42,6 +42,7 @@ package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
@@ -81,7 +82,7 @@ public class LineCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
-    public void transition(double x, double y) {
+    public void transition(double x, double y, InputEvent event) {
         _fsm.addPoint(x, y);
     }
 

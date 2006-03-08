@@ -41,6 +41,7 @@
 package com.iver.cit.gvsig.gui.cad;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.InputEvent;
 
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
@@ -62,7 +63,7 @@ public interface CADTool {
 
 	public void init();
 	public void end();
-	public void transition(double x, double y);
+	public void transition(double x, double y, InputEvent event);
 	public void transition(double d);
 	public void transition(String s);
 	public void addPoint(double x,double y);
