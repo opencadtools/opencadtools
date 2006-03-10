@@ -30,7 +30,7 @@ FirstPointAxis
 			SecondPointAxis {
 				setQuestion("Insertar punto final de eje de elipse");
 				setDescription(new String[]{"Cancelar"});
-				addPoint( pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 
 	}
@@ -39,14 +39,14 @@ SecondPointAxis{
 		DistanceOtherAxis {
 			setQuestion("Insertar distancia al otro eje");
 			setDescription(new String[]{"Cancelar"});
-			addPoint( pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 
 }
 DistanceOtherAxis{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPointAxis {
-			addPoint( pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			}
 	addValue( d:double)

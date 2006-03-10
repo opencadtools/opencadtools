@@ -9,6 +9,7 @@
 %class EditVertexCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool
+%import java.awt.event.InputEvent
 
 %map EditVertex
 %%
@@ -26,6 +27,12 @@ SelectVertexOrDelete
 		}
 
 	{
+		addPoint( pointX:double,pointY:double,event:InputEvent)
+			SelectVertexOrDelete {
+				setQuestion("Seleccionar a partir de un punto");
+				setDescription(new String[]{"Siguiente","Anterior","Anyadir","Eliminar","Cancelar"});
+				addPoint( pointX,pointY,event);
+				}
 		addOption(s:String)
 			SelectVertexOrDelete {
 				setQuestion("Siguiente vertice, aNyadir, Anterior o Eliminar");
@@ -33,7 +40,7 @@ SelectVertexOrDelete
 				addOption(s);
 				}
 	}
-	
+
 
 Default
 {

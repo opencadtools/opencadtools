@@ -270,7 +270,7 @@ public final class CircleCADToolContext
                 {
                     ctxt.setQuestion("Insertar radio o segundo punto");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -306,7 +306,7 @@ public final class CircleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                 }
                 finally
@@ -365,7 +365,7 @@ public final class CircleCADToolContext
                 {
                     ctxt.setQuestion("Insertar tercer punto");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -401,7 +401,7 @@ public final class CircleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                 }
                 finally
@@ -440,7 +440,7 @@ public final class CircleCADToolContext
                 {
                     ctxt.setQuestion("Insertar segundo punto");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {

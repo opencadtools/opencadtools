@@ -31,14 +31,14 @@ FirstPointToMove
 			SecondPointToMove {
 				setQuestion("Precisar segundo punto del desplazamiento");
 				setDescription(new String[]{"Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 	}
 SecondPointToMove{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPointToMove {
 			setDescription(new String[]{"Cancelar"});
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			refresh();
 			}

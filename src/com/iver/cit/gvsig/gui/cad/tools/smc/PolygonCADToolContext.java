@@ -239,7 +239,7 @@ public final class PolygonCADToolContext
                 {
                     ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]<C>");
                     ctxt.setDescription(new String[]{"Inscrito", "Circunscrito", "Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -298,7 +298,7 @@ public final class PolygonCADToolContext
                 {
                     ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]<C>");
                     ctxt.setDescription(new String[]{"Inscrito", "Circunscrito", "Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -355,7 +355,7 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                 }
                 finally
@@ -412,7 +412,7 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                 }
                 finally

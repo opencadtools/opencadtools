@@ -126,7 +126,7 @@ public class CopyCADTool extends DefaultCADTool {
      * @param x parámetro x del punto que se pase en esta transición.
      * @param y parámetro y del punto que se pase en esta transición.
      */
-    public void addPoint(double x, double y) {
+    public void addPoint(double x, double y,InputEvent event) {
         CopyCADToolState actualState = (CopyCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();

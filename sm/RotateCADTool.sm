@@ -31,7 +31,7 @@ PointMain
 			AngleOrPoint {
 				setQuestion("Precise angulo de rotacion");
 				setDescription(new String[]{"Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 	}
 AngleOrPoint{
@@ -45,7 +45,7 @@ AngleOrPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		PointMain {
 			setDescription(new String[]{"Cancelar"});
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			refresh();
 			}

@@ -31,7 +31,7 @@ PointMain
 			ScaleFactorOrReference {
 				setQuestion("Precise factor de escala<2> o Referencia[R]");
 				setDescription(new String[]{"Referencia","Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 	}
 ScaleFactorOrReference{
@@ -57,7 +57,7 @@ ScaleFactorOrReference{
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		PointMain {
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			refresh();
 			}
@@ -74,7 +74,7 @@ PointOriginOrScaleFactor{
 		EndPointReference {
 			setQuestion("Precise punto final recta referencia");
 			setDescription(new String[]{"Cancelar"});
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 }
 EndPointReference{
@@ -82,7 +82,7 @@ EndPointReference{
 		OriginPointScale {
 			setQuestion("Precise punto origen recta escala");
 			setDescription(new String[]{"Cancelar"});
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 }
 OriginPointScale{
@@ -90,13 +90,13 @@ OriginPointScale{
 		EndPointScale {
 			setQuestion("Precise punto final recta escala");
 			setDescription(new String[]{"Cancelar"});
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 }
 EndPointScale{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		PointMain {
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			refresh();
 			}

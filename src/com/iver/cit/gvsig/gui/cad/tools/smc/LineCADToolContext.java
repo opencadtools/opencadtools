@@ -237,7 +237,7 @@ public final class LineCADToolContext
                 {
                     ctxt.setQuestion("Insertar segundo punto o angulo");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -275,7 +275,7 @@ public final class LineCADToolContext
                 {
                     ctxt.setQuestion("Insertar segundo punto o angulo");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -333,7 +333,7 @@ public final class LineCADToolContext
                 {
                     ctxt.setQuestion("Insertar segundo punto o angulo");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {

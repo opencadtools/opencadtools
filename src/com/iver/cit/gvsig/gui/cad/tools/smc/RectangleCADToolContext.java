@@ -224,7 +224,7 @@ public final class RectangleCADToolContext
                 {
                     ctxt.setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
                     ctxt.setDescription(new String[]{"Cuadrado", "Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -289,7 +289,7 @@ public final class RectangleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                 }
                 finally
@@ -326,7 +326,7 @@ public final class RectangleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                 }
                 finally

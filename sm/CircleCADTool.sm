@@ -30,7 +30,7 @@ CenterPointOr3p
 			PointOrRadius {
 				setQuestion("Insertar radio o segundo punto");
 				setDescription(new String[]{"Cancelar"});
-				addPoint( pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 	addOption( s:String)
 		[s.equals("3p") || s.equals("3P")]
@@ -43,7 +43,7 @@ CenterPointOr3p
 PointOrRadius{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		CenterPointOr3p {
-			addPoint( pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			}
 	addValue( d:double)
@@ -57,13 +57,13 @@ SecondPoint{
 		ThirdPoint {
 			setQuestion("Insertar tercer punto");
 			setDescription(new String[]{"Cancelar"});
-			addPoint( pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 }
 ThirdPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		CenterPointOr3p {
-			addPoint( pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			}
 }
@@ -73,7 +73,7 @@ FirstPoint{
 		SecondPoint {
 			setQuestion("Insertar segundo punto");
 			setDescription(new String[]{"Cancelar"});
-			addPoint( pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 }
 

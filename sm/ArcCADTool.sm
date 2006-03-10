@@ -30,7 +30,7 @@ FirstPoint
 			SecondPoint {
 				setQuestion("Insertar segundo punto");
 				setDescription(new String[]{"Cancelar"});
-				addPoint( pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 
 	}
@@ -39,13 +39,13 @@ SecondPoint{
 		ThirdPoint {
 			setQuestion("Insertar ultimo punto");
 			setDescription(new String[]{"Cancelar"});
-			addPoint( pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 }
 ThirdPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPoint {
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			}
 }

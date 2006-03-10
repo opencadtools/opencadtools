@@ -223,7 +223,7 @@ public final class CopyCADToolContext
                 {
                     ctxt.setQuestion("Precisar segundo punto del desplazamiento");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -260,7 +260,7 @@ public final class CopyCADToolContext
                 try
                 {
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                     ctxt.refresh();
                 }

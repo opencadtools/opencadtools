@@ -224,7 +224,7 @@ public final class ArcCADToolContext
                 {
                     ctxt.setQuestion("Insertar segundo punto");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -262,7 +262,7 @@ public final class ArcCADToolContext
                 {
                     ctxt.setQuestion("Insertar ultimo punto");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -298,7 +298,7 @@ public final class ArcCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                 }
                 finally

@@ -30,7 +30,7 @@ FirstPoint
 			NextPointOrArcOrClose{
 				setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
 				setDescription(new String[]{"Arco","Cerrar","Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 	}
 NextPointOrArcOrClose{
@@ -54,7 +54,7 @@ NextPointOrArcOrClose{
 		NextPointOrArcOrClose {
 			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
 			setDescription(new String[]{"Arco","Cerrar","Cancelar"});
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 }
 NextPointOrLineOrClose{
@@ -62,7 +62,7 @@ NextPointOrLineOrClose{
 		NextPointOrLineOrClose {
 			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
 			setDescription(new String[]{"Linea","Cerrar","Cancelar"});
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 	addOption(s:String)
 		[s.equals("N") ||  s.equals("n") || s.equals("Linea")]

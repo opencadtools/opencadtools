@@ -227,7 +227,7 @@ public final class SelectionCADToolContext
                     {
                         ctxt.setQuestion("Precise segundo punto del rect?ngulo de seleccion");
                         ctxt.setDescription(new String[]{"Cancelar"});
-                        ctxt.addPoint(pointX, pointY);
+                        ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
                     {
@@ -244,7 +244,7 @@ public final class SelectionCADToolContext
                     {
                         ctxt.setQuestion("Precise punto");
                         ctxt.setDescription(new String[]{"Cancelar"});
-                        ctxt.addPoint(pointX, pointY);
+                        ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
                     {
@@ -260,7 +260,7 @@ public final class SelectionCADToolContext
                     {
                         ctxt.setQuestion("Precise punto destino");
                         ctxt.setDescription(new String[]{"Cancelar"});
-                        ctxt.addPoint(pointX, pointY);
+                        ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
                     {
@@ -303,7 +303,7 @@ public final class SelectionCADToolContext
                 {
                     ctxt.setQuestion("Precise punto de estiramiento");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                 }
                 finally
@@ -342,7 +342,7 @@ public final class SelectionCADToolContext
                 {
                     ctxt.setQuestion("Precise punto destino");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                     ctxt.refresh();
                 }

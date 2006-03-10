@@ -250,7 +250,7 @@ public final class PolylineCADToolContext
                 {
                     ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
                     ctxt.setDescription(new String[]{"Arco", "Cerrar", "Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -334,7 +334,7 @@ public final class PolylineCADToolContext
                 {
                     ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
                     ctxt.setDescription(new String[]{"Arco", "Cerrar", "Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -417,7 +417,7 @@ public final class PolylineCADToolContext
                 {
                     ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
                     ctxt.setDescription(new String[]{"Linea", "Cerrar", "Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {

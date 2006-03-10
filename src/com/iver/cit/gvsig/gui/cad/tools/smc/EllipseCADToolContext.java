@@ -237,7 +237,7 @@ public final class EllipseCADToolContext
                 {
                     ctxt.setQuestion("Insertar punto final de eje de elipse");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -275,7 +275,7 @@ public final class EllipseCADToolContext
                 {
                     ctxt.setQuestion("Insertar distancia al otro eje");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -311,7 +311,7 @@ public final class EllipseCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                 }
                 finally

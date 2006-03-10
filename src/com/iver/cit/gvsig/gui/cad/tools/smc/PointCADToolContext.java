@@ -220,7 +220,7 @@ public final class PointCADToolContext
                 {
                     ctxt.setQuestion("Insertar punto");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {

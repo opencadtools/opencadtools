@@ -36,7 +36,7 @@ NumberOrCenterPoint
 			OptionOrRadiusOrPoint {
 				setQuestion("Inscrito en el círculo[I] o Circunscrito[C]<C>");
 				setDescription(new String[]{"Inscrito","Circunscrito","Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 
 	}
@@ -45,7 +45,7 @@ CenterPoint{
 		OptionOrRadiusOrPoint {
 			setQuestion("Inscrito en el círculo[I] o Circunscrito[C]<C>");
 			setDescription(new String[]{"Inscrito","Circunscrito","Cancelar"});
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 }
 OptionOrRadiusOrPoint{
@@ -62,14 +62,14 @@ OptionOrRadiusOrPoint{
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NumberOrCenterPoint {
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			}
 }
 RadiusOrPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NumberOrCenterPoint {
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			}
 	addValue(d:double)

@@ -6,6 +6,7 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
+import java.awt.event.InputEvent;
 
 public final class EditVertexCADToolContext
     extends statemap.FSMContext
@@ -27,6 +28,14 @@ public final class EditVertexCADToolContext
     {
         _transition = "addOption";
         getState().addOption(this, s);
+        _transition = "";
+        return;
+    }
+
+    public void addPoint(double pointX, double pointY, InputEvent event)
+    {
+        _transition = "addPoint";
+        getState().addPoint(this, pointX, pointY, event);
         _transition = "";
         return;
     }
@@ -74,6 +83,11 @@ public final class EditVertexCADToolContext
         protected void Exit(EditVertexCADToolContext context) {}
 
         protected void addOption(EditVertexCADToolContext context, String s)
+        {
+            Default(context);
+        }
+
+        protected void addPoint(EditVertexCADToolContext context, double pointX, double pointY, InputEvent event)
         {
             Default(context);
         }
@@ -208,6 +222,26 @@ public final class EditVertexCADToolContext
                     ctxt.setQuestion("Siguiente vertice, aNyadir, Anterior o Eliminar");
                     ctxt.setDescription(new String[]{"Siguiente", "Anterior", "Anyadir", "Eliminar", "Cancelar"});
                     ctxt.addOption(s);
+                }
+                finally
+                {
+                    context.setState(endState);
+                }
+                return;
+            }
+
+            protected void addPoint(EditVertexCADToolContext context, double pointX, double pointY, InputEvent event)
+            {
+                EditVertexCADTool ctxt = context.getOwner();
+
+                EditVertexCADToolState endState = context.getState();
+
+                context.clearState();
+                try
+                {
+                    ctxt.setQuestion("Seleccionar a partir de un punto");
+                    ctxt.setDescription(new String[]{"Siguiente", "Anterior", "Anyadir", "Eliminar", "Cancelar"});
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {

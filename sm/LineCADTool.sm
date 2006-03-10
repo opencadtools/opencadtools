@@ -31,7 +31,7 @@ FirstPoint
 			SecondPointOrAngle {
 				setQuestion("Insertar segundo punto o angulo");
 				setDescription(new String[]{"Cancelar"});
-				addPoint( pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 
 	}
@@ -40,7 +40,7 @@ SecondPointOrAngle{
 		SecondPointOrAngle {
 			setQuestion("Insertar segundo punto o angulo");
 			setDescription(new String[]{"Cancelar"});
-			addPoint( pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 	addValue( d:double)
 		LenghtOrPoint {
@@ -55,7 +55,7 @@ LenghtOrPoint{
 		SecondPointOrAngle {
 			setQuestion("Insertar segundo punto o angulo");
 			setDescription(new String[]{"Cancelar"});
-			addPoint( pointX,pointY);
+			addPoint( pointX,pointY,event);
 			}
 	addValue( d:double)
 		SecondPointOrAngle {

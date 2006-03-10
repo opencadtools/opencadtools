@@ -33,21 +33,21 @@ FirstPoint
 			SecondPoint{
 				setQuestion("Precise segundo punto del rectángulo de seleccion");
 				setDescription(new String[]{"Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			[ctxt.getState().equals("Selection.FirstPoint")]
 			FirstPoint {
 				setQuestion("Precise punto");
 				setDescription(new String[]{"Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			[ctxt.getState().equals("Selection.EndPoint")]
 			EndPoint {
 				setQuestion("Precise punto destino");
 				setDescription(new String[]{"Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 }
 
@@ -56,7 +56,7 @@ SecondPoint{
 			FirstPoint {
 				setQuestion("Precise punto de estiramiento");
 				setDescription(new String[]{"Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				end();
 				}
 
@@ -67,7 +67,7 @@ EndPoint{
 			FirstPoint {
 				setQuestion("Precise punto destino");
 				setDescription(new String[]{"Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				end();
 				refresh();
 				}

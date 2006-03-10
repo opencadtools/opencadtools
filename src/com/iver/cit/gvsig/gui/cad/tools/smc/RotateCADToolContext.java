@@ -236,7 +236,7 @@ public final class RotateCADToolContext
                 {
                     ctxt.setQuestion("Precise angulo de rotacion");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -273,7 +273,7 @@ public final class RotateCADToolContext
                 try
                 {
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                     ctxt.refresh();
                 }

@@ -31,14 +31,14 @@ FirstPoint
 			SecondPointOrSquare {
 				setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
 				setDescription(new String[]{"Cuadrado","Cancelar"});
-				addPoint(pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 
 	}
 SecondPointOrSquare{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPoint {
-			addPoint(pointX,pointY);
+			addPoint(pointX,pointY,event);
 			end();
 			}
 	addOption(s:String)
@@ -53,7 +53,7 @@ SecondPointOrSquare{
 SecondPointSquare{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPoint {
-			addPoint(pointX,pointY);
+			addPoint( pointX,pointY,event);
 			end();
 			}
 }

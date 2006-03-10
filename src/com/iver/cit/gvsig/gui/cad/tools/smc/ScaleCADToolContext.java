@@ -244,7 +244,7 @@ public final class ScaleCADToolContext
                 {
                     ctxt.setQuestion("Precise factor de escala<2> o Referencia[R]");
                     ctxt.setDescription(new String[]{"Referencia", "Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -325,7 +325,7 @@ public final class ScaleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                     ctxt.refresh();
                 }
@@ -415,7 +415,7 @@ public final class ScaleCADToolContext
                 {
                     ctxt.setQuestion("Precise punto final recta referencia");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -453,7 +453,7 @@ public final class ScaleCADToolContext
                 {
                     ctxt.setQuestion("Precise punto origen recta escala");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -491,7 +491,7 @@ public final class ScaleCADToolContext
                 {
                     ctxt.setQuestion("Precise punto final recta escala");
                     ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
@@ -527,7 +527,7 @@ public final class ScaleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.addPoint(pointX, pointY);
+                    ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                     ctxt.refresh();
                 }

@@ -32,7 +32,7 @@ FirstPoint
 			FirstPoint {
 				setQuestion("Insertar punto");
 				setDescription(new String[]{"Cancelar"});
-				addPoint( pointX,pointY);
+				addPoint( pointX,pointY,event);
 				}
 	}
 
