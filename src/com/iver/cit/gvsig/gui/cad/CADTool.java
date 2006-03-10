@@ -66,7 +66,7 @@ public interface CADTool {
 	public void transition(double x, double y, InputEvent event);
 	public void transition(double d);
 	public void transition(String s);
-	public void addPoint(double x,double y);
+	public void addPoint(double x,double y,InputEvent event);
 	public void addValue(double d);
 	public void addOption(String s);
 	public void setQuestion(String s);

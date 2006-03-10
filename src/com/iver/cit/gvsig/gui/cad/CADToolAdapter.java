@@ -13,6 +13,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.MemoryImageSource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -35,13 +36,14 @@ import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
 
 public class CADToolAdapter extends Behavior {
-	public static int MAX_ENTITIES_IN_SPATIAL_CACHE = 5000; 
-	
+	public static int MAX_ENTITIES_IN_SPATIAL_CACHE = 5000;
+
 	private Stack cadToolStack = new Stack();
 
 	// Para pasarle las coordenadas cuando se produce un evento textEntered
@@ -143,8 +145,8 @@ public class CADToolAdapter extends Behavior {
 			Point2D mapHandlerAdjustedPoint) {
 		// if (selection.cardinality() > 0) {
 		if (getSpatialCache() == null)
-			return Double.MAX_VALUE; 
-		
+			return Double.MAX_VALUE;
+
 		double rw = getMapControl().getViewPort().toMapDistance(5);
 		Point2D mapPoint = point;
 		Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - rw / 2,
@@ -720,11 +722,14 @@ public class CADToolAdapter extends Behavior {
 		}
 		System.out.println("clear Selection");
 		selection.clear();
-		if (getCadTool() instanceof SelectionCADTool)
+		VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited();
+		vle.clearSelection();
+	/*	if (getCadTool() instanceof SelectionCADTool)
 		{
 			SelectionCADTool selTool = (SelectionCADTool) getCadTool();
 			selTool.clearSelection();
 		}
+		*/
 		getMapControl().drawMap(false);
 	}
 
@@ -752,8 +757,9 @@ public class CADToolAdapter extends Behavior {
 				cadToolStack.clear();
 				SelectionCADTool selCad = new SelectionCADTool();
 				selCad.init();
-				selCad.clearSelection();
-				
+				VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited();
+				vle.clearSelection();
+
 				pushCadTool(selCad);
 				// getVectorialAdapter().getSelection().clear();
 				getMapControl().drawMap(false);
@@ -781,12 +787,12 @@ public class CADToolAdapter extends Behavior {
 	 * Se usa para rellenar la cache de entidades
 	 * con la que queremos trabajar (para hacer snapping,
 	 * por ejemplo. Lo normal será
-	 * rellenarla cada vez que cambie el extent, y 
+	 * rellenarla cada vez que cambie el extent, y
 	 * basándonos en el futuro EditionManager para saber
 	 * de cuántos temas hay que leer. Si el numero de entidades
 	 * supera MAX_ENTITIES_IN_SPATIAL_CACHE, lo pondremos
 	 * a nulo.
-	 * @throws DriverException 
+	 * @throws DriverException
 	 */
 	public void createSpatialCache() throws DriverException {
 		ViewPort vp = getMapControl().getViewPort();
@@ -806,13 +812,13 @@ public class CADToolAdapter extends Behavior {
 			IFeature feat =  (IFeature)feats[i].getLinkedRow();
 			IGeometry geom = feat.getGeometry();
 			// TODO: EL getBounds2D del IGeometry ralentiza innecesariamente
-			// Podríamos hacer que GeneralPathX lo tenga guardado, 
+			// Podríamos hacer que GeneralPathX lo tenga guardado,
 			// y tenga un constructor en el que se lo fijes.
 			// De esta forma, el driver, a la vez que recupera
 			// las geometrías podría calcular el boundingbox
 			// y asignarlo. Luego habría que poner un método
 			// que recalcule el bounding box bajo demanda.
-			
+
 			Envelope e = FConverter.convertRectangle2DtoEnvelope(geom.getBounds2D());
 			spatialCache.insert(e, geom);
 		}

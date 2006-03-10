@@ -54,7 +54,7 @@ public class StartEditing implements Extension {
 
                     FLyrVect lv = (FLyrVect) layers.getLayer(i);
                     // lv.setVisible(true);
-
+                    lv.addLayerListener(CADExtension.getEditionManager());
                     lv.setEditing(true);
                     VectorialEditableAdapter vea = (VectorialEditableAdapter) lv.getSource();
                     // TODO: Provisional, para que al poner
