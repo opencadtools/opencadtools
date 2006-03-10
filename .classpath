@@ -11,7 +11,7 @@
 	<classpathentry kind="lib" path="/libFMap/lib/cms.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/jts-1.7.jar"/>
 	<classpathentry sourcepath="/Utiles/src" kind="lib" path="/_fwAndami/lib/iver-utiles.jar"/>
-	<classpathentry kind="lib" path="/libFMap/lib/driver-manager-1.1.jar"/>
+	<classpathentry sourcepath="/libDriverManager" kind="lib" path="/libFMap/lib/driver-manager-1.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/_fwAndami"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/appgvSIG"/>
 	<classpathentry kind="lib" path="lib/gt2-postgis.jar"/>

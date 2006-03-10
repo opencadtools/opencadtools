@@ -38,7 +38,8 @@ public class NewTheme implements Extension {
 		if (f instanceof View) {
 			View vista = (View) f;
 
-			LOGO = new javax.swing.ImageIcon("images/package_graphics.png");
+			LOGO = new javax.swing.ImageIcon(this.getClass().
+					getClassLoader().getResource("images/package_graphics.png"));
 			// new
 			// ImageIcon(DefaultJWizardComponents.class.getResource("images/logo.jpeg"));
 
