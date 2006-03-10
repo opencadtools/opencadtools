@@ -6,6 +6,8 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 
 import com.iver.cit.gvsig.fmap.edition.IWriter;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
  * @author fjp
@@ -15,6 +17,11 @@ import com.iver.cit.gvsig.fmap.edition.IWriter;
  *
  */
 public class JPanelFieldDefinition extends JWizardPanel {
+
+
+	private JLabel jLabel = null;
+	private JScrollPane jScrollPane = null;
+	private JTable jTable = null;
 
 
 	public JPanelFieldDefinition(JWizardComponents wizardComponents, String title, String[] driverNames) {
@@ -29,7 +36,41 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	 * 
 	 */
 	private void initialize() {
-        this.setSize(new java.awt.Dimension(434,232));
+        jLabel = new JLabel();
+        jLabel.setBounds(new java.awt.Rectangle(34,19,31,15));
+        jLabel.setText("JLabel");
+        this.setLayout(null);
+        this.setSize(new java.awt.Dimension(437,232));
+        this.add(jLabel, null);
+        this.add(getJScrollPane(), null);
+	}
+
+
+	/**
+	 * This method initializes jScrollPane	
+	 * 	
+	 * @return javax.swing.JScrollPane	
+	 */
+	private JScrollPane getJScrollPane() {
+		if (jScrollPane == null) {
+			jScrollPane = new JScrollPane();
+			jScrollPane.setBounds(new java.awt.Rectangle(62,53,198,150));
+			jScrollPane.setViewportView(getJTable());
+		}
+		return jScrollPane;
+	}
+
+
+	/**
+	 * This method initializes jTable	
+	 * 	
+	 * @return javax.swing.JTable	
+	 */
+	private JTable getJTable() {
+		if (jTable == null) {
+			jTable = new JTable();
+		}
+		return jTable;
 	}
 
 
