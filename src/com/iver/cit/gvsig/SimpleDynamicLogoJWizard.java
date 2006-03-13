@@ -1,8 +1,6 @@
 package com.iver.cit.gvsig;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -10,17 +8,21 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.hardcode.driverManager.WriterManager;
-import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
-import com.iver.cit.gvsig.fmap.layers.LayerFactory;
-import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
-import com.iver.cit.gvsig.gui.cad.panels.ChooseWriteDriver;
-
-import jwizardcomponent.JWizardPanel;
+import jwizardcomponent.FinishAction;
+import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.Utilities;
 import jwizardcomponent.example.SimpleDynamicWizardPanel;
 import jwizardcomponent.example.SimpleLabelWizardPanel;
 import jwizardcomponent.frame.SimpleLogoJWizardFrame;
+
+import com.hardcode.driverManager.Driver;
+import com.hardcode.driverManager.WriterManager;
+import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
+import com.iver.cit.gvsig.fmap.layers.LayerFactory;
+import com.iver.cit.gvsig.gui.cad.MyFinishAction;
+import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
+import com.iver.cit.gvsig.gui.cad.panels.ChooseWriteDriver;
+import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 
 /**
  * <p>Title: JWizardComponent</p>
@@ -48,6 +50,7 @@ import jwizardcomponent.frame.SimpleLogoJWizardFrame;
 public class SimpleDynamicLogoJWizard {
 
   static ImageIcon LOGO;
+  
 
   public static void main(String [] args) {
     try {
@@ -63,6 +66,11 @@ public class SimpleDynamicLogoJWizard {
       SwingUtilities.updateComponentTreeUI(wizardFrame);
       
       wizardFrame.setTitle("Nuevo tema");
+      
+	  wizardFrame.getWizardComponents().setFinishAction(
+			  new MyFinishAction(wizardFrame.getWizardComponents())
+	  );
+
 
       /* wizardFrame.getWizardComponents().addWizardPanel(
           new SimpleLabelWizardPanel(wizardFrame.getWizardComponents(),
@@ -70,19 +78,27 @@ public class SimpleDynamicLogoJWizard {
       LayerFactory.setWritersPath("D:/eclipse/workspace/_fwAndami/gvSIG/extensiones/com.iver.cit.gvsig/writers");
       
       WriterManager writerManager = LayerFactory.getWM(); 
+      ArrayList spatialDrivers = new ArrayList();
+      String[] writerNames = writerManager.getWriterNames();
+      for (int i=0; i<writerNames.length; i++)
+      {
+    	  Driver drv = writerManager.getWriter(writerNames[i]);
+    	  if (drv instanceof ISpatialWriter)
+    		  spatialDrivers.add(drv.getName());
+      }
       
       
 
       wizardFrame.getWizardComponents().addWizardPanel(
     		  new ChooseWriteDriver(wizardFrame.getWizardComponents(),
-              "Dynamic Test", writerManager.getWriterNames())); 
+              "Dynamic Test", (String[]) spatialDrivers.toArray(new String[0]))); 
       
       wizardFrame.getWizardComponents().addWizardPanel(
               new ChooseGeometryType(wizardFrame.getWizardComponents()));
 
       
       wizardFrame.getWizardComponents().addWizardPanel(
-          new SimpleDynamicWizardPanel(wizardFrame.getWizardComponents()));
+          new JPanelFieldDefinition(wizardFrame.getWizardComponents()));
 
       wizardFrame.getWizardComponents().addWizardPanel(
           new SimpleLabelWizardPanel(wizardFrame.getWizardComponents(),

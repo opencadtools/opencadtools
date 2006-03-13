@@ -1,12 +1,12 @@
 package com.iver.cit.gvsig.gui.cad.panels;
 
-import jwizardcomponent.JWizard;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
 
-import com.iver.cit.gvsig.fmap.edition.IWriter;
+import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 
 /**
@@ -69,7 +69,7 @@ public class ChooseWriteDriver extends JWizardPanel {
 			if (nextPanel instanceof ChooseGeometryType)
 			{
 				ChooseGeometryType panel = (ChooseGeometryType) nextPanel;
-				IWriter writer = (IWriter) LayerFactory.getWM().getWriter(getSelectedDriver());
+				ISpatialWriter writer = (ISpatialWriter) LayerFactory.getWM().getWriter(getSelectedDriver());
 				panel.setDriver(writer);
 			}
 		} catch (Exception e) {

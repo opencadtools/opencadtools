@@ -1,14 +1,15 @@
 package com.iver.cit.gvsig.gui.cad.panels;
 
-import jwizardcomponent.JWizardComponents;
-import jwizardcomponent.JWizardPanel;
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
-import javax.swing.JComboBox;
-
-import com.iver.cit.gvsig.fmap.core.FShape;
-import com.iver.cit.gvsig.fmap.edition.IWriter;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+
+import jwizardcomponent.JWizardComponents;
+import jwizardcomponent.JWizardPanel;
+
+import com.iver.cit.gvsig.fmap.core.FShape;
+import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 
 /**
  * @author fjp
@@ -65,6 +66,15 @@ public class ChooseGeometryType extends JWizardPanel {
 			jPanelGeometryTypeOptions.add(getJRadioButtonPolygon(), null);
 			jPanelGeometryTypeOptions.add(getJRadioButtonMulti(), null);
 			jPanelGeometryTypeOptions.add(getJRadioButtonMultiPoint(), null);
+			
+		    //Group the radio buttons.
+		    ButtonGroup group = new ButtonGroup();
+		    group.add(getJRadioButtonPoint());
+		    group.add(getJRadioButtonLine());
+		    group.add(getJRadioButtonPolygon());
+		    group.add(getJRadioButtonMulti());
+		    group.add(getJRadioButtonMultiPoint());
+			
 		}
 		return jPanelGeometryTypeOptions;
 	}
@@ -92,6 +102,7 @@ public class ChooseGeometryType extends JWizardPanel {
 		if (jRadioButtonLine == null) {
 			jRadioButtonLine = new JRadioButton();
 			jRadioButtonLine.setText("LINE_type");
+			jRadioButtonLine.setSelected(true);
 			jRadioButtonLine.setBounds(new java.awt.Rectangle(19,81,325,23));
 		}
 		return jRadioButtonLine;
@@ -145,7 +156,7 @@ public class ChooseGeometryType extends JWizardPanel {
 	 * multi_type
 	 * @param writer
 	 */
-	public void setDriver(IWriter writer) {
+	public void setDriver(ISpatialWriter writer) {
 		// En función de qué tipo de driver sea, habilitamos o deshabilitamos
 		// las opciones. Por ejemplo, si es de tipo shp, deshabilitamos
 		// multi_type

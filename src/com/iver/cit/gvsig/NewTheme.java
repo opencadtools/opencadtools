@@ -1,5 +1,7 @@
 package com.iver.cit.gvsig;
 
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,9 +12,16 @@ import jwizardcomponent.example.SimpleDynamicWizardPanel;
 import jwizardcomponent.example.SimpleLabelWizardPanel;
 import jwizardcomponent.frame.SimpleLogoJWizardFrame;
 
+import com.hardcode.driverManager.Driver;
+import com.hardcode.driverManager.WriterManager;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
+import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
+import com.iver.cit.gvsig.gui.cad.panels.ChooseWriteDriver;
+import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 
 /**
  * DOCUMENT ME!
@@ -38,8 +47,8 @@ public class NewTheme implements Extension {
 		if (f instanceof View) {
 			View vista = (View) f;
 
-			LOGO = new javax.swing.ImageIcon(this.getClass().
-					getClassLoader().getResource("images/package_graphics.png"));
+			LOGO = new javax.swing.ImageIcon(this.getClass().getClassLoader()
+					.getResource("images/package_graphics.png"));
 			// new
 			// ImageIcon(DefaultJWizardComponents.class.getResource("images/logo.jpeg"));
 
@@ -51,15 +60,27 @@ public class NewTheme implements Extension {
 
 			wizardFrame.setTitle("Creación de un nuevo Tema");
 
-			wizardFrame.getWizardComponents()
-					.addWizardPanel(
-							new SimpleLabelWizardPanel(wizardFrame
-									.getWizardComponents(), new JLabel(
-									"Dynamic Test")));
+			WriterManager writerManager = LayerFactory.getWM();
+			ArrayList spatialDrivers = new ArrayList();
+			String[] writerNames = writerManager.getWriterNames();
+			for (int i = 0; i < writerNames.length; i++) {
+				Driver drv = writerManager.getWriter(writerNames[i]);
+				if (drv instanceof ISpatialWriter)
+					spatialDrivers.add(drv.getName());
+			}
 
 			wizardFrame.getWizardComponents().addWizardPanel(
-					new SimpleDynamicWizardPanel(wizardFrame
-							.getWizardComponents()));
+					new ChooseWriteDriver(wizardFrame.getWizardComponents(),
+							"Dynamic Test", (String[]) spatialDrivers
+									.toArray(new String[0])));
+
+			wizardFrame.getWizardComponents().addWizardPanel(
+					new ChooseGeometryType(wizardFrame.getWizardComponents()));
+
+			wizardFrame.getWizardComponents()
+					.addWizardPanel(
+							new JPanelFieldDefinition(wizardFrame
+									.getWizardComponents()));
 
 			wizardFrame.getWizardComponents().addWizardPanel(
 					new SimpleLabelWizardPanel(wizardFrame
