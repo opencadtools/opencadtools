@@ -67,10 +67,10 @@ public class SimpleDynamicLogoJWizard {
       
       wizardFrame.setTitle("Nuevo tema");
       
-	  wizardFrame.getWizardComponents().setFinishAction(
-			  new MyFinishAction(wizardFrame.getWizardComponents())
-	  );
-
+      MyFinishAction myFinish = new MyFinishAction(wizardFrame.getWizardComponents()); 
+      
+	  wizardFrame.getWizardComponents().setFinishAction(myFinish);
+	  
 
       /* wizardFrame.getWizardComponents().addWizardPanel(
           new SimpleLabelWizardPanel(wizardFrame.getWizardComponents(),

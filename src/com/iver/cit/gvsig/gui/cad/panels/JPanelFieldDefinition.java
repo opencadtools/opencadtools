@@ -1,6 +1,7 @@
 package com.iver.cit.gvsig.gui.cad.panels;
 
 import java.awt.BorderLayout;
+import java.sql.Types;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -14,6 +15,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+
+import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
@@ -212,6 +215,43 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			});
 		}
 		return jButtonDeleteField;
+	}
+
+
+	/**
+	 * Convierte lo que hay en la tabla en una definición de campos
+	 * adecuada para crear un LayerDefinition
+	 * @return
+	 */
+	public FieldDescription[] getFieldsDescription() {
+		DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
+		FieldDescription[] fieldsDesc = new FieldDescription[tm.getRowCount()];
+		
+		for (int i=0; i < tm.getRowCount(); i++)
+		{
+			fieldsDesc[i] = new FieldDescription();
+			fieldsDesc[i].setFieldName((String) tm.getValueAt(i,0));
+			String strType = (String) tm.getValueAt(i,1);
+			if (strType.equals("String"))
+				fieldsDesc[i].setFieldType(Types.VARCHAR);
+			if (strType.equals("Double"))
+				fieldsDesc[i].setFieldType(Types.DOUBLE);
+			if (strType.equals("Integer"))
+				fieldsDesc[i].setFieldType(Types.INTEGER);
+			if (strType.equals("Boolean"))
+				fieldsDesc[i].setFieldType(Types.BOOLEAN);
+			if (strType.equals("Date"))
+				fieldsDesc[i].setFieldType(Types.DATE);
+			Integer fieldLength = (Integer) tm.getValueAt(i,2);
+			fieldsDesc[i].setFieldLength(fieldLength.intValue());
+			
+			// TODO: HACERLO BIEN
+			if (strType.equals("Double"))
+				fieldsDesc[i].setFieldDecimalCount(5);
+				
+		}
+		
+		return fieldsDesc;
 	}
 
 
