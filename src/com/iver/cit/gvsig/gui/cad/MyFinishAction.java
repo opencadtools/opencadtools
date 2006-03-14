@@ -5,6 +5,8 @@ import jwizardcomponent.JWizardComponents;
 
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.LayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.VectorialDatabaseDriver;
+import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
@@ -28,15 +30,26 @@ public class MyFinishAction extends FinishAction
 		try {
 			ChooseWriteDriver driverPanel = (ChooseWriteDriver) myWizardComponents.getWizardPanel(0);
 			ChooseGeometryType geometryTypePanel = (ChooseGeometryType) myWizardComponents.getWizardPanel(1);
-			JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(1);
+			JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(2);
 			 
 			String layerName = driverPanel.getLayerName();
 			String selectedDriver = driverPanel.getSelectedDriver();
 			int geometryType = geometryTypePanel.getSelectedGeometryType();
 			FieldDescription[] fieldsDesc = fieldDefinitionPanel.getFieldsDescription();
 			
-			ISpatialWriter drv = (ISpatialWriter) LayerFactory.getWM().getWriter(selectedDriver);
-			
+			ISpatialWriter drv = (ISpatialWriter) LayerFactory.getDM().getDriver(selectedDriver);
+			if (drv instanceof VectorialFileDriver)
+			{
+				
+			}
+			else if (drv instanceof VectorialDatabaseDriver)
+			{
+				
+			}
+			else // Si no es ni lo uno ni lo otro, 
+			{
+				
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

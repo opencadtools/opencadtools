@@ -16,6 +16,7 @@ import jwizardcomponent.example.SimpleLabelWizardPanel;
 import jwizardcomponent.frame.SimpleLogoJWizardFrame;
 
 import com.hardcode.driverManager.Driver;
+import com.hardcode.driverManager.DriverManager;
 import com.hardcode.driverManager.WriterManager;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
@@ -75,14 +76,14 @@ public class SimpleDynamicLogoJWizard {
       /* wizardFrame.getWizardComponents().addWizardPanel(
           new SimpleLabelWizardPanel(wizardFrame.getWizardComponents(),
           new JLabel("Dynamic Test"))); */
-      LayerFactory.setWritersPath("D:/eclipse/workspace/_fwAndami/gvSIG/extensiones/com.iver.cit.gvsig/writers");
+      LayerFactory.setDriversPath("c:/workspace/_fwAndami/gvSIG/extensiones/com.iver.cit.gvsig/drivers");
       
-      WriterManager writerManager = LayerFactory.getWM(); 
+      DriverManager writerManager = LayerFactory.getDM(); 
       ArrayList spatialDrivers = new ArrayList();
-      String[] writerNames = writerManager.getWriterNames();
+      String[] writerNames = writerManager.getDriverNames();
       for (int i=0; i<writerNames.length; i++)
       {
-    	  Driver drv = writerManager.getWriter(writerNames[i]);
+    	  Driver drv = writerManager.getDriver(writerNames[i]);
     	  if (drv instanceof ISpatialWriter)
     		  spatialDrivers.add(drv.getName());
       }

@@ -1,15 +1,21 @@
 package com.iver.cit.gvsig.gui.cad.panels;
 
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
+import javax.swing.JTextField;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
 
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
-import javax.swing.JTextField;
 
 /**
  * @author fjp
@@ -25,6 +31,18 @@ public class ChooseWriteDriver extends JWizardPanel {
 	private String[] driverNames;
 	private JLabel jLabel = null;
 	private JTextField jTextLayerName = null;
+	
+	private class MyInputEventListener implements CaretListener
+	{
+		public void caretUpdate(CaretEvent arg0) {
+			if (jTextLayerName.getText().length() > 0)
+				setNextButtonEnabled(true);
+			else
+				setNextButtonEnabled(false);
+			
+		}
+		
+	}
 
 	public ChooseWriteDriver(JWizardComponents wizardComponents, String title, String[] driverNames) {
 		super(wizardComponents, title);
@@ -85,7 +103,7 @@ public class ChooseWriteDriver extends JWizardPanel {
 			if (nextPanel instanceof ChooseGeometryType)
 			{
 				ChooseGeometryType panel = (ChooseGeometryType) nextPanel;
-				ISpatialWriter writer = (ISpatialWriter) LayerFactory.getWM().getWriter(getSelectedDriver());
+				ISpatialWriter writer = (ISpatialWriter) LayerFactory.getDM().getDriver(getSelectedDriver());
 				panel.setDriver(writer);
 			}
 		} catch (Exception e) {
@@ -109,14 +127,7 @@ public class ChooseWriteDriver extends JWizardPanel {
 			jTextLayerName.setBounds(new java.awt.Rectangle(15,30,244,20));
 			jTextLayerName.setText("NewLayer");
 			jTextLayerName.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-			jTextLayerName.addKeyListener(new java.awt.event.KeyAdapter() {
-				public void keyTyped(java.awt.event.KeyEvent e) {
-					if (jTextLayerName.getText().length() > 0)
-						setNextButtonEnabled(true);
-					else
-						setNextButtonEnabled(false);
-				}
-			});
+			jTextLayerName.addCaretListener(new MyInputEventListener());
 		}
 		return jTextLayerName;
 	}
