@@ -12,7 +12,9 @@
 		<extension class-name="com.iver.cit.gvsig.NewTheme"
 			description="Crear un nuevo tema."
 			active="true">
-			<menu text="Vista/new_theme" action-command="NEWTHEME"/>
+			<menu text="Vista/new_theme/new_shp" action-command="SHP"/>
+			<menu text="Vista/new_theme/new_dxf" action-command="DXF"/>
+			<menu text="Vista/new_theme/new_postgis" action-command="POSTGIS"/>			
 		</extension>
 		
 		<extension class-name="com.iver.cit.gvsig.StopEditingToShp"

@@ -13,16 +13,19 @@ import jwizardcomponent.example.SimpleLabelWizardPanel;
 import jwizardcomponent.frame.SimpleLogoJWizardFrame;
 
 import com.hardcode.driverManager.Driver;
+import com.hardcode.driverManager.DriverManager;
 import com.hardcode.driverManager.WriterManager;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.drivers.LayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.cad.MyFinishAction;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseWriteDriver;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
+import com.iver.cit.gvsig.gui.cad.panels.ShpPanel;
 
 /**
  * DOCUMENT ME!
@@ -32,7 +35,8 @@ import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 public class NewTheme implements Extension {
 	static ImageIcon LOGO;
 
-	private LayerDefinition lyrDef;
+	private ITableDefinition lyrDef;
+
 	/**
 	 * @see com.iver.andami.plugins.Extension#inicializar()
 	 */
@@ -42,7 +46,7 @@ public class NewTheme implements Extension {
 	/**
 	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
 	 */
-	public void execute(String actionCommand) {
+public void execute(String actionCommand) {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
 				.getActiveView();
 
@@ -62,37 +66,51 @@ public class NewTheme implements Extension {
 
 			wizardFrame.setTitle("Creación de un nuevo Tema");
 
-			WriterManager writerManager = LayerFactory.getWM();
-			ArrayList spatialDrivers = new ArrayList();
-			String[] writerNames = writerManager.getWriterNames();
-			for (int i = 0; i < writerNames.length; i++) {
-				Driver drv = writerManager.getWriter(writerNames[i]);
+		    DriverManager writerManager = LayerFactory.getDM(); 
+		    ArrayList spatialDrivers = new ArrayList();
+		    String[] writerNames = writerManager.getDriverNames();
+			for (int i=0; i<writerNames.length; i++)
+			{
+				Driver drv = writerManager.getDriver(writerNames[i]);
 				if (drv instanceof ISpatialWriter)
 					spatialDrivers.add(drv.getName());
 			}
 
-			wizardFrame.getWizardComponents().addWizardPanel(
-					new ChooseWriteDriver(wizardFrame.getWizardComponents(),
-							"Dynamic Test", (String[]) spatialDrivers
-									.toArray(new String[0])));
+			ChooseGeometryType panelChoose = new ChooseGeometryType(wizardFrame.getWizardComponents());
+			JPanelFieldDefinition panelFields = new JPanelFieldDefinition(wizardFrame.getWizardComponents());			
+			wizardFrame.getWizardComponents().addWizardPanel(panelChoose);
 
-			wizardFrame.getWizardComponents().addWizardPanel(
-					new ChooseGeometryType(wizardFrame.getWizardComponents()));
+			wizardFrame.getWizardComponents().addWizardPanel(panelFields);
 
-			wizardFrame.getWizardComponents()
-					.addWizardPanel(
-							new JPanelFieldDefinition(wizardFrame
-									.getWizardComponents()));
-
-			wizardFrame.getWizardComponents().addWizardPanel(
+			if (actionCommand.equals("SHP"))
+			{
+				panelChoose.setDriver((ISpatialWriter) writerManager.getDriver("gvSIG shp driver"));
+				wizardFrame.getWizardComponents().addWizardPanel(
+					new ShpPanel(wizardFrame.getWizardComponents()));
+				
+				wizardFrame.getWizardComponents().setFinishAction(
+						new MyFinishAction(wizardFrame.getWizardComponents(),
+								vista.getMapControl(), actionCommand));
+			}
+			if (actionCommand.equals("DXF"))
+			{
+				wizardFrame.getWizardComponents().addWizardPanel(
 					new SimpleLabelWizardPanel(wizardFrame
 							.getWizardComponents(), new JLabel("Done!")));
-			wizardFrame.setSize(500, 300);
+			}
+			if (actionCommand.equals("POSTGIS"))
+			{
+				wizardFrame.getWizardComponents().addWizardPanel(
+					new SimpleLabelWizardPanel(wizardFrame
+							.getWizardComponents(), new JLabel("Done!")));
+			}			
+			
+			wizardFrame.setSize(540, 350);
 			Utilities.centerComponentOnScreen(wizardFrame);
 			wizardFrame.show();
+			// System.out.println("Salgo con " + panelChoose.getLayerName());
 		}
 	}
-
 	/**
 	 * @see com.iver.andami.plugins.Extension#isEnabled()
 	 */

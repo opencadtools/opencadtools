@@ -48,7 +48,7 @@ import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
  * @version 1.0
  */
 
-public class SimpleDynamicLogoJWizard {
+public class TestJWizard {
 
   static ImageIcon LOGO;
   
@@ -68,7 +68,7 @@ public class SimpleDynamicLogoJWizard {
       
       wizardFrame.setTitle("Nuevo tema");
       
-      MyFinishAction myFinish = new MyFinishAction(wizardFrame.getWizardComponents()); 
+      MyFinishAction myFinish = new MyFinishAction(wizardFrame.getWizardComponents(), null, "SHP"); 
       
 	  wizardFrame.getWizardComponents().setFinishAction(myFinish);
 	  
@@ -76,7 +76,7 @@ public class SimpleDynamicLogoJWizard {
       /* wizardFrame.getWizardComponents().addWizardPanel(
           new SimpleLabelWizardPanel(wizardFrame.getWizardComponents(),
           new JLabel("Dynamic Test"))); */
-      LayerFactory.setDriversPath("c:/workspace/_fwAndami/gvSIG/extensiones/com.iver.cit.gvsig/drivers");
+      /* LayerFactory.setDriversPath("d:/Eclipse/workspace/_fwAndami/gvSIG/extensiones/com.iver.cit.gvsig/drivers");
       
       DriverManager writerManager = LayerFactory.getDM(); 
       ArrayList spatialDrivers = new ArrayList();
@@ -93,22 +93,22 @@ public class SimpleDynamicLogoJWizard {
       wizardFrame.getWizardComponents().addWizardPanel(
     		  new ChooseWriteDriver(wizardFrame.getWizardComponents(),
               "Dynamic Test", (String[]) spatialDrivers.toArray(new String[0]))); 
-      
-      wizardFrame.getWizardComponents().addWizardPanel(
-              new ChooseGeometryType(wizardFrame.getWizardComponents()));
+      */
+		ChooseGeometryType panelChoose = new ChooseGeometryType(wizardFrame.getWizardComponents());
+		JPanelFieldDefinition panelFields = new JPanelFieldDefinition(wizardFrame.getWizardComponents());			
+		wizardFrame.getWizardComponents().addWizardPanel(panelChoose);
 
-      
-      wizardFrame.getWizardComponents().addWizardPanel(
-          new JPanelFieldDefinition(wizardFrame.getWizardComponents()));
+		wizardFrame.getWizardComponents().addWizardPanel(panelFields);
 
-      wizardFrame.getWizardComponents().addWizardPanel(
+      /* wizardFrame.getWizardComponents().addWizardPanel(
           new SimpleLabelWizardPanel(wizardFrame.getWizardComponents(),
-          new JLabel("Done!")));
-      wizardFrame.setSize(500, 300);
-      
+          new JLabel("Done!"))); */
+      wizardFrame.setSize(540, 350);
       Utilities.centerComponentOnScreen(wizardFrame);
       wizardFrame.show();
-
+      
+  	  // System.out.println("Salgo con " + panelChoose.getLayerName());
+  	  
     } catch (Exception e) {
       e.printStackTrace();
     }

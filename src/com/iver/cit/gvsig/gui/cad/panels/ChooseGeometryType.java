@@ -4,6 +4,9 @@ import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
@@ -27,6 +30,21 @@ public class ChooseGeometryType extends JWizardPanel {
 	private JRadioButton jRadioButtonPolygon = null;
 	private JRadioButton jRadioButtonMulti = null;
 	private JRadioButton jRadioButtonMultiPoint = null;
+	private JTextField jTextFieldLayerName = null;
+	private JLabel jLabelLayerName = null;
+	private String driverName;
+
+	private class MyInputEventListener implements CaretListener
+	{
+		public void caretUpdate(CaretEvent arg0) {
+			if (jTextFieldLayerName.getText().length() > 0)
+				setNextButtonEnabled(true);
+			else
+				setNextButtonEnabled(false);
+			
+		}
+		
+	}
 
 	public ChooseGeometryType(JWizardComponents wizardComponents) {
 		super(wizardComponents);
@@ -39,13 +57,18 @@ public class ChooseGeometryType extends JWizardPanel {
 	 * 
 	 */
 	private void initialize() {
+        jLabelLayerName = new JLabel();
+        jLabelLayerName.setBounds(new java.awt.Rectangle(14,9,321,22));
+        jLabelLayerName.setText("enter_layer_name");
         lblSelecGeometryType = new JLabel();
         lblSelecGeometryType.setText("please_select_geometry_type");
-        lblSelecGeometryType.setBounds(new java.awt.Rectangle(33,10,145,15));
+        lblSelecGeometryType.setBounds(new java.awt.Rectangle(13,63,329,15));
         this.setLayout(null);
-        this.setSize(new java.awt.Dimension(434,232));
+        this.setSize(new java.awt.Dimension(358,263));
         this.add(lblSelecGeometryType, null);
         this.add(getJPanelGeometryTypeOptions(), null);
+        this.add(getJTextFieldLayerName(), null);
+        this.add(jLabelLayerName, null);
 			
 	}
 
@@ -60,7 +83,7 @@ public class ChooseGeometryType extends JWizardPanel {
 			jPanelGeometryTypeOptions.setLayout(null);
 			jPanelGeometryTypeOptions.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Geometry_types", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, null));
 			jPanelGeometryTypeOptions.setPreferredSize(new java.awt.Dimension(300,400));
-			jPanelGeometryTypeOptions.setBounds(new java.awt.Rectangle(33,37,355,172));
+			jPanelGeometryTypeOptions.setBounds(new java.awt.Rectangle(14,82,326,172));
 			jPanelGeometryTypeOptions.add(getJRadioButtonPoint(), null);
 			jPanelGeometryTypeOptions.add(getJRadioButtonLine(), null);
 			jPanelGeometryTypeOptions.add(getJRadioButtonPolygon(), null);
@@ -88,7 +111,7 @@ public class ChooseGeometryType extends JWizardPanel {
 		if (jRadioButtonPoint == null) {
 			jRadioButtonPoint = new JRadioButton();
 			jRadioButtonPoint.setText("POINT_type");
-			jRadioButtonPoint.setBounds(new java.awt.Rectangle(19,31,325,23));
+			jRadioButtonPoint.setBounds(new java.awt.Rectangle(19,31,297,23));
 		}
 		return jRadioButtonPoint;
 	}
@@ -103,7 +126,7 @@ public class ChooseGeometryType extends JWizardPanel {
 			jRadioButtonLine = new JRadioButton();
 			jRadioButtonLine.setText("LINE_type");
 			jRadioButtonLine.setSelected(true);
-			jRadioButtonLine.setBounds(new java.awt.Rectangle(19,81,325,23));
+			jRadioButtonLine.setBounds(new java.awt.Rectangle(19,81,297,23));
 		}
 		return jRadioButtonLine;
 	}
@@ -117,7 +140,7 @@ public class ChooseGeometryType extends JWizardPanel {
 		if (jRadioButtonPolygon == null) {
 			jRadioButtonPolygon = new JRadioButton();
 			jRadioButtonPolygon.setText("POLYGON_type");
-			jRadioButtonPolygon.setBounds(new java.awt.Rectangle(19,106,325,23));
+			jRadioButtonPolygon.setBounds(new java.awt.Rectangle(19,106,297,23));
 		}
 		return jRadioButtonPolygon;
 	}
@@ -131,7 +154,7 @@ public class ChooseGeometryType extends JWizardPanel {
 		if (jRadioButtonMulti == null) {
 			jRadioButtonMulti = new JRadioButton();
 			jRadioButtonMulti.setText("MULTI_type");
-			jRadioButtonMulti.setBounds(new java.awt.Rectangle(19,131,325,23));
+			jRadioButtonMulti.setBounds(new java.awt.Rectangle(19,131,297,23));
 		}
 		return jRadioButtonMulti;
 	}
@@ -145,7 +168,7 @@ public class ChooseGeometryType extends JWizardPanel {
 		if (jRadioButtonMultiPoint == null) {
 			jRadioButtonMultiPoint = new JRadioButton();
 			jRadioButtonMultiPoint.setText("MULTIPOINT_type");
-			jRadioButtonMultiPoint.setBounds(new java.awt.Rectangle(19,56,325,23));
+			jRadioButtonMultiPoint.setBounds(new java.awt.Rectangle(19,56,297,23));
 		}
 		return jRadioButtonMultiPoint;
 	}
@@ -161,6 +184,7 @@ public class ChooseGeometryType extends JWizardPanel {
 		// las opciones. Por ejemplo, si es de tipo shp, deshabilitamos
 		// multi_type
 		System.out.println("Writer seleccionado:" + writer.getName());
+		driverName = writer.getName();
 		getJRadioButtonPoint().setEnabled(writer.canWriteGeometry(FShape.POINT));
 		getJRadioButtonMultiPoint().setEnabled(writer.canWriteGeometry(FShape.MULTIPOINT));
 		getJRadioButtonLine().setEnabled(writer.canWriteGeometry(FShape.LINE));
@@ -183,6 +207,31 @@ public class ChooseGeometryType extends JWizardPanel {
 		
 		return -1;
 	}
+
+	/**
+	 * This method initializes jTextLayerName	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JTextField getJTextFieldLayerName() {
+		if (jTextFieldLayerName == null) {
+			jTextFieldLayerName = new JTextField();
+			jTextFieldLayerName.setBounds(new java.awt.Rectangle(13,36,323,20));
+			jTextFieldLayerName.setText("NewLayer");
+			jTextFieldLayerName.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+			jTextFieldLayerName.addCaretListener(new MyInputEventListener());
+		}
+		return jTextFieldLayerName;
+	}
+
+	public String getLayerName() {
+		return getJTextFieldLayerName().getText();
+	}
+
+	public String getSelectedDriver() {
+		return driverName;
+	}
+	
 
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
