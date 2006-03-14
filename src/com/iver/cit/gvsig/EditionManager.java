@@ -1,6 +1,7 @@
 package com.iver.cit.gvsig;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import com.iver.cit.gvsig.fmap.AtomicEvent;
 import com.iver.cit.gvsig.fmap.AtomicEventListener;
@@ -34,7 +35,6 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  *
  */
 public class EditionManager implements LayerListener {
-
 	private ArrayList editedLayers = new ArrayList();
 	private ILayerEdited activeLayerEdited = null;
 	private MapControl mapCtrl = null;
@@ -88,6 +88,7 @@ public class EditionManager implements LayerListener {
 	}
 
 	public void editionChanged(LayerEvent e) {
+		Logger.global.info(e.toString());
 		ILayerEdited lyrEdit = getLayerEdited(e.getSource());
 
 		// Si no está en la lista, comprobamos que está en edición

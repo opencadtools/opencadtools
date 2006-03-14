@@ -8,13 +8,11 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import jwizardcomponent.Utilities;
-import jwizardcomponent.example.SimpleDynamicWizardPanel;
 import jwizardcomponent.example.SimpleLabelWizardPanel;
 import jwizardcomponent.frame.SimpleLogoJWizardFrame;
 
 import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverManager;
-import com.hardcode.driverManager.WriterManager;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
@@ -23,7 +21,6 @@ import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
-import com.iver.cit.gvsig.gui.cad.panels.ChooseWriteDriver;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 import com.iver.cit.gvsig.gui.cad.panels.ShpPanel;
 
