@@ -123,14 +123,16 @@ public final class SelectionCADToolContext
         //
         /* package */ static Selection_Default.Selection_FirstPoint FirstPoint;
         /* package */ static Selection_Default.Selection_SecondPoint SecondPoint;
-        /* package */ static Selection_Default.Selection_EndPoint EndPoint;
+        /* package */ static Selection_Default.Selection_WithSelectedFeatures WithSelectedFeatures;
+        /* package */ static Selection_Default.Selection_WithHandlers WithHandlers;
         private static Selection_Default Default;
 
         static
         {
             FirstPoint = new Selection_Default.Selection_FirstPoint("Selection.FirstPoint", 0);
             SecondPoint = new Selection_Default.Selection_SecondPoint("Selection.SecondPoint", 1);
-            EndPoint = new Selection_Default.Selection_EndPoint("Selection.EndPoint", 2);
+            WithSelectedFeatures = new Selection_Default.Selection_WithSelectedFeatures("Selection.WithSelectedFeatures", 2);
+            WithHandlers = new Selection_Default.Selection_WithHandlers("Selection.WithHandlers", 3);
             Default = new Selection_Default("Selection.Default", -1);
         }
 
@@ -218,7 +220,7 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                if (ctxt.select(pointX,pointY) && ctxt.getState().equals("Selection.SecondPoint"))
+                if (ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.SecondPoint"))
                 {
 
                     (context.getState()).Exit(context);
@@ -235,36 +237,20 @@ public final class SelectionCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (ctxt.getState().equals("Selection.FirstPoint"))
-                {
-                    SelectionCADToolState endState = context.getState();
-
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion("Precise punto");
-                        ctxt.setDescription(new String[]{"Cancelar"});
-                        ctxt.addPoint(pointX, pointY, event);
-                    }
-                    finally
-                    {
-                        context.setState(endState);
-                    }
-                }
-                else if (ctxt.getState().equals("Selection.EndPoint"))
+                else if (ctxt.getNextState().equals("Selection.WithSelectedFeatures"))
                 {
 
                     (context.getState()).Exit(context);
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Precise punto destino");
+                        ctxt.setQuestion("select_handlers");
                         ctxt.setDescription(new String[]{"Cancelar"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
                     {
-                        context.setState(Selection.EndPoint);
+                        context.setState(Selection.WithSelectedFeatures);
                         (context.getState()).Entry(context);
                     }
                 }                else
@@ -296,21 +282,43 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
+                if (ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.FirstPoint"))
+                {
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion("Precise punto de estiramiento");
-                    ctxt.setDescription(new String[]{"Cancelar"});
-                    ctxt.addPoint(pointX, pointY, event);
-                    ctxt.end();
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                    }
+                    finally
+                    {
+                        context.setState(Selection.FirstPoint);
+                        (context.getState()).Entry(context);
+                    }
                 }
-                finally
+                else if (ctxt.getNextState().equals("Selection.WithSelectedFeatures"))
                 {
-                    context.setState(Selection.FirstPoint);
-                    (context.getState()).Entry(context);
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("select_handlers");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.addPoint(pointX, pointY, event);
+                    }
+                    finally
+                    {
+                        context.setState(Selection.WithSelectedFeatures);
+                        (context.getState()).Entry(context);
+                    }
+                }                else
+                {
+                    super.addPoint(context, pointX, pointY, event);
                 }
+
                 return;
             }
 
@@ -319,14 +327,78 @@ public final class SelectionCADToolContext
         //
         }
 
-        private static final class Selection_EndPoint
+        private static final class Selection_WithSelectedFeatures
             extends Selection_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private Selection_EndPoint(String name, int id)
+            private Selection_WithSelectedFeatures(String name, int id)
+            {
+                super (name, id);
+            }
+
+            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY, InputEvent event)
+            {
+                SelectionCADTool ctxt = context.getOwner();
+
+                if (ctxt.selectHandlers(pointX,pointY)==0)
+                {
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.addPoint(pointX, pointY, event);
+                        ctxt.refresh();
+                    }
+                    finally
+                    {
+                        context.setState(Selection.FirstPoint);
+                        (context.getState()).Entry(context);
+                    }
+                }
+                else if (ctxt.selectHandlers(pointX, pointY)>0)
+                {
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise punto destino");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.addPoint(pointX, pointY, event);
+                        ctxt.refresh();
+                    }
+                    finally
+                    {
+                        context.setState(Selection.WithHandlers);
+                        (context.getState()).Entry(context);
+                    }
+                }                else
+                {
+                    super.addPoint(context, pointX, pointY, event);
+                }
+
+                return;
+            }
+
+        //-------------------------------------------------------
+        // Member data.
+        //
+        }
+
+        private static final class Selection_WithHandlers
+            extends Selection_Default
+        {
+        //-------------------------------------------------------
+        // Member methods.
+        //
+
+            private Selection_WithHandlers(String name, int id)
             {
                 super (name, id);
             }
@@ -340,15 +412,14 @@ public final class SelectionCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precise punto destino");
+                    ctxt.setQuestion("select_handlers");
                     ctxt.setDescription(new String[]{"Cancelar"});
                     ctxt.addPoint(pointX, pointY, event);
-                    ctxt.end();
                     ctxt.refresh();
                 }
                 finally
                 {
-                    context.setState(Selection.FirstPoint);
+                    context.setState(Selection.WithSelectedFeatures);
                     (context.getState()).Entry(context);
                 }
                 return;

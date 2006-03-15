@@ -29,23 +29,16 @@ FirstPoint
 
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
-			[ctxt.select(pointX,pointY) && ctxt.getState().equals("Selection.SecondPoint")]
+			[ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.SecondPoint")]
 			SecondPoint{
 				setQuestion("Precise segundo punto del rectángulo de seleccion");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY,event);
 				}
 		addPoint( pointX:double,pointY:double,event:InputEvent)
-			[ctxt.getState().equals("Selection.FirstPoint")]
-			FirstPoint {
-				setQuestion("Precise punto");
-				setDescription(new String[]{"Cancelar"});
-				addPoint( pointX,pointY,event);
-				}
-		addPoint( pointX:double,pointY:double,event:InputEvent)
-			[ctxt.getState().equals("Selection.EndPoint")]
-			EndPoint {
-				setQuestion("Precise punto destino");
+			[ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
+			WithSelectedFeatures {
+				setQuestion("select_handlers");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY,event);
 				}
@@ -53,22 +46,47 @@ FirstPoint
 
 SecondPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
+		[ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.FirstPoint")]
 			FirstPoint {
-				setQuestion("Precise punto de estiramiento");
+				setQuestion("Precise punto del rectángulo de selección");
+				setDescription(new String[]{"Cancelar"});
+
+				}
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+			[ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
+			WithSelectedFeatures {
+				setQuestion("select_handlers");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY,event);
-				end();
 				}
 
 
 }
-EndPoint{
+WithSelectedFeatures{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
+	[ctxt.selectHandlers(pointX,pointY)==0]
 			FirstPoint {
+				setQuestion("Precise punto del rectángulo de selección");
+				setDescription(new String[]{"Cancelar"});
+				addPoint( pointX,pointY,event);
+				refresh();
+				}
+				addPoint( pointX:double,pointY:double,event:InputEvent)
+	[ctxt.selectHandlers(pointX, pointY)>0]
+			WithHandlers {
 				setQuestion("Precise punto destino");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY,event);
-				end();
+				refresh();
+				}
+}
+
+WithHandlers{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+			WithSelectedFeatures {
+				setQuestion("select_handlers");
+				setDescription(new String[]{"Cancelar"});
+				addPoint( pointX,pointY,event);
 				refresh();
 				}
 }

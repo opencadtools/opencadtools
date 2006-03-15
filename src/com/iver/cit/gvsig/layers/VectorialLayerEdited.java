@@ -18,7 +18,7 @@ import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 public class VectorialLayerEdited extends DefaultLayerEdited {
 	private ArrayList selectedHandler = new ArrayList();
 	private ArrayList selectedRow = new ArrayList();
-	private ArrayList selectedRowIndex = new ArrayList();
+	// private ArrayList selectedRowIndex = new ArrayList();
 
 	public VectorialLayerEdited(FLayer lyr)
 	{
@@ -33,14 +33,14 @@ public class VectorialLayerEdited extends DefaultLayerEdited {
 		return selectedRow;
 	}
 
-	public ArrayList getSelectedRowIndex() {
+	/* public ArrayList getSelectedRowIndex() {
 		return selectedRowIndex;
-	}
+	} */
 
 	public void clearSelection() {
 		selectedHandler.clear();
 		selectedRow.clear();
-		selectedRowIndex.clear();
+		// selectedRowIndex.clear();
 	}
 	/**
 	 * @return Returns the selectedRow.
@@ -69,7 +69,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited {
 						.getAttributes())); */
 				handlers = fea.getGeometry().getHandlers(IGeometry.SELECTHANDLER);
 				selectedRow.add(fea);
-				selectedRowIndex.add(new Integer(i));
+				// selectedRowIndex.add(new Integer(i));
 				// y miramos los handlers de cada entidad seleccionada
 				min = cta.getMapControl().getViewPort()
 						.toMapDistance(SelectionCADTool.tolerance);

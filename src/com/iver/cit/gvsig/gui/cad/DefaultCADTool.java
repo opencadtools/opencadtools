@@ -62,6 +62,7 @@ import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
+import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
@@ -69,92 +70,98 @@ import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
-
 /**
  * DOCUMENT ME!
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public abstract class DefaultCADTool implements CADTool {
-    private CADToolAdapter cadToolAdapter;
-    private String question;
-    private String[] currentdescriptions;
+	private CADToolAdapter cadToolAdapter;
 
-    /**
-     * DOCUMENT ME!
-     */
-    public void draw(IGeometry geometry) {
-        if (geometry != null) {
-            BufferedImage img = getCadToolAdapter().getMapControl().getImage();
-            Graphics2D gImag = (Graphics2D) img.getGraphics();
-            ViewPort vp = getCadToolAdapter().getMapControl().getViewPort();
-            geometry.draw(gImag, vp, CADTool.drawingSymbol);
-        }
-    }
+	private String question;
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param cta DOCUMENT ME!
-     */
-    public void setCadToolAdapter(CADToolAdapter cta) {
-        cadToolAdapter = cta;
-    }
+	private String[] currentdescriptions;
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public CADToolAdapter getCadToolAdapter() {
-        return cadToolAdapter;
-    }
+	/**
+	 * DOCUMENT ME!
+	 */
+	public void draw(IGeometry geometry) {
+		if (geometry != null) {
+			BufferedImage img = getCadToolAdapter().getMapControl().getImage();
+			Graphics2D gImag = (Graphics2D) img.getGraphics();
+			ViewPort vp = getCadToolAdapter().getMapControl().getViewPort();
+			geometry.draw(gImag, vp, CADTool.drawingSymbol);
+		}
+	}
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param g DOCUMENT ME!
-     * @param firstPoint DOCUMENT ME!
-     * @param endPoint DOCUMENT ME!
-     */
-    public void drawLine(Graphics2D g, Point2D firstPoint, Point2D endPoint) {
-        GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
-        elShape.moveTo(firstPoint.getX(), firstPoint.getY());
-        elShape.lineTo(endPoint.getX(), endPoint.getY());
-        ShapeFactory.createPolyline2D(elShape).draw(g,
-            getCadToolAdapter().getMapControl().getViewPort(),
-            CADTool.drawingSymbol);
-    }
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param cta
+	 *            DOCUMENT ME!
+	 */
+	public void setCadToolAdapter(CADToolAdapter cta) {
+		cadToolAdapter = cta;
+	}
 
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @return DOCUMENT ME!
+	 */
+	public CADToolAdapter getCadToolAdapter() {
+		return cadToolAdapter;
+	}
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param geometry DOCUMENT ME!
-     */
-    public void addGeometry(IGeometry geometry) {
-    	VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        try {
-        	if (vea.getShapeType() == FShape.POLYGON)
-        	{
-        		GeneralPathX gp = new GeneralPathX();
-        		gp.append(geometry.getGeneralPathXIterator(), true);
-        		geometry = ShapeFactory.createPolygon2D(gp);
-        	}
-        	int numAttr=getCadToolAdapter().getVectorialAdapter().getRecordset().getFieldCount();
-        	Value[] values=new Value[numAttr];
-        	for (int i=0;i<numAttr;i++){
-        		values[i]=ValueFactory.createNullValue();
-        	}
-        	DefaultFeature df = new DefaultFeature(geometry,values);
-            vea.addRow(df,getName());
-        } catch (DriverIOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (DriverException e) {
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param g
+	 *            DOCUMENT ME!
+	 * @param firstPoint
+	 *            DOCUMENT ME!
+	 * @param endPoint
+	 *            DOCUMENT ME!
+	 */
+	public void drawLine(Graphics2D g, Point2D firstPoint, Point2D endPoint) {
+		GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
+		elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+		elShape.lineTo(endPoint.getX(), endPoint.getY());
+		ShapeFactory.createPolyline2D(elShape).draw(g,
+				getCadToolAdapter().getMapControl().getViewPort(),
+				CADTool.drawingSymbol);
+	}
+
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param geometry
+	 *            DOCUMENT ME!
+	 */
+	public void addGeometry(IGeometry geometry) {
+		VectorialEditableAdapter vea = getCadToolAdapter()
+				.getVectorialAdapter();
+		try {
+			if (vea.getShapeType() == FShape.POLYGON) {
+				GeneralPathX gp = new GeneralPathX();
+				gp.append(geometry.getGeneralPathXIterator(), true);
+				geometry = ShapeFactory.createPolygon2D(gp);
+			}
+			int numAttr = getCadToolAdapter().getVectorialAdapter()
+					.getRecordset().getFieldCount();
+			Value[] values = new Value[numAttr];
+			for (int i = 0; i < numAttr; i++) {
+				values[i] = ValueFactory.createNullValue();
+			}
+			DefaultFeature df = new DefaultFeature(geometry, values);
+			vea.addRow(df, getName());
+		} catch (DriverIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DriverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (DriverLoadException e) {
@@ -162,16 +169,19 @@ public abstract class DefaultCADTool implements CADTool {
 			e.printStackTrace();
 		}
 
-        draw(geometry.cloneGeometry());
-    }
-    /**
-     * DOCUMENT ME!
-     *
-     * @param geometry DOCUMENT ME!
-     */
-    public void modifyFeature(int index,DefaultFeature row) {
-    	try {
-			getCadToolAdapter().getVectorialAdapter().modifyRow(index, row,getName());
+		draw(geometry.cloneGeometry());
+	}
+
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param geometry
+	 *            DOCUMENT ME!
+	 */
+	public void modifyFeature(int index, IFeature row) {
+		try {
+			getCadToolAdapter().getVectorialAdapter().modifyRow(index, row,
+					getName());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -179,82 +189,93 @@ public abstract class DefaultCADTool implements CADTool {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-    	draw(row.getGeometry().cloneGeometry());
-    }
-    /**
-     * DOCUMENT ME!
-     *
-     * @param geometry DOCUMENT ME!
-     * @param values DOCUMENT ME!
-     */
-    public void addGeometry(IGeometry geometry, Value[] values) {
-    }
+		draw(row.getGeometry().cloneGeometry());
+	}
 
-    /**
-     * Devuelve la cadena que corresponde al estado en el que nos encontramos.
-     *
-     * @return Cadena para mostrar por consola.
-     */
-    public String getQuestion() {
-        return question;
-    }
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param geometry
+	 *            DOCUMENT ME!
+	 * @param values
+	 *            DOCUMENT ME!
+	 */
+	public void addGeometry(IGeometry geometry, Value[] values) {
+	}
 
-    /**
-     * Actualiza la cadena que corresponde al estado actual.
-     *
-     * @param s Cadena que aparecerá en consola.
-     */
-    public void setQuestion(String s) {
-        question = s;
-    }
+	/**
+	 * Devuelve la cadena que corresponde al estado en el que nos encontramos.
+	 * 
+	 * @return Cadena para mostrar por consola.
+	 */
+	public String getQuestion() {
+		return question;
+	}
 
-    /**
-     * DOCUMENT ME!
-     */
-    public void refresh() {
-        getCadToolAdapter().getMapControl().drawMap(false);
-    }
+	/**
+	 * Actualiza la cadena que corresponde al estado actual.
+	 * 
+	 * @param s
+	 *            Cadena que aparecerá en consola.
+	 */
+	public void setQuestion(String s) {
+		question = s;
+	}
 
-	public void drawHandlers(Graphics g,FBitSet sel,AffineTransform at) throws DriverIOException{
-		 for (int i = sel.nextSetBit(0); i >= 0;
-         i = sel.nextSetBit(i + 1)) {
-			IGeometry ig = getCadToolAdapter().getVectorialAdapter().getShape(i).cloneGeometry();
-			if (ig == null) continue;
-				Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
-				FGraphicUtilities.DrawHandlers((Graphics2D)g,at,handlers);
+	/**
+	 * DOCUMENT ME!
+	 */
+	public void refresh() {
+		getCadToolAdapter().getMapControl().drawMap(false);
+	}
+
+	public void drawHandlers(Graphics g, FBitSet sel, AffineTransform at)
+			throws DriverIOException {
+		for (int i = sel.nextSetBit(0); i >= 0; i = sel.nextSetBit(i + 1)) {
+			IGeometry ig = getCadToolAdapter().getVectorialAdapter()
+					.getShape(i).cloneGeometry();
+			if (ig == null)
+				continue;
+			Handler[] handlers = ig.getHandlers(IGeometry.SELECTHANDLER);
+			FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers);
 		}
 	}
-	public void drawHandlers(Graphics g, ArrayList selectedRows, AffineTransform at) {
-		 for (int i = 0; i < selectedRows.size(); i++)
-		 {
-			//IRowEdited edRow = (IRowEdited) selectedRows.get(i);
-			// IFeature feat = (IFeature) edRow.getLinkedRow();
-			IFeature feat = (IFeature) selectedRows.get(i);
+
+	public void drawHandlers(Graphics g, ArrayList selectedRows,
+			AffineTransform at) {
+		for (int i = 0; i < selectedRows.size(); i++) {
+			IRowEdited edRow = (IRowEdited) selectedRows.get(i);
+			IFeature feat = (IFeature) edRow.getLinkedRow();
+			// IFeature feat = (IFeature) selectedRows.get(i);
 			IGeometry ig = feat.getGeometry().cloneGeometry();
-			if (ig == null) continue;
-				Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
-				FGraphicUtilities.DrawHandlers((Graphics2D)g,at,handlers);
-		}	}
-	
+			if (ig == null)
+				continue;
+			Handler[] handlers = ig.getHandlers(IGeometry.SELECTHANDLER);
+			FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers);
+		}
+	}
 
 	public void setDescription(String[] currentdescriptions) {
 		this.currentdescriptions = currentdescriptions;
 	}
-	public String[] getDescriptions(){
+
+	public String[] getDescriptions() {
 		return currentdescriptions;
 	}
-	/* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
-    public void end() {
-    	CADExtension.setCADTool("selection");
-    	PluginServices.getMainFrame().setSelectedTool("SELCAD");
-    }
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
+	 */
+	public void end() {
+		CADExtension.setCADTool("selection");
+		PluginServices.getMainFrame().setSelectedTool("SELCAD");
+	}
 
 	public void init() {
 		CADTool.drawingSymbol.setOutlined(true);
 		CADTool.drawingSymbol.setOutlineColor(Color.GREEN);
-
 
 	}
 
