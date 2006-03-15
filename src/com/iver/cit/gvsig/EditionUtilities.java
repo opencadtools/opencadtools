@@ -1,7 +1,10 @@
 package com.iver.cit.gvsig;
 
+import java.util.ArrayList;
+
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
@@ -60,4 +63,41 @@ public class EditionUtilities {
 		return status;
 	}
 
+	public static FLayer[] getActiveAndEditedLayers()
+	{
+		int status = EDITION_STATUS_NO_EDITION;
+        com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+        .getActiveView();
+        if (f == null)
+        	return null;
+
+        if (f.getClass() == View.class) {
+        	View vista = (View) f;
+        	ProjectView model = vista.getModel();
+        	FMap mapa = model.getMapContext();
+        	
+        	ArrayList resul = new ArrayList();
+
+        	FLayers capas = mapa.getLayers();
+
+        	int numActiveVectorial = 0;
+        	int numActiveVectorialEditable = 0;
+        	for (int i = 0; i < capas.getLayersCount(); i++) {
+        		if (capas.getLayer(i) instanceof FLyrVect &&
+        				capas.getLayer(i).isActive()) {
+        			numActiveVectorial++;
+        			if (capas.getLayer(i).isEditing())
+        			{
+        				numActiveVectorialEditable++;
+        				resul.add(capas.getLayer(i));
+        			}
+        		}
+        	}
+       		return (FLayer[]) resul.toArray(new FLayer[0]);
+        	
+        }
+		
+		return null;
+	}
+	
 }
