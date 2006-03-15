@@ -16,7 +16,7 @@
 			<menu text="Vista/new_theme/new_dxf" action-command="DXF"/>
 			<menu text="Vista/new_theme/new_postgis" action-command="POSTGIS"/>			
 		</extension>
-		
+
 		<extension class-name="com.iver.cit.gvsig.StopEditing"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma."
 			active="true">
@@ -83,6 +83,7 @@
 			<menu text="geometria/insertar/arc" action-command="ARC" icon="images/Arc.png"/>
 			<!--menu text="geometria/insertar/curva" action-command="SPLINE" icon="images/Spline.png"/-->
 			<menu text="geometria/insertar/copia" action-command="COPY" icon="images/Copy.png"/>
+			<menu text="geometria/insertar/desplazar" action-command="MOVE" icon="images/Move.png"/>
 			<!--menu text="geometria/insertar/equidistante" action-command="EQUIDISTANCE" icon="images/Equidistance.png"/-->
 			<!--menu text="geometria/insertar/Matriz" action-command="MATRIZ" icon="images/Matriz.png"/-->
 			<!--menu text="geometria/insertar/simetria" action-command="SYMMETRY" icon="images/Symmetry.png"/-->
@@ -111,6 +112,7 @@
 			<tool-bar name="modificar">
 				<selectable-tool name="selection" icon="images/Select.png" action-command="SELECT" tooltip="seleccionar_por_rectangulo" group="vista"/>
 				<selectable-tool icon="images/Copy.png" action-command="COPY" tooltip="copia" group="vista"/>
+				<selectable-tool icon="images/Move.png" action-command="MOVE" tooltip="desplazar" group="vista"/>
 				<!--selectable-tool icon="images/Equidistance.png" action-command="EQUIDISTANCE" tooltip="equidistante" group="vista"/-->
 				<!--selectable-tool icon="images/Matriz.png" action-command="MATRIZ" tooltip="matriz" group="vista"/-->
 				<!--selectable-tool icon="images/Symmetry.png" action-command="SYMMETRY" tooltip="simetria" group="vista"/-->

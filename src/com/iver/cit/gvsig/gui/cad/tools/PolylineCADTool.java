@@ -433,6 +433,7 @@ public class PolylineCADTool extends DefaultCADTool {
     }
 
     public void cancel(){
+    	endGeometry();
     	list.clear();
     	antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
