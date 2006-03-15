@@ -97,7 +97,7 @@ public class StopEditingToShp implements Extension {
         			// File newFile = vea.getDriver().
 
         			ShpWriter writer= (ShpWriter)LayerFactory.getWM().getWriter("Shape Writer");
-        			writer.initialize(newFile,layer);
+        			writer.initialize(layer);
 
                     vea.stopEdition(writer);
                     vea.getCommandRecord().removeCommandListener(mapControl);

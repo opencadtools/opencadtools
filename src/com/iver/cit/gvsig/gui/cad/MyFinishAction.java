@@ -65,7 +65,8 @@ public class MyFinishAction extends FinishAction
     		    lyrDef.setName(layerName);
     		    lyrDef.setShapeType(geometryType);
     			ShpWriter writer= (ShpWriter)LayerFactory.getWM().getWriter("Shape Writer");
-    			writer.initialize(newFile,lyrDef);
+    			writer.setFile(newFile);
+    			writer.initialize(lyrDef);
     			writer.preProcess();
     			writer.postProcess();
 	    		

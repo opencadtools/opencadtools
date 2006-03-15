@@ -97,7 +97,7 @@ public void stopEditing(FLyrVect layer,MapControl mapControl) {
 		ISpatialWriter writer = (ISpatialWriter) vea.getDriver();
 		
 		try {
-			writer.initialize(vea);
+			writer.initialize(layer);
 	        vea.stopEdition(writer);
 	        vea.getCommandRecord().removeCommandListener(mapControl);
 	        
