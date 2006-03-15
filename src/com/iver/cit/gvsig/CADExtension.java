@@ -73,6 +73,7 @@ import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
@@ -110,6 +111,7 @@ public class CADExtension implements Extension {
         ArcCADTool arc=new ArcCADTool();
         PolygonCADTool polygon=new PolygonCADTool();
         CopyCADTool copy=new CopyCADTool();
+        MoveCADTool move=new MoveCADTool();
         RotateCADTool rotate=new RotateCADTool();
         ScaleCADTool scale=new ScaleCADTool();
         EditVertexCADTool editvertex=new EditVertexCADTool();
@@ -123,10 +125,11 @@ public class CADExtension implements Extension {
         addCADTool("arc", arc);
         addCADTool("polygon", polygon);
         addCADTool("copy",copy);
+        addCADTool("move",move);
         addCADTool("rotate",rotate);
         addCADTool("scale",scale);
         addCADTool("editvertex",editvertex);
-        
+
         KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
     }
@@ -169,53 +172,55 @@ public class CADExtension implements Extension {
 
         view.getMapControl().setTool("cadtooladapter");
 
-        if (s.compareTo("SPLINE") == 0) {
+        if (s.equals("SPLINE")) {
         	setCADTool("spline");
-        } else if (s.compareTo("COPY") == 0) {
+        } else if (s.equals("COPY")) {
         	setCADTool("copy");
-        } else if (s.compareTo("EQUIDISTANCE") == 0) {
+        } else if (s.equals("MOVE")) {
+        	setCADTool("move");
+        } else if (s.equals("EQUIDISTANCE")) {
         	setCADTool("equidistance");
-        } else if (s.compareTo("MATRIZ") == 0) {
+        } else if (s.equals("MATRIZ")) {
         	setCADTool("matriz");
-        } else if (s.compareTo("SYMMETRY") == 0) {
+        } else if (s.equals("SYMMETRY")) {
         	setCADTool("symmetry");
-        } else if (s.compareTo("ROTATION") == 0) {
+        } else if (s.equals("ROTATION")) {
         	setCADTool("rotate");
-        } else if (s.compareTo("STRETCHING") == 0) {
+        } else if (s.equals("STRETCHING")) {
         	setCADTool("stretching");
-        } else if (s.compareTo("SCALE") == 0) {
+        } else if (s.equals("SCALE")) {
         	setCADTool("scale");
-        } else if (s.compareTo("EXTEND") == 0) {
+        } else if (s.equals("EXTEND")) {
         	setCADTool("extend");
-        } else if (s.compareTo("TRIM") == 0) {
+        } else if (s.equals("TRIM")) {
         	setCADTool("trim");
-        } else if (s.compareTo("UNIT") == 0) {
+        } else if (s.equals("UNIT")) {
         	setCADTool("unit");
-        } else if (s.compareTo("EXPLOIT") == 0) {
+        } else if (s.equals("EXPLOIT")) {
         	setCADTool("exploit");
-        } else if (s.compareTo("CHAFLAN") == 0) {
+        } else if (s.equals("CHAFLAN")) {
         	setCADTool("chaflan");
-        } else if (s.compareTo("JOIN") == 0) {
+        } else if (s.equals("JOIN")) {
         	setCADTool("join");
-        } else if (s.compareTo("SELCAD") == 0) {
+        } else if (s.equals("SELCAD")) {
         	setCADTool("selection");
-        } else if (s.compareTo("POINT") == 0) {
+        } else if (s.equals("POINT")) {
         	setCADTool("point");
-        } else if (s.compareTo("LINE") == 0) {
+        } else if (s.equals("LINE")) {
         	setCADTool("line");
-        } else if (s.compareTo("POLYLINE") == 0) {
+        } else if (s.equals("POLYLINE")) {
         	setCADTool("polyline");
-        } else if (s.compareTo("CIRCLE") == 0) {
+        } else if (s.equals("CIRCLE")) {
            setCADTool("circle");
-        } else if (s.compareTo("ARC") == 0) {
+        } else if (s.equals("ARC")) {
         	setCADTool("arc");
-        } else if (s.compareTo("ELLIPSE") == 0) {
+        } else if (s.equals("ELLIPSE")) {
         	setCADTool("ellipse");
-        } else if (s.compareTo("RECTANGLE") == 0) {
+        } else if (s.equals("RECTANGLE")) {
         	setCADTool("rectangle");
-        } else if (s.compareTo("POLYGON") == 0) {
+        } else if (s.equals("POLYGON")) {
         	setCADTool("polygon");
-        } else if (s.compareTo("EDITVERTEX") == 0) {
+        } else if (s.equals("EDITVERTEX")) {
         	setCADTool("editvertex");
         }
         adapter.configureMenu();
@@ -263,7 +268,7 @@ public class CADExtension implements Extension {
 		}
 		else
 			return false;
-    	
+
     }
 
     /**
@@ -318,7 +323,7 @@ public class CADExtension implements Extension {
 		}
 
 	}
-	
+
 	/**
 	 * @author fjp
 	 *
@@ -344,7 +349,7 @@ public class CADExtension implements Extension {
 	        		if ((e.getID() == KeyEvent.KEY_TYPED) && (!e.isActionKey()))
 	        		{
 		    			if (Character.isLetterOrDigit(e.getKeyChar()))
-		    			{        				
+		    			{
 		    				Character keyChar = new Character(e.getKeyChar());
 		    				view.focusConsole(keyChar+"");
 		        		}
@@ -353,7 +358,7 @@ public class CADExtension implements Extension {
         	}
 			return false;
 		}
-		
+
 	}
 
 	private void registerKeyStrokes(){
@@ -377,13 +382,13 @@ public class CADExtension implements Extension {
 		Character keyChar = new Character(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0).getKeyChar());
 		mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),keyChar);
 		mapControl.getActionMap().put(keyChar, new KeyAction(""));
-		
+
 		// El espacio como si fuera INTRO
 		Character keyCharSpace = new Character(' ');
 		mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(' '), keyCharSpace);
 		mapControl.getActionMap().put(keyCharSpace, new KeyAction(""));
 
-		
+
 	}
 
 	private static JPopupMenu popup = new JPopupMenu();

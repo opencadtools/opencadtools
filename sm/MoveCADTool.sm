@@ -1,0 +1,55 @@
+// -*- tab-width: 4; -*-
+
+%{
+//
+// Vicente Caballero Navarro
+%}
+
+%start Move::FirstPointToMove
+%class MoveCADTool
+%package com.iver.cit.gvsig.gui.cad.tools.smc
+%import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool
+%import java.awt.event.InputEvent
+
+%map Move
+%%
+// A task begins life in suspended animation.
+
+FirstPointToMove
+	Entry {
+		selection();
+		setQuestion("DESPLAZAR" + "\n" +
+		"Precisar punto de desplazamiento");
+		setDescription(new String[]{"Cancelar"});
+
+		}
+	Exit{
+		}
+
+	{
+		addPoint( pointX:double,pointY:double,event:InputEvent)
+			SecondPointToMove {
+				setQuestion("Precisar segundo punto del desplazamiento");
+				setDescription(new String[]{"Cancelar"});
+				addPoint( pointX,pointY,event);
+				}
+	}
+SecondPointToMove{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+		FirstPointToMove {
+			setDescription(new String[]{"Cancelar"});
+			addPoint( pointX,pointY,event);
+			end();
+			refresh();
+			}
+}
+
+Default
+{
+	addOption(s:String)
+		[s.equals("Cancelar")]
+		FirstPointToMove{
+			end();
+			}
+}
+%%
