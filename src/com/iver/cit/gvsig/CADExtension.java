@@ -349,7 +349,7 @@ public class CADExtension implements Extension {
         		if (e.getComponent().getName() != null)
         		{        			
 	        		System.out.println("Evento de teclado desde el componente " + e.getComponent().getName());
-	        		if (e.getComponent().getName().equals("CADConsole"))
+	        		if (!e.getComponent().getName().equals("CADConsole"))
 	        		{
 		        		if ((e.getID() == KeyEvent.KEY_TYPED) && (!e.isActionKey()))
 		        		{
