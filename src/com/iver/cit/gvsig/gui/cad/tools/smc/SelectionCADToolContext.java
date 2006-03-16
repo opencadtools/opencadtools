@@ -282,23 +282,7 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                if (ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.FirstPoint"))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
-                        ctxt.setDescription(new String[]{"Cancelar"});
-                    }
-                    finally
-                    {
-                        context.setState(Selection.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (ctxt.getNextState().equals("Selection.WithSelectedFeatures"))
+                if (ctxt.selectWithSecondPoint(pointX,pointY) > 0)
                 {
 
                     (context.getState()).Exit(context);
@@ -314,9 +298,22 @@ public final class SelectionCADToolContext
                         context.setState(Selection.WithSelectedFeatures);
                         (context.getState()).Entry(context);
                     }
-                }                else
+                }
+                else
                 {
-                    super.addPoint(context, pointX, pointY, event);
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                    }
+                    finally
+                    {
+                        context.setState(Selection.FirstPoint);
+                        (context.getState()).Entry(context);
+                    }
                 }
 
                 return;
@@ -343,25 +340,7 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                if (ctxt.selectHandlers(pointX,pointY)==0)
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
-                        ctxt.setDescription(new String[]{"Cancelar"});
-                        ctxt.addPoint(pointX, pointY, event);
-                        ctxt.refresh();
-                    }
-                    finally
-                    {
-                        context.setState(Selection.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (ctxt.selectHandlers(pointX, pointY)>0)
+                if (ctxt.selectHandlers(pointX, pointY)>0)
                 {
 
                     (context.getState()).Exit(context);
@@ -371,16 +350,45 @@ public final class SelectionCADToolContext
                         ctxt.setQuestion("Precise punto destino");
                         ctxt.setDescription(new String[]{"Cancelar"});
                         ctxt.addPoint(pointX, pointY, event);
-                        ctxt.refresh();
                     }
                     finally
                     {
                         context.setState(Selection.WithHandlers);
                         (context.getState()).Entry(context);
                     }
-                }                else
+                }
+                else if (ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.WithSelectedFeatures"))
                 {
-                    super.addPoint(context, pointX, pointY, event);
+                    SelectionCADToolState endState = context.getState();
+
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("select_handlers");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.addPoint(pointX, pointY, event);
+                    }
+                    finally
+                    {
+                        context.setState(endState);
+                    }
+                }
+                else
+                {
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
+                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.addPoint(pointX, pointY, event);
+                    }
+                    finally
+                    {
+                        context.setState(Selection.FirstPoint);
+                        (context.getState()).Entry(context);
+                    }
                 }
 
                 return;

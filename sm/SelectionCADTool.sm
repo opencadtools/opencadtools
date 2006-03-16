@@ -45,15 +45,40 @@ FirstPoint
 }
 
 SecondPoint{
+	// Si hemos conseguido seleccionar algo
 	addPoint( pointX:double,pointY:double,event:InputEvent)
-		[ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.FirstPoint")]
+			[ctxt.selectWithSecondPoint(pointX,pointY) > 0]
+			WithSelectedFeatures {
+				setQuestion("select_handlers");
+				setDescription(new String[]{"Cancelar"});
+				addPoint( pointX,pointY,event);
+				}
+	// Si no lo hemos conseguido
+	addPoint( pointX:double,pointY:double,event:InputEvent)
 			FirstPoint {
 				setQuestion("Precise punto del rectángulo de selección");
 				setDescription(new String[]{"Cancelar"});
 
 				}
+
+
+}
+WithSelectedFeatures{
+
+	// Si hemos pinchado encima de un handler
 	addPoint( pointX:double,pointY:double,event:InputEvent)
-			[ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
+	[ctxt.selectHandlers(pointX, pointY)>0]
+			WithHandlers {
+				setQuestion("Precise punto destino");
+				setDescription(new String[]{"Cancelar"});
+				addPoint( pointX,pointY,event);
+				// refresh();
+				}
+
+	// Si no hemos cogido un handler, probamos a seleccionar
+	// otra entidad
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+		[ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
 			WithSelectedFeatures {
 				setQuestion("select_handlers");
 				setDescription(new String[]{"Cancelar"});
@@ -61,24 +86,15 @@ SecondPoint{
 				}
 
 
-}
-WithSelectedFeatures{
+	// Cualquier otro caso (hemos pinchado en algo vacio), volvemos al estado inicial
 	addPoint( pointX:double,pointY:double,event:InputEvent)
-	[ctxt.selectHandlers(pointX,pointY)==0]
 			FirstPoint {
 				setQuestion("Precise punto del rectángulo de selección");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY,event);
-				refresh();
+				// refresh();
 				}
-				addPoint( pointX:double,pointY:double,event:InputEvent)
-	[ctxt.selectHandlers(pointX, pointY)>0]
-			WithHandlers {
-				setQuestion("Precise punto destino");
-				setDescription(new String[]{"Cancelar"});
-				addPoint( pointX,pointY,event);
-				refresh();
-				}
+				
 }
 
 WithHandlers{
