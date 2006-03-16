@@ -25,6 +25,7 @@ import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.fmap.layers.VectorialAdapter;
 import com.iver.cit.gvsig.fmap.layers.VectorialFileAdapter;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.ProjectView;
 import com.iver.utiles.SimpleFileFilter;
 
@@ -57,6 +58,7 @@ public class StopEditing implements Extension {
 		ProjectView model = vista.getModel();
 		FMap mapa = model.getMapContext();
 		FLayers layers = mapa.getLayers();
+		EditionManager edMan = CADExtension.getEditionManager();
 		if (s.equals("STOPEDITING")) {
 			FLayer[] actives = layers.getActives();
 			// TODO: Comprobar que solo hay una activa, o al menos
@@ -65,6 +67,8 @@ public class StopEditing implements Extension {
 				if (actives[i] instanceof FLyrVect && actives[i].isEditing()) {
 					FLyrVect lv = (FLyrVect) actives[i];
 					MapControl mapControl = (MapControl) vista.getMapControl();
+					VectorialLayerEdited lyrEd = (VectorialLayerEdited) edMan.getActiveLayerEdited();
+					lyrEd.clearSelection();
 					stopEditing(lv, mapControl);
 
 					return;

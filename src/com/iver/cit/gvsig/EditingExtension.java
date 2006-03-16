@@ -8,6 +8,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.ProjectView;
 
 /**
@@ -34,6 +35,8 @@ public class EditingExtension implements Extension {
 		FMap mapa = model.getMapContext();
 		FLayers layers = mapa.getLayers();
 		if (s.equals("CANCELEDITING")) {
+			EditionManager editionManager = CADExtension.getEditionManager();
+
 			for (int i = 0; i < layers.getLayersCount(); i++) {
 				vista.hideConsole();
 				if (layers.getLayer(i) instanceof FLyrVect
@@ -43,6 +46,8 @@ public class EditingExtension implements Extension {
 					// VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) layers
 					// 		.getLayer(i)).getSource();
 					// lv.setSource(vea.getOriginalAdapter());
+					VectorialLayerEdited lyrEdited = (VectorialLayerEdited) editionManager.getLayerEdited(lv);
+					lyrEdited.clearSelection();
 					lv.setEditing(false);
 					return;
 				}

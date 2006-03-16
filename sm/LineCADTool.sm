@@ -71,5 +71,11 @@ Default
 		FirstPoint{
 			end();
 			}
+	addOption(s:String)
+		[s.equals("")]
+		FirstPoint{
+			end();
+			}
+			
 }
 %%

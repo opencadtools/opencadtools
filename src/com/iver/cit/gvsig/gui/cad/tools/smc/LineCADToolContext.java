@@ -191,7 +191,33 @@ public final class LineCADToolContext
 
                 }
             }
-            else
+            else if (s.equals(""))
+            {
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Line.FirstPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(Line.FirstPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
+            }            else
             {
                 super.addOption(context, s);
             }
