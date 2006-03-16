@@ -45,6 +45,7 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
@@ -58,6 +59,7 @@ import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CopyCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CopyCADToolContext.CopyCADToolState;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
 /**
@@ -182,7 +184,7 @@ public class CopyCADTool extends DefaultCADTool {
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
         FBitSet selection = vea.getSelection();
 
-        try {
+       /* try {
             drawHandlers(g, selection,
                 getCadToolAdapter().getMapControl().getViewPort()
                     .getAffineTransform());
@@ -190,7 +192,13 @@ public class CopyCADTool extends DefaultCADTool {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        */
+        VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+		.getEditionManager().getActiveLayerEdited();
+    	ArrayList selectedRow = vle.getSelectedRow();
+    	drawHandlers(g, selectedRow,
+                 getCadToolAdapter().getMapControl().getViewPort()
+                     .getAffineTransform());
         if (status.equals("Copy.SecondPointToMove")) {
             ///int dx = getCadToolAdapter().getMapControl().getViewPort().fromMapDistance(x - firstPoint.getX());
             ///int dy = -getCadToolAdapter().getMapControl().getViewPort().fromMapDistance(y - firstPoint.getY());

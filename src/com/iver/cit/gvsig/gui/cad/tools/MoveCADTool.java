@@ -45,12 +45,14 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
@@ -58,6 +60,7 @@ import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MoveCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MoveCADToolContext.MoveCADToolState;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
 /**
@@ -130,9 +133,11 @@ public class MoveCADTool extends DefaultCADTool {
         MoveCADToolState actualState = (MoveCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        FBitSet selection = vea.getSelection();
+        VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+		.getEditionManager().getActiveLayerEdited();
+    	ArrayList selectedRow = vle.getSelectedRow();
 
-        if (status.equals("Move.FirstPointToMove")) {
+    	if (status.equals("Move.FirstPointToMove")) {
             firstPoint = new Point2D.Double(x, y);
         } else if (status.equals("Move.SecondPointToMove")) {
             PluginServices.getMDIManager().setWaitCursor();
@@ -140,31 +145,26 @@ public class MoveCADTool extends DefaultCADTool {
             vea.startComplexRow();
 
             try {
-                for (int i = selection.nextSetBit(0); i >= 0;
-                        i = selection.nextSetBit(i + 1)) {
-                    DefaultFeature fea = (DefaultFeature) vea.getRow(i)
-                                                             .getLinkedRow()
-                                                             .cloneRow();
-                    // Movemos la geometría
-                    UtilFunctions.moveGeom(fea.getGeometry(), lastPoint.getX() -
+              for (int i = 0; i < selectedRow.size(); i++) {
+        			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+        			IFeature feat = (IFeature) edRow.getLinkedRow().cloneRow();
+        			IGeometry ig = feat.getGeometry();
+        			if (ig == null)
+        				continue;
+        			 // Movemos la geometría
+                    UtilFunctions.moveGeom(ig, lastPoint.getX() -
                             firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
 
-                    vea.modifyRow(i,fea,getName());
-                }
-
+                    vea.modifyRow(edRow.getIndex(),feat,getName());
+        		}
+                selectedRow.clear();
                 vea.endComplexRow();
             } catch (DriverIOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            selection.clear();
             PluginServices.getMDIManager().restoreCursor();
-
-            //ret = ret | copyStatus.transition("cancel");
         }
     }
 
@@ -179,37 +179,25 @@ public class MoveCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
         MoveCADToolState actualState = ((MoveCADToolContext) _fsm).getState();
         String status = actualState.getName();
-        VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        FBitSet selection = vea.getSelection();
-
-        try {
-            drawHandlers(g, selection,
-                getCadToolAdapter().getMapControl().getViewPort()
-                    .getAffineTransform());
-        } catch (DriverIOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        	VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+			.getEditionManager().getActiveLayerEdited();
+        	ArrayList selectedRow = vle.getSelectedRow();
+        	drawHandlers(g, selectedRow,
+                     getCadToolAdapter().getMapControl().getViewPort()
+                         .getAffineTransform());
         if (status.equals("Move.SecondPointToMove")) {
-            ///int dx = getCadToolAdapter().getMapControl().getViewPort().fromMapDistance(x - firstPoint.getX());
-            ///int dy = -getCadToolAdapter().getMapControl().getViewPort().fromMapDistance(y - firstPoint.getY());
-            ///Image img = getCadToolAdapter().getVectorialAdapter().getImage();
-            ///g.drawImage(img, dx, dy, null);
-            try {
-                for (int i = selection.nextSetBit(0); i >= 0;
-                        i = selection.nextSetBit(i + 1)) {
-                    IGeometry geometry = vea.getShape(i).cloneGeometry();
-                    // Movemos la geometría
-                    UtilFunctions.moveGeom(geometry, x - firstPoint.getX(), y - firstPoint.getY());
-                    // geometry.move(x - firstPoint.getX(), y - firstPoint.getY());
-                    geometry.draw((Graphics2D) g,
-                        getCadToolAdapter().getMapControl().getViewPort(),
-                        CADTool.drawingSymbol);
-                }
-            } catch (DriverIOException e) {
-                e.printStackTrace();
-            }
+            for (int i = 0; i < selectedRow.size(); i++) {
+    			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+    			IFeature feat = (IFeature) edRow.getLinkedRow();
+    			IGeometry ig = feat.getGeometry().cloneGeometry();
+    			if (ig == null)
+    				continue;
+    			// Movemos la geometría
+                UtilFunctions.moveGeom(ig, x - firstPoint.getX(), y - firstPoint.getY());
+                ig.draw((Graphics2D) g,
+                    getCadToolAdapter().getMapControl().getViewPort(),
+                    CADTool.drawingSymbol);
+    		}
         }
     }
 

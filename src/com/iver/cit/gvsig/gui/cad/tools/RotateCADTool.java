@@ -46,6 +46,7 @@ import java.awt.event.InputEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
@@ -61,6 +62,7 @@ import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.RotateCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.RotateCADToolContext.RotateCADToolState;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
 /**
@@ -186,14 +188,20 @@ public class RotateCADTool extends DefaultCADTool {
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
         FBitSet selection = vea.getSelection();
 
-        try {
+       /* try {
             drawHandlers(g, selection,
                 getCadToolAdapter().getMapControl().getViewPort()
                     .getAffineTransform());
         } catch (DriverIOException e) {
             e.printStackTrace();
         }
-
+*/
+        VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+		.getEditionManager().getActiveLayerEdited();
+    	ArrayList selectedRow = vle.getSelectedRow();
+    	drawHandlers(g, selectedRow,
+                 getCadToolAdapter().getMapControl().getViewPort()
+                     .getAffineTransform());
         if (status.equals("Rotate.AngleOrPoint")) {
 			/*Point2D point = getCadToolAdapter().getMapControl().getViewPort()
 								.fromMapPoint(firstPoint.getX(),

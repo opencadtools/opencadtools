@@ -72,7 +72,7 @@ import com.iver.cit.gvsig.fmap.layers.FBitSet;
 
 /**
  * DOCUMENT ME!
- * 
+ *
  * @author Vicente Caballero Navarro
  */
 public abstract class DefaultCADTool implements CADTool {
@@ -96,7 +96,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param cta
 	 *            DOCUMENT ME!
 	 */
@@ -106,7 +106,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @return DOCUMENT ME!
 	 */
 	public CADToolAdapter getCadToolAdapter() {
@@ -115,7 +115,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param g
 	 *            DOCUMENT ME!
 	 * @param firstPoint
@@ -134,7 +134,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 */
@@ -174,7 +174,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 */
@@ -194,7 +194,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 * @param values
@@ -205,7 +205,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * Devuelve la cadena que corresponde al estado en el que nos encontramos.
-	 * 
+	 *
 	 * @return Cadena para mostrar por consola.
 	 */
 	public String getQuestion() {
@@ -214,7 +214,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * Actualiza la cadena que corresponde al estado actual.
-	 * 
+	 *
 	 * @param s
 	 *            Cadena que aparecerá en consola.
 	 */
@@ -229,7 +229,7 @@ public abstract class DefaultCADTool implements CADTool {
 		getCadToolAdapter().getMapControl().drawMap(false);
 	}
 
-	public void drawHandlers(Graphics g, FBitSet sel, AffineTransform at)
+	/*public void drawHandlers(Graphics g, FBitSet sel, AffineTransform at)
 			throws DriverIOException {
 		for (int i = sel.nextSetBit(0); i >= 0; i = sel.nextSetBit(i + 1)) {
 			IGeometry ig = getCadToolAdapter().getVectorialAdapter()
@@ -240,7 +240,7 @@ public abstract class DefaultCADTool implements CADTool {
 			FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers);
 		}
 	}
-
+*/
 	public void drawHandlers(Graphics g, ArrayList selectedRows,
 			AffineTransform at) {
 		for (int i = 0; i < selectedRows.size(); i++) {
@@ -265,7 +265,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
 	 */
 	public void end() {
