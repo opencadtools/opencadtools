@@ -201,7 +201,9 @@ public class SelectionCADTool extends DefaultCADTool {
 		ArrayList selectedRow = vle.getSelectedRow();
 		
 		lastPoint = new Point2D.Double(x, y);
-		// selection.clear();
+		FBitSet selection = getCadToolAdapter().getVectorialAdapter()
+			.getSelection();
+		selection.clear();
 		selectedRow.clear();
 
 		double x1;
@@ -242,10 +244,12 @@ public class SelectionCADTool extends DefaultCADTool {
 				if (firstPoint.getX() < lastPoint.getX()) {
 					if (rect.contains(geom.getBounds2D())) {
 						selectedRow.add(feats[i]);
+						selection.set(feats[i].getIndex(), true);
 					}
 				} else {
 					if (geom.intersects(rect)) { // , 0.1)){
 						selectedRow.add(feats[i]);
+						selection.set(feats[i].getIndex(), true);
 					}
 				}
 			}
@@ -390,8 +394,8 @@ public class SelectionCADTool extends DefaultCADTool {
 				|| (status.equals("Selection.WithSelectedFeatures"))) {
 			firstPoint = new Point2D.Double(x, y);
 
-			// FBitSet selection = getCadToolAdapter().getVectorialAdapter()
-			// .getSelection();
+			FBitSet selection = getCadToolAdapter().getVectorialAdapter()
+				.getSelection();
 			ArrayList selectedHandler = vle.getSelectedHandler();
 			selectedRow.clear();
 			selectedHandler.clear();
@@ -413,14 +417,14 @@ public class SelectionCADTool extends DefaultCADTool {
 
 			try {
 				feats = vea.getFeatures(rect, strEPSG);
-				// selection.clear();
+				selection.clear();
 
 				for (int i = 0; i < feats.length; i++) {
 					IFeature feat = (IFeature) feats[i].getLinkedRow();
 					IGeometry geom = feat.getGeometry();
 
 					if (geom.intersects(rect)) { // , 0.1)){
-						// selection.set(feats[i].getIndex(), true);
+						selection.set(feats[i].getIndex(), true);
 						selectedRow.add(feats[i]);
 					}
 				}

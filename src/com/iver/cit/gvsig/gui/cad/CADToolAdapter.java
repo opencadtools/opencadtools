@@ -703,9 +703,19 @@ public class CADToolAdapter extends Behavior {
 					.nextSetBit(i + 1)) {
 				indexesToDel[j++] = i;
 				// /vea.removeRow(i);
-			}
-			for (j = indexesToDel.length - 1; j >= 0; j--) {
-				vea.removeRow(indexesToDel[j],"Feature eliminada");
+			} 
+			/* VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+				.getEditionManager().getActiveLayerEdited();
+			ArrayList selectedRow = vle.getSelectedRow();
+
+			int[] indexesToDel = new int[selectedRow.size()];
+			for (int i = 0; i < selectedRow.size(); i++)
+			{
+				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+				indexesToDel[i] = edRow.getIndex();
+			}	*/		
+			for (int i = indexesToDel.length - 1; i >= 0; i--) {
+				vea.removeRow(indexesToDel[i],"Feature eliminada");
 			}
 		} catch (DriverIOException e) {
 			e.printStackTrace();

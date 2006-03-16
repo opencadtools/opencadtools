@@ -341,17 +341,24 @@ public class CADExtension implements Extension {
         	else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
         		adapter.keyPressed("escape");
         	else if (e.getKeyCode() == KeyEvent.VK_ENTER)
+        		// TODO: REVISAR ESTO CUANDO VIENE UN INTRO DESDE UN JTEXTAREA
+        		// QUE NO ES EL DE CONSOLA
         		view.focusConsole("");
         	else
         	{
-        		if (!(e.getComponent() instanceof JTextArea))
+        		if ((e.getComponent() instanceof JTextArea) && (e.getComponent().getName() != null))
         		{
-	        		if ((e.getID() == KeyEvent.KEY_TYPED) && (!e.isActionKey()))
+        			
+	        		System.out.println("Evento de teclado desde el componente " + e.getComponent().getName());
+	        		if (e.getComponent().getName().equals("JTextAreaConsole"))
 	        		{
-		    			if (Character.isLetterOrDigit(e.getKeyChar()))
-		    			{
-		    				Character keyChar = new Character(e.getKeyChar());
-		    				view.focusConsole(keyChar+"");
+		        		if ((e.getID() == KeyEvent.KEY_TYPED) && (!e.isActionKey()))
+		        		{
+			    			if (Character.isLetterOrDigit(e.getKeyChar()))
+			    			{
+			    				Character keyChar = new Character(e.getKeyChar());
+			    				view.focusConsole(keyChar+"");
+			        		}
 		        		}
 	        		}
         		}
