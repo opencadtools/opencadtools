@@ -346,11 +346,10 @@ public class CADExtension implements Extension {
         		view.focusConsole("");
         	else
         	{
-        		if ((e.getComponent() instanceof JTextArea) && (e.getComponent().getName() != null))
-        		{
-        			
+        		if (e.getComponent().getName() != null)
+        		{        			
 	        		System.out.println("Evento de teclado desde el componente " + e.getComponent().getName());
-	        		if (e.getComponent().getName().equals("JTextAreaConsole"))
+	        		if (e.getComponent().getName().equals("CADConsole"))
 	        		{
 		        		if ((e.getID() == KeyEvent.KEY_TYPED) && (!e.isActionKey()))
 		        		{
