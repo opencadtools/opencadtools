@@ -247,6 +247,7 @@ public final class SelectionCADToolContext
                         ctxt.setQuestion("select_handlers");
                         ctxt.setDescription(new String[]{"Cancelar"});
                         ctxt.addPoint(pointX, pointY, event);
+                        ctxt.end();
                     }
                     finally
                     {
@@ -292,6 +293,7 @@ public final class SelectionCADToolContext
                         ctxt.setQuestion("select_handlers");
                         ctxt.setDescription(new String[]{"Cancelar"});
                         ctxt.addPoint(pointX, pointY, event);
+                        ctxt.end();
                     }
                     finally
                     {

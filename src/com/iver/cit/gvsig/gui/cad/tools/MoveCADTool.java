@@ -60,7 +60,6 @@ import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MoveCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MoveCADToolContext.MoveCADToolState;
-import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
 /**
@@ -133,9 +132,7 @@ public class MoveCADTool extends DefaultCADTool {
         MoveCADToolState actualState = (MoveCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-		.getEditionManager().getActiveLayerEdited();
-    	ArrayList selectedRow = vle.getSelectedRow();
+        ArrayList selectedRow=getSelectedRow();
 
     	if (status.equals("Move.FirstPointToMove")) {
             firstPoint = new Point2D.Double(x, y);
@@ -179,9 +176,7 @@ public class MoveCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
         MoveCADToolState actualState = ((MoveCADToolContext) _fsm).getState();
         String status = actualState.getName();
-        	VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-			.getEditionManager().getActiveLayerEdited();
-        	ArrayList selectedRow = vle.getSelectedRow();
+        ArrayList selectedRow=getSelectedRow();
         	drawHandlers(g, selectedRow,
                      getCadToolAdapter().getMapControl().getViewPort()
                          .getAffineTransform());

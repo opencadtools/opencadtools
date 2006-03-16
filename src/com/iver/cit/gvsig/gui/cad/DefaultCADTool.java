@@ -69,6 +69,7 @@ import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 /**
  * DOCUMENT ME!
@@ -277,6 +278,12 @@ public abstract class DefaultCADTool implements CADTool {
 		CADTool.drawingSymbol.setOutlined(true);
 		CADTool.drawingSymbol.setOutlineColor(Color.GREEN);
 
+	}
+	protected ArrayList getSelectedRow(){
+		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+		.getEditionManager().getActiveLayerEdited();
+    	ArrayList selectedRow = vle.getSelectedRow();
+    	return selectedRow;
 	}
 
 }

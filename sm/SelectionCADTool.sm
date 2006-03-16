@@ -41,6 +41,7 @@ FirstPoint
 				setQuestion("select_handlers");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY,event);
+				end();
 				}
 }
 
@@ -52,13 +53,13 @@ SecondPoint{
 				setQuestion("select_handlers");
 				setDescription(new String[]{"Cancelar"});
 				addPoint( pointX,pointY,event);
+				end();
 				}
 	// Si no lo hemos conseguido
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 			FirstPoint {
 				setQuestion("Precise punto del rectángulo de selección");
 				setDescription(new String[]{"Cancelar"});
-
 				}
 
 
@@ -94,7 +95,7 @@ WithSelectedFeatures{
 				addPoint( pointX,pointY,event);
 				// refresh();
 				}
-				
+
 }
 
 WithHandlers{

@@ -72,7 +72,7 @@ import java.util.ArrayList;
 
 /**
  * DOCUMENT ME!
- * 
+ *
  * @author Vicente Caballero Navarro
  */
 public class SelectionCADTool extends DefaultCADTool {
@@ -105,7 +105,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
 	 *      double, double)
 	 */
@@ -119,7 +119,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
 	 *      double)
 	 */
@@ -129,7 +129,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
 	 *      java.lang.String)
 	 */
@@ -144,7 +144,7 @@ public class SelectionCADTool extends DefaultCADTool {
 	/**
 	 * Equivale al transition del prototipo pero sin pasarle como pará metro el
 	 * editableFeatureSource que ya estará creado.
-	 * 
+	 *
 	 * @param selection
 	 *            Bitset con las geometrías que estén seleccionadas.
 	 * @param x
@@ -199,7 +199,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
 			.getEditionManager().getActiveLayerEdited();
 		ArrayList selectedRow = vle.getSelectedRow();
-		
+
 		lastPoint = new Point2D.Double(x, y);
 		FBitSet selection = getCadToolAdapter().getVectorialAdapter()
 			.getSelection();
@@ -269,7 +269,7 @@ public class SelectionCADTool extends DefaultCADTool {
 	/**
 	 * Método para dibujar la lo necesario para el estado en el que nos
 	 * encontremos.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics sobre el que dibujar.
 	 * @param selectedGeometries
@@ -335,7 +335,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/**
 	 * Add a diferent option.
-	 * 
+	 *
 	 * @param sel
 	 *            DOCUMENT ME!
 	 * @param s
@@ -347,7 +347,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
 	 */
 	public void addValue(double d) {
@@ -374,7 +374,8 @@ public class SelectionCADTool extends DefaultCADTool {
 	}
 
 	public void end() {
-		CADExtension.setCADTool(getTool());
+		if (!tool.equals("selection"))
+			CADExtension.setCADTool(getTool());
 	}
 
 	public String getName() {
