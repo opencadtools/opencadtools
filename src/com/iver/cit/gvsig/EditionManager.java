@@ -97,8 +97,11 @@ public class EditionManager implements LayerListener {
 		{
 			lyrEdit = FactoryLayerEdited.createLayerEdited(e.getSource());
 			editedLayers.add(lyrEdit);
+			System.out.println("NUEVA CAPA EN EDICION: " + lyrEdit.getLayer().getName());
 			activationChanged(e);
+			
 		}
+		
 	}
 
 	/**

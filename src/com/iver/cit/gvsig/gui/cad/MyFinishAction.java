@@ -5,9 +5,7 @@ import java.io.File;
 import jwizardcomponent.FinishAction;
 import jwizardcomponent.JWizardComponents;
 
-import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.ProjectExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
@@ -19,30 +17,31 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
+import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 import com.iver.cit.gvsig.gui.cad.panels.ShpPanel;
-import com.iver.cit.gvsig.project.ProjectTable;
 
 public class MyFinishAction extends FinishAction
 {
 	JWizardComponents myWizardComponents;
 	FinishAction oldAction;
 	ITableDefinition lyrDef = null;
-	MapControl mapCtrl;
+	View view;
 	String actionComand;
-	public MyFinishAction(JWizardComponents wizardComponents, MapControl mapCtrl, String actionComand) {		
+	public MyFinishAction(JWizardComponents wizardComponents, View view, String actionComand) {		
 		super(wizardComponents);
 		oldAction = wizardComponents.getFinishAction();
 		myWizardComponents = wizardComponents;
-		this.mapCtrl = mapCtrl;
+		this.view = view;
 		this.actionComand = actionComand;
 		// TODO Auto-generated constructor stub
 	}
 
 	public void performAction() {
-		// TODO Auto-generated method stub
-		try {
+		FLyrVect lyr = null;
+		MapControl mapCtrl = view.getMapControl();
+		try {			
 			// ChooseWriteDriver driverPanel = (ChooseWriteDriver) myWizardComponents.getWizardPanel(0);
 			ChooseGeometryType geometryTypePanel = (ChooseGeometryType) myWizardComponents.getWizardPanel(0);
 			JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(1);
@@ -53,10 +52,10 @@ public class MyFinishAction extends FinishAction
 			int geometryType = geometryTypePanel.getSelectedGeometryType();
 			FieldDescription[] fieldsDesc = fieldDefinitionPanel.getFieldsDescription();
 			
-			ISpatialWriter drv = (ISpatialWriter) LayerFactory.getDM().getDriver(selectedDriver);
+			ISpatialWriter drv = (ISpatialWriter) LayerFactory.getDM().getDriver(selectedDriver);    		
+			
 			if (actionComand.equals("SHP"))
 			{
-	    		FLyrVect lyr = null;
 	    		ShpPanel shpPanel = (ShpPanel) myWizardComponents.getWizardPanel(2);
     		    File newFile = new File(shpPanel.getPath());
     		    SHPLayerDefinition lyrDef = new SHPLayerDefinition();
@@ -74,24 +73,6 @@ public class MyFinishAction extends FinishAction
                 lyr = (FLyrVect) LayerFactory.createLayer(layerName,
                         (VectorialFileDriver) drv, newFile, mapCtrl.getProjection());
                                 
-                lyr.setVisible(true);
-				mapCtrl.getMapContext().getLayers().addLayer(lyr);
-				
-				mapCtrl.getMapContext().endAtomicEvent();
-				lyr.setEditing(true);
-                VectorialEditableAdapter vea = (VectorialEditableAdapter) lyr.getSource();
-                // TODO: Provisional, para que al poner
-                // un tema en edición el CADToolAdapter se entere
-                CADExtension.getCADToolAdapter().setVectorialAdapter(vea);
-                vea.getCommandRecord().addCommandListener(mapCtrl);
-                //Si existe una tabla asociada a esta capa se cambia su modelo por el VectorialEditableAdapter.
-                ProjectExtension pe=(ProjectExtension)PluginServices.getExtension(ProjectExtension.class);
-                ProjectTable pt=pe.getProject().getTable(lyr);
-                if (pt!=null)
-                pt.setModel(vea);
-
-				
-	            
 			}
 			else if (drv instanceof VectorialDatabaseDriver)
 			{
@@ -162,6 +143,19 @@ public class MyFinishAction extends FinishAction
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        lyr.setVisible(true);
+		mapCtrl.getMapContext().getLayers().addLayer(lyr);
+		
+		mapCtrl.getMapContext().endAtomicEvent();
+		lyr.addLayerListener(CADExtension.getEditionManager());
+		lyr.setActive(true);
+		lyr.setEditing(true);
+        VectorialEditableAdapter vea = (VectorialEditableAdapter) lyr.getSource();
+        // TODO: Provisional, para que al poner
+        // un tema en edición el CADToolAdapter se entere
+        CADExtension.getCADToolAdapter().setVectorialAdapter(vea);
+        vea.getCommandRecord().addCommandListener(mapCtrl);
+        view.showConsole();
 		
 		// Para cerrar el cuadro de diálogo.
 		oldAction.performAction();
