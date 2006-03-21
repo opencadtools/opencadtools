@@ -114,7 +114,7 @@ public class MoveCADTool extends DefaultCADTool {
         FBitSet selection = CADExtension.getCADToolAdapter()
                                         .getVectorialAdapter().getSelection();
 
-        if (selection.cardinality() == 0) {
+        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getName().equals("selection")) {
             CADExtension.setCADTool("selection");
             ((SelectionCADTool) CADExtension.getCADToolAdapter().getCadTool()).setNextTool(
                 "move");
@@ -154,6 +154,9 @@ public class MoveCADTool extends DefaultCADTool {
 
                     vea.modifyRow(edRow.getIndex(),feat,getName());
         		}
+              FBitSet selection = CADExtension.getCADToolAdapter()
+              		.getVectorialAdapter().getSelection();
+              	selection.clear();
                 selectedRow.clear();
                 vea.endComplexRow();
             } catch (DriverIOException e) {
