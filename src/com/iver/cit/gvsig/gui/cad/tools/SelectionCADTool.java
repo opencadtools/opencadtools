@@ -167,11 +167,13 @@ public class SelectionCADTool extends DefaultCADTool {
 		ArrayList selectedHandler = vle.getSelectedHandler();
 		ArrayList selectedRow = vle.getSelectedRow();
 		// ArrayList selectedRowIndex = vle.getSelectedRowIndex();
-
+		System.out.println("STATUS ACTUAL = " + _fsm.getTransition());
 		if (status.equals("Selection.FirstPoint")) {
 		} else if (status.equals("Selection.SecondPoint")) {
 			// selectByRectangle(x, y, selectedRow);
-
+		} else if (status.equals("Selection.WithFeatures")) {
+			
+ 		
 		} else if (status.equals("Selection.WithHandlers")) {
 			for (int i = 0; i < selectedRow.size(); i++) {
 				IRowEdited row = (IRowEdited) selectedRow.get(i);
@@ -195,7 +197,7 @@ public class SelectionCADTool extends DefaultCADTool {
 	 * @param y
 	 * @return numFeatures selected
 	 */
-	public int selectWithSecondPoint(double x, double y) {
+	public int selectWithSecondPoint(double x, double y, InputEvent event) {
 		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
 			.getEditionManager().getActiveLayerEdited();
 		ArrayList selectedRow = vle.getSelectedRow();
@@ -382,7 +384,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		return "SELECCION";
 	}
 
-	public boolean selectFeatures(double x, double y) {
+	public boolean selectFeatures(double x, double y, InputEvent event) {
 		SelectionCADToolState actualState = (SelectionCADToolState) _fsm
 				.getState();
 
@@ -452,7 +454,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		return true; // Truco de Vicente */
 	}
 
-	public int selectHandlers(double x, double y) {
+	public int selectHandlers(double x, double y, InputEvent event) {
 		// firstPoint = new Point2D.Double(x, y);
 
 		Point2D auxPoint = new Point2D.Double(x, y);

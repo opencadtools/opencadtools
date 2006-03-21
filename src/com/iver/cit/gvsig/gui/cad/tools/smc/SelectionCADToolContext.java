@@ -220,7 +220,7 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                if (ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.SecondPoint"))
+                if (ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.SecondPoint"))
                 {
 
                     (context.getState()).Exit(context);
@@ -283,7 +283,7 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                if (ctxt.selectWithSecondPoint(pointX,pointY) > 0)
+                if (ctxt.selectWithSecondPoint(pointX,pointY, event) > 0)
                 {
 
                     (context.getState()).Exit(context);
@@ -342,7 +342,7 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                if (ctxt.selectHandlers(pointX, pointY)>0)
+                if (ctxt.selectHandlers(pointX, pointY, event)>0)
                 {
 
                     (context.getState()).Exit(context);
@@ -359,7 +359,7 @@ public final class SelectionCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (ctxt.selectFeatures(pointX,pointY) && ctxt.getNextState().equals("Selection.WithSelectedFeatures"))
+                else if (ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.WithSelectedFeatures"))
                 {
                     SelectionCADToolState endState = context.getState();
 
