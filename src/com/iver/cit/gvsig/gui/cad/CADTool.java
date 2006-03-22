@@ -45,7 +45,6 @@ import java.awt.event.InputEvent;
 
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
-import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 
 
 /**
