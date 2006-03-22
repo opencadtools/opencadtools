@@ -170,7 +170,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 					Object[] newRow = new Object[tm.getColumnCount()];
 					newRow[0] = "NewField";
 					newRow[1] = "String";
-					newRow[2] = new Integer(20);
+					newRow[2] = "20";
 					tm.addRow(newRow);
 					
 					// Esto lo añado aquí porque si no tiene registros, no hace caso. (Por eso no
@@ -183,6 +183,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 					comboBox.addItem("Double");
 					comboBox.addItem("String");
 					typeColumn.setCellEditor(new DefaultCellEditor(comboBox));
+
+					TableColumn widthColumn = jTable.getColumnModel().getColumn(2);
 					
 					// tm.setValueAt("NewField", tm.getRowCount()-1, 0);
 				}
@@ -242,8 +244,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 				fieldsDesc[i].setFieldType(Types.BOOLEAN);
 			if (strType.equals("Date"))
 				fieldsDesc[i].setFieldType(Types.DATE);
-			Integer fieldLength = (Integer) tm.getValueAt(i,2);
-			fieldsDesc[i].setFieldLength(fieldLength.intValue());
+			int fieldLength = Integer.parseInt((String) tm.getValueAt(i,2));
+			fieldsDesc[i].setFieldLength(fieldLength);
 			
 			// TODO: HACERLO BIEN
 			if (strType.equals("Double"))
