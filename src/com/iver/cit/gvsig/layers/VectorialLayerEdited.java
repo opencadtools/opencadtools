@@ -4,12 +4,12 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
@@ -54,21 +54,22 @@ public class VectorialLayerEdited extends DefaultLayerEdited {
 		.getSelection();
 		double min = Double.MAX_VALUE;
 //		 Cogemos las entidades seleccionadas
+		clearSelection();
 		for (int i = selection.nextSetBit(0); i >= 0; i = selection
 				.nextSetBit(i + 1)) {
 			Handler[] handlers = null;
 
-			DefaultFeature fea = null;
+			DefaultRowEdited dre = null;
 			try {
-				fea = (DefaultFeature) cta
-						.getVectorialAdapter().getRow(i).getLinkedRow();
+				dre = (DefaultRowEdited) cta
+						.getVectorialAdapter().getRow(i);
 				/* clonedGeometry = fea.getGeometry().cloneGeometry();
 				handlers = clonedGeometry
 						.getHandlers(IGeometry.SELECTHANDLER);
 				selectedRow.add(new DefaultFeature(clonedGeometry, fea
 						.getAttributes())); */
-				handlers = fea.getGeometry().getHandlers(IGeometry.SELECTHANDLER);
-				selectedRow.add(fea);
+				handlers = ((DefaultFeature)dre.getLinkedRow()).getGeometry().getHandlers(IGeometry.SELECTHANDLER);
+				selectedRow.add(dre);
 				// selectedRowIndex.add(new Integer(i));
 				// y miramos los handlers de cada entidad seleccionada
 				min = cta.getMapControl().getViewPort()

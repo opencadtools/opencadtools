@@ -114,7 +114,7 @@ public class MoveCADTool extends DefaultCADTool {
         FBitSet selection = CADExtension.getCADToolAdapter()
                                         .getVectorialAdapter().getSelection();
 
-        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getName().equals("selection")) {
+        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
             CADExtension.setCADTool("selection");
             ((SelectionCADTool) CADExtension.getCADToolAdapter().getCadTool()).setNextTool(
                 "move");

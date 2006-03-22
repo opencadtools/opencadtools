@@ -48,12 +48,10 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
-import com.iver.cit.gvsig.fmap.core.FGeometry;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FPoint2D;
 import com.iver.cit.gvsig.fmap.core.FPolygon2D;
@@ -129,7 +127,7 @@ public class EditVertexCADTool extends DefaultCADTool {
         FBitSet selection = CADExtension.getCADToolAdapter()
                                         .getVectorialAdapter().getSelection();
 
-        if (selection.cardinality() == 0) {
+        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
             CADExtension.setCADTool("selection");
             ((SelectionCADTool) CADExtension.getCADToolAdapter().getCadTool()).setNextTool(
                 "editvertex");
@@ -177,8 +175,8 @@ public class EditVertexCADTool extends DefaultCADTool {
      * @param y parámetro x del punto que se pase para dibujar.
      */
     public void drawOperation(Graphics g, double x, double y) {
-        EditVertexCADToolState actualState = ((EditVertexCADToolContext) _fsm).getState();
-        String status = actualState.getName();
+        //EditVertexCADToolState actualState = ((EditVertexCADToolContext) _fsm).getState();
+        //String status = actualState.getName();
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
         FBitSet selection = vea.getSelection();
 
@@ -371,9 +369,116 @@ public class EditVertexCADTool extends DefaultCADTool {
     }
     private IGeometry addVertex(IGeometry geome,Point2D p,Rectangle2D rect) {
     	IGeometry geometryCloned=geome.cloneGeometry();
-    	FGeometry geom1=null;
-    	FGeometry geom2=null;
-    	if (geometryCloned instanceof FGeometryCollection){
+    	IGeometry geom1=null;
+    	GeneralPathX gpxAux;
+    	//FGeometry geom2=null;
+
+    	//if (geometryCloned.getGeometryType() == FShape.POLYGON){
+    		/////////////////
+
+    		GeneralPathX newGp = new GeneralPathX();
+            double[] theData = new double[6];
+
+            GeneralPathXIterator theIterator;
+            int theType;
+            int numParts = 0;
+            Point2D pLast=new Point2D.Double();
+            Point2D pAnt = new Point2D.Double();
+
+            theIterator = geome.getGeneralPathXIterator(); //, flatness);
+            int numSegmentsAdded = 0;
+            while (!theIterator.isDone()) {
+                theType = theIterator.currentSegment(theData);
+                switch (theType) {
+                    case PathIterator.SEG_MOVETO:
+                    	numParts++;
+                    	pLast.setLocation(theData[0], theData[1]);
+
+
+                    	gpxAux=new GeneralPathX();
+                    	gpxAux.moveTo(pAnt.getX(),pAnt.getY());
+                    	gpxAux.lineTo(pLast.getX(),pLast.getY());
+                    	geom1=ShapeFactory.createPolyline2D(gpxAux);
+                    	if (geom1.intersects(rect)){
+                    		newGp.moveTo(p.getX(), p.getY());
+                    		newGp.lineTo(pLast.getX(),pLast.getY());
+                    	}else{
+                    		newGp.moveTo(pLast.getX(), pLast.getY());
+                    	}
+
+
+                        pAnt.setLocation(pLast.getX(), pLast.getY());
+                        numSegmentsAdded++;
+                        break;
+
+                    case PathIterator.SEG_LINETO:
+                    	pLast.setLocation(theData[0], theData[1]);
+
+                    	gpxAux=new GeneralPathX();
+                    	gpxAux.moveTo(pAnt.getX(),pAnt.getY());
+                    	gpxAux.lineTo(pLast.getX(),pLast.getY());
+                    	geom1=ShapeFactory.createPolyline2D(gpxAux);
+                    	if (geom1.intersects(rect)){
+                    		newGp.lineTo(p.getX(), p.getY());
+                    		newGp.lineTo(pLast.getX(),pLast.getY());
+                    	}else{
+                    		newGp.lineTo(pLast.getX(), pLast.getY());
+                    	}
+
+                    	pAnt.setLocation(pLast.getX(), pLast.getY());
+                        numSegmentsAdded++;
+                        break;
+
+                    case PathIterator.SEG_QUADTO:
+                        newGp.quadTo(theData[0], theData[1], theData[2], theData[3]);
+                        numSegmentsAdded++;
+                        break;
+
+                    case PathIterator.SEG_CUBICTO:
+                        newGp.curveTo(theData[0], theData[1], theData[2], theData[3], theData[4], theData[5]);
+                        numSegmentsAdded++;
+                        break;
+
+                    case PathIterator.SEG_CLOSE:
+                        if (numSegmentsAdded < 3){
+                            newGp.lineTo(theData[0], theData[1]);
+                        }
+                        newGp.closePath();
+
+                        break;
+                } //end switch
+
+                theIterator.next();
+            } //end while loop
+            FShape shp = null;
+            switch (geometryCloned.getGeometryType())
+            {
+                case FShape.POINT: //Tipo punto
+                case FShape.POINT + FShape.Z:
+                    shp = new FPoint2D(pLast.getX(), pLast.getY());
+                    break;
+
+                case FShape.LINE:
+                case FShape.LINE + FShape.Z:
+                    shp = new FPolyline2D(newGp);
+                    break;
+                case FShape.POLYGON:
+                case FShape.POLYGON + FShape.Z:
+                    shp = new FPolygon2D(newGp);
+                    break;
+            }
+            return ShapeFactory.createGeometry(shp);
+
+
+    		/////////////////////
+    	//}else if (geometryCloned.getGeometryType() == FShape.LINE){
+
+    	//}
+
+
+
+
+    /*	if (geometryCloned instanceof FGeometryCollection){
     		IGeometry[] geometries=((FGeometryCollection)geometryCloned).getGeometries();
     		boolean isSelected=false;
     		for (int i=0;i<geometries.length;i++){
@@ -431,22 +536,7 @@ public class EditVertexCADTool extends DefaultCADTool {
     		}
     	}
     	return geometryCloned;
-
-
-
-    	/*Geometry jtsGeom = geometry.toJTSGeometry();
-    	Coordinate[] coords=jtsGeom.getCoordinates();
-    	Coordinate[] newcoordinates=new Coordinate[coords.length+1];
-    	int i;
-    	for (i=0;i<coords.length;i++){
-    		newcoordinates[i]=coords[i];
-    	}
-    	newcoordinates[i+1]=new Coordinate(p.getX(), p.getY());
-    	//Geometry jtsGeomNew = new GeometryFactory().createPoint(new Coordinate(p.getX(), p.getY()));
-    	//Geometry jtsGeomNew = new GeometryFactory().createPoint(new Coordinate(p.getX(), p.getY()));
-    	//GeometryCollection res=new GeometryCollection(new Geometry[]{jtsGeom,jtsGeomNew},null);//jtsGeom.union(jtsGeomNew);
-    	return FConverter.jts_to_igeometry(res);
-    	*/
+*/
     }
 	public String getName() {
 		return "EDITAR VERTICE";

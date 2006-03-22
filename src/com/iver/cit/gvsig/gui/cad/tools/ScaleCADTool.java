@@ -46,12 +46,14 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
@@ -118,7 +120,7 @@ public class ScaleCADTool extends DefaultCADTool {
         FBitSet selection = CADExtension.getCADToolAdapter()
                                         .getVectorialAdapter().getSelection();
 
-        if (selection.cardinality() == 0) {
+        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
             CADExtension.setCADTool("selection");
             ((SelectionCADTool) CADExtension.getCADToolAdapter().getCadTool()).setNextTool(
                 "scale");
@@ -135,8 +137,6 @@ public class ScaleCADTool extends DefaultCADTool {
     public void addPoint(double x, double y,InputEvent event) {
         ScaleCADToolState actualState = (ScaleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-        VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        FBitSet selection = vea.getSelection();
 
 
         if (status.equals("Scale.PointMain")) {
@@ -146,10 +146,10 @@ public class ScaleCADTool extends DefaultCADTool {
 			PluginServices.getMDIManager().setWaitCursor();
 			lastPoint = new Point2D.Double(x, y);
 
-			double w;
-			double h;
-			w = lastPoint.getX() - firstPoint.getX();
-			h = lastPoint.getY() - firstPoint.getY();
+			//double w;
+			//double h;
+			//w = lastPoint.getX() - firstPoint.getX();
+			//h = lastPoint.getY() - firstPoint.getY();
 
 			try {
 				double size=getCadToolAdapter().getMapControl().getViewPort().toMapDistance(getCadToolAdapter().getMapControl().getWidth());
@@ -196,67 +196,60 @@ public class ScaleCADTool extends DefaultCADTool {
      * @param y parámetro x del punto que se pase para dibujar.
      */
     public void drawOperation(Graphics g, double x, double y) {
-        ScaleCADToolState actualState = ((ScaleCADToolContext) _fsm).getState();
-        String status = actualState.getName();
-        VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        FBitSet selection = vea.getSelection();
-        Point2D currentPoint = new Point2D.Double(x, y);
+		ScaleCADToolState actualState = ((ScaleCADToolContext) _fsm).getState();
+		String status = actualState.getName();
+		ArrayList selectedRow = getSelectedRow();
+		Point2D currentPoint = new Point2D.Double(x, y);
 
+		if (status.equals("Scale.ScaleFactorOrReference")) {
+			for (int i = 0; i < selectedRow.size(); i++) {
+				DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
+						.get(i)).getLinkedRow();
+				IGeometry geometry = fea.getGeometry();
+				double size = getCadToolAdapter().getMapControl().getViewPort()
+						.toMapDistance(
+								getCadToolAdapter().getMapControl().getWidth());
+				UtilFunctions.scaleGeom(geometry, firstPoint, firstPoint
+						.distance(currentPoint)
+						/ (size / 40), firstPoint.distance(currentPoint)
+						/ (size / 40));
+				geometry.draw((Graphics2D) g, getCadToolAdapter()
+						.getMapControl().getViewPort(), CADTool.modifySymbol);
+				drawLine((Graphics2D) g, firstPoint, currentPoint);
+				PluginServices.getMainFrame().getStatusBar().setMessage(
+						"5",
+						"Factor = " + firstPoint.distance(currentPoint)
+								/ (size / 40));
 
-        if (status.equals("Scale.ScaleFactorOrReference")) {
-        	try {
-				for (int i = 0; i < vea.getRowCount(); i++) {
-					if (selection.get(i)) {
-						IGeometry geometry = vea.getShape(i);
-						double size=getCadToolAdapter().getMapControl().getViewPort().toMapDistance(getCadToolAdapter().getMapControl().getWidth());
-						UtilFunctions.scaleGeom(geometry, firstPoint,
-								firstPoint.distance(currentPoint)/(size/40),
-								firstPoint.distance(currentPoint)/(size/40));
-						geometry.draw((Graphics2D) g,
-							getCadToolAdapter().getMapControl().getViewPort(),
-							CADTool.modifySymbol);
-						drawLine((Graphics2D) g, firstPoint, currentPoint);
-						PluginServices.getMainFrame().getStatusBar().setMessage("5","Factor = "+firstPoint.distance(currentPoint)/(size/40));
-					}
-				}
-			} catch (DriverIOException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+
 		} else if (status.equals("Scale.EndPointScale")) {
-			try {
-				for (int i = 0; i < vea.getRowCount(); i++) {
-					if (selection.get(i)) {
-						IGeometry geometry = vea.getShape(i);
+			for (int i = 0; i < selectedRow.size(); i++) {
+				DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
+						.get(i)).getLinkedRow();
+				IGeometry geometry = fea.getGeometry();
 
+				double distrr = orr.distance(frr);
+				double distre = ore.distance(currentPoint);
+				double escalado = distre / distrr;
 
-						double distrr = orr.distance(frr);
-						double distre = ore.distance(currentPoint);
-						double escalado = distre / distrr;
+				UtilFunctions.scaleGeom(geometry, scalePoint, escalado,
+						escalado);
+				// geometry.scale(scalePoint, escalado, escalado);
+				geometry.draw((Graphics2D) g, getCadToolAdapter()
+						.getMapControl().getViewPort(), CADTool.modifySymbol);
+				drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
 
-						UtilFunctions.scaleGeom(geometry, scalePoint, escalado, escalado);
-						// geometry.scale(scalePoint, escalado, escalado);
-						geometry.draw((Graphics2D) g,
-							getCadToolAdapter().getMapControl().getViewPort(),
-							CADTool.modifySymbol);
-						drawLine((Graphics2D) g, firstPoint,
-							new Point2D.Double(x, y));
-					}
-				}
-			} catch (DriverIOException e) {
-				e.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
 			}
 		}
-    }
+	}
 
     /**
-     * Add a diferent option.
-     *
-     * @param s Diferent option.
-     */
+	 * Add a diferent option.
+	 *
+	 * @param s
+	 *            Diferent option.
+	 */
     public void addOption(String s) {
     	ScaleCADToolState actualState = (ScaleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();

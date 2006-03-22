@@ -45,7 +45,7 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
-import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
+import com.iver.cit.gvsig.fmap.core.FPolygon2D;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
@@ -222,6 +222,83 @@ public class PolygonCADTool extends DefaultCADTool {
      * @return GeometryCollection con las geometrías del polígono.
      */
     private IGeometry getCPolygon(Point2D point, double radio) {
+        Point2D p1 = UtilFunctions.getPoint(center, point, radio);
+
+        double initangle = UtilFunctions.getAngle(center, point);
+        Point2D antPoint = p1;
+        Point2D antInter = null;
+        double an = (Math.PI * 2) / numLines;
+        GeneralPathX elShape = new GeneralPathX();
+        boolean firstTime=true;
+        for (int i = 1; i < (numLines+1); i++) {
+            Point2D p2 = UtilFunctions.getPoint(center, (an * i) + initangle,
+                    radio);
+            Point2D[] ps1 = UtilFunctions.getPerpendicular(antPoint, center,
+                    antPoint);
+            Point2D[] ps2 = UtilFunctions.getPerpendicular(p2, center, p2);
+            Point2D inter = UtilFunctions.getIntersection(ps1[0], ps1[1],
+                    ps2[0], ps2[1]);
+
+            if (antInter != null) {
+
+                if (firstTime){
+                	elShape.moveTo(antInter.getX(), antInter.getY());
+                	firstTime=false;
+                }
+                elShape.lineTo(inter.getX(), inter.getY());
+
+            }
+
+            antInter = inter;
+            antPoint = p2;
+        }
+
+        return ShapeFactory.createGeometry(new FPolygon2D(elShape));
+    }
+
+    /**
+     * Devuelve la geometría con el poligono regular inscrito en la
+     * circunferencia.
+     *
+     * @param point Puntero del ratón.
+     * @param radio Radio
+     *
+     * @return GeometryCollection con las geometrías del polígono.
+     */
+    private IGeometry getIPolygon(Point2D point, double radio) {
+        Point2D p1 = UtilFunctions.getPoint(center, point, radio);
+        double initangle = UtilFunctions.getAngle(center, point);
+        Point2D antPoint = p1;
+        double an = (Math.PI * 2) / numLines;
+        GeneralPathX elShape = new GeneralPathX();
+        boolean firstTime=true;
+        for (int i = 1; i < (numLines); i++) {
+            Point2D p2 = UtilFunctions.getPoint(center, (an * i) + initangle,
+                    radio);
+
+            if (firstTime){
+            	 elShape.moveTo(antPoint.getX(), antPoint.getY());
+            	 firstTime=false;
+            }
+
+            elShape.lineTo(p2.getX(), p2.getY());
+
+            antPoint = p2;
+        }
+
+        return ShapeFactory.createGeometry(new FPolygon2D(elShape));
+    }
+    /**
+     * Devuelve la geometría con el poligono regular circunscrito a la
+     * circunferencia formada por el punto central y el radio que se froma
+     * entre este y el puntero del ratón..
+     *
+     * @param point Puntero del ratón.
+     * @param radio Radio
+     *
+     * @return GeometryCollection con las geometrías del polígono.
+     */
+   /* private IGeometry getCPolygonOld(Point2D point, double radio) {
         IGeometry[] geoms = new IGeometry[numLines];
         Point2D p1 = UtilFunctions.getPoint(center, point, radio);
 
@@ -254,7 +331,7 @@ public class PolygonCADTool extends DefaultCADTool {
 
         return new FGeometryCollection(geoms);
     }
-
+*/
     /**
      * Devuelve la geometría con el poligono regular inscrito en la
      * circunferencia.
@@ -264,7 +341,7 @@ public class PolygonCADTool extends DefaultCADTool {
      *
      * @return GeometryCollection con las geometrías del polígono.
      */
-    private IGeometry getIPolygon(Point2D point, double radio) {
+  /*  private IGeometry getIPolygonOld(Point2D point, double radio) {
         IGeometry[] geoms = new IGeometry[numLines];
         Point2D p1 = UtilFunctions.getPoint(center, point, radio);
         double initangle = UtilFunctions.getAngle(center, point);
@@ -285,7 +362,7 @@ public class PolygonCADTool extends DefaultCADTool {
 
         return new FGeometryCollection(geoms);
     }
-
+*/
 	public String getName() {
 		return "POLIGONO";
 	}
