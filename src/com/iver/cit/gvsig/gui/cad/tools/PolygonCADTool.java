@@ -45,7 +45,7 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
-import com.iver.cit.gvsig.fmap.core.FPolygon2D;
+import com.iver.cit.gvsig.fmap.core.FPolyline2D;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
@@ -227,6 +227,7 @@ public class PolygonCADTool extends DefaultCADTool {
         double initangle = UtilFunctions.getAngle(center, point);
         Point2D antPoint = p1;
         Point2D antInter = null;
+        //Point2D firstPoint= null;
         double an = (Math.PI * 2) / numLines;
         GeneralPathX elShape = new GeneralPathX();
         boolean firstTime=true;
@@ -243,6 +244,7 @@ public class PolygonCADTool extends DefaultCADTool {
 
                 if (firstTime){
                 	elShape.moveTo(antInter.getX(), antInter.getY());
+                	//firstPoint=new Point2D.Double(antInter.getX(), antInter.getY());
                 	firstTime=false;
                 }
                 elShape.lineTo(inter.getX(), inter.getY());
@@ -252,8 +254,9 @@ public class PolygonCADTool extends DefaultCADTool {
             antInter = inter;
             antPoint = p2;
         }
-
-        return ShapeFactory.createGeometry(new FPolygon2D(elShape));
+        //elShape.lineTo(firstPoint.getX(),firstPoint.getY());
+        elShape.closePath();
+        return ShapeFactory.createGeometry(new FPolyline2D(elShape));
     }
 
     /**
@@ -269,6 +272,7 @@ public class PolygonCADTool extends DefaultCADTool {
         Point2D p1 = UtilFunctions.getPoint(center, point, radio);
         double initangle = UtilFunctions.getAngle(center, point);
         Point2D antPoint = p1;
+        //Point2D firstPoint= null;
         double an = (Math.PI * 2) / numLines;
         GeneralPathX elShape = new GeneralPathX();
         boolean firstTime=true;
@@ -278,6 +282,7 @@ public class PolygonCADTool extends DefaultCADTool {
 
             if (firstTime){
             	 elShape.moveTo(antPoint.getX(), antPoint.getY());
+            	 //firstPoint=new Point2D.Double(antPoint.getX(), antPoint.getY());
             	 firstTime=false;
             }
 
@@ -285,8 +290,9 @@ public class PolygonCADTool extends DefaultCADTool {
 
             antPoint = p2;
         }
-
-        return ShapeFactory.createGeometry(new FPolygon2D(elShape));
+        //elShape.lineTo(firstPoint.getX(),firstPoint.getY());
+        elShape.closePath();
+        return ShapeFactory.createGeometry(new FPolyline2D(elShape));
     }
     /**
      * Devuelve la geometría con el poligono regular circunscrito a la

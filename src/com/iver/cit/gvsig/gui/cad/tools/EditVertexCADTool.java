@@ -273,6 +273,8 @@ public class EditVertexCADTool extends DefaultCADTool {
 			IGeometry ig = getCadToolAdapter().getVectorialAdapter().getShape(i).cloneGeometry();
 			if (ig == null) continue;
 				Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
+				if (numSelect>handlers.length)
+					numSelect=0;
 				FGraphicUtilities.DrawVertex((Graphics2D)g,at,handlers[numSelect]);
 		}
 	}

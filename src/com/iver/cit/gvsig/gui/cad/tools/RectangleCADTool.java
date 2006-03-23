@@ -117,20 +117,19 @@ public class RectangleCADTool extends DefaultCADTool {
         } else if (status == "Rectangle.SecondPointOrSquare") {
             lastPoint = new Point2D.Double(x, y);
 
-            GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-                    2);
+            GeneralPathX elShape = new GeneralPathX();
             elShape.moveTo(firstPoint.getX(), firstPoint.getY());
             elShape.lineTo(lastPoint.getX(), firstPoint.getY());
             elShape.lineTo(lastPoint.getX(), lastPoint.getY());
             elShape.lineTo(firstPoint.getX(), lastPoint.getY());
-            elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            //elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            elShape.closePath();
             addGeometry(ShapeFactory.createPolyline2D(elShape));
             firstPoint = (Point2D) lastPoint.clone();
         } else if (status == "Rectangle.SecondPointSquare") {
             lastPoint = new Point2D.Double(x, y);
 
-            GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-                    2);
+            GeneralPathX elShape = new GeneralPathX();
             elShape.moveTo(firstPoint.getX(), firstPoint.getY());
             elShape.lineTo(lastPoint.getX(), firstPoint.getY());
 
@@ -149,7 +148,8 @@ public class RectangleCADTool extends DefaultCADTool {
                     firstPoint.getY() - (lastPoint.getX() - firstPoint.getX()));
             }
 
-            elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            //elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            elShape.closePath();
             addGeometry(ShapeFactory.createPolyline2D(elShape));
             firstPoint = (Point2D) lastPoint.clone();
         }
