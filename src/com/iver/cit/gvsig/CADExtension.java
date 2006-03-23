@@ -49,21 +49,12 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
-import javax.swing.FocusManager;
-import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FLayer;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
@@ -102,28 +93,28 @@ public class CADExtension implements Extension {
      */
     public void inicializar() {
         SelectionCADTool selection=new SelectionCADTool();
-    	LineCADTool line = new LineCADTool();
-        PointCADTool point = new PointCADTool();
-        CircleCADTool circle=new CircleCADTool();
-        RectangleCADTool rectangle=new RectangleCADTool();
-        PolylineCADTool polyline=new PolylineCADTool();
-        EllipseCADTool ellipse=new EllipseCADTool();
-        ArcCADTool arc=new ArcCADTool();
-        PolygonCADTool polygon=new PolygonCADTool();
+//    	LineCADTool line = new LineCADTool();
+//        PointCADTool point = new PointCADTool();
+//        CircleCADTool circle=new CircleCADTool();
+//        RectangleCADTool rectangle=new RectangleCADTool();
+//        PolylineCADTool polyline=new PolylineCADTool();
+//        EllipseCADTool ellipse=new EllipseCADTool();
+//        ArcCADTool arc=new ArcCADTool();
+//        PolygonCADTool polygon=new PolygonCADTool();
         CopyCADTool copy=new CopyCADTool();
         MoveCADTool move=new MoveCADTool();
         RotateCADTool rotate=new RotateCADTool();
         ScaleCADTool scale=new ScaleCADTool();
         EditVertexCADTool editvertex=new EditVertexCADTool();
         addCADTool("selection", selection);
-        addCADTool("line", line);
-        addCADTool("point", point);
-        addCADTool("circle",circle);
-        addCADTool("rectangle", rectangle);
-        addCADTool("polyline", polyline);
-        addCADTool("ellipse", ellipse);
-        addCADTool("arc", arc);
-        addCADTool("polygon", polygon);
+//        addCADTool("line", line);
+//        addCADTool("point", point);
+//        addCADTool("circle",circle);
+//        addCADTool("rectangle", rectangle);
+//        addCADTool("polyline", polyline);
+//        addCADTool("ellipse", ellipse);
+//        addCADTool("arc", arc);
+//        addCADTool("polygon", polygon);
         addCADTool("copy",copy);
         addCADTool("move",move);
         addCADTool("rotate",rotate);
@@ -204,29 +195,29 @@ public class CADExtension implements Extension {
         	setCADTool("join");
         } else if (s.equals("SELCAD")) {
         	setCADTool("selection");
-        } else if (s.equals("POINT")) {
-        	setCADTool("point");
-        } else if (s.equals("LINE")) {
-        	setCADTool("line");
-        } else if (s.equals("POLYLINE")) {
-        	setCADTool("polyline");
-        } else if (s.equals("CIRCLE")) {
-           setCADTool("circle");
-        } else if (s.equals("ARC")) {
-        	setCADTool("arc");
-        } else if (s.equals("ELLIPSE")) {
-        	setCADTool("ellipse");
-        } else if (s.equals("RECTANGLE")) {
-        	setCADTool("rectangle");
-        } else if (s.equals("POLYGON")) {
-        	setCADTool("polygon");
+//        } else if (s.equals("POINT")) {
+//        	setCADTool("point");
+//        } else if (s.equals("LINE")) {
+//        	setCADTool("line");
+//        } else if (s.equals("POLYLINE")) {
+//        	setCADTool("polyline");
+//        } else if (s.equals("CIRCLE")) {
+//           setCADTool("circle");
+//        } else if (s.equals("ARC")) {
+//        	setCADTool("arc");
+//        } else if (s.equals("ELLIPSE")) {
+//        	setCADTool("ellipse");
+//        } else if (s.equals("RECTANGLE")) {
+//        	setCADTool("rectangle");
+//        } else if (s.equals("POLYGON")) {
+//        	setCADTool("polygon");
         } else if (s.equals("EDITVERTEX")) {
         	setCADTool("editvertex");
         }
         adapter.configureMenu();
         //ViewControls.CANCELED=false;
     }
-    public void addCADTool(String name, CADTool c){
+    public static void addCADTool(String name, CADTool c){
 		namesCadTools.put(name, c);
 	}
     public static void setCADTool(String text){
@@ -348,7 +339,7 @@ public class CADExtension implements Extension {
         	else
         	{
         		if (e.getComponent().getName() != null)
-        		{        			
+        		{
 	        		System.out.println("Evento de teclado desde el componente " + e.getComponent().getName());
 	        		if (!e.getComponent().getName().equals("CADConsole"))
 	        		{
@@ -368,7 +359,7 @@ public class CADExtension implements Extension {
 
 	}
 
-	private void registerKeyStrokes(){
+/*	private void registerKeyStrokes(){
 		for (char key = '0'; key <= '9'; key++){
 			Character keyChar = new Character(key);
 			mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), keyChar);
@@ -397,7 +388,7 @@ public class CADExtension implements Extension {
 
 
 	}
-
+*/
 	private static JPopupMenu popup = new JPopupMenu();
 	public static  void clearMenu(){
 		popup.removeAll();
