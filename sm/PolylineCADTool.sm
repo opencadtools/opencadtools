@@ -10,6 +10,7 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 %map Polyline
 %%
@@ -18,9 +19,9 @@
 FirstPoint
 
 	Entry {
-		setQuestion("POLILINEA" + "\n" +
-		"Insertar primer punto");
-		setDescription(new String[]{"Cancelar"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_first_point"));
+		setDescription(new String[]{"cancel"});
 		}
 	Exit{
 		}
@@ -28,22 +29,22 @@ FirstPoint
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			NextPointOrArcOrClose{
-				setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-				setDescription(new String[]{"Arco","Cerrar","Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
+				setDescription(new String[]{"arc","close","cancel"});
 				addPoint( pointX,pointY,event);
 				}
 	}
 NextPointOrArcOrClose{
 
 	addOption(s:String)
-		[s.equals("A") ||  s.equals("a") || s.equals("Arco")]
+		[s.equals("A") ||  s.equals("a") || s.equals(PluginServices.getText(this,"arc"))]
 		NextPointOrLineOrClose {
-			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-			setDescription(new String[]{"Linea","Cerrar","Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
+			setDescription(new String[]{"line","close","cancel"});
 			addOption(s);
 			}
 	addOption(s:String)
-		[s.equals("C") ||  s.equals("c") || s.equals("Cerrar")]
+		[s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close"))]
 		FirstPoint {
 			addOption(s);
 			closeGeometry();
@@ -52,27 +53,27 @@ NextPointOrArcOrClose{
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrArcOrClose {
-			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-			setDescription(new String[]{"Arco","Cerrar","Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
+			setDescription(new String[]{"arc","close","cancel"});
 			addPoint( pointX,pointY,event);
 			}
 }
 NextPointOrLineOrClose{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrLineOrClose {
-			setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-			setDescription(new String[]{"Linea","Cerrar","Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
+			setDescription(new String[]{"line","close","cancel"});
 			addPoint( pointX,pointY,event);
 			}
 	addOption(s:String)
-		[s.equals("N") ||  s.equals("n") || s.equals("Linea")]
+		[s.equals("N") ||  s.equals("n") || s.equals(PluginServices.getText(this,"line"))]
 		NextPointOrArcOrClose {
-			setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-			setDescription(new String[]{"Arco","Cerrar","Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
+			setDescription(new String[]{"arc","close","cancel"});
 			addOption(s);
 			}
 	addOption(s:String)
-		[s.equals("C") ||  s.equals("c") || s.equals("Cerrar")]
+		[s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close"))]
 		FirstPoint {
 			addOption(s);
 			closeGeometry();
@@ -84,7 +85,7 @@ NextPointOrLineOrClose{
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		FirstPoint{
 			cancel();
 			}

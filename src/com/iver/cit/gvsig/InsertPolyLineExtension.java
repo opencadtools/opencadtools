@@ -108,17 +108,11 @@ public class InsertPolyLineExtension implements Extension {
 	 * @see com.iver.andami.plugins.Extension#isVisible()
 	 */
 	public boolean isVisible() {
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
-				.getActiveView();
-
-		if (f == null) {
-			return false;
-		}
-
-		if (f.getClass() == View.class) {
+		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+		{
 			return true;
-		} else {
-			return false;
 		}
+		else
+			return false;
 	}
 }

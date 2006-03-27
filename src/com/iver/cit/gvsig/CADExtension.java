@@ -55,20 +55,14 @@ import javax.swing.JPopupMenu;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
-import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
@@ -93,28 +87,12 @@ public class CADExtension implements Extension {
      */
     public void inicializar() {
         SelectionCADTool selection=new SelectionCADTool();
-//    	LineCADTool line = new LineCADTool();
-//        PointCADTool point = new PointCADTool();
-//        CircleCADTool circle=new CircleCADTool();
-//        RectangleCADTool rectangle=new RectangleCADTool();
-//        PolylineCADTool polyline=new PolylineCADTool();
-//        EllipseCADTool ellipse=new EllipseCADTool();
-//        ArcCADTool arc=new ArcCADTool();
-//        PolygonCADTool polygon=new PolygonCADTool();
         CopyCADTool copy=new CopyCADTool();
         MoveCADTool move=new MoveCADTool();
         RotateCADTool rotate=new RotateCADTool();
         ScaleCADTool scale=new ScaleCADTool();
         EditVertexCADTool editvertex=new EditVertexCADTool();
         addCADTool("selection", selection);
-//        addCADTool("line", line);
-//        addCADTool("point", point);
-//        addCADTool("circle",circle);
-//        addCADTool("rectangle", rectangle);
-//        addCADTool("polyline", polyline);
-//        addCADTool("ellipse", ellipse);
-//        addCADTool("arc", arc);
-//        addCADTool("polygon", polygon);
         addCADTool("copy",copy);
         addCADTool("move",move);
         addCADTool("rotate",rotate);
@@ -146,20 +124,6 @@ public class CADExtension implements Extension {
 
      			}
      		});
-        	// registerKeyStrokes();
-        	/* view.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "elimina");
-            view.getActionMap().put("elimina", new MyAction("eliminar"));
-            view.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape");
-            view.getActionMap().put("escape", new MyAction("escape")); */
-
-        /* FLayers layers=mapControl.getMapContext().getLayers();
-		for (int i=0;i<layers.getLayersCount();i++){
-			if (layers.getLayer(i).isEditing() && layers.getLayer(i) instanceof FLyrVect){
-				adapter.setVectorialAdapter((VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource());
-				adapter.setMapControl(mapControl);
-
-			}
-		} */
 
         view.getMapControl().setTool("cadtooladapter");
 
@@ -195,22 +159,6 @@ public class CADExtension implements Extension {
         	setCADTool("join");
         } else if (s.equals("SELCAD")) {
         	setCADTool("selection");
-//        } else if (s.equals("POINT")) {
-//        	setCADTool("point");
-//        } else if (s.equals("LINE")) {
-//        	setCADTool("line");
-//        } else if (s.equals("POLYLINE")) {
-//        	setCADTool("polyline");
-//        } else if (s.equals("CIRCLE")) {
-//           setCADTool("circle");
-//        } else if (s.equals("ARC")) {
-//        	setCADTool("arc");
-//        } else if (s.equals("ELLIPSE")) {
-//        	setCADTool("ellipse");
-//        } else if (s.equals("RECTANGLE")) {
-//        	setCADTool("rectangle");
-//        } else if (s.equals("POLYGON")) {
-//        	setCADTool("polygon");
         } else if (s.equals("EDITVERTEX")) {
         	setCADTool("editvertex");
         }
@@ -225,9 +173,13 @@ public class CADExtension implements Extension {
 		if (ct == null) throw new RuntimeException("No such cad tool");
 		adapter.setCadTool(ct);
 		ct.init();
+		adapter.askQuestion();
 		//PluginServices.getMainFrame().setSelectedTool("SELECT");
 		//PluginServices.getMainFrame().enableControls();
 	}
+    public static CADTool getCADTool(){
+    	return adapter.getCadTool();
+    }
     /**
      * @see com.iver.andami.plugins.Extension#isEnabled()
      */
@@ -251,7 +203,7 @@ public class CADExtension implements Extension {
         }
 
         return false; */
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+		/*if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
 		{
 			// Queremos que siempre que haya edición esto esté funcionando.
 	        editionManager.setMapControl(mapControl);
@@ -260,24 +212,36 @@ public class CADExtension implements Extension {
 		else
 			return false;
 
+    */
+    	return true;
     }
 
     /**
      * @see com.iver.andami.plugins.Extension#isVisible()
      */
     public boolean isVisible() {
-        com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
-                                                             .getActiveView();
-
-        if (f == null) {
-            return false;
-        }
-
-        if (f.getClass() == View.class) {
-            return true;
-        } else {
-            return false;
-        }
+    	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+		{
+			// Queremos que siempre que haya edición esto esté funcionando.
+	        editionManager.setMapControl(mapControl);
+			return true;
+		}
+		else
+			return false;
+//        com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+//                                                             .getActiveView();
+//
+//        if (f == null) {
+//            return false;
+//        }
+//
+//        if (f.getClass() == View.class) {
+//        	FLayer[] layers=getMapControl().getMapContext().getLayers().getActives();
+//        	if (layers[0] instanceof FLyrVect && ((FLyrVect)layers[0]).isEditing()){
+//        		return true;
+//        	}
+//        }
+//        return false;
     }
 	public MapControl getMapControl() {
 		return this.mapControl;

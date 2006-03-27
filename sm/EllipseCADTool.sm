@@ -10,6 +10,7 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 %map Ellipse
 %%
@@ -18,9 +19,9 @@
 FirstPointAxis
 
 	Entry {
-		setQuestion("ELIPSE" + "\n" +
-		"Insertar punto inicial de eje de elipse");
-		setDescription(new String[]{"Cancelar"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_initial_point_axis"));
+		setDescription(new String[]{"cancel"});
 		}
 	Exit{
 		}
@@ -28,8 +29,8 @@ FirstPointAxis
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SecondPointAxis {
-				setQuestion("Insertar punto final de eje de elipse");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_last_point_axis"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				}
 
@@ -37,8 +38,8 @@ FirstPointAxis
 SecondPointAxis{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		DistanceOtherAxis {
-			setQuestion("Insertar distancia al otro eje");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_distance_another_axis"));
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			}
 
@@ -59,7 +60,7 @@ DistanceOtherAxis{
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		FirstPointAxis{
 			end();
 			}

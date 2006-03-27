@@ -10,6 +10,7 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 %map Copy
 %%
@@ -18,9 +19,9 @@
 FirstPointToMove
 	Entry {
 		selection();
-		setQuestion("COPIAR" + "\n" +
-		"Precisar punto de desplazamiento");
-		setDescription(new String[]{"Cancelar"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_point_move"));
+		setDescription(new String[]{"cancel"});
 
 		}
 	Exit{
@@ -29,15 +30,15 @@ FirstPointToMove
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SecondPointToMove {
-				setQuestion("Precisar segundo punto del desplazamiento");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_second_point_move"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				}
 	}
 SecondPointToMove{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPointToMove {
-			setDescription(new String[]{"Cancelar"});
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			end();
 			refresh();
@@ -47,7 +48,7 @@ SecondPointToMove{
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		FirstPointToMove{
 			end();
 			}

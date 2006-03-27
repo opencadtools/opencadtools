@@ -10,6 +10,7 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 %map Scale
 %%
@@ -18,9 +19,9 @@
 PointMain
 	Entry {
 		selection();
-		setQuestion("ESCALAR" + "\n" +
-		"Precise punto base");
-		setDescription(new String[]{"Cancelar"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_basis_point"));
+		setDescription(new String[]{"cancel"});
 
 		}
 	Exit{
@@ -29,8 +30,8 @@ PointMain
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			ScaleFactorOrReference {
-				setQuestion("Precise factor de escala<2> o Referencia[R]");
-				setDescription(new String[]{"Referencia","Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+				setDescription(new String[]{"reference","cancel"});
 				addPoint( pointX,pointY,event);
 				}
 	}
@@ -49,10 +50,10 @@ ScaleFactorOrReference{
 			refresh();
 			}
 	addOption(s:String)
-		[s.equals("R") || s.equals("r") || s.equals("Referencia")]
+		[s.equals("R") || s.equals("r") || s.equals(PluginServices.getText(this,"reference"))]
 		PointOriginOrScaleFactor{
-			setQuestion("Precise punto origen recta referencia o Factor de escala[F]");
-			setDescription(new String[]{"Factor escala","Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_reference_point_or_factor"));
+			setDescription(new String[]{"factor","cancel"});
 			addOption(s);
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
@@ -64,32 +65,32 @@ ScaleFactorOrReference{
 }
 PointOriginOrScaleFactor{
 	addOption(s:String)
-		[s.equals("F") || s.equals("f") || s.equals("Factor escala")]
+		[s.equals("F") || s.equals("f") || s.equals(PluginServices.getText(this,"factor"))]
 		PointMain{
-			setQuestion("Precise factor de escala<2> o Referencia[R]");
-			setDescription(new String[]{"Referencia","Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+			setDescription(new String[]{"reference","cancel"});
 			addOption(s);
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		EndPointReference {
-			setQuestion("Precise punto final recta referencia");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_last_point_reference"));
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			}
 }
 EndPointReference{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		OriginPointScale {
-			setQuestion("Precise punto origen recta escala");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_first_point_scale"));
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			}
 }
 OriginPointScale{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		EndPointScale {
-			setQuestion("Precise punto final recta escala");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_last_point_scale"));
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			}
 }
@@ -105,7 +106,7 @@ EndPointScale{
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		PointMain{
 			end();
 			}

@@ -11,6 +11,7 @@
 %import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool
 %import com.iver.cit.gvsig.fmap.layers.FBitSet
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 
 %map Selection
@@ -20,9 +21,9 @@
 FirstPoint
 
 	Entry {
-		setQuestion("SELECCION" + "\n" +
-		"Precise punto del rectángulo de selección");
-		setDescription(new String[]{"Cancelar"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_point_selection"));
+		setDescription(new String[]{"cancel"});
 		}
 	Exit{
 		}
@@ -31,15 +32,15 @@ FirstPoint
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			[ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.SecondPoint")]
 			SecondPoint{
-				setQuestion("Precise segundo punto del rectángulo de seleccion");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_second_point_selection"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				}
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			[ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
 			WithSelectedFeatures {
-				setQuestion("select_handlers");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"select_handlers"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				end();
 				}
@@ -50,16 +51,16 @@ SecondPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 			[ctxt.selectWithSecondPoint(pointX,pointY, event) > 0]
 			WithSelectedFeatures {
-				setQuestion("select_handlers");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"select_handlers"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				end();
 				}
 	// Si no lo hemos conseguido
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 			FirstPoint {
-				setQuestion("Precise punto del rectángulo de selección");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_point_selection"));
+				setDescription(new String[]{"cancel"});
 				}
 
 
@@ -70,8 +71,8 @@ WithSelectedFeatures{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 	[ctxt.selectHandlers(pointX, pointY, event)>0]
 			WithHandlers {
-				setQuestion("Precise punto destino");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_destination_point"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				// refresh();
 				}
@@ -81,8 +82,8 @@ WithSelectedFeatures{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		[ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
 			WithSelectedFeatures {
-				setQuestion("select_handlers");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"select_handlers"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				}
 
@@ -90,8 +91,8 @@ WithSelectedFeatures{
 	// Cualquier otro caso (hemos pinchado en algo vacio), volvemos al estado inicial
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 			FirstPoint {
-				setQuestion("Precise punto del rectángulo de selección");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_point_selection"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				// refresh();
 				}
@@ -101,8 +102,8 @@ WithSelectedFeatures{
 WithHandlers{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 			WithSelectedFeatures {
-				setQuestion("select_handlers");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"select_handlers"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				refresh();
 				}
@@ -111,7 +112,7 @@ WithHandlers{
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		FirstPoint{
 			end();
 			}

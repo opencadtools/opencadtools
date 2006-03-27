@@ -10,6 +10,7 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 %map Rotate
 %%
@@ -18,9 +19,9 @@
 PointMain
 	Entry {
 		selection();
-		setQuestion("ROTAR" + "\n" +
-		"Precise punto base");
-		setDescription(new String[]{"Cancelar"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_basis_point"));
+		setDescription(new String[]{"cancel"});
 
 		}
 	Exit{
@@ -29,22 +30,22 @@ PointMain
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			AngleOrPoint {
-				setQuestion("Precise angulo de rotacion");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_rotation_angle"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				}
 	}
 AngleOrPoint{
 	addValue(d:double)
 		PointMain{
-			setDescription(new String[]{"Cancelar"});
+			setDescription(new String[]{"cancel"});
 			addValue(d);
 			end();
 			refresh();
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		PointMain {
-			setDescription(new String[]{"Cancelar"});
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			end();
 			refresh();
@@ -54,7 +55,7 @@ AngleOrPoint{
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		PointMain{
 			end();
 			}

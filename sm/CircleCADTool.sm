@@ -10,6 +10,7 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 %map Circle
 %%
@@ -18,9 +19,9 @@
 CenterPointOr3p
 
 	Entry {
-		setQuestion("CIRCULO" + "\n" +
-		"Insertar punto central o [3P]:");
-		setDescription(new String[]{"Cancelar","3P"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_central_point_or_3p"));
+		setDescription(new String[]{"cancel","3P"});
 		}
 	Exit{
 		}
@@ -28,15 +29,15 @@ CenterPointOr3p
 	{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 			PointOrRadius {
-				setQuestion("Insertar radio o segundo punto");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_radius_or_second_point"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				}
 	addOption( s:String)
 		[s.equals("3p") || s.equals("3P")]
 			FirstPoint{
-				setQuestion("Insertar primer punto");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_first_point"));
+				setDescription(new String[]{"cancel"});
 				addOption( s);
 			}
 }
@@ -55,8 +56,8 @@ PointOrRadius{
 SecondPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		ThirdPoint {
-			setQuestion("Insertar tercer punto");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_third_point"));
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			}
 }
@@ -71,8 +72,8 @@ ThirdPoint{
 FirstPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		SecondPoint {
-			setQuestion("Insertar segundo punto");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_second_point"));
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			}
 }
@@ -80,7 +81,7 @@ FirstPoint{
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		CenterPointOr3p{
 			end();
 			}

@@ -10,6 +10,7 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 %map EditVertex
 %%
@@ -18,9 +19,9 @@
 SelectVertexOrDelete
 	Entry {
 		selection();
-		setQuestion("EDITAR VERTICES" + "\n" +
-		"Siguiente vertice, Anterior, Anyadir o Eliminar");
-		setDescription(new String[]{"Siguiente","Anterior","Anyadir","Eliminar","Cancelar"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"next_previous_add_del_cancel"));
+		setDescription(new String[]{"next","previous","add","del","cancel"});
 
 		}
 	Exit{
@@ -29,14 +30,14 @@ SelectVertexOrDelete
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SelectVertexOrDelete {
-				setQuestion("Seleccionar a partir de un punto");
-				setDescription(new String[]{"Siguiente","Anterior","Anyadir","Eliminar","Cancelar"});
+				setQuestion(PluginServices.getText(this,"select_from_point"));
+				setDescription(new String[]{"next","previous","add","del","cancel"});
 				addPoint( pointX,pointY,event);
 				}
 		addOption(s:String)
 			SelectVertexOrDelete {
-				setQuestion("Siguiente vertice, aNyadir, Anterior o Eliminar");
-				setDescription(new String[]{"Siguiente","Anterior","Anyadir","Eliminar","Cancelar"});
+				setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
+				setDescription(new String[]{"next","previous","add","del","cancel"});
 				addOption(s);
 				}
 	}
@@ -45,7 +46,7 @@ SelectVertexOrDelete
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		SelectVertexOrDelete{
 			end();
 			}

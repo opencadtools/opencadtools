@@ -7,125 +7,125 @@
 		<extension class-name="com.iver.cit.gvsig.StartEditing"
 			description="Extensión encargada de comenzar la edición sobre la capa activa."
 			active="true">
-			<menu text="Capa/comenzar_edicion" action-command="STARTEDITING"/>
+			<menu text="theme/start_edition" action-command="STARTEDITING"/>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.NewTheme"
 			description="Crear un nuevo tema."
 			active="true">
-			<menu text="Vista/new_theme/new_shp" action-command="SHP"/>
-			<menu text="Vista/new_theme/new_dxf" action-command="DXF"/>
-			<menu text="Vista/new_theme/new_postgis" action-command="POSTGIS"/>
+			<menu text="view/new_theme/new_shp" action-command="SHP"/>
+			<menu text="view/new_theme/new_dxf" action-command="DXF"/>
+			<menu text="view/new_theme/new_postgis" action-command="POSTGIS"/>
 		</extension>
 
 		<extension class-name="com.iver.cit.gvsig.StopEditing"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma."
 			active="true">
-			<menu text="Capa/terminar_edicion" action-command="STOPEDITING"/>
+			<menu text="theme/stop_edition" action-command="STOPEDITING"/>
 		</extension>
 		<!-- <extension class-name="com.iver.cit.gvsig.StopEditingToGT2Shp"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma si es un shapefile."
 			active="true">
-			<menu text="Capa/terminar_edicion/GT2shp" action-command="STOPEDITING"/>
+			<menu text="theme/stop_edition/GT2shp" action-command="STOPEDITING"/>
 		</extension> -->
 		<extension class-name="com.iver.cit.gvsig.RedoViewExtension"
 			description="Extensión encargada de rehacer la edición sobre la capa activa."
 			active="true">
-			<menu text="Capa/rehacer" action-command="REDO" icon="images/Redo.png"/>
+			<menu text="theme/redo" action-command="REDO" icon="images/Redo.png"/>
 		<tool-bar name="modificar">
-				<action-tool name="rehacer" icon="images/Redo.png" action-command="REDO" tooltip="rehacer" group="vista"/>
+				<action-tool name="redo" icon="images/Redo.png" action-command="REDO" tooltip="redo" group="vista"/>
 		</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.UndoViewExtension"
 			description="Extensión encargada de dehacer la edición sobre la capa activa."
 			active="true">
-			<menu text="Capa/deshacer" action-command="UNDO" icon="images/Undo.png"/>
+			<menu text="theme/undo" action-command="UNDO" icon="images/Undo.png"/>
 		<tool-bar name="modificar">
-				<action-tool name="deshacer" icon="images/Undo.png" action-command="UNDO" tooltip="deshacer" group="vista"/>
+				<action-tool name="deshacer" icon="images/Undo.png" action-command="UNDO" tooltip="undo" group="vista"/>
 		</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.ViewCommandStackExtension"
 			description="Extensión encargada de administrar la pila de comados de edición sobre una vista."
 			active="true">
-			<menu text="Archivo/pila_de_comandos" action-command="COMMANDSTACK" icon="images/commandstack.png"/>
+			<menu text="file/commands_stack" action-command="COMMANDSTACK" icon="images/commandstack.png"/>
 		<tool-bar name="gvsig">
-			<action-tool name="pila_de_comandos" icon="images/commandstack.png" action-command="COMMANDSTACK" tooltip="pila_de_comandos" group="vista"/>
+			<action-tool name="commands_stack" icon="images/commandstack.png" action-command="COMMANDSTACK" tooltip="commands_stack" group="vista"/>
 		</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.TableCommandStackExtension"
 			description="Extensión encargada de administrar la pila de comados de edición sobre una tabla."
 			active="true">
-			<menu text="Archivo/pila_de_comandos" action-command="COMMANDSTACK" icon="images/commandstack.png"/>
+			<menu text="file/commands_stack" action-command="COMMANDSTACK" icon="images/commandstack.png"/>
 		<tool-bar name="gvsig">
-			<action-tool name="pila_de_comandos" icon="images/commandstack.png" action-command="COMMANDSTACK" tooltip="pila_de_comandos" group="tabla"/>
+			<action-tool name="commands_stack" icon="images/commandstack.png" action-command="COMMANDSTACK" tooltip="commands_stack" group="tabla"/>
 		</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.EditingExtension"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla en un shapefile."
 			active="true">
-			<menu text="Capa/cancelar_edicion" action-command="CANCELEDITING"/>
-			<menu text="Capa/mostrar_grid" action-command="SHOWGRID"/>
-			<menu text="Capa/ocultar_grid" action-command="HIDEGRID"/>
-			<menu text="Capa/ajustar_grid" action-command="SETADJUSTGRID"/>
-			<menu text="Capa/no_ajustar_grid" action-command="NOTADJUSTGRID"/>
+			<menu text="theme/cancel_edition" action-command="CANCELEDITING"/>
+			<menu text="theme/show_grid" action-command="SHOWGRID"/>
+			<menu text="theme/hide_grid" action-command="HIDEGRID"/>
+			<menu text="theme/adjust_grid" action-command="SETADJUSTGRID"/>
+			<menu text="theme/no_adjust_grid" action-command="NOTADJUSTGRID"/>
 		</extension>
 
 		<extension class-name="com.iver.cit.gvsig.CADExtension"
 			description="Extensión encargada de gestionar los eventos realizados sobre las geometrías."
 			active="true">
-			<menu text="geometria/seleccionar" action-command="SELCAD" icon="images/SelCAD.png"/>
-			<!--menu text="geometria/insertar/punto" action-command="POINT" icon="images/Point.png"/-->
-			<!--menu text="geometria/insertar/linea" action-command="LINE" icon="images/Rect.png"/-->
-			<!--menu text="geometria/insertar/polilinea" action-command="POLYLINE" icon="images/Line.png"/-->
-			<!--menu text="geometria/insertar/poligono" action-command="POLYGON" icon="images/Poligon.png"/-->
-			<!--menu text="geometria/insertar/rectangulo" action-command="RECTANGLE" icon="images/Rectangle.png"/-->
-			<!--menu text="geometria/insertar/circulo" action-command="CIRCLE" icon="images/Circle.png"/-->
-			<!--menu text="geometria/insertar/elipse" action-command="ELLIPSE" icon="images/Ellipse.png"/-->
-			<!--menu text="geometria/insertar/arc" action-command="ARC" icon="images/Arc.png"/-->
-			<!--menu text="geometria/insertar/curva" action-command="SPLINE" icon="images/Spline.png"/-->
-			<menu text="geometria/insertar/copia" action-command="COPY" icon="images/Copy.png"/>
-			<menu text="geometria/insertar/desplazar" action-command="MOVE" icon="images/Move.png"/>
-			<!--menu text="geometria/insertar/equidistante" action-command="EQUIDISTANCE" icon="images/Equidistance.png"/-->
-			<!--menu text="geometria/insertar/Matriz" action-command="MATRIZ" icon="images/Matriz.png"/-->
-			<!--menu text="geometria/insertar/simetria" action-command="SYMMETRY" icon="images/Symmetry.png"/-->
-			<menu text="geometria/insertar/rotacion" action-command="ROTATION" icon="images/Rotation.png"/>
-			<menu text="geometria/insertar/estirar" action-command="STRETCHING" icon="images/Stretching.png"/>
-			<menu text="geometria/insertar/escalado" action-command="SCALE" icon="images/Scale.png"/>
-			<!--menu text="geometria/insertar/alargar" action-command="EXTEND" icon="images/Extend.png"/-->
-			<!--menu text="geometria/insertar/recortar" action-command="TRIM" icon="images/Trim.png"/-->
-			<!--menu text="geometria/insertar/unir_separar" action-command="UNIT" icon="images/Unit.png"/-->
-			<menu text="geometria/insertar/explotar" action-command="EXPLOIT" icon="images/Exploit.png"/>
-			<!--menu text="geometria/insertar/chaflan" action-command="CHAFLAN" icon="images/Chaflan.png"/-->
-			<!--menu text="geometria/insertar/empalme" action-command="JOIN" icon="images/Join.png"/-->
+			<menu text="geometry/seleccionar" action-command="SELCAD" icon="images/SelCAD.png"/>
+			<!--menu text="geometry/insert/point" action-command="POINT" icon="images/Point.png"/-->
+			<!--menu text="geometry/insert/line" action-command="LINE" icon="images/Rect.png"/-->
+			<!--menu text="geometry/insert/polyline" action-command="POLYLINE" icon="images/Line.png"/-->
+			<!--menu text="geometry/insert/polygon" action-command="POLYGON" icon="images/Poligon.png"/-->
+			<!--menu text="geometry/insert/rectangle" action-command="RECTANGLE" icon="images/Rectangle.png"/-->
+			<!--menu text="geometry/insert/circle" action-command="CIRCLE" icon="images/Circle.png"/-->
+			<!--menu text="geometry/insert/ellipse" action-command="ELLIPSE" icon="images/Ellipse.png"/-->
+			<!--menu text="geometry/insert/arc" action-command="ARC" icon="images/Arc.png"/-->
+			<!--menu text="geometry/insert/spline" action-command="SPLINE" icon="images/Spline.png"/-->
+			<menu text="geometry/insert/copy" action-command="COPY" icon="images/Copy.png"/>
+			<menu text="geometry/insert/move" action-command="MOVE" icon="images/Move.png"/>
+			<!--menu text="geometry/insert/equidistance" action-command="EQUIDISTANCE" icon="images/Equidistance.png"/-->
+			<!--menu text="geometry/insert/matriz" action-command="MATRIZ" icon="images/Matriz.png"/-->
+			<!--menu text="geometry/insert/symmetry" action-command="SYMMETRY" icon="images/Symmetry.png"/-->
+			<menu text="geometry/insert/rotate" action-command="ROTATION" icon="images/Rotation.png"/>
+			<menu text="geometry/insert/stretch" action-command="STRETCHING" icon="images/Stretching.png"/>
+			<menu text="geometry/insert/scale" action-command="SCALE" icon="images/Scale.png"/>
+			<!--menu text="geometry/insert/extend" action-command="EXTEND" icon="images/Extend.png"/-->
+			<!--menu text="geometry/insert/trim" action-command="TRIM" icon="images/Trim.png"/-->
+			<!--menu text="geometry/insert/unite_separate" action-command="UNIT" icon="images/Unit.png"/-->
+			<menu text="geometry/insert/exploit" action-command="EXPLOIT" icon="images/Exploit.png"/>
+			<!--menu text="geometry/insert/chaflan" action-command="CHAFLAN" icon="images/Chaflan.png"/-->
+			<!--menu text="geometry/insert/join" action-command="JOIN" icon="images/Join.png"/-->
 
-			<tool-bar name="insertar">
-				<selectable-tool icon="images/SelCAD.png" action-command="SELCAD" tooltip="seleccion" group="vista"/>
-				<!--selectable-tool icon="images/Point.png" action-command="POINT" tooltip="punto" group="vista"/-->
-				<!--selectable-tool icon="images/Rect.png" action-command="LINE" tooltip="linea" group="vista"/-->
-				<!--selectable-tool icon="images/Line.png" action-command="POLYLINE" tooltip="polilinea" group="vista"/-->
-				<!--selectable-tool icon="images/Poligon.png" action-command="POLYGON" tooltip="poligono" group="vista"/-->
-				<!--selectable-tool icon="images/Rectangle.png" action-command="RECTANGLE" tooltip="rectangulo" group="vista"/-->
-				<!--selectable-tool icon="images/Circle.png" action-command="CIRCLE" tooltip="circulo" group="vista"/-->
-				<!--selectable-tool icon="images/Ellipse.png" action-command="ELLIPSE" tooltip="elipse" group="vista"/-->
-				<!--selectable-tool icon="images/Arc.png" action-command="ARC" tooltip="arco" group="vista"/-->
-				<!--selectable-tool icon="images/Spline.png" action-command="SPLINE" tooltip="curva" group="vista"/-->
+			<tool-bar name="insert">
+				<selectable-tool icon="images/SelCAD.png" action-command="SELCAD" tooltip="selection" group="vista"/>
+				<!--selectable-tool icon="images/Point.png" action-command="POINT" tooltip="point" group="vista"/-->
+				<!--selectable-tool icon="images/Rect.png" action-command="LINE" tooltip="line" group="vista"/-->
+				<!--selectable-tool icon="images/Line.png" action-command="POLYLINE" tooltip="polyline" group="vista"/-->
+				<!--selectable-tool icon="images/Poligon.png" action-command="POLYGON" tooltip="polygon" group="vista"/-->
+				<!--selectable-tool icon="images/Rectangle.png" action-command="RECTANGLE" tooltip="rectangle" group="vista"/-->
+				<!--selectable-tool icon="images/Circle.png" action-command="CIRCLE" tooltip="circle" group="vista"/-->
+				<!--selectable-tool icon="images/Ellipse.png" action-command="ELLIPSE" tooltip="ellipse" group="vista"/-->
+				<!--selectable-tool icon="images/Arc.png" action-command="ARC" tooltip="arc" group="vista"/-->
+				<!--selectable-tool icon="images/Spline.png" action-command="SPLINE" tooltip="spline" group="vista"/-->
 			</tool-bar>
 			<tool-bar name="modificar">
-				<selectable-tool name="selection" icon="images/Select.png" action-command="SELECT" tooltip="seleccionar_por_rectangulo" group="vista"/>
-				<selectable-tool icon="images/Copy.png" action-command="COPY" tooltip="copia" group="vista"/>
-				<selectable-tool icon="images/Move.png" action-command="MOVE" tooltip="desplazar" group="vista"/>
-				<!--selectable-tool icon="images/Equidistance.png" action-command="EQUIDISTANCE" tooltip="equidistante" group="vista"/-->
+				<selectable-tool name="selection" icon="images/Select.png" action-command="SELECT" tooltip="selection" group="vista"/>
+				<selectable-tool icon="images/Copy.png" action-command="COPY" tooltip="copy" group="vista"/>
+				<selectable-tool icon="images/Move.png" action-command="MOVE" tooltip="move" group="vista"/>
+				<!--selectable-tool icon="images/Equidistance.png" action-command="EQUIDISTANCE" tooltip="equidistance" group="vista"/-->
 				<!--selectable-tool icon="images/Matriz.png" action-command="MATRIZ" tooltip="matriz" group="vista"/-->
-				<!--selectable-tool icon="images/Symmetry.png" action-command="SYMMETRY" tooltip="simetria" group="vista"/-->
-				<selectable-tool icon="images/Rotation.png" action-command="ROTATION" tooltip="rotacion" group="vista"/>
-				<selectable-tool icon="images/Stretching.png" action-command="STRETCHING" tooltip="estirar" group="vista"/>
-				<selectable-tool icon="images/Scale.png" action-command="SCALE" tooltip="escalado" group="vista"/>
-				<!--selectable-tool icon="images/Extend.png" action-command="EXTEND" tooltip="alargar" group="vista"/-->
-				<!--selectable-tool icon="images/Trim.png" action-command="TRIM" tooltip="recortar" group="vista"/-->
-				<!--selectable-tool icon="images/Unit.png" action-command="UNIT" tooltip="unir_separar" group="vista"/-->
-				<selectable-tool icon="images/Exploit.png" action-command="EXPLOIT" tooltip="explotar" group="vista"/>
+				<!--selectable-tool icon="images/Symmetry.png" action-command="SYMMETRY" tooltip="symmetry" group="vista"/-->
+				<selectable-tool icon="images/Rotation.png" action-command="ROTATION" tooltip="rotation" group="vista"/>
+				<selectable-tool icon="images/Stretching.png" action-command="STRETCHING" tooltip="stretch" group="vista"/>
+				<selectable-tool icon="images/Scale.png" action-command="SCALE" tooltip="scale" group="vista"/>
+				<!--selectable-tool icon="images/Extend.png" action-command="EXTEND" tooltip="extend" group="vista"/-->
+				<!--selectable-tool icon="images/Trim.png" action-command="TRIM" tooltip="trim" group="vista"/-->
+				<!--selectable-tool icon="images/Unit.png" action-command="UNIT" tooltip="unite_separate" group="vista"/-->
+				<selectable-tool icon="images/Exploit.png" action-command="EXPLOIT" tooltip="exploit" group="vista"/>
 				<!--selectable-tool icon="images/Chaflan.png" action-command="CHAFLAN" tooltip="chaflan" group="vista"/-->
-				<!--selectable-tool icon="images/Join.png" action-command="JOIN" tooltip="empalme" group="vista"/-->
-				<selectable-tool icon="images/EditVertex.png" action-command="EDITVERTEX" tooltip="editar_vertices" group="vista"/>
+				<!--selectable-tool icon="images/Join.png" action-command="JOIN" tooltip="join" group="vista"/-->
+				<selectable-tool icon="images/EditVertex.png" action-command="EDITVERTEX" tooltip="edit_vertex" group="vista"/>
 
 			</tool-bar>
 		</extension>
@@ -133,42 +133,42 @@
 		<extension class-name="com.iver.cit.gvsig.InsertPointExtension"
 			description="Extensión encargada de insertar puntos en un tema en edición."
 			active="true">
-			<menu text="geometria/insertar/punto" action-command="POINT" icon="images/Point.png"/>
-			<tool-bar name="insertar">
-				<selectable-tool icon="images/Point.png" action-command="POINT" tooltip="punto" group="vista"/>
+			<menu text="geometry/insert/point" action-command="POINT" icon="images/Point.png"/>
+			<tool-bar name="insert">
+				<selectable-tool icon="images/Point.png" action-command="POINT" tooltip="point" group="vista"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertLineExtension"
 			description="Extensión encargada de insertar líneas en un tema en edición."
 			active="true">
-			<menu text="geometria/insertar/linea" action-command="LINE" icon="images/Rect.png"/>
-			<menu text="geometria/insertar/arc" action-command="ARC" icon="images/Arc.png"/>
+			<menu text="geometry/insert/line" action-command="LINE" icon="images/Rect.png"/>
+			<menu text="geometry/insert/arc" action-command="ARC" icon="images/Arc.png"/>
 
-			<tool-bar name="insertar">
-				<selectable-tool icon="images/Rect.png" action-command="LINE" tooltip="linea" group="vista"/>
-				<selectable-tool icon="images/Arc.png" action-command="ARC" tooltip="arco" group="vista"/>
+			<tool-bar name="insert">
+				<selectable-tool icon="images/Rect.png" action-command="LINE" tooltip="line" group="vista"/>
+				<selectable-tool icon="images/Arc.png" action-command="ARC" tooltip="arc" group="vista"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertPolyLineExtension"
 			description="Extensión encargada de insertar polilíneas en un tema en edición."
 			active="true">
-			<menu text="geometria/insertar/polilinea" action-command="POLYLINE" icon="images/Line.png"/>
-			<tool-bar name="insertar">
-				<selectable-tool icon="images/Line.png" action-command="POLYLINE" tooltip="polilinea" group="vista"/>
+			<menu text="geometry/insert/polyline" action-command="POLYLINE" icon="images/Line.png"/>
+			<tool-bar name="insert">
+				<selectable-tool icon="images/Line.png" action-command="POLYLINE" tooltip="polyline" group="vista"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertPolygonExtension"
 			description="Extensión encargada de insertar poligonos en un tema en edición."
 			active="true">
-			<menu text="geometria/insertar/poligono" action-command="POLYGON" icon="images/Poligon.png"/>
-			<menu text="geometria/insertar/rectangulo" action-command="RECTANGLE" icon="images/Rectangle.png"/>
-			<menu text="geometria/insertar/circulo" action-command="CIRCLE" icon="images/Circle.png"/>
-			<menu text="geometria/insertar/elipse" action-command="ELLIPSE" icon="images/Ellipse.png"/>
-			<tool-bar name="insertar">
-				<selectable-tool icon="images/Poligon.png" action-command="POLYGON" tooltip="poligono" group="vista"/>
-				<selectable-tool icon="images/Rectangle.png" action-command="RECTANGLE" tooltip="rectangulo" group="vista"/>
-				<selectable-tool icon="images/Circle.png" action-command="CIRCLE" tooltip="circulo" group="vista"/>
-				<selectable-tool icon="images/Ellipse.png" action-command="ELLIPSE" tooltip="elipse" group="vista"/>
+			<menu text="geometry/insert/polygon" action-command="POLYGON" icon="images/Poligon.png"/>
+			<menu text="geometry/insert/rectangle" action-command="RECTANGLE" icon="images/Rectangle.png"/>
+			<menu text="geometry/insert/circle" action-command="CIRCLE" icon="images/Circle.png"/>
+			<menu text="geometry/insert/ellipse" action-command="ELLIPSE" icon="images/Ellipse.png"/>
+			<tool-bar name="insert">
+				<selectable-tool icon="images/Poligon.png" action-command="POLYGON" tooltip="polygon" group="vista"/>
+				<selectable-tool icon="images/Rectangle.png" action-command="RECTANGLE" tooltip="rectangle" group="vista"/>
+				<selectable-tool icon="images/Circle.png" action-command="CIRCLE" tooltip="circle" group="vista"/>
+				<selectable-tool icon="images/Ellipse.png" action-command="ELLIPSE" tooltip="ellipse" group="vista"/>
 			</tool-bar>
 		</extension>
 	</extensions>

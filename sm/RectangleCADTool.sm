@@ -10,6 +10,7 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 %map Rectangle
 %%
@@ -18,9 +19,9 @@
 FirstPoint
 
 	Entry {
-		setQuestion("RECTANGULO" + "\n" +
-		"Insertar primer punto de esquina");
-		setDescription(new String[]{"Cancelar"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_first_point_corner"));
+		setDescription(new String[]{"cancel"});
 		}
 	Exit{
 		}
@@ -29,8 +30,8 @@ FirstPoint
 
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SecondPointOrSquare {
-				setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
-				setDescription(new String[]{"Cuadrado","Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_point_corner_or_square"));
+				setDescription(new String[]{"square","cancel"});
 				addPoint( pointX,pointY,event);
 				}
 
@@ -42,10 +43,10 @@ SecondPointOrSquare{
 			end();
 			}
 	addOption(s:String)
-		[s.equals("c") || s.equals("C") || s.equals("Cuadrado")]
+		[s.equals("c") || s.equals("C") || s.equals(PluginServices.getText(this,"square"))]
 		SecondPointSquare {
-			setQuestion("Insertar esquina opuesta");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_opposited_corner"));
+			setDescription(new String[]{"cancel"});
 			addOption(s);
 			}
 
@@ -61,7 +62,7 @@ SecondPointSquare{
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		FirstPoint{
 			end();
 			}

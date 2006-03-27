@@ -10,6 +10,7 @@
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.LineCADTool
 %import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
 
 %map Line
 %%
@@ -18,9 +19,9 @@
 FirstPoint
 
 	Entry {
-		setQuestion("LINEA" + "\n" +
-		"Insertar primer punto");
-		setDescription(new String[]{"Cancelar"});
+		setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_first_point"));
+		setDescription(new String[]{"cancel"});
 		}
 	Exit{
 		}
@@ -29,8 +30,8 @@ FirstPoint
 
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SecondPointOrAngle {
-				setQuestion("Insertar segundo punto o angulo");
-				setDescription(new String[]{"Cancelar"});
+				setQuestion(PluginServices.getText(this,"insert_second_point_angle"));
+				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				}
 
@@ -38,14 +39,14 @@ FirstPoint
 SecondPointOrAngle{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		SecondPointOrAngle {
-			setQuestion("Insertar segundo punto o angulo");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_second_point_angle"));
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			}
 	addValue( d:double)
 		LenghtOrPoint {
-			setQuestion("Insertar longitud o punto");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_length_or_point"));
+			setDescription(new String[]{"cancel"});
 			addValue( d);
 			}
 
@@ -53,21 +54,21 @@ SecondPointOrAngle{
 LenghtOrPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		SecondPointOrAngle {
-			setQuestion("Insertar segundo punto o angulo");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_second_point_angle"));
+			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			}
 	addValue( d:double)
 		SecondPointOrAngle {
-			setQuestion("Insertar segundo punto o angulo");
-			setDescription(new String[]{"Cancelar"});
+			setQuestion(PluginServices.getText(this,"insert_second_point_angle"));
+			setDescription(new String[]{"cancel"});
 			addValue( d);
 			}
 	}
 Default
 {
 	addOption(s:String)
-		[s.equals("Cancelar")]
+		[s.equals(PluginServices.getText(this,"cancel"))]
 		FirstPoint{
 			end();
 			}
@@ -76,6 +77,6 @@ Default
 		FirstPoint{
 			end();
 			}
-			
+
 }
 %%
