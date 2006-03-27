@@ -56,7 +56,6 @@ import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ScaleCADToolContext;
@@ -117,12 +116,10 @@ public class ScaleCADTool extends DefaultCADTool {
      * DOCUMENT ME!
      */
     public void selection() {
-        FBitSet selection = CADExtension.getCADToolAdapter()
-                                        .getVectorialAdapter().getSelection();
-
-        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
+        ArrayList rowSelected=getSelectedRows();
+        if (rowSelected.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
             CADExtension.setCADTool("selection");
-            ((SelectionCADTool) CADExtension.getCADToolAdapter().getCadTool()).setNextTool(
+            ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
                 "scale");
         }
     }
@@ -137,7 +134,6 @@ public class ScaleCADTool extends DefaultCADTool {
     public void addPoint(double x, double y,InputEvent event) {
         ScaleCADToolState actualState = (ScaleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-
 
         if (status.equals("Scale.PointMain")) {
 				firstPoint = new Point2D.Double(x, y);
@@ -161,6 +157,7 @@ public class ScaleCADTool extends DefaultCADTool {
 			}
 
 			PluginServices.getMDIManager().restoreCursor();
+			clearSelection();
 		} else if (status.equals("Scale.PointOriginOrScaleFactor")) {
 			orr = new Point2D.Double(x, y);
 		} else if (status.equals("Scale.EndPointReference")) {
@@ -182,7 +179,7 @@ public class ScaleCADTool extends DefaultCADTool {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
+			clearSelection();
 		}
 
     }
@@ -198,14 +195,14 @@ public class ScaleCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
 		ScaleCADToolState actualState = ((ScaleCADToolContext) _fsm).getState();
 		String status = actualState.getName();
-		ArrayList selectedRow = getSelectedRow();
+		ArrayList selectedRow = getSelectedRows();
 		Point2D currentPoint = new Point2D.Double(x, y);
 
 		if (status.equals("Scale.ScaleFactorOrReference")) {
 			for (int i = 0; i < selectedRow.size(); i++) {
 				DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
 						.get(i)).getLinkedRow();
-				IGeometry geometry = fea.getGeometry();
+				IGeometry geometry = fea.getGeometry().cloneGeometry();
 				double size = getCadToolAdapter().getMapControl().getViewPort()
 						.toMapDistance(
 								getCadToolAdapter().getMapControl().getWidth());
@@ -227,7 +224,7 @@ public class ScaleCADTool extends DefaultCADTool {
 			for (int i = 0; i < selectedRow.size(); i++) {
 				DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
 						.get(i)).getLinkedRow();
-				IGeometry geometry = fea.getGeometry();
+				IGeometry geometry = fea.getGeometry().cloneGeometry();
 
 				double distrr = orr.distance(frr);
 				double distre = ore.distance(currentPoint);
@@ -286,19 +283,19 @@ public class ScaleCADTool extends DefaultCADTool {
     private void scale(double scaleFactor) throws DriverIOException, IOException {
     		VectorialEditableAdapter vea=getCadToolAdapter().getVectorialAdapter();
     		vea.startComplexRow();
-    		FBitSet selection=vea.getSelection();
-    		for (int i = 0; i < vea.getRowCount(); i++) {
-    			if (selection.get(i)) {
-    				DefaultFeature df=(DefaultFeature)vea.getRow(i).cloneRow();
-    				UtilFunctions.scaleGeom(df.getGeometry(), scalePoint, scaleFactor, scaleFactor);
+    		ArrayList selectedRow=getSelectedRows();
+    		for (int i = 0; i < selectedRow.size(); i++) {
+				DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
+						.get(i)).getLinkedRow().cloneRow();
+				UtilFunctions.scaleGeom(fea.getGeometry(), scalePoint, scaleFactor, scaleFactor);
     				// df.getGeometry().scale(scalePoint, scaleFactor, scaleFactor);
-    				vea.modifyRow(i, df,getName());
-    			}
+    				vea.modifyRow(i, fea,getName());
+
     		}
     		vea.endComplexRow();
     	}
 
 	public String getName() {
-		return "ESCALAR";
+		return PluginServices.getText(this,"scale_");
 	}
 }

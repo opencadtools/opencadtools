@@ -29,7 +29,7 @@ import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
  * <p>Title: JWizardComponent</p>
  * <p>Description: Swing-Based Wizard Framework for Wizards</p>
  * <p>Copyright (C) 2003 William Ready
- * 
+ *
  * <br>This library is free software; you can redistribute it and/or
  * <br>modify it under the terms of the GNU Lesser General Public
  * <br>License as published by the Free Software Foundation; either
@@ -37,12 +37,12 @@ import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
  *
  * <br>This library is distributed in the hope that it will be useful,
  * <br>but WITHOUT ANY WARRANTY; without even the implied warranty of
- * <br>MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * <br>MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * <br>See the GNU Lesser General Public License for more details.
  *
- * <br>To receive a copy of the GNU Lesser General Public License 
- * <br>write to:  The Free Software Foundation, Inc., 
- * <br>59 Temple Place, Suite 330 
+ * <br>To receive a copy of the GNU Lesser General Public License
+ * <br>write to:  The Free Software Foundation, Inc.,
+ * <br>59 Temple Place, Suite 330
  * <br>Boston, MA 02111-1307 USA</p>
  * @author William Ready
  * @version 1.0
@@ -51,11 +51,11 @@ import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 public class TestJWizard {
 
   static ImageIcon LOGO;
-  
+
 
   public static void main(String [] args) {
     try {
-    	
+
     	LOGO = new javax.swing.ImageIcon("images/package_graphics.png");
 			// new ImageIcon(DefaultJWizardComponents.class.getResource("images/logo.jpeg"));
 
@@ -65,20 +65,20 @@ public class TestJWizard {
 
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
       SwingUtilities.updateComponentTreeUI(wizardFrame);
-      
+
       wizardFrame.setTitle("Nuevo tema");
-      
-      MyFinishAction myFinish = new MyFinishAction(wizardFrame.getWizardComponents(), null, "SHP"); 
-      
+
+      MyFinishAction myFinish = new MyFinishAction(wizardFrame.getWizardComponents(), null, "SHP");
+
 	  wizardFrame.getWizardComponents().setFinishAction(myFinish);
-	  
+
 
       /* wizardFrame.getWizardComponents().addWizardPanel(
           new SimpleLabelWizardPanel(wizardFrame.getWizardComponents(),
           new JLabel("Dynamic Test"))); */
       /* LayerFactory.setDriversPath("d:/Eclipse/workspace/_fwAndami/gvSIG/extensiones/com.iver.cit.gvsig/drivers");
-      
-      DriverManager writerManager = LayerFactory.getDM(); 
+
+      DriverManager writerManager = LayerFactory.getDM();
       ArrayList spatialDrivers = new ArrayList();
       String[] writerNames = writerManager.getDriverNames();
       for (int i=0; i<writerNames.length; i++)
@@ -87,15 +87,15 @@ public class TestJWizard {
     	  if (drv instanceof ISpatialWriter)
     		  spatialDrivers.add(drv.getName());
       }
-      
-      
+
+
 
       wizardFrame.getWizardComponents().addWizardPanel(
     		  new ChooseWriteDriver(wizardFrame.getWizardComponents(),
-              "Dynamic Test", (String[]) spatialDrivers.toArray(new String[0]))); 
+              "Dynamic Test", (String[]) spatialDrivers.toArray(new String[0])));
       */
 		ChooseGeometryType panelChoose = new ChooseGeometryType(wizardFrame.getWizardComponents());
-		JPanelFieldDefinition panelFields = new JPanelFieldDefinition(wizardFrame.getWizardComponents());			
+		JPanelFieldDefinition panelFields = new JPanelFieldDefinition(wizardFrame.getWizardComponents());
 		wizardFrame.getWizardComponents().addWizardPanel(panelChoose);
 
 		wizardFrame.getWizardComponents().addWizardPanel(panelFields);
@@ -106,9 +106,9 @@ public class TestJWizard {
       wizardFrame.setSize(540, 350);
       Utilities.centerComponentOnScreen(wizardFrame);
       wizardFrame.show();
-      
+
   	  // System.out.println("Salgo con " + panelChoose.getLayerName());
-  	  
+
     } catch (Exception e) {
       e.printStackTrace();
     }

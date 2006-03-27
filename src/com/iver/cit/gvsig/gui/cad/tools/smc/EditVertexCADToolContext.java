@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class EditVertexCADToolContext
     extends statemap.FSMContext
@@ -147,7 +148,7 @@ public final class EditVertexCADToolContext
         {
             EditVertexCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -204,9 +205,9 @@ public final class EditVertexCADToolContext
                 EditVertexCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion("EDITAR VERTICES" + "\n" +
-		"Siguiente vertice, Anterior, Anyadir o Eliminar");
-                ctxt.setDescription(new String[]{"Siguiente", "Anterior", "Anyadir", "Eliminar", "Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"next_previous_add_del_cancel"));
+                ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
                 return;
             }
 
@@ -219,8 +220,8 @@ public final class EditVertexCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Siguiente vertice, aNyadir, Anterior o Eliminar");
-                    ctxt.setDescription(new String[]{"Siguiente", "Anterior", "Anyadir", "Eliminar", "Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
+                    ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
                     ctxt.addOption(s);
                 }
                 finally
@@ -239,8 +240,8 @@ public final class EditVertexCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Seleccionar a partir de un punto");
-                    ctxt.setDescription(new String[]{"Siguiente", "Anterior", "Anyadir", "Eliminar", "Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"select_from_point"));
+                    ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

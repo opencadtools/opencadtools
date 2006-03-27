@@ -90,10 +90,10 @@ public class UndoViewExtension implements Extension {
 				}
 			}
 		} catch (DriverIOException e) {
-			NotificationManager.addError("Error accediendo a los Drivers para deshacer un comando",
+			NotificationManager.addError("undo_error",
 				e);
 		} catch (IOException e) {
-			NotificationManager.addError("Error accediendo al fichero para deshacer un comando",
+			NotificationManager.addError("undo_error",
 				e);
 		}
 		//vista.getMapControl().cancelDrawing();

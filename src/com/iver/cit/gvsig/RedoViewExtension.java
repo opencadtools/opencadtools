@@ -87,10 +87,10 @@ public class RedoViewExtension implements Extension {
 
 					}
 			} catch (DriverIOException e) {
-				NotificationManager.addError("Error accediendo a los Drivers para rehacer un comando",
+				NotificationManager.addError(PluginServices.getText(this,"redo_error"),
 					e);
 			} catch (IOException e) {
-				NotificationManager.addError("Error accediendo al fichero para rehacer un comando",
+				NotificationManager.addError("redo_error",
 					e);
 			}
 

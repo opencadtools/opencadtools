@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class LineCADToolContext
     extends statemap.FSMContext
@@ -164,7 +165,7 @@ public final class LineCADToolContext
         {
             LineCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -246,9 +247,9 @@ public final class LineCADToolContext
             {
                 LineCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("LINEA" + "\n" +
-		"Insertar primer punto");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_first_point"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -261,8 +262,8 @@ public final class LineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_second_point_angle"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -299,8 +300,8 @@ public final class LineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_second_point_angle"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -319,8 +320,8 @@ public final class LineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar longitud o punto");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_length_or_point"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addValue(d);
                 }
                 finally
@@ -357,8 +358,8 @@ public final class LineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_second_point_angle"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -378,8 +379,8 @@ public final class LineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto o angulo");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_second_point_angle"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addValue(d);
                 }
                 finally

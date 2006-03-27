@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class PointCADToolContext
     extends statemap.FSMContext
@@ -147,7 +148,7 @@ public final class PointCADToolContext
         {
             PointCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -203,9 +204,9 @@ public final class PointCADToolContext
             {
                 PointCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("PUNTO" + "\n" +
-		"Defina el punto");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"define_point"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -218,8 +219,8 @@ public final class PointCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar punto");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_point"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

@@ -83,7 +83,7 @@ public class StopEditingToShp implements Extension {
     public void stopEditing(FLyrVect layer,MapControl mapControl) {
         try {
             JFileChooser jfc = new JFileChooser();
-            SimpleFileFilter filterShp = new SimpleFileFilter("shp", "Ficheros .shp");
+            SimpleFileFilter filterShp = new SimpleFileFilter("shp", PluginServices.getText(this,"shp_files"));
             jfc.setFileFilter(filterShp);
             if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
         		    File newFile = jfc.getSelectedFile();
@@ -101,7 +101,7 @@ public class StopEditingToShp implements Extension {
 
                     vea.stopEdition(writer);
                     vea.getCommandRecord().removeCommandListener(mapControl);
-                    
+
                     layer.setEditing(false);
                     vista.hideConsole();
                 }

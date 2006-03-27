@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class EllipseCADToolContext
     extends statemap.FSMContext
@@ -164,7 +165,7 @@ public final class EllipseCADToolContext
         {
             EllipseCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -220,9 +221,9 @@ public final class EllipseCADToolContext
             {
                 EllipseCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("ELIPSE" + "\n" +
-		"Insertar punto inicial de eje de elipse");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_initial_point_axis"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -235,8 +236,8 @@ public final class EllipseCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar punto final de eje de elipse");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_last_point_axis"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -273,8 +274,8 @@ public final class EllipseCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar distancia al otro eje");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_distance_another_axis"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

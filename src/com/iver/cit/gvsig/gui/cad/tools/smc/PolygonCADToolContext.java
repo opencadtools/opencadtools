@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class PolygonCADToolContext
     extends statemap.FSMContext
@@ -166,7 +167,7 @@ public final class PolygonCADToolContext
         {
             PolygonCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -222,9 +223,9 @@ public final class PolygonCADToolContext
             {
                 PolygonCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("POLIGONO" + "\n" +
-		"Insertar numero de lados<5>");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_number_sides"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -237,8 +238,8 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]<C>");
-                    ctxt.setDescription(new String[]{"Inscrito", "Circunscrito", "Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"into_circle_or_circumscribed"));
+                    ctxt.setDescription(new String[]{"into_circle", "circumscribed", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -258,8 +259,8 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar punto central del poligono");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_central_point_polygon"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addValue(d);
                 }
                 finally
@@ -296,8 +297,8 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Inscrito en el c?rculo[I] o Circunscrito[C]<C>");
-                    ctxt.setDescription(new String[]{"Inscrito", "Circunscrito", "Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"into_circle_or_circumscribed"));
+                    ctxt.setDescription(new String[]{"into_circle", "circumscribed", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -334,8 +335,8 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precise r?dio(r)");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_radius"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addOption(s);
                 }
                 finally

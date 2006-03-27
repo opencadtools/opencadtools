@@ -55,7 +55,6 @@ import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MoveCADToolContext;
@@ -111,12 +110,10 @@ public class MoveCADTool extends DefaultCADTool {
      * DOCUMENT ME!
      */
     public void selection() {
-        FBitSet selection = CADExtension.getCADToolAdapter()
-                                        .getVectorialAdapter().getSelection();
-
-        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
+    	ArrayList selectedRow=getSelectedRows();
+        if (selectedRow.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
             CADExtension.setCADTool("selection");
-            ((SelectionCADTool) CADExtension.getCADToolAdapter().getCadTool()).setNextTool(
+            ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
                 "move");
         }
     }
@@ -132,7 +129,7 @@ public class MoveCADTool extends DefaultCADTool {
         MoveCADToolState actualState = (MoveCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        ArrayList selectedRow=getSelectedRow();
+        ArrayList selectedRow=getSelectedRows();
 
     	if (status.equals("Move.FirstPointToMove")) {
             firstPoint = new Point2D.Double(x, y);
@@ -154,10 +151,8 @@ public class MoveCADTool extends DefaultCADTool {
 
                     vea.modifyRow(edRow.getIndex(),feat,getName());
         		}
-              FBitSet selection = CADExtension.getCADToolAdapter()
-              		.getVectorialAdapter().getSelection();
-              	selection.clear();
-                selectedRow.clear();
+
+                clearSelection();
                 vea.endComplexRow();
             } catch (DriverIOException e) {
                 e.printStackTrace();
@@ -179,7 +174,7 @@ public class MoveCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
         MoveCADToolState actualState = ((MoveCADToolContext) _fsm).getState();
         String status = actualState.getName();
-        ArrayList selectedRow=getSelectedRow();
+        ArrayList selectedRow=getSelectedRows();
         	drawHandlers(g, selectedRow,
                      getCadToolAdapter().getMapControl().getViewPort()
                          .getAffineTransform());
@@ -214,6 +209,6 @@ public class MoveCADTool extends DefaultCADTool {
     }
 
 	public String getName() {
-		return "DESPLAZAR";
+		return PluginServices.getText(this,"move_");
 	}
 }

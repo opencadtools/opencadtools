@@ -16,6 +16,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 
 import jwizardcomponent.JWizardComponents;
@@ -23,7 +24,7 @@ import jwizardcomponent.JWizardPanel;
 
 /**
  * @author fjp
- * 
+ *
  * Panel para que el usuario seleccione el driver que va a utilizar para
  * crear un tema desde cero.
  *
@@ -44,7 +45,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		initialize();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see jwizardcomponent.JWizardPanel#next()
@@ -59,11 +60,11 @@ public class JPanelFieldDefinition extends JWizardPanel {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 */
 	private void initialize() {
         jLabel = new JLabel();
-        jLabel.setText("define_fields");
+        jLabel.setText(PluginServices.getText(this,"define_fields"));
         this.setLayout(new BorderLayout(5,5));
         this.setSize(new java.awt.Dimension(437,232));
         this.add(jLabel, java.awt.BorderLayout.NORTH);
@@ -73,9 +74,9 @@ public class JPanelFieldDefinition extends JWizardPanel {
 
 
 	/**
-	 * This method initializes jScrollPane	
-	 * 	
-	 * @return javax.swing.JScrollPane	
+	 * This method initializes jScrollPane
+	 *
+	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
@@ -87,29 +88,29 @@ public class JPanelFieldDefinition extends JWizardPanel {
 
 
 	/**
-	 * This method initializes jTable	
-	 * 	
-	 * @return javax.swing.JTable	
+	 * This method initializes jTable
+	 *
+	 * @return javax.swing.JTable
 	 */
 	private JTable getJTable() {
 		if (jTable == null) {
 			jTable = new JTable();
 			DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
-			tm.addColumn("Field");
-			
+			tm.addColumn(PluginServices.getText(this,"field"));
+
 			// TableColumn fieldTypeColumn = new TableColumn(1);
 			// fieldTypeColumn.setHeaderValue("Type");
 			// jTable.addColumn(fieldTypeColumn);
-			tm.addColumn("Type");
+			tm.addColumn(PluginServices.getText(this,"type"));
 			// MIRAR EL CÓDIGO DEL BOTÓN DE AÑADIR CAMPO PARA VER EL CellEditor con comboBox
 
-			
+
 			/* TableColumn fieldLengthColumn = new TableColumn(2);
 			fieldLengthColumn.setHeaderValue("Length");
 			// fieldLengthColumn.setCellRenderer(new DefaultTableCellRenderer());
 			jTable.addColumn(fieldLengthColumn); */
-			tm.addColumn("Length");
-			
+			tm.addColumn(PluginServices.getText(this,"length"));
+
 //			Ask to be notified of selection changes.
 			ListSelectionModel rowSM = jTable.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
@@ -130,16 +131,16 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			    }
 			});
 
-			
+
 		}
 		return jTable;
 	}
 
 
 	/**
-	 * This method initializes jPanelWest	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jPanelWest
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelEast() {
 		if (jPanelEast == null) {
@@ -154,25 +155,25 @@ public class JPanelFieldDefinition extends JWizardPanel {
 
 
 	/**
-	 * This method initializes jButtonAddField	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes jButtonAddField
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonAddField() {
 		if (jButtonAddField == null) {
 			jButtonAddField = new JButton();
-			jButtonAddField.setText("AddField");
+			jButtonAddField.setText(PluginServices.getText(this,"add_field"));
 			jButtonAddField.setBounds(new java.awt.Rectangle(7,5,85,23));
 			jButtonAddField.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					// Add a new row
 					DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
 					Object[] newRow = new Object[tm.getColumnCount()];
-					newRow[0] = "NewField";
+					newRow[0] = PluginServices.getText(this,"new_field");
 					newRow[1] = "String";
 					newRow[2] = "20";
 					tm.addRow(newRow);
-					
+
 					// Esto lo añado aquí porque si no tiene registros, no hace caso. (Por eso no
 					// lo pongo en getJTable()
 					TableColumn typeColumn = jTable.getColumnModel().getColumn(1);
@@ -185,32 +186,32 @@ public class JPanelFieldDefinition extends JWizardPanel {
 					typeColumn.setCellEditor(new DefaultCellEditor(comboBox));
 
 					TableColumn widthColumn = jTable.getColumnModel().getColumn(2);
-					
+
 					// tm.setValueAt("NewField", tm.getRowCount()-1, 0);
 				}
 			});
-			
+
 		}
 		return jButtonAddField;
 	}
 
 
 	/**
-	 * This method initializes jButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes jButton
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonDeleteField() {
 		if (jButtonDeleteField == null) {
 			jButtonDeleteField = new JButton();
-			jButtonDeleteField.setText("DeleteField");
+			jButtonDeleteField.setText(PluginServices.getText(this,"delete_field"));
 			jButtonDeleteField.setBounds(new java.awt.Rectangle(7,33,85,23));
 			jButtonDeleteField.setEnabled(false);
 			jButtonDeleteField.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					int[] selecteds = jTable.getSelectedRows();
 					DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
-					
+
 					for (int i=selecteds.length-1; i >=0; i--)
 						tm.removeRow(selecteds[i]);
 				}
@@ -228,7 +229,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	public FieldDescription[] getFieldsDescription() {
 		DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
 		FieldDescription[] fieldsDesc = new FieldDescription[tm.getRowCount()];
-		
+
 		for (int i=0; i < tm.getRowCount(); i++)
 		{
 			fieldsDesc[i] = new FieldDescription();
@@ -246,13 +247,13 @@ public class JPanelFieldDefinition extends JWizardPanel {
 				fieldsDesc[i].setFieldType(Types.DATE);
 			int fieldLength = Integer.parseInt((String) tm.getValueAt(i,2));
 			fieldsDesc[i].setFieldLength(fieldLength);
-			
+
 			// TODO: HACERLO BIEN
 			if (strType.equals("Double"))
 				fieldsDesc[i].setFieldDecimalCount(5);
-				
+
 		}
-		
+
 		return fieldsDesc;
 	}
 

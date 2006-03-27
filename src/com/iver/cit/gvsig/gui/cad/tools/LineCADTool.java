@@ -45,6 +45,7 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
@@ -200,7 +201,7 @@ public class LineCADTool extends DefaultCADTool {
     }
 
 	public String getName() {
-		return "LINEA";
+		return PluginServices.getText(this,"line_");
 	}
 
 }

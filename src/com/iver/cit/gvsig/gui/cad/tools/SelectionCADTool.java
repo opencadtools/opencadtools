@@ -376,7 +376,7 @@ public class SelectionCADTool extends DefaultCADTool {
 	}
 
 	public String getName() {
-		return "SELECCION";
+		return PluginServices.getText(this,"selection_");
 	}
 
 	public boolean selectFeatures(double x, double y, InputEvent event) {

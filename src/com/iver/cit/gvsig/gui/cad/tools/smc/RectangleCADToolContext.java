@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class RectangleCADToolContext
     extends statemap.FSMContext
@@ -151,7 +152,7 @@ public final class RectangleCADToolContext
         {
             RectangleCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -207,9 +208,9 @@ public final class RectangleCADToolContext
             {
                 RectangleCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("RECTANGULO" + "\n" +
-		"Insertar primer punto de esquina");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_first_point_corner"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -222,8 +223,8 @@ public final class RectangleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar punto de esquina opuesta o Cuadrado[C]");
-                    ctxt.setDescription(new String[]{"Cuadrado", "Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_corner_or_square"));
+                    ctxt.setDescription(new String[]{"square", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -255,15 +256,15 @@ public final class RectangleCADToolContext
             {
                 RectangleCADTool ctxt = context.getOwner();
 
-                if (s.equals("c") || s.equals("C") || s.equals("Cuadrado"))
+                if (s.equals("c") || s.equals("C") || s.equals(PluginServices.getText(this,"square")))
                 {
 
                     (context.getState()).Exit(context);
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Insertar esquina opuesta");
-                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_opposited_corner"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addOption(s);
                     }
                     finally

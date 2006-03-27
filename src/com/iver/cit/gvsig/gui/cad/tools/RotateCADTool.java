@@ -52,11 +52,13 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.RotateCADToolContext;
@@ -112,12 +114,10 @@ public class RotateCADTool extends DefaultCADTool {
      * DOCUMENT ME!
      */
     public void selection() {
-        FBitSet selection = CADExtension.getCADToolAdapter()
-                                        .getVectorialAdapter().getSelection();
-
-        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
+       ArrayList selectedRows=getSelectedRows();
+        if (selectedRows.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
             CADExtension.setCADTool("selection");
-            ((SelectionCADTool) CADExtension.getCADToolAdapter().getCadTool()).setNextTool(
+            ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
                 "rotate");
         }
     }
@@ -132,7 +132,7 @@ public class RotateCADTool extends DefaultCADTool {
     public void addPoint(double x, double y,InputEvent event) {
         RotateCADToolState actualState = (RotateCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-        ArrayList selectedRow=getSelectedRow();
+        ArrayList selectedRow=getSelectedRows();
 
         if (status.equals("Rotate.PointMain")) {
         	firstPoint = new Point2D.Double(x, y);
@@ -146,23 +146,27 @@ public class RotateCADTool extends DefaultCADTool {
     			h = lastPoint.getY() - firstPoint.getY();
 
     			try {
-    				getCadToolAdapter().getVectorialAdapter().startComplexRow();
+				getCadToolAdapter().getVectorialAdapter().startComplexRow();
 
-    				for (int i = 0; i < selectedRow.size(); i++) {
-    					DefaultFeature fea = (DefaultFeature)getCadToolAdapter().getVectorialAdapter().getRow(i).cloneRow();
-						// Rotamos la geometry
-						UtilFunctions.rotateGeom(fea.getGeometry(), -Math.atan2(w, h) + (Math.PI / 2),
-	    						firstPoint.getX(), firstPoint.getY());
+				for (int i = 0; i < selectedRow.size(); i++) {
+					DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
+							.get(i)).getLinkedRow().cloneRow();
+					// Rotamos la geometry
+					UtilFunctions.rotateGeom(fea.getGeometry(), -Math.atan2(w,
+							h)
+							+ (Math.PI / 2), firstPoint.getX(), firstPoint
+							.getY());
 
-    					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea,getName());
-    				}
-
-    				getCadToolAdapter().getVectorialAdapter().endComplexRow();
-    			} catch (DriverIOException e) {
-    				e.printStackTrace();
-    			} catch (IOException e1) {
-    				e1.printStackTrace();
-    			}
+					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea,
+							getName());
+				}
+				clearSelection();
+				getCadToolAdapter().getVectorialAdapter().endComplexRow();
+			} catch (DriverIOException e) {
+				e.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 
     			PluginServices.getMDIManager().restoreCursor();
     		}
@@ -179,7 +183,7 @@ public class RotateCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
         RotateCADToolState actualState = ((RotateCADToolContext) _fsm).getState();
         String status = actualState.getName();
-        ArrayList selectedRow=getSelectedRow();
+        ArrayList selectedRow=getSelectedRows();
 
         drawHandlers(g, selectedRow,
                  getCadToolAdapter().getMapControl().getViewPort()
@@ -200,52 +204,54 @@ public class RotateCADTool extends DefaultCADTool {
 			///drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
 
 
-			   try {
-				   for (int i = 0; i < selectedRow.size(); i++) {
-			                   IGeometry geometry = getCadToolAdapter().getVectorialAdapter().getShape(i);
-								// Rotamos la geometry
-								UtilFunctions.rotateGeom(geometry, -Math.atan2(w,h)+Math.PI/2,firstPoint.getX(),firstPoint.getY());
+			     for (int i = 0; i < selectedRow.size(); i++) {
+			                   // IGeometry geometry =
+								// getCadToolAdapter().getVectorialAdapter().getShape(i);
+				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+				IFeature feat = (IFeature) edRow.getLinkedRow();
+				IGeometry geometry = feat.getGeometry().cloneGeometry();
+				// Rotamos la geometry
+				UtilFunctions.rotateGeom(geometry, -Math.atan2(w, h) + Math.PI
+						/ 2, firstPoint.getX(), firstPoint.getY());
 
-			                   geometry.draw((Graphics2D) g,
-			                                   getCadToolAdapter().getMapControl().getViewPort(),
-			                                   CADTool.drawingSymbol);
-			                   GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-			                                   2);
-			                   elShape.moveTo(firstPoint.getX(), firstPoint.getY());
-			                   elShape.lineTo(x, y);
-			                   ShapeFactory.createPolyline2D(
-			                                   elShape).draw((Graphics2D) g,
-			                                                   getCadToolAdapter().getMapControl().getViewPort(),
-			                                                   CADTool.drawingSymbol);
+				geometry.draw((Graphics2D) g, getCadToolAdapter()
+						.getMapControl().getViewPort(), CADTool.drawingSymbol);
+				GeneralPathX elShape = new GeneralPathX(
+						GeneralPathX.WIND_EVEN_ODD, 2);
+				elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+				elShape.lineTo(x, y);
+				ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
+						getCadToolAdapter().getMapControl().getViewPort(),
+						CADTool.drawingSymbol);
 
-			   }
-			   } catch (DriverIOException e) {
-			           e.printStackTrace();
-			   }
-
+			}
 		}
     }
 
     /**
-     * Add a diferent option.
-     *
-     * @param s Diferent option.
-     */
+	 * Add a diferent option.
+	 *
+	 * @param s
+	 *            Diferent option.
+	 */
     public void addOption(String s) {
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
-     */
+    /*
+	 * (non-Javadoc)
+	 *
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
+	 */
     public void addValue(double d) {
     	RotateCADToolState actualState = (RotateCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-        ArrayList selectedRow=getSelectedRow();
+        ArrayList selectedRow=getSelectedRows();
 
     	if (status.equals("Rotate.AngleOrPoint")) {
 			try {
 				for (int i = 0; i < selectedRow.size(); i++) {
-						DefaultFeature fea = (DefaultFeature)getCadToolAdapter().getVectorialAdapter().getRow(i).cloneRow();
+					DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
+							.get(i)).getLinkedRow().cloneRow();
 						// Rotamos la geometry
 						AffineTransform at = new AffineTransform();
 						at.rotate(Math.toRadians(d),
@@ -254,6 +260,7 @@ public class RotateCADTool extends DefaultCADTool {
     					getCadToolAdapter().getVectorialAdapter().modifyRow(i, fea,getName());
 
 				}
+				clearSelection();
 			} catch (DriverIOException e) {
 				e.printStackTrace();
 			} catch (IOException e1) {
@@ -264,6 +271,6 @@ public class RotateCADTool extends DefaultCADTool {
     }
 
 	public String getName() {
-		return "ROTAR";
+		return PluginServices.getText(this,"rotate_");
 	}
 }

@@ -26,7 +26,7 @@ public class ShpPanel extends JWizardPanel {
 	private JLabel jLabel = null;
 	private JTextField jTextFieldPath = null;
 	private JButton jButtonSelectPath = null;
-	
+
 	private class MyInputEventListener implements CaretListener
 	{
 		public void caretUpdate(CaretEvent arg0) {
@@ -34,9 +34,9 @@ public class ShpPanel extends JWizardPanel {
 				setFinishButtonEnabled(true);
 			else
 				setFinishButtonEnabled(false);
-			
+
 		}
-		
+
 	}
 
 
@@ -47,24 +47,24 @@ public class ShpPanel extends JWizardPanel {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 */
 	private void initialize() {
         jLabel = new JLabel();
-        jLabel.setText("enter_path_to_file");
+        jLabel.setText(PluginServices.getText(this,"enter_path_to_file"));
         jLabel.setBounds(new java.awt.Rectangle(12,17,319,15));
         this.setLayout(null);
         this.setSize(new java.awt.Dimension(380,214));
         this.add(jLabel, null);
         this.add(getJTextFieldPath(), null);
         this.add(getJButtonSelectPath(), null);
-			
+
 	}
 
 	/**
-	 * This method initializes jTextFieldPath	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes jTextFieldPath
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextFieldPath() {
 		if (jTextFieldPath == null) {
@@ -76,9 +76,9 @@ public class ShpPanel extends JWizardPanel {
 	}
 
 	/**
-	 * This method initializes jButtonSelectPath	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes jButtonSelectPath
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonSelectPath() {
 		if (jButtonSelectPath == null) {
@@ -88,7 +88,7 @@ public class ShpPanel extends JWizardPanel {
 			jButtonSelectPath.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 		            JFileChooser jfc = new JFileChooser();
-		            SimpleFileFilter filterShp = new SimpleFileFilter("shp", "Ficheros .shp");
+		            SimpleFileFilter filterShp = new SimpleFileFilter("shp", PluginServices.getText(this,"shp_files"));
 		            jfc.setFileFilter(filterShp);
 		            if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
 		        		    File newFile = jfc.getSelectedFile();
@@ -99,7 +99,7 @@ public class ShpPanel extends JWizardPanel {
 		        		    }
 		        		    jTextFieldPath.setText(path);
 		                }
-					
+
 				}
 			});
 		}

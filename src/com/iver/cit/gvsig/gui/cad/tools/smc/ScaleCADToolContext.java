@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class ScaleCADToolContext
     extends statemap.FSMContext
@@ -170,7 +171,7 @@ public final class ScaleCADToolContext
         {
             ScaleCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -227,9 +228,9 @@ public final class ScaleCADToolContext
                 ScaleCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion("ESCALAR" + "\n" +
-		"Precise punto base");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_basis_point"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -242,8 +243,8 @@ public final class ScaleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precise factor de escala<2> o Referencia[R]");
-                    ctxt.setDescription(new String[]{"Referencia", "Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+                    ctxt.setDescription(new String[]{"reference", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -292,15 +293,15 @@ public final class ScaleCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equals("R") || s.equals("r") || s.equals("Referencia"))
+                else if (s.equals("R") || s.equals("r") || s.equals(PluginServices.getText(this,"reference")))
                 {
 
                     (context.getState()).Exit(context);
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Precise punto origen recta referencia o Factor de escala[F]");
-                        ctxt.setDescription(new String[]{"Factor escala", "Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_reference_point_or_factor"));
+                        ctxt.setDescription(new String[]{"factor", "cancel"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -379,15 +380,15 @@ public final class ScaleCADToolContext
             {
                 ScaleCADTool ctxt = context.getOwner();
 
-                if (s.equals("F") || s.equals("f") || s.equals("Factor escala"))
+                if (s.equals("F") || s.equals("f") || s.equals(PluginServices.getText(this,"factor")))
                 {
 
                     (context.getState()).Exit(context);
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Precise factor de escala<2> o Referencia[R]");
-                        ctxt.setDescription(new String[]{"Referencia", "Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+                        ctxt.setDescription(new String[]{"reference", "cancel"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -413,8 +414,8 @@ public final class ScaleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precise punto final recta referencia");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_last_point_reference"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -451,8 +452,8 @@ public final class ScaleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precise punto origen recta escala");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_first_point_scale"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -489,8 +490,8 @@ public final class ScaleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precise punto final recta escala");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_last_point_scale"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

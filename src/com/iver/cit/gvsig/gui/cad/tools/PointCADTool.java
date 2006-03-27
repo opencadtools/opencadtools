@@ -43,6 +43,7 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Graphics;
 import java.awt.event.InputEvent;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext;
@@ -144,7 +145,7 @@ public class PointCADTool extends DefaultCADTool {
     }
 
 	public String getName() {
-		return "PUNTO";
+		return PluginServices.getText(this,"point_");
 	}
 
 }

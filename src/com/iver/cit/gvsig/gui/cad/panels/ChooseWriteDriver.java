@@ -14,12 +14,13 @@ import javax.swing.event.CaretListener;
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 
 /**
  * @author fjp
- * 
+ *
  * Panel para que el usuario seleccione el driver que va a utilizar para
  * crear un tema desde cero.
  *
@@ -31,7 +32,7 @@ public class ChooseWriteDriver extends JWizardPanel {
 	private String[] driverNames;
 	private JLabel jLabel = null;
 	private JTextField jTextLayerName = null;
-	
+
 	private class MyInputEventListener implements CaretListener
 	{
 		public void caretUpdate(CaretEvent arg0) {
@@ -39,9 +40,9 @@ public class ChooseWriteDriver extends JWizardPanel {
 				setNextButtonEnabled(true);
 			else
 				setNextButtonEnabled(false);
-			
+
 		}
-		
+
 	}
 
 	public ChooseWriteDriver(JWizardComponents wizardComponents, String title, String[] driverNames) {
@@ -49,9 +50,9 @@ public class ChooseWriteDriver extends JWizardPanel {
 		this.driverNames = driverNames;
 		initialize();
 		// TODO Auto-generated constructor stub
-				
+
 	}
-	
+
 	public String getSelectedDriver()
 	{
 		return (String) jCmbBoxDrivers.getSelectedItem();
@@ -59,15 +60,15 @@ public class ChooseWriteDriver extends JWizardPanel {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 */
 	private void initialize() {
         jLabel = new JLabel();
-        jLabel.setText("enter_layer_name");
+        jLabel.setText(PluginServices.getText(this,"enter_layer_name"));
         jLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel.setBounds(new java.awt.Rectangle(15,7,241,15));
         lblSelecDriver = new JLabel();
-        lblSelecDriver.setText("please_select_driver");
+        lblSelecDriver.setText(PluginServices.getText(this,"select_driver"));
         lblSelecDriver.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblSelecDriver.setBounds(new java.awt.Rectangle(15,68,245,15));
         this.setLayout(null);
@@ -76,14 +77,14 @@ public class ChooseWriteDriver extends JWizardPanel {
         this.add(lblSelecDriver, null);
         this.add(getJCmbBoxDrivers(), null);
         this.add(getJTextLayerName(), null);
-                
-			
+
+
 	}
 
 	/**
-	 * This method initializes jCmbBoxDrivers	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes jCmbBoxDrivers
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getJCmbBoxDrivers() {
 		if (jCmbBoxDrivers == null) {
@@ -96,8 +97,8 @@ public class ChooseWriteDriver extends JWizardPanel {
 	/* (non-Javadoc)
 	 * @see jwizardcomponent.JWizardPanel#next()
 	 */
-	public void next() {		
-		super.next();	
+	public void next() {
+		super.next();
 		try {
 			JWizardPanel nextPanel =  getWizardComponents().getCurrentPanel();
 			if (nextPanel instanceof ChooseGeometryType)
@@ -117,15 +118,15 @@ public class ChooseWriteDriver extends JWizardPanel {
 	}
 
 	/**
-	 * This method initializes jTextLayerName	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes jTextLayerName
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextLayerName() {
 		if (jTextLayerName == null) {
 			jTextLayerName = new JTextField();
 			jTextLayerName.setBounds(new java.awt.Rectangle(15,30,244,20));
-			jTextLayerName.setText("NewLayer");
+			jTextLayerName.setText(PluginServices.getText(this,"new_layer"));
 			jTextLayerName.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 			jTextLayerName.addCaretListener(new MyInputEventListener());
 		}

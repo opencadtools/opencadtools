@@ -50,11 +50,13 @@ import java.util.ArrayList;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CopyCADToolContext;
@@ -110,12 +112,10 @@ public class CopyCADTool extends DefaultCADTool {
      * DOCUMENT ME!
      */
     public void selection() {
-        FBitSet selection = CADExtension.getCADToolAdapter()
-                                        .getVectorialAdapter().getSelection();
-
-        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
+    	ArrayList selectedRow=getSelectedRows();
+        if (selectedRow.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
             CADExtension.setCADTool("selection");
-            ((SelectionCADTool) CADExtension.getCADToolAdapter().getCadTool()).setNextTool(
+            ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
                 "copy");
         }
     }
@@ -131,7 +131,7 @@ public class CopyCADTool extends DefaultCADTool {
         CopyCADToolState actualState = (CopyCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        ArrayList selectedRow=getSelectedRow();
+        ArrayList selectedRow=getSelectedRows();
 
         if (status.equals("Copy.FirstPointToMove")) {
             firstPoint = new Point2D.Double(x, y);
@@ -142,7 +142,7 @@ public class CopyCADTool extends DefaultCADTool {
 
             try {
             	for (int i = 0; i < selectedRow.size(); i++) {
-                    DefaultFeature fea = (DefaultFeature) vea.getRow(i)
+                    DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited)selectedRow.get(i))
                                                              .getLinkedRow()
                                                              .cloneRow();
                     // Movemos la geometría
@@ -158,10 +158,7 @@ public class CopyCADTool extends DefaultCADTool {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            FBitSet selection = CADExtension.getCADToolAdapter()
-      			.getVectorialAdapter().getSelection();
-            selection.clear();
-            selectedRow.clear();
+            clearSelection();
             PluginServices.getMDIManager().restoreCursor();
         }
     }
@@ -177,8 +174,7 @@ public class CopyCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
         CopyCADToolState actualState = ((CopyCADToolContext) _fsm).getState();
         String status = actualState.getName();
-        VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        ArrayList selectedRow=getSelectedRow();
+        ArrayList selectedRow=getSelectedRows();
         drawHandlers(g, selectedRow,
                  getCadToolAdapter().getMapControl().getViewPort()
                      .getAffineTransform());
@@ -187,18 +183,17 @@ public class CopyCADTool extends DefaultCADTool {
             ///int dy = -getCadToolAdapter().getMapControl().getViewPort().fromMapDistance(y - firstPoint.getY());
             ///Image img = getCadToolAdapter().getVectorialAdapter().getImage();
             ///g.drawImage(img, dx, dy, null);
-            try {
             	 for (int i = 0; i < selectedRow.size(); i++) {
-                    IGeometry geometry = vea.getShape(i).cloneGeometry();
-                    // Movemos la geometría
+                    //IGeometry geometry = vea.getShape(i).cloneGeometry();
+            		IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+         			IFeature feat = (IFeature) edRow.getLinkedRow();
+         			IGeometry geometry = feat.getGeometry().cloneGeometry();
+            		 // Movemos la geometría
                     UtilFunctions.moveGeom(geometry, x - firstPoint.getX(), y - firstPoint.getY());
                     geometry.draw((Graphics2D) g,
                         getCadToolAdapter().getMapControl().getViewPort(),
                         CADTool.drawingSymbol);
                 }
-            } catch (DriverIOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -217,6 +212,6 @@ public class CopyCADTool extends DefaultCADTool {
     }
 
 	public String getName() {
-		return "COPIAR";
+		return PluginServices.getText(this,"copy_");
 	}
 }

@@ -46,6 +46,7 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
@@ -444,6 +445,6 @@ public class PolylineCADTool extends DefaultCADTool {
 	}
 
 	public String getName() {
-		return "POLILINEA";
+		return PluginServices.getText(this,"polyline_");
 	}
 }

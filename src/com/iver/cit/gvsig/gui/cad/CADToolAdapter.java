@@ -427,7 +427,7 @@ public class CADToolAdapter extends Behavior {
 
 		for (int i = 0; i < desc.length; i++) {
 			if (desc[i] != null) {
-				CADExtension.addMenuEntry(desc[i]);// , labels[i]);
+				CADExtension.addMenuEntry(PluginServices.getText(this,desc[i]));// , labels[i]);
 			}
 		}
 
@@ -647,7 +647,7 @@ public class CADToolAdapter extends Behavior {
 	public void setCadTool(CADTool cadTool) {
 		cadToolStack.clear();
 		pushCadTool(cadTool);
-		askQuestion();
+		//askQuestion();
 	}
 
 	/**
@@ -703,7 +703,7 @@ public class CADToolAdapter extends Behavior {
 					.nextSetBit(i + 1)) {
 				indexesToDel[j++] = i;
 				// /vea.removeRow(i);
-			} 
+			}
 			/* VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
 				.getEditionManager().getActiveLayerEdited();
 			ArrayList selectedRow = vle.getSelectedRow();
@@ -713,9 +713,9 @@ public class CADToolAdapter extends Behavior {
 			{
 				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
 				indexesToDel[i] = edRow.getIndex();
-			}	*/		
+			}	*/
 			for (int i = indexesToDel.length - 1; i >= 0; i--) {
-				vea.removeRow(indexesToDel[i],"Feature eliminada");
+				vea.removeRow(indexesToDel[i],PluginServices.getText(this,"deleted_feature"));
 			}
 		} catch (DriverIOException e) {
 			e.printStackTrace();

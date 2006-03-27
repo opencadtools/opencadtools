@@ -47,6 +47,7 @@ import java.awt.geom.Point2D;
 
 import statemap.TransitionUndefinedException;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.CADTool;
@@ -202,7 +203,7 @@ public class CircleCADTool extends DefaultCADTool {
     }
 
 	public String getName() {
-		return "CIRCULO";
+		return PluginServices.getText(this,"circle_");
 	}
 
 }

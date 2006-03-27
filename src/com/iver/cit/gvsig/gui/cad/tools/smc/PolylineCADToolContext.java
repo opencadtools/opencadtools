@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class PolylineCADToolContext
     extends statemap.FSMContext
@@ -151,7 +152,7 @@ public final class PolylineCADToolContext
         {
             PolylineCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -233,9 +234,9 @@ public final class PolylineCADToolContext
             {
                 PolylineCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("POLILINEA" + "\n" +
-		"Insertar primer punto");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_first_point"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -248,8 +249,8 @@ public final class PolylineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-                    ctxt.setDescription(new String[]{"Arco", "Cerrar", "Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
+                    ctxt.setDescription(new String[]{"arc", "close", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -281,15 +282,15 @@ public final class PolylineCADToolContext
             {
                 PolylineCADTool ctxt = context.getOwner();
 
-                if (s.equals("A") ||  s.equals("a") || s.equals("Arco"))
+                if (s.equals("A") ||  s.equals("a") || s.equals(PluginServices.getText(this,"arc")))
                 {
 
                     (context.getState()).Exit(context);
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-                        ctxt.setDescription(new String[]{"Linea", "Cerrar", "Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
+                        ctxt.setDescription(new String[]{"line", "close", "cancel"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -298,7 +299,7 @@ public final class PolylineCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equals("C") ||  s.equals("c") || s.equals("Cerrar"))
+                else if (s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close")))
                 {
 
                     (context.getState()).Exit(context);
@@ -332,8 +333,8 @@ public final class PolylineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-                    ctxt.setDescription(new String[]{"Arco", "Cerrar", "Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
+                    ctxt.setDescription(new String[]{"arc", "close", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -364,15 +365,15 @@ public final class PolylineCADToolContext
             {
                 PolylineCADTool ctxt = context.getOwner();
 
-                if (s.equals("N") ||  s.equals("n") || s.equals("Linea"))
+                if (s.equals("N") ||  s.equals("n") || s.equals(PluginServices.getText(this,"line")))
                 {
 
                     (context.getState()).Exit(context);
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Insertar siguiente punto, Arco[A] o Cerrar[C]");
-                        ctxt.setDescription(new String[]{"Arco", "Cerrar", "Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
+                        ctxt.setDescription(new String[]{"arc", "close", "cancel"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -381,7 +382,7 @@ public final class PolylineCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equals("C") ||  s.equals("c") || s.equals("Cerrar"))
+                else if (s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close")))
                 {
 
                     (context.getState()).Exit(context);
@@ -415,8 +416,8 @@ public final class PolylineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar punto siguiente, Linea[N] o Cerrar[C]");
-                    ctxt.setDescription(new String[]{"Linea", "Cerrar", "Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
+                    ctxt.setDescription(new String[]{"line", "close", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

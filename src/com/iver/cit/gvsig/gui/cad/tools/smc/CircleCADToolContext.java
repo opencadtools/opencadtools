@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class CircleCADToolContext
     extends statemap.FSMContext
@@ -168,7 +169,7 @@ public final class CircleCADToolContext
         {
             CircleCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -224,9 +225,9 @@ public final class CircleCADToolContext
             {
                 CircleCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("CIRCULO" + "\n" +
-		"Insertar punto central o [3P]:");
-                ctxt.setDescription(new String[]{"Cancelar", "3P"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_central_point_or_3p"));
+                ctxt.setDescription(new String[]{"cancel", "3P"});
                 return;
             }
 
@@ -241,8 +242,8 @@ public final class CircleCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Insertar primer punto");
-                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -268,8 +269,8 @@ public final class CircleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar radio o segundo punto");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_radius_or_second_point"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -363,8 +364,8 @@ public final class CircleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar tercer punto");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_third_point"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -438,8 +439,8 @@ public final class CircleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Insertar segundo punto");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_second_point"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

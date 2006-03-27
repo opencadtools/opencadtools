@@ -68,6 +68,7 @@ import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 /**
@@ -186,10 +187,8 @@ public abstract class DefaultCADTool implements CADTool {
 			getCadToolAdapter().getVectorialAdapter().modifyRow(index, row,
 					getName());
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (DriverIOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		draw(row.getGeometry().cloneGeometry());
@@ -281,11 +280,27 @@ public abstract class DefaultCADTool implements CADTool {
 		CADTool.drawingSymbol.setOutlineColor(Color.GREEN);
 
 	}
-	protected ArrayList getSelectedRow(){
+	protected ArrayList getSelectedRows(){
 		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
 		.getEditionManager().getActiveLayerEdited();
     	ArrayList selectedRow = vle.getSelectedRow();
     	return selectedRow;
 	}
-
+	protected ArrayList getSelectedHandlers(){
+		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+		.getEditionManager().getActiveLayerEdited();
+    	ArrayList selectedHandlers = vle.getSelectedHandler();
+    	return selectedHandlers;
+	}
+	protected void clearSelection(){
+		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+		.getEditionManager().getActiveLayerEdited();
+		ArrayList selectedRow = vle.getSelectedRow();
+    	ArrayList selectedHandlers = vle.getSelectedHandler();
+    	selectedRow.clear();
+    	selectedHandlers.clear();
+    	FBitSet selection = CADExtension.getCADToolAdapter()
+  		.getVectorialAdapter().getSelection();
+    	selection.clear();
+	}
 }

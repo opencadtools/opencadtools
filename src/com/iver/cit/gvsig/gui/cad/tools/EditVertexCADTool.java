@@ -48,7 +48,9 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.util.ArrayList;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
@@ -66,9 +68,10 @@ import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
+//import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EditVertexCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EditVertexCADToolContext.EditVertexCADToolState;
@@ -124,12 +127,10 @@ public class EditVertexCADTool extends DefaultCADTool {
      * DOCUMENT ME!
      */
     public void selection() {
-        FBitSet selection = CADExtension.getCADToolAdapter()
-                                        .getVectorialAdapter().getSelection();
-
-        if (selection.cardinality() == 0 && !CADExtension.getCADToolAdapter().getCadTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
+    	ArrayList selectedRow=getSelectedRows();
+        if (selectedRow.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
             CADExtension.setCADTool("selection");
-            ((SelectionCADTool) CADExtension.getCADToolAdapter().getCadTool()).setNextTool(
+            ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
                 "editvertex");
         }
     }
@@ -147,19 +148,15 @@ public class EditVertexCADTool extends DefaultCADTool {
     }
 
     private IGeometry getSelectedGeometry() {
-        VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        FBitSet selection = vea.getSelection();
+        ArrayList selectedRows=getSelectedRows();
+//    	VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
+//        FBitSet selection = vea.getSelection();
         IRowEdited row=null;
         IGeometry ig=null;
-        if (selection.cardinality()==1){
-			try {
-				row = getCadToolAdapter().getVectorialAdapter().getRow(selection.nextSetBit(0));
-			} catch (DriverIOException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-        	ig=((IFeature)row.getLinkedRow()).getGeometry().cloneGeometry();
+        if (selectedRows.size()==1){
+			row=(DefaultRowEdited) selectedRows.get(0);
+				//row = getCadToolAdapter().getVectorialAdapter().getRow(selection.nextSetBit(0));
+			ig=((IFeature)row.getLinkedRow()).getGeometry().cloneGeometry();
         	return ig;
         }
 
@@ -177,12 +174,11 @@ public class EditVertexCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
         //EditVertexCADToolState actualState = ((EditVertexCADToolContext) _fsm).getState();
         //String status = actualState.getName();
-        VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        FBitSet selection = vea.getSelection();
+        //VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
+        //FBitSet selection = vea.getSelection();
 
         try {
-            drawVertex(g, selection,
-                getCadToolAdapter().getMapControl().getViewPort()
+            drawVertex(g,getCadToolAdapter().getMapControl().getViewPort()
                     .getAffineTransform());
         } catch (DriverIOException e) {
             e.printStackTrace();
@@ -199,27 +195,20 @@ public class EditVertexCADTool extends DefaultCADTool {
     	EditVertexCADToolState actualState = (EditVertexCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
         VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        FBitSet selection = vea.getSelection();
+        //FBitSet selection = vea.getSelection();
+        ArrayList selectedRows=getSelectedRows();
         IRowEdited row=null;
         IGeometry ig=null;
         Handler[] handlers=null;
-        if (selection.cardinality()==1){
-
-			try {
-				row = getCadToolAdapter().getVectorialAdapter().getRow(selection.nextSetBit(0));
-			} catch (DriverIOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        if (selectedRows.size()==1){
+				row =  (DefaultRowEdited) selectedRows.get(0);
+				//row = getCadToolAdapter().getVectorialAdapter().getRow(selection.nextSetBit(0));
         	ig=((IFeature)row.getLinkedRow()).getGeometry().cloneGeometry();
         	handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
         	numHandlers=handlers.length;
         	if (numHandlers ==0){
         		try {
-					vea.removeRow(selection.nextSetBit(0),getName());
+					vea.removeRow(row.getIndex(),getName());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -245,14 +234,14 @@ public class EditVertexCADTool extends DefaultCADTool {
        				numSelect=numSelect-(numHandlers);
        			}
 
-        	}else if(s.equals("e") || s.equals("E") || s.equals("Eliminar")){
+        	}else if(s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"del"))){
         		if (handlers!=null){
         			IGeometry newGeometry=removeVertex(ig,handlers[numSelect]);
         			numSelect=0;
 
         			IRow newRow=new DefaultFeature(newGeometry,row.getAttributes());
         			try {
-						vea.modifyRow(selection.nextSetBit(0),newRow,getName());
+						vea.modifyRow(row.getIndex(),newRow,getName());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -262,15 +251,18 @@ public class EditVertexCADTool extends DefaultCADTool {
 					}
 					getCadToolAdapter().getMapControl().drawMap(false);
         		}
-        	}else if(s.equals("i") || s.equals("I") || s.equals("Anyadir")){
+        	}else if(s.equals("i") || s.equals("I") || s.equals(PluginServices.getText(this,"add"))){
         		addVertex=true;
         	}
         }
     }
-    private void drawVertex(Graphics g,FBitSet sel,AffineTransform at) throws DriverIOException{
-		 for (int i = sel.nextSetBit(0); i >= 0;
-		 		i = sel.nextSetBit(i + 1)) {
-			IGeometry ig = getCadToolAdapter().getVectorialAdapter().getShape(i).cloneGeometry();
+    private void drawVertex(Graphics g,AffineTransform at) throws DriverIOException{
+		ArrayList selectedRows=getSelectedRows();
+    	for (int i = 0; i<selectedRows.size();
+		 		i++) {
+    		DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRows
+					.get(i)).getLinkedRow();
+			IGeometry ig = fea.getGeometry().cloneGeometry();
 			if (ig == null) continue;
 				Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
 				if (numSelect>handlers.length)
@@ -541,17 +533,18 @@ public class EditVertexCADTool extends DefaultCADTool {
 */
     }
 	public String getName() {
-		return "EDITAR VERTICE";
+		return PluginServices.getText(this,"edit_vertex_");
 	}
 	private void selectHandler(double x, double y) {
 		Point2D firstPoint = new Point2D.Double(x, y);
-		FBitSet selection = getCadToolAdapter().getVectorialAdapter()
-				.getSelection();
+		ArrayList selectedRows=getSelectedRows();
+		//FBitSet selection = getCadToolAdapter().getVectorialAdapter()
+		//		.getSelection();
 		double tam = getCadToolAdapter().getMapControl().getViewPort()
 				.toMapDistance(SelectionCADTool.tolerance);
 		 Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() - tam,
 					firstPoint.getY() - tam, tam * 2, tam * 2);
-		if (selection.cardinality()>0){
+		if (selectedRows.size()>0){
 			boolean isSelectedHandler=false;
 			 IGeometry geometry=getSelectedGeometry();
 				 Handler[] handlers=geometry.getHandlers(IGeometry.SELECTHANDLER);
@@ -578,22 +571,20 @@ public class EditVertexCADTool extends DefaultCADTool {
 								}
 							}
 							if (isSelectedGeometry && addVertex){
-								selection = getCadToolAdapter().getVectorialAdapter()
-								.getSelection();
+								selectedRows=getSelectedRows();
+								//selection = getCadToolAdapter().getVectorialAdapter()
+								//.getSelection();
 						    	DefaultFeature fea=null;
-								try {
-									fea = (DefaultFeature) getCadToolAdapter()
-									.getVectorialAdapter().getRow(selection.nextSetBit(0)).getLinkedRow();
-								} catch (DriverIOException e) {
-									e.printStackTrace();
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
+						    	DefaultRowEdited row=null;
+									row=(DefaultRowEdited) selectedRows.get(0);
+									fea = (DefaultFeature) row.getLinkedRow();
+									//fea = (DefaultFeature) getCadToolAdapter()
+									//.getVectorialAdapter().getRow(selection.nextSetBit(0)).getLinkedRow();
 								Point2D posVertex=new Point2D.Double(x,y);
 						    	IGeometry geom=addVertex(fea.getGeometry(),posVertex,rect);
 
 						    	getCadToolAdapter()
-								.getVectorialAdapter().modifyRow(selection.nextSetBit(0),new DefaultFeature(geom,fea.getAttributes()),"Add vertice");
+								.getVectorialAdapter().modifyRow(row.getIndex(),new DefaultFeature(geom,fea.getAttributes()),"Add vertice");
 
 						    	Handler[] newHandlers=geom.getHandlers(IGeometry.SELECTHANDLER);
 								 for (int h=0;h<newHandlers.length;h++){

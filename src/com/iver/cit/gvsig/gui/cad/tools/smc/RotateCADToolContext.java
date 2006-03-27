@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class RotateCADToolContext
     extends statemap.FSMContext
@@ -162,7 +163,7 @@ public final class RotateCADToolContext
         {
             RotateCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -219,9 +220,9 @@ public final class RotateCADToolContext
                 RotateCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion("ROTAR" + "\n" +
-		"Precise punto base");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_basis_point"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -234,8 +235,8 @@ public final class RotateCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precise angulo de rotacion");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_rotation_angle"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -272,7 +273,7 @@ public final class RotateCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                     ctxt.refresh();
@@ -294,7 +295,7 @@ public final class RotateCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addValue(d);
                     ctxt.end();
                     ctxt.refresh();

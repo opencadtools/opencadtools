@@ -7,6 +7,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class CopyCADToolContext
     extends statemap.FSMContext
@@ -149,7 +150,7 @@ public final class CopyCADToolContext
         {
             CopyCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -206,9 +207,9 @@ public final class CopyCADToolContext
                 CopyCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion("COPIAR" + "\n" +
-		"Precisar punto de desplazamiento");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_point_move"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -221,8 +222,8 @@ public final class CopyCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("Precisar segundo punto del desplazamiento");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_second_point_move"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -259,7 +260,7 @@ public final class CopyCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                     ctxt.end();
                     ctxt.refresh();

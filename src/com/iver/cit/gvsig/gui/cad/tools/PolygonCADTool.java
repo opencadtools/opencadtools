@@ -45,6 +45,7 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FPolyline2D;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
@@ -370,7 +371,7 @@ public class PolygonCADTool extends DefaultCADTool {
     }
 */
 	public String getName() {
-		return "POLIGONO";
+		return PluginServices.getText(this,"polygon_");
 	}
 
 }

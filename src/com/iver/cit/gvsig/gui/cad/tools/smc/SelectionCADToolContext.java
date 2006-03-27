@@ -8,6 +8,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class SelectionCADToolContext
     extends statemap.FSMContext
@@ -154,7 +155,7 @@ public final class SelectionCADToolContext
         {
             SelectionCADTool ctxt = context.getOwner();
 
-            if (s.equals("Cancelar"))
+            if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -210,9 +211,9 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion("SELECCION" + "\n" +
-		"Precise punto del rect?ngulo de selecci?n");
-                ctxt.setDescription(new String[]{"Cancelar"});
+                ctxt.setQuestion(ctxt.getName() + "\n" +
+		PluginServices.getText(this,"insert_point_selection"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -227,8 +228,8 @@ public final class SelectionCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Precise segundo punto del rect?ngulo de seleccion");
-                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_second_point_selection"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
@@ -244,8 +245,8 @@ public final class SelectionCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("select_handlers");
-                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                         ctxt.end();
                     }
@@ -290,8 +291,8 @@ public final class SelectionCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("select_handlers");
-                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                         ctxt.end();
                     }
@@ -308,8 +309,8 @@ public final class SelectionCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
-                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
+                        ctxt.setDescription(new String[]{"cancel"});
                     }
                     finally
                     {
@@ -349,8 +350,8 @@ public final class SelectionCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Precise punto destino");
-                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_destination_point"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
@@ -366,8 +367,8 @@ public final class SelectionCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("select_handlers");
-                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
@@ -382,8 +383,8 @@ public final class SelectionCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion("Precise punto del rect?ngulo de selecci?n");
-                        ctxt.setDescription(new String[]{"Cancelar"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
@@ -422,8 +423,8 @@ public final class SelectionCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion("select_handlers");
-                    ctxt.setDescription(new String[]{"Cancelar"});
+                    ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                     ctxt.refresh();
                 }
