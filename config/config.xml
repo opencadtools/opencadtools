@@ -73,14 +73,6 @@
 			description="Extensión encargada de gestionar los eventos realizados sobre las geometrías."
 			active="true">
 			<menu text="geometry/seleccionar" action-command="SELCAD" icon="images/SelCAD.png"/>
-			<!--menu text="geometry/insert/point" action-command="POINT" icon="images/Point.png"/-->
-			<!--menu text="geometry/insert/line" action-command="LINE" icon="images/Rect.png"/-->
-			<!--menu text="geometry/insert/polyline" action-command="POLYLINE" icon="images/Line.png"/-->
-			<!--menu text="geometry/insert/polygon" action-command="POLYGON" icon="images/Poligon.png"/-->
-			<!--menu text="geometry/insert/rectangle" action-command="RECTANGLE" icon="images/Rectangle.png"/-->
-			<!--menu text="geometry/insert/circle" action-command="CIRCLE" icon="images/Circle.png"/-->
-			<!--menu text="geometry/insert/ellipse" action-command="ELLIPSE" icon="images/Ellipse.png"/-->
-			<!--menu text="geometry/insert/arc" action-command="ARC" icon="images/Arc.png"/-->
 			<!--menu text="geometry/insert/spline" action-command="SPLINE" icon="images/Spline.png"/-->
 			<menu text="geometry/insert/copy" action-command="COPY" icon="images/Copy.png"/>
 			<menu text="geometry/insert/move" action-command="MOVE" icon="images/Move.png"/>
@@ -88,25 +80,17 @@
 			<!--menu text="geometry/insert/matriz" action-command="MATRIZ" icon="images/Matriz.png"/-->
 			<!--menu text="geometry/insert/symmetry" action-command="SYMMETRY" icon="images/Symmetry.png"/-->
 			<menu text="geometry/insert/rotate" action-command="ROTATION" icon="images/Rotation.png"/>
-			<menu text="geometry/insert/stretch" action-command="STRETCHING" icon="images/Stretching.png"/>
+			<!--menu text="geometry/insert/stretch" action-command="STRETCHING" icon="images/Stretching.png"/-->
 			<menu text="geometry/insert/scale" action-command="SCALE" icon="images/Scale.png"/>
 			<!--menu text="geometry/insert/extend" action-command="EXTEND" icon="images/Extend.png"/-->
 			<!--menu text="geometry/insert/trim" action-command="TRIM" icon="images/Trim.png"/-->
 			<!--menu text="geometry/insert/unite_separate" action-command="UNIT" icon="images/Unit.png"/-->
-			<menu text="geometry/insert/exploit" action-command="EXPLOIT" icon="images/Exploit.png"/>
+			<!--menu text="geometry/insert/exploit" action-command="EXPLOIT" icon="images/Exploit.png"/-->
 			<!--menu text="geometry/insert/chaflan" action-command="CHAFLAN" icon="images/Chaflan.png"/-->
 			<!--menu text="geometry/insert/join" action-command="JOIN" icon="images/Join.png"/-->
 
 			<tool-bar name="insert">
 				<selectable-tool icon="images/SelCAD.png" action-command="SELCAD" tooltip="selection" group="vista"/>
-				<!--selectable-tool icon="images/Point.png" action-command="POINT" tooltip="point" group="vista"/-->
-				<!--selectable-tool icon="images/Rect.png" action-command="LINE" tooltip="line" group="vista"/-->
-				<!--selectable-tool icon="images/Line.png" action-command="POLYLINE" tooltip="polyline" group="vista"/-->
-				<!--selectable-tool icon="images/Poligon.png" action-command="POLYGON" tooltip="polygon" group="vista"/-->
-				<!--selectable-tool icon="images/Rectangle.png" action-command="RECTANGLE" tooltip="rectangle" group="vista"/-->
-				<!--selectable-tool icon="images/Circle.png" action-command="CIRCLE" tooltip="circle" group="vista"/-->
-				<!--selectable-tool icon="images/Ellipse.png" action-command="ELLIPSE" tooltip="ellipse" group="vista"/-->
-				<!--selectable-tool icon="images/Arc.png" action-command="ARC" tooltip="arc" group="vista"/-->
 				<!--selectable-tool icon="images/Spline.png" action-command="SPLINE" tooltip="spline" group="vista"/-->
 			</tool-bar>
 			<tool-bar name="modificar">
@@ -117,12 +101,12 @@
 				<!--selectable-tool icon="images/Matriz.png" action-command="MATRIZ" tooltip="matriz" group="vista"/-->
 				<!--selectable-tool icon="images/Symmetry.png" action-command="SYMMETRY" tooltip="symmetry" group="vista"/-->
 				<selectable-tool icon="images/Rotation.png" action-command="ROTATION" tooltip="rotation" group="vista"/>
-				<selectable-tool icon="images/Stretching.png" action-command="STRETCHING" tooltip="stretch" group="vista"/>
+				<!--selectable-tool icon="images/Stretching.png" action-command="STRETCHING" tooltip="stretch" group="vista"/-->
 				<selectable-tool icon="images/Scale.png" action-command="SCALE" tooltip="scale" group="vista"/>
 				<!--selectable-tool icon="images/Extend.png" action-command="EXTEND" tooltip="extend" group="vista"/-->
 				<!--selectable-tool icon="images/Trim.png" action-command="TRIM" tooltip="trim" group="vista"/-->
 				<!--selectable-tool icon="images/Unit.png" action-command="UNIT" tooltip="unite_separate" group="vista"/-->
-				<selectable-tool icon="images/Exploit.png" action-command="EXPLOIT" tooltip="exploit" group="vista"/>
+				<!--selectable-tool icon="images/Exploit.png" action-command="EXPLOIT" tooltip="exploit" group="vista"/-->
 				<!--selectable-tool icon="images/Chaflan.png" action-command="CHAFLAN" tooltip="chaflan" group="vista"/-->
 				<!--selectable-tool icon="images/Join.png" action-command="JOIN" tooltip="join" group="vista"/-->
 				<selectable-tool icon="images/EditVertex.png" action-command="EDITVERTEX" tooltip="edit_vertex" group="vista"/>
