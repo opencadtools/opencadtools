@@ -42,9 +42,11 @@ package com.iver.cit.gvsig.gui.cad;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.InputEvent;
+import java.util.ArrayList;
 
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
 /**
@@ -59,6 +61,7 @@ public interface CADTool {
 			new Color(100, 100, 100, 100));
 	public static FSymbol selectSymbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT,
 			Color.ORANGE);
+	public static int TOPGEOMETRY = 2000;
 
 	public void init();
 	public void end();
@@ -113,4 +116,6 @@ public interface CADTool {
 	public String[] getDescriptions();
 	public void setDescription(String[] descriptions);
 	public String getName();
+	public VectorialLayerEdited getVLE();
+	void clearSelection();
 }

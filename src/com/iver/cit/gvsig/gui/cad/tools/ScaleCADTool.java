@@ -42,24 +42,30 @@ package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.InputEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.awt.image.ImagingOpException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ScaleCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ScaleCADToolContext.ScaleCADToolState;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
 /**
@@ -157,7 +163,6 @@ public class ScaleCADTool extends DefaultCADTool {
 			}
 
 			PluginServices.getMDIManager().restoreCursor();
-			clearSelection();
 		} else if (status.equals("Scale.PointOriginOrScaleFactor")) {
 			orr = new Point2D.Double(x, y);
 		} else if (status.equals("Scale.EndPointReference")) {
@@ -179,7 +184,6 @@ public class ScaleCADTool extends DefaultCADTool {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			clearSelection();
 		}
 
     }
@@ -199,46 +203,75 @@ public class ScaleCADTool extends DefaultCADTool {
 		Point2D currentPoint = new Point2D.Double(x, y);
 
 		if (status.equals("Scale.ScaleFactorOrReference")) {
-			for (int i = 0; i < selectedRow.size(); i++) {
-				DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
-						.get(i)).getLinkedRow();
-				IGeometry geometry = fea.getGeometry().cloneGeometry();
-				double size = getCadToolAdapter().getMapControl().getViewPort()
-						.toMapDistance(
-								getCadToolAdapter().getMapControl().getWidth());
-				UtilFunctions.scaleGeom(geometry, firstPoint, firstPoint
-						.distance(currentPoint)
-						/ (size / 40), firstPoint.distance(currentPoint)
-						/ (size / 40));
-				geometry.draw((Graphics2D) g, getCadToolAdapter()
-						.getMapControl().getViewPort(), CADTool.modifySymbol);
-				drawLine((Graphics2D) g, firstPoint, currentPoint);
-				PluginServices.getMainFrame().getStatusBar().setMessage(
-						"5",
-						"Factor = " + firstPoint.distance(currentPoint)
-								/ (size / 40));
+			VectorialLayerEdited vle = getVLE();
+			ViewPort vp = vle.getLayer().getFMap().getViewPort();
+			Point2D point = vp.fromMapPoint(firstPoint.getX(), firstPoint
+					.getY());
+			double size = getCadToolAdapter().getMapControl().getViewPort()
+					.toMapDistance(
+							getCadToolAdapter().getMapControl().getWidth());
+			double scale = firstPoint.distance(currentPoint) / (size / 40);
+			drawLine((Graphics2D) g, firstPoint, currentPoint);
+			if (selectedRow.size() < CADTool.TOPGEOMETRY) {
+				for (int i = 0; i < selectedRow.size(); i++) {
+					DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
+							.get(i)).getLinkedRow();
+					IGeometry geometry = fea.getGeometry().cloneGeometry();
 
+					UtilFunctions.scaleGeom(geometry, firstPoint, scale, scale);
+					geometry.draw((Graphics2D) g, getCadToolAdapter()
+							.getMapControl().getViewPort(),
+							CADTool.modifySymbol);
+
+				}
+
+			} else {
+				AffineTransform at = new AffineTransform();
+				at.setToTranslation(point.getX(), point.getY());
+				at.scale(scale, scale);
+				at.translate(-point.getX(), -point.getY());
+				Image imgSel = vle.getSelectionImage();
+				try {
+					((Graphics2D) g).drawImage(imgSel, at, null);
+				} catch (ImagingOpException e) {
+				}
 			}
-
+			PluginServices.getMainFrame().getStatusBar().setMessage("5",
+					"Factor = " + scale);
 		} else if (status.equals("Scale.EndPointScale")) {
-			for (int i = 0; i < selectedRow.size(); i++) {
-				DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
-						.get(i)).getLinkedRow();
-				IGeometry geometry = fea.getGeometry().cloneGeometry();
+			VectorialLayerEdited vle = getVLE();
+			ViewPort vp = vle.getLayer().getFMap().getViewPort();
+			Point2D point = vp.fromMapPoint(scalePoint.getX(), scalePoint
+					.getY());
 
-				double distrr = orr.distance(frr);
-				double distre = ore.distance(currentPoint);
-				double escalado = distre / distrr;
+			double distrr = orr.distance(frr);
+			double distre = ore.distance(currentPoint);
+			double escalado = distre / distrr;
+			if (selectedRow.size() < CADTool.TOPGEOMETRY) {
+				for (int i = 0; i < selectedRow.size(); i++) {
+						DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
+								.get(i)).getLinkedRow();
+						IGeometry geometry = fea.getGeometry().cloneGeometry();
+						UtilFunctions.scaleGeom(geometry, scalePoint, escalado,
+								escalado);
+						geometry.draw((Graphics2D) g, getCadToolAdapter()
+								.getMapControl().getViewPort(),
+								CADTool.modifySymbol);
 
-				UtilFunctions.scaleGeom(geometry, scalePoint, escalado,
-						escalado);
-				// geometry.scale(scalePoint, escalado, escalado);
-				geometry.draw((Graphics2D) g, getCadToolAdapter()
-						.getMapControl().getViewPort(), CADTool.modifySymbol);
+					}
+				} else {
+					AffineTransform at = new AffineTransform();
+					at.setToTranslation(point.getX(), point.getY());
+					at.scale(escalado, escalado);
+					at.translate(-point.getX(), -point.getY());
+					Image imgSel = vle.getSelectionImage();
+					try {
+						((Graphics2D) g).drawImage(imgSel, at, null);
+					} catch (ImagingOpException e) {
+					}
+				}
 				drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
-
 			}
-		}
 	}
 
     /**
@@ -251,7 +284,7 @@ public class ScaleCADTool extends DefaultCADTool {
     	ScaleCADToolState actualState = (ScaleCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
        if (status.equals("Scale.ScaleFactorOrReference")) {
-			try {
+		/*	try {
 				scale(2);
 			} catch (DriverIOException e) {
 				// TODO Auto-generated catch block
@@ -260,8 +293,9 @@ public class ScaleCADTool extends DefaultCADTool {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		*/
 		}
-    }
+	}
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
@@ -284,15 +318,18 @@ public class ScaleCADTool extends DefaultCADTool {
     		VectorialEditableAdapter vea=getCadToolAdapter().getVectorialAdapter();
     		vea.startComplexRow();
     		ArrayList selectedRow=getSelectedRows();
+    		ArrayList selectedRowAux=new ArrayList();
     		for (int i = 0; i < selectedRow.size(); i++) {
-				DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
-						.get(i)).getLinkedRow().cloneRow();
+    			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+    			DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
 				UtilFunctions.scaleGeom(fea.getGeometry(), scalePoint, scaleFactor, scaleFactor);
     				// df.getGeometry().scale(scalePoint, scaleFactor, scaleFactor);
-    				vea.modifyRow(i, fea,getName());
-
+    			int index=	vea.modifyRow(edRow.getIndex(), fea,getName());
+    			selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
     		}
     		vea.endComplexRow();
+    		clearSelection();
+    		selectedRow=selectedRowAux;
     	}
 
 	public String getName() {

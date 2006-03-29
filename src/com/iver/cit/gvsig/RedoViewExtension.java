@@ -83,6 +83,7 @@ public class RedoViewExtension implements Extension {
 							vea.redo();
 							vea.getCommandRecord().fireCommandsRepaint(null);
 							vea.getSelection().clear();
+							CADExtension.getCADTool().clearSelection();
 						}
 
 					}

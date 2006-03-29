@@ -43,22 +43,23 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.fmap.DriverException;
+import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext;
@@ -77,11 +78,13 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	private Point2D firstPoint;
 
-	private Point2D lastPoint;
+	//private Point2D lastPoint;
 
 	private String tool = "selection";
 
 	private String nextState;
+// Registros de los que se ha sleccionado algún handler.
+	private ArrayList rowselectedHandlers=new ArrayList();
 
 	/**
 	 * Crea un nuevo LineCADTool.
@@ -157,8 +160,8 @@ public class SelectionCADTool extends DefaultCADTool {
 		 * FBitSet selection = getCadToolAdapter().getVectorialAdapter()
 		 * .getSelection();
 		 */
-		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-				.getEditionManager().getActiveLayerEdited();
+		VectorialLayerEdited vle = getVLE();
+		VectorialEditableAdapter vea=vle.getVEA();
 		ArrayList selectedHandler = vle.getSelectedHandler();
 		ArrayList selectedRow = vle.getSelectedRow();
 		// ArrayList selectedRowIndex = vle.getSelectedRowIndex();
@@ -170,6 +173,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 
 		} else if (status.equals("Selection.WithHandlers")) {
+			vea.startComplexRow();
 			for (int i = 0; i < selectedRow.size(); i++) {
 				IRowEdited row = (IRowEdited) selectedRow.get(i);
 				// int index = ((Integer) selectedRowIndex.get(i)).intValue();
@@ -181,7 +185,16 @@ public class SelectionCADTool extends DefaultCADTool {
 					h.set(x, y);
 				}
 
-				modifyFeature(row.getIndex(), (IFeature) row.getLinkedRow());
+				modifyFeature(row.getIndex(), (IFeature) row.getLinkedRow().cloneRow());
+			}
+			try {
+				vea.endComplexRow();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DriverIOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -193,68 +206,10 @@ public class SelectionCADTool extends DefaultCADTool {
 	 * @return numFeatures selected
 	 */
 	public int selectWithSecondPoint(double x, double y, InputEvent event) {
-		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-			.getEditionManager().getActiveLayerEdited();
+		VectorialLayerEdited vle = getVLE();
+		PluginServices.getMDIManager().setWaitCursor();
+		vle.selectWithSecondPoint(x,y);
 		ArrayList selectedRow = vle.getSelectedRow();
-
-		lastPoint = new Point2D.Double(x, y);
-		FBitSet selection = getCadToolAdapter().getVectorialAdapter()
-			.getSelection();
-		selection.clear();
-		selectedRow.clear();
-
-		double x1;
-		double y1;
-		double w1;
-		double h1;
-
-		if (firstPoint.getX() < lastPoint.getX()) {
-			x1 = firstPoint.getX();
-			w1 = lastPoint.getX() - firstPoint.getX();
-		} else {
-			x1 = lastPoint.getX();
-			w1 = firstPoint.getX() - lastPoint.getX();
-		}
-
-		if (firstPoint.getY() < lastPoint.getY()) {
-			y1 = firstPoint.getY();
-			h1 = lastPoint.getY() - firstPoint.getY();
-		} else {
-			y1 = lastPoint.getY();
-			h1 = firstPoint.getY() - lastPoint.getY();
-		}
-
-		Rectangle2D rect = new Rectangle2D.Double(x1, y1, w1, h1);
-
-		VectorialEditableAdapter vea = getCadToolAdapter()
-				.getVectorialAdapter();
-		String strEPSG = getCadToolAdapter().getMapControl().getViewPort()
-				.getProjection().getAbrev().substring(5);
-		IRowEdited[] feats;
-		try {
-			feats = vea.getFeatures(rect, strEPSG);
-
-			for (int i = 0; i < feats.length; i++) {
-				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
-						.getGeometry();
-
-				if (firstPoint.getX() < lastPoint.getX()) {
-					if (rect.contains(geom.getBounds2D())) {
-						selectedRow.add(feats[i]);
-						selection.set(feats[i].getIndex(), true);
-					}
-				} else {
-					if (geom.intersects(rect)) { // , 0.1)){
-						selectedRow.add(feats[i]);
-						selection.set(feats[i].getIndex(), true);
-					}
-				}
-			}
-		} catch (DriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		PluginServices.getMDIManager().restoreCursor();
 		if (selectedRow.size() > 0) {
 			nextState = "Selection.WithSelectedFeatures";
@@ -283,10 +238,10 @@ public class SelectionCADTool extends DefaultCADTool {
 		 * FBitSet selection = getCadToolAdapter().getVectorialAdapter()
 		 * .getSelection();
 		 */
-		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-				.getEditionManager().getActiveLayerEdited();
+		VectorialLayerEdited vle = getVLE();
 		ArrayList selectedHandler = vle.getSelectedHandler();
 		ArrayList selectedRow = vle.getSelectedRow();
+		ViewPort vp=vle.getLayer().getFMap().getViewPort();
 		// ArrayList selectedRowIndex = vle.getSelectedRowIndex();
 
 		/*
@@ -294,8 +249,8 @@ public class SelectionCADTool extends DefaultCADTool {
 		 * selectedRowIndex.clear(); selectedHandler.clear(); }
 		 */
 
-		drawHandlers(g, selectedRow, getCadToolAdapter().getMapControl()
-				.getViewPort().getAffineTransform());
+		//drawHandlers(g, selectedRow, getCadToolAdapter().getMapControl()
+		//		.getViewPort().getAffineTransform());
 
 		if (status.equals("Selection.SecondPoint")) {
 			// Dibuja el rectángulo de selección
@@ -307,8 +262,11 @@ public class SelectionCADTool extends DefaultCADTool {
 			elShape.lineTo(firstPoint.getX(), y);
 			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
-					getCadToolAdapter().getMapControl().getViewPort(),
+					vp,
 					CADTool.selectSymbol);
+			Image img = vle.getSelectionImage();
+	        g.drawImage(img, 0, 0, null);
+	        return;
 		} else if (status.equals("Selection.WithHandlers")) {
 			// Movemos los handlers que hemos seleccionado
 			// previamente dentro del método select()
@@ -319,15 +277,31 @@ public class SelectionCADTool extends DefaultCADTool {
 
 			// Y una vez movidos los vértices (handles)
 			// redibujamos la nueva geometría.
-			for (int i = 0; i < selectedRow.size(); i++) {
-				IRowEdited rowEd = (IRowEdited) selectedRow.get(i);
+			for (int i = 0; i < rowselectedHandlers.size(); i++) {
+				IRowEdited rowEd = (IRowEdited) rowselectedHandlers.get(i);
 				IGeometry geom = ((IFeature) rowEd.getLinkedRow())
 						.getGeometry().cloneGeometry();
 				g.setColor(Color.gray);
-				geom.draw((Graphics2D) g, getCadToolAdapter().getMapControl()
-						.getViewPort(), CADTool.modifySymbol);
+				geom.draw((Graphics2D) g, vp, CADTool.modifySymbol);
+			}
+			return;
+		}else{
+			try{
+			Image imgSel = vle.getSelectionImage();
+	        if (imgSel!=null)
+			g.drawImage(imgSel, 0, 0, null);
+	        Image imgHand = vle.getHandlersImage();
+	        if (imgHand!=null)
+			g.drawImage(imgHand, 0, 0, null);
+			}catch (Exception e) {
 			}
 		}
+//		if (firstPoint != null) {
+//			int dx = vp.fromMapDistance(x - firstPoint.getX());
+//			int dy = -vp.fromMapDistance(y - firstPoint.getY());
+//			Image img = vle.getImage();
+//			g.drawImage(img, 0, 0, null);
+//		}
 	}
 
 	/**
@@ -339,7 +313,6 @@ public class SelectionCADTool extends DefaultCADTool {
 	 *            Diferent option.
 	 */
 	public void addOption(String s) {
-		// TODO Auto-generated method stub
 	}
 
 	/*
@@ -384,78 +357,32 @@ public class SelectionCADTool extends DefaultCADTool {
 				.getState();
 
 		String status = actualState.getName();
-		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-				.getEditionManager().getActiveLayerEdited();
-		ArrayList selectedRow = vle.getSelectedRow();
+		VectorialLayerEdited vle = getVLE();
+
 
 		if ((status.equals("Selection.FirstPoint"))
 				|| (status.equals("Selection.WithSelectedFeatures"))) {
-			firstPoint = new Point2D.Double(x, y);
-
-			FBitSet selection = getCadToolAdapter().getVectorialAdapter()
-				.getSelection();
-			ArrayList selectedHandler = vle.getSelectedHandler();
-			selectedRow.clear();
-			selectedHandler.clear();
-
-			// ArrayList selectedRowIndex = vle.getSelectedRowIndex();
-
-			// Se comprueba si se pincha en una gemometría
 			PluginServices.getMDIManager().setWaitCursor();
-
-			double tam = getCadToolAdapter().getMapControl().getViewPort()
-					.toMapDistance(tolerance);
-			Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() - tam,
-					firstPoint.getY() - tam, tam * 2, tam * 2);
-			VectorialEditableAdapter vea = getCadToolAdapter()
-					.getVectorialAdapter();
-			String strEPSG = getCadToolAdapter().getMapControl().getViewPort()
-					.getProjection().getAbrev().substring(5);
-			IRowEdited[] feats;
-
-			try {
-				feats = vea.getFeatures(rect, strEPSG);
-				selection.clear();
-
-				for (int i = 0; i < feats.length; i++) {
-					IFeature feat = (IFeature) feats[i].getLinkedRow();
-					IGeometry geom = feat.getGeometry();
-
-					if (geom.intersects(rect)) { // , 0.1)){
-						selection.set(feats[i].getIndex(), true);
-						selectedRow.add(feats[i]);
-					}
-				}
-			} catch (DriverException e1) {
-				e1.printStackTrace();
-			}
+			firstPoint = new Point2D.Double(x, y);
+			vle.selectWithPoint(x,y);
 			PluginServices.getMDIManager().restoreCursor();
 		}
+		ArrayList selectedRow = vle.getSelectedRow();
 		if (selectedRow.size() > 0) {
 			nextState = "Selection.WithSelectedFeatures";
 			return true;
 		} else {
-			// if (nextState == null)
 			{
 				nextState = "Selection.SecondPoint";
 				return true;
 			}
 		}
-		/* if (nextState.equals("Selection.SecondPoint"))
-			nextState = "Selection.FirstPoint";
-		else
-			nextState = "Selection.SecondPoint";
-
-		return true; // Truco de Vicente */
 	}
 
 	public int selectHandlers(double x, double y, InputEvent event) {
-		// firstPoint = new Point2D.Double(x, y);
-
 		Point2D auxPoint = new Point2D.Double(x, y);
 
-		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-				.getEditionManager().getActiveLayerEdited();
+		VectorialLayerEdited vle = getVLE();
 		ArrayList selectedHandler = vle.getSelectedHandler();
 		ArrayList selectedRow = vle.getSelectedRow();
 		System.out.println("DENTRO DE selectHandlers. selectedRow.size= "
@@ -469,6 +396,7 @@ public class SelectionCADTool extends DefaultCADTool {
 				.toMapDistance(tolerance);
 
 		Handler[] handlers = null;
+		rowselectedHandlers.clear();
 		for (int i = 0; i < selectedRow.size(); i++) {
 			IRowEdited rowEd = (IRowEdited) selectedRow.get(i);
 
@@ -477,6 +405,7 @@ public class SelectionCADTool extends DefaultCADTool {
 			// y miramos los handlers de cada entidad seleccionada
 			double min = tam;
 			// int hSel = -1;
+
 			for (int j = 0; j < handlers.length; j++) {
 				Point2D handlerPoint = handlers[j].getPoint();
 				double distance = auxPoint.distance(handlerPoint);
@@ -484,6 +413,7 @@ public class SelectionCADTool extends DefaultCADTool {
 					min = distance;
 					// hSel = j;
 					selectedHandler.add(handlers[j]);
+					rowselectedHandlers.add(rowEd);
 				}
 			}
 		}

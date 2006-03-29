@@ -75,6 +75,7 @@ public class UndoViewExtension implements Extension {
 
 		if (s.compareTo("UNDO") == 0) {
 			undo(vista);
+
 		}
 	}
 
@@ -87,6 +88,7 @@ public class UndoViewExtension implements Extension {
 					VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
 					vea.undo();
 					vea.getCommandRecord().fireCommandsRepaint(null);
+					CADExtension.getCADTool().clearSelection();
 				}
 			}
 		} catch (DriverIOException e) {

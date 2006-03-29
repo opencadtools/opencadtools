@@ -55,8 +55,6 @@ import javax.swing.JPopupMenu;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLayer;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;

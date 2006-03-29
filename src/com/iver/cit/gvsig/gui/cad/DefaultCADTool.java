@@ -113,6 +113,9 @@ public abstract class DefaultCADTool implements CADTool {
 	public CADToolAdapter getCadToolAdapter() {
 		return cadToolAdapter;
 	}
+	public VectorialLayerEdited getVLE(){
+		return (VectorialLayerEdited) CADExtension.getEditionManager().getActiveLayerEdited();
+	}
 
 	/**
 	 * DOCUMENT ME!
@@ -156,13 +159,22 @@ public abstract class DefaultCADTool implements CADTool {
 			}
 			DefaultFeature df = new DefaultFeature(geometry, values);
 			int index = vea.addRow(df, getName());
-			VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-			.getEditionManager().getActiveLayerEdited();
+
+
+			VectorialLayerEdited vle = getVLE();
 			ArrayList selectedHandler = vle.getSelectedHandler();
 			ArrayList selectedRow = vle.getSelectedRow();
 			selectedHandler.clear();
 			selectedRow.clear();
+
+			ViewPort vp=vle.getLayer().getFMap().getViewPort();
+			BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics2D gs = selectionImage.createGraphics();
 			selectedRow.add(new DefaultRowEdited(df, IRowEdited.STATUS_ADDED, index));
+			IGeometry geom=df.getGeometry();
+			geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
+			vle.drawHandlers(geom.cloneGeometry(),gs,vp);
+			vea.setSelectionImage(selectionImage);
 		} catch (DriverIOException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -281,26 +293,26 @@ public abstract class DefaultCADTool implements CADTool {
 
 	}
 	protected ArrayList getSelectedRows(){
-		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-		.getEditionManager().getActiveLayerEdited();
+		VectorialLayerEdited vle = getVLE();
     	ArrayList selectedRow = vle.getSelectedRow();
     	return selectedRow;
 	}
 	protected ArrayList getSelectedHandlers(){
-		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-		.getEditionManager().getActiveLayerEdited();
+		VectorialLayerEdited vle = getVLE();
     	ArrayList selectedHandlers = vle.getSelectedHandler();
     	return selectedHandlers;
 	}
-	protected void clearSelection(){
-		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-		.getEditionManager().getActiveLayerEdited();
+	public void clearSelection(){
+		VectorialLayerEdited vle = getVLE();
 		ArrayList selectedRow = vle.getSelectedRow();
     	ArrayList selectedHandlers = vle.getSelectedHandler();
     	selectedRow.clear();
     	selectedHandlers.clear();
-    	FBitSet selection = CADExtension.getCADToolAdapter()
-  		.getVectorialAdapter().getSelection();
+    	VectorialEditableAdapter vea=vle.getVEA();
+    	FBitSet selection = vea.getSelection();
     	selection.clear();
+    	vea.setSelectionImage(null);
+    	vea.setHandlersImage(null);
+
 	}
 }

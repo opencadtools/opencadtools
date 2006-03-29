@@ -54,7 +54,7 @@ ScaleFactorOrReference{
 		PointOriginOrScaleFactor{
 			setQuestion(PluginServices.getText(this,"insert_reference_point_or_factor"));
 			setDescription(new String[]{"factor","cancel"});
-			addOption(s);
+			//addOption(s);
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		PointMain {

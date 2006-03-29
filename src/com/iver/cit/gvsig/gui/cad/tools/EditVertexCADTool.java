@@ -593,7 +593,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 										 isSelectedHandler=true;
 									 }
 								 }
-								VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited();
+								VectorialLayerEdited vle=getVLE();
 				    			vle.refreshSelectionCache(firstPoint,getCadToolAdapter());
 								//getCadToolAdapter().getMapControl().drawMap(false);
 							}

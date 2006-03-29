@@ -41,7 +41,7 @@
 package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.io.IOException;
@@ -49,16 +49,18 @@ import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MoveCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MoveCADToolContext.MoveCADToolState;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
 /**
@@ -128,17 +130,19 @@ public class MoveCADTool extends DefaultCADTool {
     public void addPoint(double x, double y,InputEvent event) {
         MoveCADToolState actualState = (MoveCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-        VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
+        VectorialLayerEdited vle=getVLE();
+        VectorialEditableAdapter vea = vle.getVEA();
         ArrayList selectedRow=getSelectedRows();
 
     	if (status.equals("Move.FirstPointToMove")) {
             firstPoint = new Point2D.Double(x, y);
         } else if (status.equals("Move.SecondPointToMove")) {
             PluginServices.getMDIManager().setWaitCursor();
-            lastPoint = new Point2D.Double(x, y);
+           lastPoint = new Point2D.Double(x, y);
             vea.startComplexRow();
 
             try {
+            	///ArrayList selectedRowAux=new ArrayList();
               for (int i = 0; i < selectedRow.size(); i++) {
         			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
         			IFeature feat = (IFeature) edRow.getLinkedRow().cloneRow();
@@ -149,11 +153,13 @@ public class MoveCADTool extends DefaultCADTool {
                     UtilFunctions.moveGeom(ig, lastPoint.getX() -
                             firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
 
-                    vea.modifyRow(edRow.getIndex(),feat,getName());
-        		}
-
-                clearSelection();
+                    int index=vea.modifyRow(edRow.getIndex(),feat,getName());
+                   /// selectedRowAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,index));
+              }
                 vea.endComplexRow();
+                clearSelection();
+              	///selectedRow=selectedRowAux;
+
             } catch (DriverIOException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -174,12 +180,19 @@ public class MoveCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
         MoveCADToolState actualState = ((MoveCADToolContext) _fsm).getState();
         String status = actualState.getName();
-        ArrayList selectedRow=getSelectedRows();
-        	drawHandlers(g, selectedRow,
+        VectorialLayerEdited vle=getVLE();
+        //ArrayList selectedRow=getSelectedRows();
+        	/*drawHandlers(g, selectedRow,
                      getCadToolAdapter().getMapControl().getViewPort()
                          .getAffineTransform());
+        */
         if (status.equals("Move.SecondPointToMove")) {
-            for (int i = 0; i < selectedRow.size(); i++) {
+        	ViewPort vp=vle.getLayer().getFMap().getViewPort();
+            int dx = vp.fromMapDistance(x - firstPoint.getX());
+            int dy = -vp.fromMapDistance(y - firstPoint.getY());
+            Image img = vle.getSelectionImage();
+            g.drawImage(img, dx, dy, null);
+        	/*for (int i = 0; i < selectedRow.size(); i++) {
     			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
     			IFeature feat = (IFeature) edRow.getLinkedRow();
     			IGeometry ig = feat.getGeometry().cloneGeometry();
@@ -190,7 +203,12 @@ public class MoveCADTool extends DefaultCADTool {
                 ig.draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
                     CADTool.drawingSymbol);
-    		}
+    		}*/
+        }else{
+        	 Image imgSel = vle.getSelectionImage();
+             g.drawImage(imgSel, 0, 0, null);
+             Image imgHand = vle.getHandlersImage();
+             g.drawImage(imgHand, 0, 0, null);
         }
     }
 
