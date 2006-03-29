@@ -11,14 +11,19 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.ui.mdiManager.View;
+import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
+import com.iver.cit.gvsig.gui.FOpenDialog;
+import com.iver.cit.gvsig.gui.Panels.ProjChooserPanel;
 import com.iver.utiles.SimpleFileFilter;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
+import javax.swing.JPanel;
 
 public class ShpPanel extends JWizardPanel {
 
@@ -26,6 +31,7 @@ public class ShpPanel extends JWizardPanel {
 	private JLabel jLabel = null;
 	private JTextField jTextFieldPath = null;
 	private JButton jButtonSelectPath = null;
+	private ProjChooserPanel chooserPanel = null;
 
 	private class MyInputEventListener implements CaretListener
 	{
@@ -59,6 +65,7 @@ public class ShpPanel extends JWizardPanel {
         this.add(getJTextFieldPath(), null);
         this.add(getJButtonSelectPath(), null);
 
+        this.add(getChooserPanel(), null);
 	}
 
 	/**
@@ -108,6 +115,32 @@ public class ShpPanel extends JWizardPanel {
 
 	public String getPath() {
 		return jTextFieldPath.getText();
+	}
+
+	/**
+	 * This method initializes chooserPanel
+	 *
+	 * @return javax.swing.JPanel
+	 */
+	private ProjChooserPanel getChooserPanel() {
+		if (chooserPanel == null) {
+			chooserPanel = new ProjChooserPanel(FOpenDialog.getLastProjection());
+			chooserPanel.setBounds(new java.awt.Rectangle(16,98,348,44));
+			View view= PluginServices.getMDIManager().getActiveView();
+			if (view instanceof com.iver.cit.gvsig.gui.View){
+				if (((com.iver.cit.gvsig.gui.View)view).getMapControl().getMapContext().getLayers().getLayersCount()!=0){
+					chooserPanel.getJBtnChangeProj().setEnabled(false);
+				}
+			}
+			chooserPanel.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+			        if (chooserPanel.isOkPressed()) {
+			        	FOpenDialog.setLastProjection(chooserPanel.getCurProj());
+			        }
+				}
+			});
+		}
+		return chooserPanel;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
