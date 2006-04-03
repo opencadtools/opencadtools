@@ -28,6 +28,7 @@ import com.iver.cit.gvsig.fmap.layers.LayerDrawingListener;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
+import com.vividsolutions.jts.geom.Geometry;
 
 public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDrawingListener{
 	private ArrayList selectedHandler = new ArrayList();
@@ -185,7 +186,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			for (int i = 0; i < feats.length; i++) {
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 					.getGeometry();
-					if (polygon.contains(geom)) {
+					if (contains(polygon,geom)) {
 						selectedRow.add(feats[i]);
 						selection.set(feats[i].getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
@@ -218,7 +219,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			for (int i = 0; i < feats.length; i++) {
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 					.getGeometry();
-					if (polygon.contains(geom) || polygon.intersects(geom)) {
+					if (contains(polygon,geom) || intersects(polygon,geom)) {
 						selectedRow.add(feats[i]);
 						selection.set(feats[i].getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
@@ -248,7 +249,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				IRowEdited rowEd=(IRowEdited)vea.getRow(i);
 				IGeometry geom = ((IFeature)rowEd.getLinkedRow())
 						.getGeometry();
-					if (!polygon.contains(geom) && !polygon.intersects(geom)) {
+					if (!contains(polygon,geom) && !intersects(polygon,geom)) {
 						selectedRow.add(rowEd);
 						selection.set(rowEd.getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
@@ -384,5 +385,13 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	}
 
 	public void afterLayerGraphicDraw(LayerDrawEvent e) throws CancelationException {
+	}
+	private static boolean contains(IGeometry g1,IGeometry g2) {
+		Geometry geometry=g1.toJTSGeometry();
+		return geometry.contains(g2.toJTSGeometry());
+	}
+	private static boolean intersects(IGeometry g1,IGeometry g2) {
+		Geometry geometry=g1.toJTSGeometry();
+		return geometry.intersects(g2.toJTSGeometry());
 	}
 }
