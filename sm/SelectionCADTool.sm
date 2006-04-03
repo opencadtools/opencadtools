@@ -20,101 +20,205 @@
 
 FirstPoint
 
-	Entry {
-		setQuestion(ctxt.getName() + "\n" +
-		PluginServices.getText(this,"insert_point_selection"));
-		setDescription(new String[]{"cancel"});
-		}
-	Exit{
-		}
+  Entry {
+    setQuestion(ctxt.getName() + "\n" +
+    PluginServices.getText(this,"insert_point_selection_or_types"));
+    setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+    }
+  Exit{
+    }
 
-	{
-		addPoint( pointX:double,pointY:double,event:InputEvent)
-			[ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.SecondPoint")]
-			SecondPoint{
-				setQuestion(PluginServices.getText(this,"insert_second_point_selection"));
-				setDescription(new String[]{"cancel"});
-				addPoint( pointX,pointY,event);
-				}
-		addPoint( pointX:double,pointY:double,event:InputEvent)
-			[ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
-			WithSelectedFeatures {
-				setQuestion(PluginServices.getText(this,"select_handlers"));
-				setDescription(new String[]{"cancel"});
-				addPoint( pointX,pointY,event);
-				end();
-				}
+  {
+    addOption(s:String)
+      FirstPoint{
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addOption(s);
+        }
+    addPoint( pointX:double,pointY:double,event:InputEvent)
+      [ctxt.getType().equals(PluginServices.getText(this,"out_rectangle"))]
+      SecondPointOutRectangle{
+        setQuestion(PluginServices.getText(this,"insert_second_point_selection"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        }
+    addPoint( pointX:double,pointY:double,event:InputEvent)
+      [ctxt.getType().equals(PluginServices.getText(this,"inside_circle")) || ctxt.getType().equals(PluginServices.getText(this,"cross_circle")) || ctxt.getType().equals(PluginServices.getText(this,"out_circle"))]
+      SecondPointCircle{
+        setQuestion(PluginServices.getText(this,"insert_second_point_selection"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        }
+    addPoint( pointX:double,pointY:double,event:InputEvent)
+      [ctxt.getType().equals(PluginServices.getText(this,"inside_polygon")) || ctxt.getType().equals(PluginServices.getText(this,"cross_polygon")) || ctxt.getType().equals(PluginServices.getText(this,"out_polygon"))]
+      NextPointPolygon{
+        setQuestion(PluginServices.getText(this,"insert_next_point_selection_or_end_polygon"));
+        setDescription(new String[]{"end_polygon","simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        }
+
+    addPoint( pointX:double,pointY:double,event:InputEvent)
+      [ctxt.getType().equals(PluginServices.getText(this,"simple")) && ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.SecondPoint")]
+      SecondPoint{
+        setQuestion(PluginServices.getText(this,"insert_second_point_selection"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        }
+    addPoint( pointX:double,pointY:double,event:InputEvent)
+      [ctxt.getType().equals(PluginServices.getText(this,"simple")) && ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
+      WithSelectedFeatures {
+        setQuestion(PluginServices.getText(this,"select_handlers"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        end();
+        }
 }
 
 SecondPoint{
-	// Si hemos conseguido seleccionar algo
-	addPoint( pointX:double,pointY:double,event:InputEvent)
-			[ctxt.selectWithSecondPoint(pointX,pointY, event) > 0]
-			WithSelectedFeatures {
-				setQuestion(PluginServices.getText(this,"select_handlers"));
-				setDescription(new String[]{"cancel"});
-				addPoint( pointX,pointY,event);
-				end();
-				}
-	// Si no lo hemos conseguido
-	addPoint( pointX:double,pointY:double,event:InputEvent)
-			FirstPoint {
-				setQuestion(PluginServices.getText(this,"insert_point_selection"));
-				setDescription(new String[]{"cancel"});
-				}
-
+  // Si hemos conseguido seleccionar algo
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      [ctxt.selectWithSecondPoint(pointX,pointY, event) > 0]
+      WithSelectedFeatures {
+        setQuestion(PluginServices.getText(this,"select_handlers"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        end();
+        }
+  // Si no lo hemos conseguido
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      FirstPoint {
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint(pointX,pointY,event);
+        }
+  addOption(s:String)
+      FirstPoint{
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"end_polygon","simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        setType(s);
+        }
 
 }
 WithSelectedFeatures{
 
-	// Si hemos pinchado encima de un handler
-	addPoint( pointX:double,pointY:double,event:InputEvent)
-	[ctxt.selectHandlers(pointX, pointY, event)>0]
-			WithHandlers {
-				setQuestion(PluginServices.getText(this,"insert_destination_point"));
-				setDescription(new String[]{"cancel"});
-				addPoint( pointX,pointY,event);
-				// refresh();
-				}
+  // Si hemos pinchado encima de un handler
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+  [ctxt.selectHandlers(pointX, pointY, event)>0]
+      WithHandlers {
+        setQuestion(PluginServices.getText(this,"insert_destination_point"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        // refresh();
+        }
 
-	// Si no hemos cogido un handler, probamos a seleccionar
-	// otra entidad
-	addPoint( pointX:double,pointY:double,event:InputEvent)
-		[ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
-			WithSelectedFeatures {
-				setQuestion(PluginServices.getText(this,"select_handlers"));
-				setDescription(new String[]{"cancel"});
-				addPoint( pointX,pointY,event);
-				}
+  // Si no hemos cogido un handler, probamos a seleccionar
+  // otra entidad
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+    [ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.WithSelectedFeatures")]
+      WithSelectedFeatures {
+        setQuestion(PluginServices.getText(this,"select_handlers"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        }
 
 
-	// Cualquier otro caso (hemos pinchado en algo vacio), volvemos al estado inicial
-	addPoint( pointX:double,pointY:double,event:InputEvent)
-			FirstPoint {
-				setQuestion(PluginServices.getText(this,"insert_point_selection"));
-				setDescription(new String[]{"cancel"});
-				addPoint( pointX,pointY,event);
-				// refresh();
-				}
-
+  // Cualquier otro caso (hemos pinchado en algo vacio), volvemos al estado inicial
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      FirstPoint {
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        // refresh();
+        }
+	 addOption(s:String)
+      FirstPoint{
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"end_polygon","simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        setType(s);
+        }
 }
 
 WithHandlers{
-	addPoint( pointX:double,pointY:double,event:InputEvent)
-			WithSelectedFeatures {
-				setQuestion(PluginServices.getText(this,"select_handlers"));
-				setDescription(new String[]{"cancel"});
-				addPoint( pointX,pointY,event);
-				refresh();
-				}
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      WithSelectedFeatures {
+        setQuestion(PluginServices.getText(this,"select_handlers"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        refresh();
+        }
+}
+
+SecondPointOutRectangle{
+  // Si hemos conseguido seleccionar algo
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      [ctxt.selectWithSecondPointOutRectangle(pointX,pointY, event) > 0]
+      WithSelectedFeatures {
+        setQuestion(PluginServices.getText(this,"select_handlers"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        end();
+        }
+  // Si no lo hemos conseguido
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      FirstPoint {
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint(pointX,pointY,event);
+        }
+  addOption(s:String)
+      FirstPoint{
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"end_polygon","simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        setType(s);
+        }
+
+}
+SecondPointCircle{
+  // Si hemos conseguido seleccionar algo
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      [ctxt.selectWithCircle(pointX,pointY, event) > 0]
+      WithSelectedFeatures {
+        setQuestion(PluginServices.getText(this,"select_handlers"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint( pointX,pointY,event);
+        end();
+        }
+  // Si no lo hemos conseguido
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      FirstPoint {
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint(pointX,pointY,event);
+        }
+  addOption(s:String)
+      FirstPoint{
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        setType(s);
+        }
+}
+
+NextPointPolygon{
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      NextPointPolygon {
+        setQuestion(PluginServices.getText(this,"insert_next_selection_or_end_polygon"));
+        setDescription(new String[]{"end_polygon","simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addPoint(pointX,pointY,event);
+        }
+  addOption(s:String)
+      FirstPoint{
+        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setDescription(new String[]{"end_polygon","simple","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
+        addOption(s);
+        }
 }
 
 Default
 {
-	addOption(s:String)
-		[s.equals(PluginServices.getText(this,"cancel"))]
-		FirstPoint{
-			end();
-			}
+  addOption(s:String)
+    [s.equals(PluginServices.getText(this,"cancel"))]
+    FirstPoint{
+      end();
+      }
 }
 %%

@@ -302,7 +302,6 @@ public final class ScaleCADToolContext
                     {
                         ctxt.setQuestion(PluginServices.getText(this,"insert_reference_point_or_factor"));
                         ctxt.setDescription(new String[]{"factor", "cancel"});
-                        ctxt.addOption(s);
                     }
                     finally
                     {

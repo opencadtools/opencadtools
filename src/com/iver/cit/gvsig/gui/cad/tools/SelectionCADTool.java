@@ -80,12 +80,13 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	//private Point2D lastPoint;
 
-	private String tool = "selection";
+
 
 	private String nextState;
 // Registros de los que se ha sleccionado algún handler.
 	private ArrayList rowselectedHandlers=new ArrayList();
-
+	private String type=PluginServices.getText(this,"simple");
+	private ArrayList pointsPolygon=new ArrayList();
 	/**
 	 * Crea un nuevo LineCADTool.
 	 */
@@ -99,6 +100,8 @@ public class SelectionCADTool extends DefaultCADTool {
 	public void init() {
 		_fsm = new SelectionCADToolContext(this);
 		setNextTool("selection");
+
+		setType(PluginServices.getText(this,"simple"));
 	}
 
 	/*
@@ -156,28 +159,20 @@ public class SelectionCADTool extends DefaultCADTool {
 		String status = actualState.getName();
 		System.out.println("PREVIOUSSTATE =" + status); // + "ESTADO ACTUAL: " +
 														// _fsm.getState());
-		/*
-		 * FBitSet selection = getCadToolAdapter().getVectorialAdapter()
-		 * .getSelection();
-		 */
 		VectorialLayerEdited vle = getVLE();
 		VectorialEditableAdapter vea=vle.getVEA();
 		ArrayList selectedHandler = vle.getSelectedHandler();
 		ArrayList selectedRow = vle.getSelectedRow();
-		// ArrayList selectedRowIndex = vle.getSelectedRowIndex();
 		System.out.println("STATUS ACTUAL = " + _fsm.getTransition());
 		if (status.equals("Selection.FirstPoint")) {
+			firstPoint=new Point2D.Double(x,y);
+			pointsPolygon.add(firstPoint);
 		} else if (status.equals("Selection.SecondPoint")) {
-			// selectByRectangle(x, y, selectedRow);
 		} else if (status.equals("Selection.WithFeatures")) {
-
-
 		} else if (status.equals("Selection.WithHandlers")) {
 			vea.startComplexRow();
 			for (int i = 0; i < selectedRow.size(); i++) {
 				IRowEdited row = (IRowEdited) selectedRow.get(i);
-				// int index = ((Integer) selectedRowIndex.get(i)).intValue();
-
 				// Movemos los handlers que hemos seleccionado
 				// previamente dentro del método select()
 				for (int k = 0; k < selectedHandler.size(); k++) {
@@ -190,12 +185,12 @@ public class SelectionCADTool extends DefaultCADTool {
 			try {
 				vea.endComplexRow();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (DriverIOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if (status.equals("Selection.NextPointPolygon")) {
+			pointsPolygon.add(new Point2D.Double(x,y));
 		}
 	}
 
@@ -217,6 +212,63 @@ public class SelectionCADTool extends DefaultCADTool {
 			nextState = "Selection.FirstPoint";
 		return selectedRow.size();
 	}
+	/**
+	 * Receives second point
+	 * @param x
+	 * @param y
+	 * @return numFeatures selected
+	 */
+	public int selectWithSecondPointOutRectangle(double x, double y, InputEvent event) {
+		Point2D lastPoint=new Point2D.Double(x,y);
+		GeneralPathX gpx=new GeneralPathX();
+		gpx.moveTo(firstPoint.getX(),firstPoint.getY());
+		gpx.lineTo(lastPoint.getX(),firstPoint.getY());
+		gpx.lineTo(lastPoint.getX(),lastPoint.getY());
+		gpx.lineTo(firstPoint.getX(),lastPoint.getY());
+		gpx.closePath();
+		IGeometry rectangle=ShapeFactory.createPolygon2D(gpx);
+		return selectWithPolygon(rectangle);
+//		VectorialLayerEdited vle = getVLE();
+//		PluginServices.getMDIManager().setWaitCursor();
+//		vle.selectWithSecondPointOutRectangle(firstPoint,x,y);
+//		ArrayList selectedRow = vle.getSelectedRow();
+//		PluginServices.getMDIManager().restoreCursor();
+//		if (selectedRow.size() > 0) {
+//			nextState = "Selection.WithSelectedFeatures";
+//		} else
+//			nextState = "Selection.FirstPoint";
+//		return selectedRow.size();
+	}
+	/**
+	 * Receives second point
+	 * @param x
+	 * @param y
+	 * @return numFeatures selected
+	 */
+	public int selectWithCircle(double x, double y, InputEvent event) {
+		IGeometry circle=ShapeFactory.createCircle(firstPoint,new Point2D.Double(x,y));
+		return selectWithPolygon(circle);
+	}
+	public int selectWithPolygon(IGeometry polygon) {
+		VectorialLayerEdited vle = getVLE();
+		PluginServices.getMDIManager().setWaitCursor();
+
+		if (getType().equals(PluginServices.getText(this,"inside_circle")) || getType().equals(PluginServices.getText(this,"inside_polygon"))) {
+			vle.selectInsidePolygon(polygon);
+		} else if (getType().equals(PluginServices.getText(this,"cross_circle")) || getType().equals(PluginServices.getText(this,"cross_polygon"))) {
+			vle.selectCrossPolygon(polygon);
+		} else if (getType().equals(PluginServices.getText(this,"out_circle")) || getType().equals(PluginServices.getText(this,"out_polygon")) || getType().equals(PluginServices.getText(this,"out_rectangle"))) {
+			vle.selectOutPolygon(polygon);
+		}
+		ArrayList selectedRow = vle.getSelectedRow();
+		PluginServices.getMDIManager().restoreCursor();
+		if (selectedRow.size() > 0) {
+			nextState = "Selection.WithSelectedFeatures";
+			end();
+		} else
+			nextState = "Selection.FirstPoint";
+		return selectedRow.size();
+	}
 
 	/**
 	 * Método para dibujar la lo necesario para el estado en el que nos
@@ -234,25 +286,10 @@ public class SelectionCADTool extends DefaultCADTool {
 	public void drawOperation(Graphics g, double x, double y) {
 		SelectionCADToolState actualState = _fsm.getState();
 		String status = actualState.getName();
-		/*
-		 * FBitSet selection = getCadToolAdapter().getVectorialAdapter()
-		 * .getSelection();
-		 */
 		VectorialLayerEdited vle = getVLE();
 		ArrayList selectedHandler = vle.getSelectedHandler();
-		ArrayList selectedRow = vle.getSelectedRow();
 		ViewPort vp=vle.getLayer().getFMap().getViewPort();
-		// ArrayList selectedRowIndex = vle.getSelectedRowIndex();
-
-		/*
-		 * if (selection.cardinality() == 0) { selectedRow.clear();
-		 * selectedRowIndex.clear(); selectedHandler.clear(); }
-		 */
-
-		//drawHandlers(g, selectedRow, getCadToolAdapter().getMapControl()
-		//		.getViewPort().getAffineTransform());
-
-		if (status.equals("Selection.SecondPoint")) {
+		if (status.equals("Selection.SecondPoint") || status.equals("Selection.SecondPointOutRectangle")) {
 			// Dibuja el rectángulo de selección
 			GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
 					4);
@@ -267,14 +304,30 @@ public class SelectionCADTool extends DefaultCADTool {
 			Image img = vle.getSelectionImage();
 	        g.drawImage(img, 0, 0, null);
 	        return;
-		} else if (status.equals("Selection.WithHandlers")) {
+		}if (status.equals("Selection.SecondPointCircle")) {
+			// Dibuja el círculo de selección
+			ShapeFactory.createCircle(firstPoint,new Point2D.Double(x,y)).draw((Graphics2D) g,
+					vp,
+					CADTool.selectSymbol);
+			Image img = vle.getSelectionImage();
+	        g.drawImage(img, 0, 0, null);
+	        return;
+		}else if (status.equals("Selection.NextPointPolygon")) {
+			// Dibuja el polígono de selección
+			IGeometry polygon=getGeometryPolygon(new Point2D.Double(x,y));
+			polygon.draw((Graphics2D) g,
+					vp,
+					CADTool.selectSymbol);
+			Image img = vle.getSelectionImage();
+	        g.drawImage(img, 0, 0, null);
+	        return;
+		}else if (status.equals("Selection.WithHandlers")) {
 			// Movemos los handlers que hemos seleccionado
 			// previamente dentro del método select()
 			for (int k = 0; k < selectedHandler.size(); k++) {
 				Handler h = (Handler) selectedHandler.get(k);
 				h.set(x, y);
 			}
-
 			// Y una vez movidos los vértices (handles)
 			// redibujamos la nueva geometría.
 			for (int i = 0; i < rowselectedHandlers.size(); i++) {
@@ -296,12 +349,6 @@ public class SelectionCADTool extends DefaultCADTool {
 			}catch (Exception e) {
 			}
 		}
-//		if (firstPoint != null) {
-//			int dx = vp.fromMapDistance(x - firstPoint.getX());
-//			int dy = -vp.fromMapDistance(y - firstPoint.getY());
-//			Image img = vle.getImage();
-//			g.drawImage(img, 0, 0, null);
-//		}
 	}
 
 	/**
@@ -313,6 +360,64 @@ public class SelectionCADTool extends DefaultCADTool {
 	 *            Diferent option.
 	 */
 	public void addOption(String s) {
+		SelectionCADToolState actualState = (SelectionCADToolState) _fsm
+				.getPreviousState();
+		String status = actualState.getName();
+		System.out.println("PREVIOUSSTATE =" + status); // + "ESTADO ACTUAL: " +
+		// _fsm.getState());
+		System.out.println("STATUS ACTUAL = " + _fsm.getTransition());
+		if (s.equals(PluginServices.getText(this,"cancel"))){
+			init();
+			return;
+		}else if (s.equals(PluginServices.getText(this,"select_all"))){
+			selectAll();
+			init();
+			return;
+		}
+		if (status.equals("Selection.FirstPoint")) {
+			setType(s);
+		}else if (status.equals("Selection.NextPointPolygon")){
+			if (s.equals(PluginServices.getText(this,"end_polygon")) || s.equals("E") || s.equals("e")) {
+			IGeometry polygon=getGeometryPolygon(null);
+			selectWithPolygon(polygon);
+			pointsPolygon.clear();
+			setType(PluginServices.getText(this,"simple"));
+			}
+		}
+	}
+	private int selectAll() {
+		VectorialLayerEdited vle = getVLE();
+		PluginServices.getMDIManager().setWaitCursor();
+		vle.selectAll();
+		ArrayList selectedRow = vle.getSelectedRow();
+		PluginServices.getMDIManager().restoreCursor();
+		if (selectedRow.size() > 0) {
+			nextState = "Selection.WithSelectedFeatures";
+		} else
+			nextState = "Selection.FirstPoint";
+		end();
+		return selectedRow.size();
+	}
+
+	private IGeometry getGeometryPolygon(Point2D p) {
+		Point2D[] points = (Point2D[]) pointsPolygon.toArray(new Point2D[0]);
+		GeneralPathX gpx = new GeneralPathX();
+		for (int i = 0; i < points.length; i++) {
+			if (i == 0) {
+				gpx.moveTo(points[i].getX(), points[i].getY());
+			} else {
+				gpx.lineTo(points[i].getX(), points[i].getY());
+			}
+		}
+		if (p!=null){
+			gpx.lineTo(p.getX(),p.getY());
+			gpx.closePath();
+			IGeometry polyline = ShapeFactory.createPolyline2D(gpx);
+			return polyline;
+		}
+		gpx.closePath();
+		IGeometry polygon = ShapeFactory.createPolygon2D(gpx);
+		return polygon;
 	}
 
 	/*
@@ -331,21 +436,15 @@ public class SelectionCADTool extends DefaultCADTool {
 
 			return status;
 		} catch (NullPointerException e) {
-			return "ExecuteMap.Initial";
+			return "Selection.FisrtPoint";
 		}
 	}
 
-	public String getTool() {
-		return tool;
-	}
 
-	public void setNextTool(String tool) {
-		this.tool = tool;
-	}
 
 	public void end() {
-		if (!tool.equals("selection"))
-			CADExtension.setCADTool(getTool());
+		if (!getNextTool().equals("selection"))
+			CADExtension.setCADTool(getNextTool());
 	}
 
 	public String getName() {
@@ -426,5 +525,35 @@ public class SelectionCADTool extends DefaultCADTool {
 		 */
 
 		return numHandlesSelected;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		if (type.equals("S") || type.equals("s")){
+			this.type=PluginServices.getText(this,"simple");
+		}else if (type.equals("OR") || type.equals("or")){
+			this.type=PluginServices.getText(this,"out_rectangle");
+		}else if (type.equals("IP") || type.equals("ip")){
+			this.type=PluginServices.getText(this,"inside_polygon");
+		}else if (type.equals("CP") || type.equals("cp")){
+			this.type=PluginServices.getText(this,"cross_polygon");
+		}else if (type.equals("OP") || type.equals("op")){
+			this.type=PluginServices.getText(this,"out_polygon");
+		}else if (type.equals("IC") || type.equals("ic")){
+			this.type=PluginServices.getText(this,"inside_circle");
+		}else if (type.equals("CC") || type.equals("cc")){
+			this.type=PluginServices.getText(this,"cross_circle");
+		}else if (type.equals("OC") || type.equals("oc")){
+			this.type=PluginServices.getText(this,"cross_circle");
+		}else if (type.equals(PluginServices.getText(this,"select_all"))){
+			selectAll();
+			init();
+		}else{
+			this.type = type;
+		}
+		pointsPolygon.clear();
 	}
 }

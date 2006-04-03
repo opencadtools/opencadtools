@@ -83,6 +83,8 @@ public abstract class DefaultCADTool implements CADTool {
 
 	private String[] currentdescriptions;
 
+	private String tool = "selection";
+
 	/**
 	 * DOCUMENT ME!
 	 */
@@ -314,5 +316,12 @@ public abstract class DefaultCADTool implements CADTool {
     	vea.setSelectionImage(null);
     	vea.setHandlersImage(null);
 
+	}
+	public String getNextTool() {
+		return tool;
+	}
+
+	public void setNextTool(String tool) {
+		this.tool = tool;
 	}
 }
