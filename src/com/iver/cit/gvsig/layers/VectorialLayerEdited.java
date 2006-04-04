@@ -14,6 +14,7 @@ import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
+import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
@@ -294,9 +295,8 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	}
 
 	public void refreshSelectionCache(Point2D firstPoint,CADToolAdapter cta){
-		VectorialEditableAdapter vea = (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
-		FBitSet selection = cta.getVectorialAdapter()
-		.getSelection();
+		VectorialEditableAdapter vea = getVEA();
+		FBitSet selection = vea.getSelection();
 		double min = java.lang.Double.MAX_VALUE;
 //		 Cogemos las entidades seleccionadas
 		clearSelection();
@@ -311,13 +311,12 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 			DefaultRowEdited dre = null;
 			try {
-				dre = (DefaultRowEdited) cta
-						.getVectorialAdapter().getRow(i);
+				dre = (DefaultRowEdited)(vea.getRow(i));
 				IFeature feat=(DefaultFeature)dre.getLinkedRow();
 				IGeometry geom=feat.getGeometry();
 				handlers = geom.getHandlers(IGeometry.SELECTHANDLER);
 				selectedRow.add(dre);
-				geom.draw(gs, vp, CADTool.drawingSymbol);
+				geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 				drawHandlers(geom.cloneGeometry(),gh,vp);
 				// y miramos los handlers de cada entidad seleccionada
 				min = cta.getMapControl().getViewPort()
@@ -387,11 +386,15 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void afterLayerGraphicDraw(LayerDrawEvent e) throws CancelationException {
 	}
 	private static boolean contains(IGeometry g1,IGeometry g2) {
-		Geometry geometry=g1.toJTSGeometry();
-		return geometry.contains(g2.toJTSGeometry());
+		Geometry geometry1=g1.toJTSGeometry();
+		Geometry geometry2=g2.toJTSGeometry();
+		if (geometry1==null || geometry2==null)return false;
+		return geometry1.contains(geometry2);
 	}
 	private static boolean intersects(IGeometry g1,IGeometry g2) {
-		Geometry geometry=g1.toJTSGeometry();
-		return geometry.intersects(g2.toJTSGeometry());
+		Geometry geometry1=g1.toJTSGeometry();
+		Geometry geometry2=g2.toJTSGeometry();
+		if (geometry1==null || geometry2==null)return false;
+		return geometry1.intersects(geometry2);
 	}
 }

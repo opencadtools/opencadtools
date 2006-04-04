@@ -194,9 +194,10 @@ public class EditVertexCADTool extends DefaultCADTool {
     public void addOption(String s) {
     	EditVertexCADToolState actualState = (EditVertexCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-        VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
+        VectorialLayerEdited vle=getVLE();
+        VectorialEditableAdapter vea = vle.getVEA();
         //FBitSet selection = vea.getSelection();
-        ArrayList selectedRows=getSelectedRows();
+        ArrayList selectedRows=vle.getSelectedRow();
         IRowEdited row=null;
         IGeometry ig=null;
         Handler[] handlers=null;
@@ -223,12 +224,12 @@ public class EditVertexCADTool extends DefaultCADTool {
         	dif=2;
         }
         if (status.equals("EditVertex.SelectVertexOrDelete")){
-        	if(s.equals("s") || s.equals("S") || s.equals("Siguiente")){
+        	if(s.equals("s") || s.equals("S") || s.equals(PluginServices.getText(this,"next"))){
         		numSelect=numSelect-dif;
         		if (numSelect<0){
         			numSelect=numHandlers-1+(numSelect+1);
         		}
-           }else if(s.equals("a") || s.equals("A") || s.equals("Anterior")){
+           }else if(s.equals("a") || s.equals("A") || s.equals(PluginServices.getText(this,"previous"))){
         	   	numSelect=numSelect+dif;
        			if (numSelect>(numHandlers-1)){
        				numSelect=numSelect-(numHandlers);
@@ -249,7 +250,10 @@ public class EditVertexCADTool extends DefaultCADTool {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+
+					vle.refreshSelectionCache(new Point2D.Double(0,0),getCadToolAdapter());
 					getCadToolAdapter().getMapControl().drawMap(false);
+
         		}
         	}else if(s.equals("i") || s.equals("I") || s.equals(PluginServices.getText(this,"add"))){
         		addVertex=true;
@@ -537,7 +541,8 @@ public class EditVertexCADTool extends DefaultCADTool {
 	}
 	private void selectHandler(double x, double y) {
 		Point2D firstPoint = new Point2D.Double(x, y);
-		ArrayList selectedRows=getSelectedRows();
+		VectorialLayerEdited vle=getVLE();
+		ArrayList selectedRows=vle.getSelectedRow();
 		//FBitSet selection = getCadToolAdapter().getVectorialAdapter()
 		//		.getSelection();
 		double tam = getCadToolAdapter().getMapControl().getViewPort()
@@ -547,7 +552,8 @@ public class EditVertexCADTool extends DefaultCADTool {
 		if (selectedRows.size()>0){
 			boolean isSelectedHandler=false;
 			 IGeometry geometry=getSelectedGeometry();
-				 Handler[] handlers=geometry.getHandlers(IGeometry.SELECTHANDLER);
+			if (geometry!=null){
+			 Handler[] handlers=geometry.getHandlers(IGeometry.SELECTHANDLER);
 				 for (int h=0;h<handlers.length;h++){
 					 if (handlers[h].getPoint().distance(firstPoint)<tam){
 						 numSelect=h;
@@ -581,10 +587,9 @@ public class EditVertexCADTool extends DefaultCADTool {
 									//fea = (DefaultFeature) getCadToolAdapter()
 									//.getVectorialAdapter().getRow(selection.nextSetBit(0)).getLinkedRow();
 								Point2D posVertex=new Point2D.Double(x,y);
-						    	IGeometry geom=addVertex(fea.getGeometry(),posVertex,rect);
-
-						    	getCadToolAdapter()
-								.getVectorialAdapter().modifyRow(row.getIndex(),new DefaultFeature(geom,fea.getAttributes()),"Add vertice");
+						    	IGeometry geom=addVertex(fea.getGeometry().cloneGeometry(),posVertex,rect);
+						    	DefaultFeature df=new DefaultFeature(geom,fea.getAttributes());
+						    	vle.getVEA().modifyRow(row.getIndex(),df,"Add vertice");
 
 						    	Handler[] newHandlers=geom.getHandlers(IGeometry.SELECTHANDLER);
 								 for (int h=0;h<newHandlers.length;h++){
@@ -593,7 +598,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 										 isSelectedHandler=true;
 									 }
 								 }
-								VectorialLayerEdited vle=getVLE();
+
 				    			vle.refreshSelectionCache(firstPoint,getCadToolAdapter());
 								//getCadToolAdapter().getMapControl().drawMap(false);
 							}
@@ -608,6 +613,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 						}
 
 				 }
+			}
 		}
 
 	}
