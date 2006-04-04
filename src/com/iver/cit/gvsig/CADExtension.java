@@ -51,6 +51,7 @@ import java.util.HashMap;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
@@ -287,7 +288,7 @@ public class CADExtension implements Extension {
 	{
 
 		public boolean postProcessKeyEvent(KeyEvent e) {
-			// System.out.println("KeyEvent e = " + e);
+			System.out.println("KeyEvent e = " + e);
 			if ((adapter==null) ||  (view == null)) return false;
 			if (e.getID() != KeyEvent.KEY_RELEASED) return false;
         	if (e.getKeyCode() == KeyEvent.VK_DELETE)
@@ -300,19 +301,26 @@ public class CADExtension implements Extension {
         		view.focusConsole("");
         	else
         	{
-        		if (e.getComponent().getName() != null)
+        		if ((e.getID() == KeyEvent.KEY_RELEASED) && (!e.isActionKey()))
         		{
-	        		System.out.println("Evento de teclado desde el componente " + e.getComponent().getName());
-	        		if (!e.getComponent().getName().equals("CADConsole"))
-	        		{
-		        		if ((e.getID() == KeyEvent.KEY_TYPED) && (!e.isActionKey()))
-		        		{
-			    			if (Character.isLetterOrDigit(e.getKeyChar()))
-			    			{
-			    				Character keyChar = new Character(e.getKeyChar());
-			    				view.focusConsole(keyChar+"");
-			        		}
-		        		}
+	    			if (Character.isLetterOrDigit(e.getKeyChar()))
+	    			{
+	    				Character keyChar = new Character(e.getKeyChar());
+	            		if (e.getComponent().getName() != null)
+	            		{
+	    	        		System.out.println("Evento de teclado desde el componente " + e.getComponent().getName());
+	    	        		if (!e.getComponent().getName().equals("CADConsole"))
+	    	        		{    				
+	    	        			view.focusConsole(keyChar+"");
+	    	        		}
+	            		}
+	            		else
+	            		{
+	    	        		if (!(e.getComponent() instanceof JTextArea))
+	    	        		{    				
+	    	        			view.focusConsole(keyChar+"");
+	    	        		}	            			
+	            		}
 	        		}
         		}
         	}
