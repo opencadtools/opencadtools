@@ -4,6 +4,10 @@ import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
 import javax.swing.JPanel;
 
+import com.hardcode.driverManager.Driver;
+import com.hardcode.driverManager.DriverManager;
+import com.iver.cit.gvsig.fmap.layers.LayerChangeSupport;
+import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionPanel;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 
@@ -39,6 +43,9 @@ public class PostGISpanel extends JWizardPanel {
 	private ConnectionPanel getJPanelConex() {
 		if (jPanelConex == null) {
 			jPanelConex = new ConnectionPanel();
+			String[] drvAux = new String[1];
+			drvAux[0] = "PostGIS JDBC Driver";
+			jPanelConex.setDrivers(drvAux);
 			jPanelConex.setPreferredSize(new java.awt.Dimension(400,300));
 		}
 		return jPanelConex;

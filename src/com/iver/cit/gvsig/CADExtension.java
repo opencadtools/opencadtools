@@ -288,7 +288,7 @@ public class CADExtension implements Extension {
 	{
 
 		public boolean postProcessKeyEvent(KeyEvent e) {
-			System.out.println("KeyEvent e = " + e);
+			// System.out.println("KeyEvent e = " + e);
 			if ((adapter==null) ||  (view == null)) return false;
 			if (e.getID() != KeyEvent.KEY_RELEASED) return false;
         	if (e.getKeyCode() == KeyEvent.VK_DELETE)

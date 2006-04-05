@@ -19,7 +19,6 @@ import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
-import com.iver.cit.gvsig.fmap.drivers.VectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
 import com.iver.cit.gvsig.fmap.drivers.VectorialJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
@@ -103,12 +102,15 @@ public class MyFinishAction extends FinishAction
 				dbLayerDef.setTableName(layerName);
 				dbLayerDef.setShapeType(geometryType);
 				dbLayerDef.setFieldGeometry("the_geom");
+				dbLayerDef.setFieldID("gid");
 				dbLayerDef.setFieldsDesc(fieldsDesc);
+				dbLayerDef.setWhereClause("");
 				String strSRID = mapCtrl.getProjection().getAbrev()
 						.substring(5);
 				dbLayerDef.setSRID_EPSG(strSRID); 
+				dbLayerDef.setConnection(conex);
 
-    			PostGISWriter writer= (PostGISWriter)LayerFactory.getWM().getWriter("PostGIS Writer");
+    			PostGISWriter writer= new PostGISWriter(); //(PostGISWriter)LayerFactory.getWM().getWriter("PostGIS Writer");
     			writer.setWriteAll(true);
     			writer.setCreateTable(true);
     			writer.initialize(dbLayerDef);

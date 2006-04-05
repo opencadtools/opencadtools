@@ -91,7 +91,12 @@ public class PolylineCADTool extends DefaultCADTool {
     public void endGeometry() {
     	IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
         FGeometryCollection fgc = new FGeometryCollection(geoms);
-        addGeometry(fgc);
+		// No queremos guardar FGeometryCollections:
+		GeneralPathX gp = new GeneralPathX();
+		gp.append(fgc.getGeneralPathXIterator(), true);
+		IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
+        
+        addGeometry(newGeom);
         _fsm = new PolylineCADToolContext(this);
         list.clear();
         antantPoint=antCenter=antInter=antPoint=firstPoint=null;
