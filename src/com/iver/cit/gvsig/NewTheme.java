@@ -23,6 +23,7 @@ import com.iver.cit.gvsig.gui.cad.MyFinishAction;
 import com.iver.cit.gvsig.gui.cad.WizardAndami;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
+import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
 import com.iver.cit.gvsig.gui.cad.panels.ShpPanel;
 
 /**
@@ -97,9 +98,13 @@ public void execute(String actionCommand) {
 			}
 			if (actionCommand.equals("POSTGIS"))
 			{
+				panelChoose.setDriver((ISpatialWriter) writerManager.getDriver("PostGIS JDBC Driver"));
 				wizard.getWizardComponents().addWizardPanel(
-					new SimpleLabelWizardPanel(wizard
-							.getWizardComponents(), new JLabel("Done!")));
+					new PostGISpanel(wizard.getWizardComponents()));
+				
+				wizard.getWizardComponents().setFinishAction(
+						new MyFinishAction(wizard.getWizardComponents(),
+								vista, actionCommand));
 			}			
 			
 			wizard.getViewInfo().setWidth(540);

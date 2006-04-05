@@ -1,18 +1,28 @@
 package com.iver.cit.gvsig.gui.cad;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 import jwizardcomponent.FinishAction;
 import jwizardcomponent.JWizardComponents;
 
+import org.cresques.cts.IProjection;
+import org.cresques.cts.ProjectionPool;
+
+import com.hardcode.driverManager.Driver;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.core.ICanReproject;
+import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
-import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
+import com.iver.cit.gvsig.fmap.drivers.VectorialJDBCDriver;
+import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -20,7 +30,9 @@ import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
+import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
 import com.iver.cit.gvsig.gui.cad.panels.ShpPanel;
+import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 
 public class MyFinishAction extends FinishAction
 {
@@ -52,8 +64,8 @@ public class MyFinishAction extends FinishAction
 			int geometryType = geometryTypePanel.getSelectedGeometryType();
 			FieldDescription[] fieldsDesc = fieldDefinitionPanel.getFieldsDescription();
 			
-			ISpatialWriter drv = (ISpatialWriter) LayerFactory.getDM().getDriver(selectedDriver);    		
-			
+			Driver drv = LayerFactory.getDM().getDriver(selectedDriver);    		
+			mapCtrl.getMapContext().beginAtomicEvent();
 			if (actionComand.equals("SHP"))
 			{
 	    		ShpPanel shpPanel = (ShpPanel) myWizardComponents.getWizardPanel(2);
@@ -69,69 +81,53 @@ public class MyFinishAction extends FinishAction
     			writer.preProcess();
     			writer.postProcess();
 	    		
-				mapCtrl.getMapContext().beginAtomicEvent();
+				
                 lyr = (FLyrVect) LayerFactory.createLayer(layerName,
                         (VectorialFileDriver) drv, newFile, mapCtrl.getProjection());
                                 
 			}
-			else if (drv instanceof VectorialDatabaseDriver)
+			else if (drv instanceof VectorialJDBCDriver)
 			{
-				// ConnectionPanel connectionPanel = (ConnectionPanel) myWizardComponents.getWizardPanel(3);
-				/* ConnectionSettings cs = dlg.getConnSettings();
+				VectorialJDBCDriver dbDriver = (VectorialJDBCDriver) drv;
+	    		PostGISpanel postgisPanel = (PostGISpanel) myWizardComponents.getWizardPanel(2);
+				ConnectionSettings cs = postgisPanel.getConnSettings();
 				if (cs == null)
 					return;
-				conex = DriverManager.getConnection(cs.getConnectionString(),
+				Connection conex = DriverManager.getConnection(cs.getConnectionString(),
 						cs.getUser(), cs.getPassw());
 
-				st = conex.createStatement();
+				Statement st = conex.createStatement();
 
+				DBLayerDefinition dbLayerDef = new DBLayerDefinition();
 				dbLayerDef.setCatalogName(cs.getDb());
-				dbLayerDef.setTableName(tableName);
-				String strGeometryFieldType = "GEOMETRY";
-
-				switch (lyrVect.getShapeType()) {
-				case FShape.POINT:
-					strGeometryFieldType = XTypes
-							.fieldTypeToString(XTypes.POINT2D);
-					break;
-				case FShape.LINE:
-					strGeometryFieldType = XTypes
-							.fieldTypeToString(XTypes.LINE2D);
-					break;
-				case FShape.POLYGON:
-					strGeometryFieldType = XTypes
-							.fieldTypeToString(XTypes.POLYGON2D);
-					break;
-				case FShape.MULTI:
-					strGeometryFieldType = XTypes
-							.fieldTypeToString(XTypes.MULTI2D);
-					break;
-				}
-
+				dbLayerDef.setTableName(layerName);
+				dbLayerDef.setShapeType(geometryType);
 				dbLayerDef.setFieldGeometry("the_geom");
-				FieldDescription[] fieldsDescrip = new FieldDescription[rsSel
-						.getFieldNames().length];
-				dbLayerDef.setFieldNames(rsSel.getFieldNames());
-				for (int i = 0; i < rsSel.getFieldNames().length; i++) {
-					fieldsDescrip[i] = new FieldDescription();
-					fieldsDescrip[i].setFieldType(rsSel.getFieldType(i));
-					fieldsDescrip[i].setFieldName(rsSel.getFieldName(i));
-					// TODO: Por ahora le ponemos 200, a falta
-					// de recompilar GDBMS con la posibilidad
-					// de obtener el ancho de un campo.
-					fieldsDescrip[i].setFieldLength(200);
-					/*
-					 * if (fieldsDescrip[i].getFieldName().equals("gid")) { int
-					 * resp = JOptionPane.showConfirmDialog(null,
-					 * PluginServices.getText(this, "confirm_gid"), "Field GID",
-					 * JOptionPane.YES_NO_OPTION); if (resp ==
-					 * JOptionPane.NO_OPTION) return; else { // Quitamos el GID
-					 * original, y lo sustituiremos por el nuestro } }
-					 
-				}
-				String strSRID = lyrVect.getProjection().getAbrev()
+				dbLayerDef.setFieldsDesc(fieldsDesc);
+				String strSRID = mapCtrl.getProjection().getAbrev()
 						.substring(5);
-				dbLayerDef.setSRID_EPSG(strSRID); */
+				dbLayerDef.setSRID_EPSG(strSRID); 
+
+    			PostGISWriter writer= (PostGISWriter)LayerFactory.getWM().getWriter("PostGIS Writer");
+    			writer.setWriteAll(true);
+    			writer.setCreateTable(true);
+    			writer.initialize(dbLayerDef);
+
+    			writer.preProcess();
+    			writer.postProcess();
+	    		
+    	        if (dbDriver instanceof ICanReproject)
+    	        {                    
+    	            ((ICanReproject)dbDriver).setDestProjection(strSRID);
+    	        }
+    	        dbDriver.setData(conex, dbLayerDef);
+    	        IProjection proj = null; 
+    	        if (drv instanceof ICanReproject)
+    	        {                                        
+    	            proj = ProjectionPool.get("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection()); 
+    	        }
+				
+    			lyr = (FLyrVect) LayerFactory.createDBLayer(dbDriver, layerName, proj);
 				
 			}
 			else // Si no es ni lo uno ni lo otro, 
