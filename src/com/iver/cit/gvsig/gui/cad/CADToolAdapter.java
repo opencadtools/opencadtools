@@ -297,7 +297,7 @@ public class CADToolAdapter extends Behavior {
 		CADTool ct = (CADTool) cadToolStack.peek();
 		if (ct instanceof SelectionCADTool
 				&& ((SelectionCADTool) ct).getStatus().equals(
-						"ExecuteMap.Initial")) {
+						"Selection.FirstPoint")) {
 			mapAdjustedPoint = gridAdjustedPoint;
 			adjustedPoint = (Point2D) point.clone();
 		} else {
@@ -804,7 +804,7 @@ public class CADToolAdapter extends Behavior {
 	 * a nulo.
 	 * @throws DriverException
 	 */
-	public void createSpatialCache() throws DriverException {
+/*	public void createSpatialCache() throws DriverException {
 		ViewPort vp = getMapControl().getViewPort();
 		Rectangle2D extent = vp.getAdjustedExtent();
 		// TODO: Por ahora cogemos el VectorialAdapter
@@ -832,5 +832,5 @@ public class CADToolAdapter extends Behavior {
 			Envelope e = FConverter.convertRectangle2DtoEnvelope(geom.getBounds2D());
 			spatialCache.insert(e, geom);
 		}
-	}
+	}*/
 }
