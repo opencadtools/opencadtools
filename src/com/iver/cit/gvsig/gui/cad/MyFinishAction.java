@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.sql.Types;
 
 import jwizardcomponent.FinishAction;
 import jwizardcomponent.JWizardComponents;
@@ -101,9 +102,10 @@ public class MyFinishAction extends FinishAction
 				dbLayerDef.setCatalogName(cs.getDb());
 				dbLayerDef.setTableName(layerName);
 				dbLayerDef.setShapeType(geometryType);
+				dbLayerDef.setFieldsDesc(fieldsDesc);
 				dbLayerDef.setFieldGeometry("the_geom");
 				dbLayerDef.setFieldID("gid");
-				dbLayerDef.setFieldsDesc(fieldsDesc);
+				
 				dbLayerDef.setWhereClause("");
 				String strSRID = mapCtrl.getProjection().getAbrev()
 						.substring(5);
@@ -115,6 +117,7 @@ public class MyFinishAction extends FinishAction
     			writer.setCreateTable(true);
     			writer.initialize(dbLayerDef);
 
+    			// Creamos la tabla.
     			writer.preProcess();
     			writer.postProcess();
 	    		
@@ -122,6 +125,38 @@ public class MyFinishAction extends FinishAction
     	        {                    
     	            ((ICanReproject)dbDriver).setDestProjection(strSRID);
     	        }
+    	        
+    	        // Creamos el driver. OJO: Hay que añadir el campo ID a la 
+    	        // definición de campos.
+    	        
+    	        boolean bFound = false;
+    	        for (int i=0; i < dbLayerDef.getFieldsDesc().length; i++)
+    	        {
+    	        	FieldDescription f = dbLayerDef.getFieldsDesc()[i];
+    	        	if (f.getFieldName().equalsIgnoreCase(dbLayerDef.getFieldID()))
+    	        	{
+    	        		bFound = true;
+    	        		break;
+    	        	}
+    	        }
+    	        // Si no está, lo añadimos
+    	        if (!bFound)
+    	        {
+    	        	int numFieldsAnt = dbLayerDef.getFieldsDesc().length;
+    	        	FieldDescription[] newFields = new FieldDescription[dbLayerDef.getFieldsDesc().length + 1];
+    	            for (int i=0; i < numFieldsAnt; i++)
+    	            {
+    	            	newFields[i] = dbLayerDef.getFieldsDesc()[i];
+    	            }
+    	            newFields[numFieldsAnt] = new FieldDescription();
+    	            newFields[numFieldsAnt].setFieldDecimalCount(0);
+    	            newFields[numFieldsAnt].setFieldType(Types.INTEGER);
+    	            newFields[numFieldsAnt].setFieldLength(7);
+    	            newFields[numFieldsAnt].setFieldName(dbLayerDef.getFieldID());
+    	            dbLayerDef.setFieldsDesc(newFields);
+    	        	
+    	        }
+
     	        dbDriver.setData(conex, dbLayerDef);
     	        IProjection proj = null; 
     	        if (drv instanceof ICanReproject)
