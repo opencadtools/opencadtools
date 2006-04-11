@@ -106,6 +106,7 @@ public void stopEditing(FLyrVect layer,MapControl mapControl) {
 	        vea.getCommandRecord().removeCommandListener(mapControl);
 	        
 	        layer.setEditing(false);
+	        mapControl.setTool("zoomIn");
 	        vista.hideConsole();
 		} catch (EditionException e) {
 			// TODO Auto-generated catch block

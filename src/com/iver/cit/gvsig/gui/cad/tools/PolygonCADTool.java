@@ -232,7 +232,7 @@ public class PolygonCADTool extends DefaultCADTool {
         double an = (Math.PI * 2) / numLines;
         GeneralPathX elShape = new GeneralPathX();
         boolean firstTime=true;
-        for (int i = 1; i < (numLines+1); i++) {
+        for (int i = numLines; i >=1 ; i++) {
             Point2D p2 = UtilFunctions.getPoint(center, (an * i) + initangle,
                     radio);
             Point2D[] ps1 = UtilFunctions.getPerpendicular(antPoint, center,
@@ -277,7 +277,7 @@ public class PolygonCADTool extends DefaultCADTool {
         double an = (Math.PI * 2) / numLines;
         GeneralPathX elShape = new GeneralPathX();
         boolean firstTime=true;
-        for (int i = 1; i < (numLines); i++) {
+        for (int i = numLines-1; i >= 0; i--) {
             Point2D p2 = UtilFunctions.getPoint(center, (an * i) + initangle,
                     radio);
 

@@ -47,6 +47,7 @@ public class EditingExtension implements Extension {
 					VectorialLayerEdited lyrEdited = (VectorialLayerEdited) editionManager.getLayerEdited(lv);
 					lyrEdited.clearSelection();
 					lv.setEditing(false);
+					vista.getMapControl().setTool("zoomIn");
 					return;
 				}
 			}
