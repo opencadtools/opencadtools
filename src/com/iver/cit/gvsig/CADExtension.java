@@ -52,6 +52,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
+import javax.swing.text.JTextComponent;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
@@ -316,7 +317,7 @@ public class CADExtension implements Extension {
 	            		}
 	            		else
 	            		{
-	    	        		if (!(e.getComponent() instanceof JTextArea))
+	    	        		if (!(e.getComponent() instanceof JTextComponent))
 	    	        		{    				
 	    	        			view.focusConsole(keyChar+"");
 	    	        		}	            			
