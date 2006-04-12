@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -63,6 +64,7 @@ import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
@@ -151,6 +153,8 @@ public abstract class DefaultCADTool implements CADTool {
 			if (vea.getShapeType() == FShape.POLYGON) {
 				GeneralPathX gp = new GeneralPathX();
 				gp.append(geometry.getGeneralPathXIterator(), true);
+				FConverter.getExteriorPolygon(gp);
+				
 				geometry = ShapeFactory.createPolygon2D(gp);
 			}
 			int numAttr = getCadToolAdapter().getVectorialAdapter()

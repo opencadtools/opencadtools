@@ -29,6 +29,9 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * Lo principal es una colección de LayerEdited, y cada
  * LayerEdited es un wrapper alrededor de un tema que guarda
  * las propiedades de la edición.
+ * 
+ * Nuevo: Llevar aquí el control de las tablas en edición también
+ * y centralizar los listeners interesados en los eventos de edición.
  *
  * TODO: Poner todo lo referente al EditionManager dentro de una vista.
  * para permitir tener varias vistas con temas en edición
@@ -36,6 +39,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  */
 public class EditionManager implements LayerListener {
 	private ArrayList editedLayers = new ArrayList();
+	private ArrayList editedTables = new ArrayList();
 	private ILayerEdited activeLayerEdited = null;
 	private MapControl mapCtrl = null;
 
@@ -99,6 +103,12 @@ public class EditionManager implements LayerListener {
 			editedLayers.add(lyrEdit);
 			System.out.println("NUEVA CAPA EN EDICION: " + lyrEdit.getLayer().getName());
 			activationChanged(e);
+			
+			// Ponemos el resto de temas desactivados
+			if (mapCtrl != null)
+				mapCtrl.getMapContext().getLayers().setActive(false);
+			// y activamos el nuevo.
+			e.getSource().setActive(true);
 			
 		}
 		
