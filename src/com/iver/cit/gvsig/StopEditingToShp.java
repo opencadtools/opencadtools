@@ -61,11 +61,9 @@ public class StopEditingToShp implements Extension {
             		{
             			FLyrVect lv = (FLyrVect) actives[i];
             			MapControl mapControl = (MapControl) vista.getMapControl();
-            			stopEditing(lv,mapControl);
-
-                    return;
-                }
-            }
+            			stopEditing(lv,mapControl);                    
+            		}
+            	}
             }
             PluginServices.getMainFrame().enableControls();
     }

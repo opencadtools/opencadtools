@@ -3,7 +3,6 @@ package com.iver.cit.gvsig.gui.cad;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
 import java.sql.Types;
 
 import jwizardcomponent.FinishAction;
@@ -95,8 +94,6 @@ public class MyFinishAction extends FinishAction
 					return;
 				Connection conex = DriverManager.getConnection(cs.getConnectionString(),
 						cs.getUser(), cs.getPassw());
-
-				Statement st = conex.createStatement();
 
 				DBLayerDefinition dbLayerDef = new DBLayerDefinition();
 				dbLayerDef.setCatalogName(cs.getDb());

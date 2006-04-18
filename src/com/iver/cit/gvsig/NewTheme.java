@@ -3,19 +3,14 @@ package com.iver.cit.gvsig;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 
-import jwizardcomponent.Utilities;
 import jwizardcomponent.example.SimpleLabelWizardPanel;
-import jwizardcomponent.frame.SimpleLogoJWizardFrame;
 
 import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverManager;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
@@ -33,8 +28,6 @@ import com.iver.cit.gvsig.gui.cad.panels.ShpPanel;
  */
 public class NewTheme implements Extension {
 	static ImageIcon LOGO;
-
-	private ITableDefinition lyrDef;
 
 	/**
 	 * @see com.iver.andami.plugins.Extension#inicializar()

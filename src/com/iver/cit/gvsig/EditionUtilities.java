@@ -3,10 +3,13 @@ package com.iver.cit.gvsig;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.project.ProjectView;
 
@@ -100,4 +103,25 @@ public class EditionUtilities {
 		return null;
 	}
 	
+	public static FieldDescription[] getFieldsDescription(FLyrVect lyrVect)
+	{
+		SelectableDataSource sds;
+		FieldDescription[] fieldsDescrip = null;
+		try {
+			sds = lyrVect.getRecordset();
+			int numFields = sds.getFieldNames().length;
+			fieldsDescrip = new FieldDescription[numFields];
+			for (int i = 0; i < numFields; i++) {
+				fieldsDescrip[i] = new FieldDescription();
+				fieldsDescrip[i].setFieldType(sds.getFieldType(i));
+				fieldsDescrip[i].setFieldName(sds.getFieldName(i));
+				fieldsDescrip[i].setFieldLength(200);
+			}
+		} catch (DriverException e) {
+			e.printStackTrace();
+		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
+			e.printStackTrace();
+		}
+		return fieldsDescrip;
+	}
 }
