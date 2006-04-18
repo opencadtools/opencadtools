@@ -196,25 +196,21 @@ public class EditVertexCADTool extends DefaultCADTool {
         String status = actualState.getName();
         VectorialLayerEdited vle=getVLE();
         VectorialEditableAdapter vea = vle.getVEA();
-        //FBitSet selection = vea.getSelection();
         ArrayList selectedRows=vle.getSelectedRow();
         IRowEdited row=null;
         IGeometry ig=null;
         Handler[] handlers=null;
         if (selectedRows.size()==1){
 				row =  (DefaultRowEdited) selectedRows.get(0);
-				//row = getCadToolAdapter().getVectorialAdapter().getRow(selection.nextSetBit(0));
-        	ig=((IFeature)row.getLinkedRow()).getGeometry().cloneGeometry();
+			ig=((IFeature)row.getLinkedRow()).getGeometry().cloneGeometry();
         	handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
         	numHandlers=handlers.length;
         	if (numHandlers ==0){
         		try {
 					vea.removeRow(row.getIndex(),getName());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (DriverIOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
         	}
@@ -244,10 +240,8 @@ public class EditVertexCADTool extends DefaultCADTool {
         			try {
 						vea.modifyRow(row.getIndex(),newRow,getName());
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (DriverIOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -382,16 +376,17 @@ public class EditVertexCADTool extends DefaultCADTool {
             int numParts = 0;
             Point2D pLast=new Point2D.Double();
             Point2D pAnt = new Point2D.Double();
-
+            Point2D firstPoint=null;
             theIterator = geome.getGeneralPathXIterator(); //, flatness);
             int numSegmentsAdded = 0;
             while (!theIterator.isDone()) {
                 theType = theIterator.currentSegment(theData);
                 switch (theType) {
                     case PathIterator.SEG_MOVETO:
-                    	numParts++;
                     	pLast.setLocation(theData[0], theData[1]);
-
+                    	if (numParts==0)
+                    		firstPoint=(Point2D)pLast.clone();
+                    	numParts++;
 
                     	gpxAux=new GeneralPathX();
                     	gpxAux.moveTo(pAnt.getX(),pAnt.getY());
@@ -403,15 +398,12 @@ public class EditVertexCADTool extends DefaultCADTool {
                     	}else{
                     		newGp.moveTo(pLast.getX(), pLast.getY());
                     	}
-
-
                         pAnt.setLocation(pLast.getX(), pLast.getY());
                         numSegmentsAdded++;
                         break;
 
                     case PathIterator.SEG_LINETO:
                     	pLast.setLocation(theData[0], theData[1]);
-
                     	gpxAux=new GeneralPathX();
                     	gpxAux.moveTo(pAnt.getX(),pAnt.getY());
                     	gpxAux.lineTo(pLast.getX(),pLast.getY());
@@ -422,7 +414,6 @@ public class EditVertexCADTool extends DefaultCADTool {
                     	}else{
                     		newGp.lineTo(pLast.getX(), pLast.getY());
                     	}
-
                     	pAnt.setLocation(pLast.getX(), pLast.getY());
                         numSegmentsAdded++;
                         break;
@@ -438,11 +429,19 @@ public class EditVertexCADTool extends DefaultCADTool {
                         break;
 
                     case PathIterator.SEG_CLOSE:
-                        if (numSegmentsAdded < 3){
-                            newGp.lineTo(theData[0], theData[1]);
-                        }
+                        //if (numSegmentsAdded < 3){
+                        	gpxAux=new GeneralPathX();
+                        	gpxAux.moveTo(pAnt.getX(),pAnt.getY());
+                        	gpxAux.lineTo(firstPoint.getX(),firstPoint.getY());
+                        	geom1=ShapeFactory.createPolyline2D(gpxAux);
+                        	if (geom1.intersects(rect)){
+                        		newGp.lineTo(p.getX(), p.getY());
+                        		newGp.lineTo(pLast.getX(),pLast.getY());
+                        	}else{
+                        		newGp.lineTo(pLast.getX(), pLast.getY());
+                        	}
+                        //}
                         newGp.closePath();
-
                         break;
                 } //end switch
 
@@ -541,78 +540,75 @@ public class EditVertexCADTool extends DefaultCADTool {
 	}
 	private void selectHandler(double x, double y) {
 		Point2D firstPoint = new Point2D.Double(x, y);
-		VectorialLayerEdited vle=getVLE();
-		ArrayList selectedRows=vle.getSelectedRow();
-		//FBitSet selection = getCadToolAdapter().getVectorialAdapter()
-		//		.getSelection();
+		VectorialLayerEdited vle = getVLE();
+		ArrayList selectedRows = vle.getSelectedRow();
 		double tam = getCadToolAdapter().getMapControl().getViewPort()
 				.toMapDistance(SelectionCADTool.tolerance);
-		 Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() - tam,
-					firstPoint.getY() - tam, tam * 2, tam * 2);
-		if (selectedRows.size()>0){
-			boolean isSelectedHandler=false;
-			 IGeometry geometry=getSelectedGeometry();
-			if (geometry!=null){
-			 Handler[] handlers=geometry.getHandlers(IGeometry.SELECTHANDLER);
-				 for (int h=0;h<handlers.length;h++){
-					 if (handlers[h].getPoint().distance(firstPoint)<tam){
-						 numSelect=h;
-						 isSelectedHandler=true;
-					 }
-				 }
+		Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() - tam,
+				firstPoint.getY() - tam, tam * 2, tam * 2);
+		if (selectedRows.size() > 0) {
+			boolean isSelectedHandler = false;
+			IGeometry geometry = getSelectedGeometry();
+			if (geometry != null) {
+				Handler[] handlers = geometry
+						.getHandlers(IGeometry.SELECTHANDLER);
+				for (int h = 0; h < handlers.length; h++) {
+					if (handlers[h].getPoint().distance(firstPoint) < tam) {
+						numSelect = h;
+						isSelectedHandler = true;
+					}
+				}
 
-				 if (!isSelectedHandler){
-					 boolean isSelectedGeometry=false;
-					 try {
+				if (!isSelectedHandler) {
+					boolean isSelectedGeometry = false;
+					try {
 
-							VectorialEditableAdapter vea = getCadToolAdapter()
-									.getVectorialAdapter();
-							String strEPSG = getCadToolAdapter().getMapControl().getViewPort()
-									.getProjection().getAbrev().substring(5);
-							IRowEdited[] feats = vea.getFeatures(rect, strEPSG);
+						VectorialEditableAdapter vea = getCadToolAdapter()
+								.getVectorialAdapter();
+						String strEPSG = getCadToolAdapter().getMapControl()
+								.getViewPort().getProjection().getAbrev()
+								.substring(5);
+						//IRowEdited[] feats = vea.getFeatures(rect, strEPSG);
 
-							for (int i = 0; i < feats.length; i++) {
-								if (geometry.intersects(rect)) { // , 0.1)){
-									isSelectedGeometry=true;
+						//for (int i = 0; i < feats.length; i++) {
+							if (geometry.intersects(rect)) { // , 0.1)){
+								isSelectedGeometry = true;
+							}
+						//}
+						if (isSelectedGeometry && addVertex) {
+							selectedRows = getSelectedRows();
+							DefaultFeature fea = null;
+							DefaultRowEdited row = null;
+							row = (DefaultRowEdited) selectedRows.get(0);
+							fea = (DefaultFeature) row.getLinkedRow();
+							Point2D posVertex = new Point2D.Double(x, y);
+							IGeometry geom = addVertex(fea.getGeometry()
+									.cloneGeometry(), posVertex, rect);
+							DefaultFeature df = new DefaultFeature(geom, fea
+									.getAttributes());
+							vle.getVEA().modifyRow(row.getIndex(), df,
+									PluginServices.getText(this,"add_vertex"));
+
+							Handler[] newHandlers = geom
+									.getHandlers(IGeometry.SELECTHANDLER);
+							for (int h = 0; h < newHandlers.length; h++) {
+								if (newHandlers[h].getPoint().distance(
+										posVertex) < tam) {
+									numSelect = h;
+									isSelectedHandler = true;
 								}
 							}
-							if (isSelectedGeometry && addVertex){
-								selectedRows=getSelectedRows();
-								//selection = getCadToolAdapter().getVectorialAdapter()
-								//.getSelection();
-						    	DefaultFeature fea=null;
-						    	DefaultRowEdited row=null;
-									row=(DefaultRowEdited) selectedRows.get(0);
-									fea = (DefaultFeature) row.getLinkedRow();
-									//fea = (DefaultFeature) getCadToolAdapter()
-									//.getVectorialAdapter().getRow(selection.nextSetBit(0)).getLinkedRow();
-								Point2D posVertex=new Point2D.Double(x,y);
-						    	IGeometry geom=addVertex(fea.getGeometry().cloneGeometry(),posVertex,rect);
-						    	DefaultFeature df=new DefaultFeature(geom,fea.getAttributes());
-						    	vle.getVEA().modifyRow(row.getIndex(),df,"Add vertice");
 
-						    	Handler[] newHandlers=geom.getHandlers(IGeometry.SELECTHANDLER);
-								 for (int h=0;h<newHandlers.length;h++){
-									 if (newHandlers[h].getPoint().distance(posVertex)<tam){
-										 numSelect=h;
-										 isSelectedHandler=true;
-									 }
-								 }
-
-				    			vle.refreshSelectionCache(firstPoint,getCadToolAdapter());
-								//getCadToolAdapter().getMapControl().drawMap(false);
-							}
-						} catch (DriverException e1) {
-							e1.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (DriverIOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							vle.refreshSelectionCache(firstPoint,
+									getCadToolAdapter());
 						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (DriverIOException e) {
+						e.printStackTrace();
+					}
 
-				 }
+				}
 			}
 		}
 
