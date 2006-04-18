@@ -109,13 +109,15 @@ public class EditionUtilities {
 		FieldDescription[] fieldsDescrip = null;
 		try {
 			sds = lyrVect.getRecordset();
-			int numFields = sds.getFieldNames().length;
+			// Para evitar el PK.
+			int numFields = sds.getFieldNames().length; //-sds.getPKCardinality();
 			fieldsDescrip = new FieldDescription[numFields];
 			for (int i = 0; i < numFields; i++) {
 				fieldsDescrip[i] = new FieldDescription();
 				fieldsDescrip[i].setFieldType(sds.getFieldType(i));
 				fieldsDescrip[i].setFieldName(sds.getFieldName(i));
-				fieldsDescrip[i].setFieldLength(200);
+				fieldsDescrip[i].setFieldLength(sds.getFieldWidth(i));
+				System.out.println("Campo " + sds.getFieldName(i) + " con ancho= " + sds.getFieldWidth(i));
 			}
 		} catch (DriverException e) {
 			e.printStackTrace();
