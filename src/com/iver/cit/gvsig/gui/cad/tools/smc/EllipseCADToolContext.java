@@ -221,8 +221,7 @@ public final class EllipseCADToolContext
             {
                 EllipseCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(ctxt.getName() + "\n" +
-		PluginServices.getText(this,"insert_initial_point_axis"));
+                ctxt.setQuestion(PluginServices.getText(this,"insert_initial_point_axis"));
                 ctxt.setDescription(new String[]{"cancel"});
                 return;
             }

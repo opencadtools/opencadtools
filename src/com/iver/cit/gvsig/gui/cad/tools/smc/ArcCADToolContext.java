@@ -208,8 +208,7 @@ public final class ArcCADToolContext
             {
                 ArcCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(ctxt.getName() + "\n"+
-		PluginServices.getText(this,"insert_first_point"));
+                ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
                 ctxt.setDescription(new String[]{"cancel"});
                 return;
             }

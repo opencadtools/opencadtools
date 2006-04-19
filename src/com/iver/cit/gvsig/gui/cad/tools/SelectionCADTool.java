@@ -135,7 +135,9 @@ public class SelectionCADTool extends DefaultCADTool {
 	 *      java.lang.String)
 	 */
 	public void transition(String s) {
-		_fsm.addOption(s);
+		if (!super.changeCommand(s)){
+    		_fsm.addOption(s);
+    	}
 	}
 
 	public String getNextState() {
@@ -444,7 +446,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	public void end() {
 		if (!getNextTool().equals("selection"))
-			CADExtension.setCADTool(getNextTool());
+			CADExtension.setCADTool(getNextTool(),false);
 	}
 
 	public String getName() {
@@ -555,5 +557,9 @@ public class SelectionCADTool extends DefaultCADTool {
 			this.type = type;
 		}
 		pointsPolygon.clear();
+	}
+
+	public String toString() {
+		return "_selection";
 	}
 }

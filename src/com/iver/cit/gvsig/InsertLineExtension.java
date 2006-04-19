@@ -78,10 +78,10 @@ public class InsertLineExtension implements Extension {
 		mapControl.addMapTool("cadtooladapter",CADExtension.getCADToolAdapter());
 		mapControl.setTool("cadtooladapter");
 		if (s.equals("LINE")) {
-			CADExtension.setCADTool("line");
+			CADExtension.setCADTool("line",true);
 			CADExtension.getEditionManager().setMapControl(mapControl);
 		} else if (s.equals("ARC")) {
-        	CADExtension.setCADTool("arc");
+        	CADExtension.setCADTool("arc",true);
         	CADExtension.getEditionManager().setMapControl(mapControl);
         }
 		CADExtension.getCADToolAdapter().configureMenu();

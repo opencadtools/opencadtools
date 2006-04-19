@@ -217,8 +217,7 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(ctxt.getName() + "\n" +
-    PluginServices.getText(this,"insert_point_selection_or_types"));
+                ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
                 ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
                 return;
             }

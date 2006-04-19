@@ -11,12 +11,16 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.cad.CADTool;
+import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
 import com.iver.cit.gvsig.project.ProjectTable;
 import com.iver.cit.gvsig.project.ProjectView;
+import com.iver.utiles.console.jedit.KeywordMap;
+import com.iver.utiles.console.jedit.Token;
 
 /**
  * DOCUMENT ME!
- * 
+ *
  * @author Vicente Caballero Navarro
  */
 public class StartEditing implements Extension {
@@ -35,6 +39,16 @@ public class StartEditing implements Extension {
 
 		if (f instanceof View) {
 			View vista = (View) f;
+			CADTool[] cadtools=CADExtension.getCADTools();
+			KeywordMap keywordMap=new KeywordMap(true);
+			for (int i=0;i<cadtools.length;i++){
+				keywordMap.add(cadtools[i].getName(),Token.KEYWORD2);
+				keywordMap.add(cadtools[i].toString(),Token.KEYWORD3);
+
+			}
+			ConsoleToken consoletoken= new ConsoleToken(keywordMap);
+
+			vista.getConsolePanel().setTokenMarker(consoletoken);
 			vista.showConsole();
 			MapControl mapControl = (MapControl) vista.getMapControl();
 			ProjectView model = vista.getModel();

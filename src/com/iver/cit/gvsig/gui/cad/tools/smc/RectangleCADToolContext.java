@@ -208,8 +208,7 @@ public final class RectangleCADToolContext
             {
                 RectangleCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(ctxt.getName() + "\n" +
-		PluginServices.getText(this,"insert_first_point_corner"));
+                ctxt.setQuestion(PluginServices.getText(this,"insert_first_point_corner"));
                 ctxt.setDescription(new String[]{"cancel"});
                 return;
             }

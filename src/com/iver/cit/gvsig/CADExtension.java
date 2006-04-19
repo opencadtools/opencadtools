@@ -66,6 +66,7 @@ import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
+import com.iver.utiles.console.JConsole;
 import com.iver.utiles.console.ResponseListener;
 /**
  * Extensión dedicada a controlar las diferentes operaciones sobre el editado
@@ -128,52 +129,57 @@ public class CADExtension implements Extension {
         view.getMapControl().setTool("cadtooladapter");
 
         if (s.equals("SPLINE")) {
-        	setCADTool("spline");
+        	setCADTool("spline",true);
         } else if (s.equals("COPY")) {
-        	setCADTool("copy");
+        	setCADTool("copy",true);
         } else if (s.equals("MOVE")) {
-        	setCADTool("move");
+        	setCADTool("move",true);
         } else if (s.equals("EQUIDISTANCE")) {
-        	setCADTool("equidistance");
+        	setCADTool("equidistance",true);
         } else if (s.equals("MATRIZ")) {
-        	setCADTool("matriz");
+        	setCADTool("matriz",true);
         } else if (s.equals("SYMMETRY")) {
-        	setCADTool("symmetry");
+        	setCADTool("symmetry",true);
         } else if (s.equals("ROTATION")) {
-        	setCADTool("rotate");
+        	setCADTool("rotate",true);
         } else if (s.equals("STRETCHING")) {
-        	setCADTool("stretching");
+        	setCADTool("stretching",true);
         } else if (s.equals("SCALE")) {
-        	setCADTool("scale");
+        	setCADTool("scale",true);
         } else if (s.equals("EXTEND")) {
-        	setCADTool("extend");
+        	setCADTool("extend",true);
         } else if (s.equals("TRIM")) {
-        	setCADTool("trim");
+        	setCADTool("trim",true);
         } else if (s.equals("UNIT")) {
-        	setCADTool("unit");
+        	setCADTool("unit",true);
         } else if (s.equals("EXPLOIT")) {
-        	setCADTool("exploit");
+        	setCADTool("exploit",true);
         } else if (s.equals("CHAFLAN")) {
-        	setCADTool("chaflan");
+        	setCADTool("chaflan",true);
         } else if (s.equals("JOIN")) {
-        	setCADTool("join");
+        	setCADTool("join",true);
         } else if (s.equals("SELCAD")) {
-        	setCADTool("selection");
+        	setCADTool("selection",true);
         } else if (s.equals("EDITVERTEX")) {
-        	setCADTool("editvertex");
+        	setCADTool("editvertex",true);
         }
         adapter.configureMenu();
         //ViewControls.CANCELED=false;
     }
     public static void addCADTool(String name, CADTool c){
 		namesCadTools.put(name, c);
+
 	}
-    public static void setCADTool(String text){
+    public static void setCADTool(String text,boolean showCommand){
 		CADTool ct = (CADTool) namesCadTools.get(text);
 		if (ct == null) throw new RuntimeException("No such cad tool");
 		adapter.setCadTool(ct);
 		ct.init();
-		adapter.askQuestion();
+		if (showCommand){
+			View vista = (View) PluginServices.getMDIManager().getActiveView();
+			vista.getConsolePanel().addText("\n" + ct.getName(),JConsole.COMMAND);
+			adapter.askQuestion();
+		}
 		//PluginServices.getMainFrame().setSelectedTool("SELECT");
 		//PluginServices.getMainFrame().enableControls();
 	}
@@ -311,16 +317,16 @@ public class CADExtension implements Extension {
 	            		{
 	    	        		System.out.println("Evento de teclado desde el componente " + e.getComponent().getName());
 	    	        		if (!e.getComponent().getName().equals("CADConsole"))
-	    	        		{    				
+	    	        		{
 	    	        			view.focusConsole(keyChar+"");
 	    	        		}
 	            		}
 	            		else
 	            		{
 	    	        		if (!(e.getComponent() instanceof JTextComponent))
-	    	        		{    				
+	    	        		{
 	    	        			view.focusConsole(keyChar+"");
-	    	        		}	            			
+	    	        		}
 	            		}
 	        		}
         		}
@@ -391,5 +397,8 @@ public class CADExtension implements Extension {
 	 */
 	public static EditionManager getEditionManager() {
 		return editionManager;
+	}
+	public static CADTool[] getCADTools(){
+		return (CADTool[])namesCadTools.values().toArray(new CADTool[0]);
 	}
 }

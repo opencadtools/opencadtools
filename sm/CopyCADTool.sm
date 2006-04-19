@@ -19,7 +19,7 @@
 FirstPointToMove
 	Entry {
 		selection();
-		setQuestion(ctxt.getName() + "\n" +
+		setQuestion(
 		PluginServices.getText(this,"insert_point_move"));
 		setDescription(new String[]{"cancel"});
 

@@ -75,7 +75,7 @@ public class InsertPolyLineExtension implements Extension {
 		mapControl.addMapTool("cadtooladapter",CADExtension.getCADToolAdapter());
 		mapControl.setTool("cadtooladapter");
 		if (s.equals("POLYLINE")) {
-			CADExtension.setCADTool("polyline");
+			CADExtension.setCADTool("polyline",true);
 			CADExtension.getEditionManager().setMapControl(mapControl);
 		}
 		CADExtension.getCADToolAdapter().configureMenu();

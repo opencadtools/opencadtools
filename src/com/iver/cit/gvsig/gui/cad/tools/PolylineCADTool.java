@@ -95,7 +95,7 @@ public class PolylineCADTool extends DefaultCADTool {
 		GeneralPathX gp = new GeneralPathX();
 		gp.append(fgc.getPathIterator(null), true);
 		IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
-        
+
         addGeometry(newGeom);
         _fsm = new PolylineCADToolContext(this);
         list.clear();
@@ -129,7 +129,9 @@ public class PolylineCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        _fsm.addOption(s);
+    	if (!super.changeCommand(s)){
+    		_fsm.addOption(s);
+    	}
     }
 
     /**
@@ -451,5 +453,9 @@ public class PolylineCADTool extends DefaultCADTool {
 
 	public String getName() {
 		return PluginServices.getText(this,"polyline_");
+	}
+
+	public String toString() {
+		return "_polyline";
 	}
 }

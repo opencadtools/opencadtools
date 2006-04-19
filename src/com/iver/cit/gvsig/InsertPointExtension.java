@@ -74,7 +74,7 @@ public class InsertPointExtension implements Extension {
         mapControl.setTool("cadtooladapter");
 
         if (s.equals("POINT")) {
-        	CADExtension.setCADTool("point");
+        	CADExtension.setCADTool("point",true);
         	CADExtension.getEditionManager().setMapControl(mapControl);
         }
         CADExtension.getCADToolAdapter().configureMenu();

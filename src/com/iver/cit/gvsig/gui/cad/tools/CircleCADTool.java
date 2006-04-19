@@ -85,8 +85,7 @@ public class CircleCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
-    public void transition(double x, double y, InputEvent event)
-        throws TransitionUndefinedException {
+    public void transition(double x, double y, InputEvent event){
         _fsm.addPoint(x, y, event);
     }
 
@@ -101,7 +100,9 @@ public class CircleCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s){
-        _fsm.addOption(s);
+    	if (!super.changeCommand(s)){
+    		_fsm.addOption(s);
+    	}
     }
 
     /**
@@ -204,6 +205,10 @@ public class CircleCADTool extends DefaultCADTool {
 
 	public String getName() {
 		return PluginServices.getText(this,"circle_");
+	}
+
+	public String toString() {
+		return "_circle";
 	}
 
 }

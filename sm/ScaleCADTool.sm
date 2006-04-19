@@ -19,7 +19,7 @@
 PointMain
 	Entry {
 		selection();
-		setQuestion(ctxt.getName() + "\n" +
+		setQuestion(
 		PluginServices.getText(this,"insert_basis_point"));
 		setDescription(new String[]{"cancel"});
 

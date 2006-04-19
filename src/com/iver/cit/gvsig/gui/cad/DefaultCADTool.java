@@ -44,7 +44,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -71,7 +70,10 @@ import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
+import com.iver.utiles.console.JConsole;
 
 /**
  * DOCUMENT ME!
@@ -154,7 +156,7 @@ public abstract class DefaultCADTool implements CADTool {
 				GeneralPathX gp = new GeneralPathX();
 				gp.append(geometry.getPathIterator(null), true);
 				FConverter.getExteriorPolygon(gp);
-				
+
 				geometry = ShapeFactory.createPolygon2D(gp);
 			}
 			int numAttr = getCadToolAdapter().getVectorialAdapter()
@@ -240,6 +242,7 @@ public abstract class DefaultCADTool implements CADTool {
 	 */
 	public void setQuestion(String s) {
 		question = s;
+		//ConsoleToken.addQuestion(s);
 	}
 
 	/**
@@ -289,7 +292,7 @@ public abstract class DefaultCADTool implements CADTool {
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
 	 */
 	public void end() {
-		CADExtension.setCADTool("selection");
+		CADExtension.setCADTool("selection",true);
 		PluginServices.getMainFrame().setSelectedTool("SELCAD");
 	}
 
@@ -328,4 +331,19 @@ public abstract class DefaultCADTool implements CADTool {
 	public void setNextTool(String tool) {
 		this.tool = tool;
 	}
+	public boolean changeCommand(String name){
+		CADTool[] cadtools=CADExtension.getCADTools();
+		for (int i=0;i<cadtools.length;i++){
+			CADTool ct=cadtools[i];
+			if (name.equalsIgnoreCase(ct.getName())|| name.equalsIgnoreCase(ct.toString())){
+				getCadToolAdapter().setCadTool(ct);
+				ct.init();
+				View vista = (View) PluginServices.getMDIManager().getActiveView();
+				vista.getConsolePanel().addText("\n" + ct.getName(),JConsole.COMMAND);
+				return true;
+			}
+		}
+		return false;
+	}
+	public abstract String toString();
 }

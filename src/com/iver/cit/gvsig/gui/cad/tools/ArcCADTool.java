@@ -97,7 +97,9 @@ public class ArcCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        ((ArcCADToolContext)_fsm).addOption(s);
+    	if (!super.changeCommand(s)){
+    		_fsm.addOption(s);
+    	}
     }
 
     /**
@@ -180,6 +182,10 @@ public class ArcCADTool extends DefaultCADTool {
 
 	public String getName() {
 		return PluginServices.getText(this,"arc_");
+	}
+
+	public String toString() {
+		return "_arc";
 	}
 
 }

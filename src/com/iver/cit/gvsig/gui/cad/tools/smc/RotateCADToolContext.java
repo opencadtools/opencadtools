@@ -220,8 +220,7 @@ public final class RotateCADToolContext
                 RotateCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion(ctxt.getName() + "\n" +
-		PluginServices.getText(this,"insert_basis_point"));
+                ctxt.setQuestion(PluginServices.getText(this,"insert_basis_point"));
                 ctxt.setDescription(new String[]{"cancel"});
                 return;
             }

@@ -205,8 +205,7 @@ public final class EditVertexCADToolContext
                 EditVertexCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion(ctxt.getName() + "\n" +
-		PluginServices.getText(this,"next_previous_add_del_cancel"));
+                ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
                 ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
                 return;
             }

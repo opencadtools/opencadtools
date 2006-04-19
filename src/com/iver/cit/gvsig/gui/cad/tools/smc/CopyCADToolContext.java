@@ -207,8 +207,7 @@ public final class CopyCADToolContext
                 CopyCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion(ctxt.getName() + "\n" +
-		PluginServices.getText(this,"insert_point_move"));
+                ctxt.setQuestion(PluginServices.getText(this,"insert_point_move"));
                 ctxt.setDescription(new String[]{"cancel"});
                 return;
             }

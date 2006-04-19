@@ -96,7 +96,9 @@ public class EllipseCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        _fsm.addOption(s);
+    	if (!super.changeCommand(s)){
+    		_fsm.addOption(s);
+    	}
     }
 
     /**
@@ -183,6 +185,10 @@ public class EllipseCADTool extends DefaultCADTool {
 
 	public String getName() {
 		return PluginServices.getText(this,"ellipse_");
+	}
+
+	public String toString() {
+		return "_ellipse";
 	}
 
 }

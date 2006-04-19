@@ -19,7 +19,7 @@
 NumberOrCenterPoint
 
 	Entry {
-		setQuestion(ctxt.getName() + "\n" +
+		setQuestion(
 		PluginServices.getText(this,"insert_number_sides"));
 		setDescription(new String[]{"cancel"});
 		}

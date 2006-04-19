@@ -19,7 +19,7 @@
 FirstPoint
 
 	Entry {
-		setQuestion(ctxt.getName() + "\n" +
+		setQuestion(
 		PluginServices.getText(this,"insert_first_point_corner"));
 		setDescription(new String[]{"cancel"});
 		}

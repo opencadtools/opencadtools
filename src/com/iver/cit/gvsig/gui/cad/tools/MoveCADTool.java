@@ -105,7 +105,9 @@ public class MoveCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
     public void transition(String s) {
-        _fsm.addOption(s);
+    	if (!super.changeCommand(s)){
+    		_fsm.addOption(s);
+    	}
     }
 
     /**
@@ -114,7 +116,7 @@ public class MoveCADTool extends DefaultCADTool {
     public void selection() {
     	ArrayList selectedRow=getSelectedRows();
         if (selectedRow.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
-            CADExtension.setCADTool("selection");
+            CADExtension.setCADTool("selection",false);
             ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
                 "move");
         }
@@ -228,5 +230,9 @@ public class MoveCADTool extends DefaultCADTool {
 
 	public String getName() {
 		return PluginServices.getText(this,"move_");
+	}
+
+	public String toString() {
+		return "_move";
 	}
 }

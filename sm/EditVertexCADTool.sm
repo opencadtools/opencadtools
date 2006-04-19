@@ -19,7 +19,7 @@
 SelectVertexOrDelete
 	Entry {
 		selection();
-		setQuestion(ctxt.getName() + "\n" +
+		setQuestion(
 		PluginServices.getText(this,"next_previous_add_del_cancel"));
 		setDescription(new String[]{"next","previous","add","del","cancel"});
 

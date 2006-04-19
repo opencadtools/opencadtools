@@ -204,8 +204,7 @@ public final class PointCADToolContext
             {
                 PointCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(ctxt.getName() + "\n" +
-		PluginServices.getText(this,"define_point"));
+                ctxt.setQuestion(PluginServices.getText(this,"define_point"));
                 ctxt.setDescription(new String[]{"cancel"});
                 return;
             }

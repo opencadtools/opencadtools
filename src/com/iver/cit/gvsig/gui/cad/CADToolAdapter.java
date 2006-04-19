@@ -37,6 +37,7 @@ import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
+import com.iver.utiles.console.JConsole;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
@@ -512,7 +513,12 @@ public class CADToolAdapter extends Behavior {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()) {
 			CADTool ct = (CADTool) cadToolStack.peek();
+			try{
 			ct.transition(option);
+			}catch (Exception e) {
+				View vista = (View) PluginServices.getMDIManager().getActiveView();
+				vista.getConsolePanel().addText("\n" + PluginServices.getText(this,"incorrect_option")+ " : "+ option,JConsole.ERROR);
+			}
 			askQuestion();
 		}
 		configureMenu();
@@ -631,7 +637,7 @@ public class CADToolAdapter extends Behavior {
 		 * +cadtool.getName()); }
 		 */
 		View vista = (View) PluginServices.getMDIManager().getActiveView();
-		vista.getConsolePanel().addText("\n" + cadtool.getQuestion() + ">");
+		vista.getConsolePanel().addText("\n" +"#" +cadtool.getQuestion() + " > ",JConsole.MESSAGE);
 		// ***PluginServices.getMainFrame().addTextToConsole("\n" +
 		// cadtool.getQuestion());
 		questionAsked = true;
@@ -774,7 +780,9 @@ public class CADToolAdapter extends Behavior {
 				// getVectorialAdapter().getSelection().clear();
 				getMapControl().drawMap(false);
 				PluginServices.getMainFrame().setSelectedTool("SELCAD");
-				askQuestion();
+				//askQuestion();
+			}else{
+				getMapControl().setPrevTool();
 			}
 		}
 

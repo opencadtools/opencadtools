@@ -84,13 +84,13 @@ public class InsertPolygonExtension implements Extension {
 		mapControl.addMapTool("cadtooladapter",CADExtension.getCADToolAdapter());
 		mapControl.setTool("cadtooladapter");
 		if (s.equals("POLYGON")) {
-			CADExtension.setCADTool("polygon");
+			CADExtension.setCADTool("polygon",true);
 		}else if (s.equals("CIRCLE")) {
-           CADExtension.setCADTool("circle");
+			CADExtension.setCADTool("circle",true);
         } else if (s.equals("ELLIPSE")) {
-        	CADExtension.setCADTool("ellipse");
+        	CADExtension.setCADTool("ellipse",true);
         }else if (s.equals("RECTANGLE")) {
-        	CADExtension.setCADTool("rectangle");
+        	CADExtension.setCADTool("rectangle",true);
         }
 		CADExtension.getEditionManager().setMapControl(mapControl);
 		CADExtension.getCADToolAdapter().configureMenu();

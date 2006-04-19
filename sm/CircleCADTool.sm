@@ -19,7 +19,7 @@
 CenterPointOr3p
 
 	Entry {
-		setQuestion(ctxt.getName() + "\n" +
+		setQuestion(
 		PluginServices.getText(this,"insert_central_point_or_3p"));
 		setDescription(new String[]{"cancel","3P"});
 		}

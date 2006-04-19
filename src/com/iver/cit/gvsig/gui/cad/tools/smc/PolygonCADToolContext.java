@@ -223,8 +223,7 @@ public final class PolygonCADToolContext
             {
                 PolygonCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(ctxt.getName() + "\n" +
-		PluginServices.getText(this,"insert_number_sides"));
+                ctxt.setQuestion(PluginServices.getText(this,"insert_number_sides"));
                 ctxt.setDescription(new String[]{"cancel"});
                 return;
             }

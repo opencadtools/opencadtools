@@ -19,7 +19,7 @@
 FirstPointAxis
 
 	Entry {
-		setQuestion(ctxt.getName() + "\n" +
+		setQuestion(
 		PluginServices.getText(this,"insert_initial_point_axis"));
 		setDescription(new String[]{"cancel"});
 		}

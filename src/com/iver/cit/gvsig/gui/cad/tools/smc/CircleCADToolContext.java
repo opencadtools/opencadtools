@@ -225,8 +225,7 @@ public final class CircleCADToolContext
             {
                 CircleCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(ctxt.getName() + "\n" +
-		PluginServices.getText(this,"insert_central_point_or_3p"));
+                ctxt.setQuestion(PluginServices.getText(this,"insert_central_point_or_3p"));
                 ctxt.setDescription(new String[]{"cancel", "3P"});
                 return;
             }
