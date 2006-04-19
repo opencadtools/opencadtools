@@ -10,12 +10,15 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import com.hardcode.driverManager.DriverLoadException;
+import com.hardcode.gdbms.engine.values.Value;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.IFeature;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
@@ -144,9 +147,11 @@ public class SaveAs implements Extension {
 	 * @throws EditionException
 	 * @throws DriverException
 	 * @throws DriverIOException
+	 * @throws com.hardcode.gdbms.engine.data.driver.DriverException 
 	 */
-	public void writeFeatures(FLyrVect layer, IWriter writer) throws EditionException, DriverException, DriverIOException {
+	public void writeFeatures(FLyrVect layer, IWriter writer) throws EditionException, DriverException, DriverIOException, com.hardcode.gdbms.engine.data.driver.DriverException {
 		ReadableVectorial va = layer.getSource();
+		SelectableDataSource sds = layer.getRecordset();
 		
 		// Creamos la tabla.
 		writer.preProcess();
@@ -157,9 +162,11 @@ public class SaveAs implements Extension {
 		{
 			rowCount = va.getShapeCount();
 			for (int i = 0; i < rowCount; i++) {
-				IFeature feat = va.getFeature(i);
+				IGeometry geom = va.getShape(i);
 
-				if (feat != null) {
+				if (geom != null) {
+					Value[] values = sds.getRow(i);
+					IFeature feat = new DefaultFeature(geom, values, ""+i);
 					DefaultRowEdited edRow = new DefaultRowEdited(feat,
 							DefaultRowEdited.STATUS_ADDED, i);
 					writer.process(edRow);
@@ -169,11 +176,14 @@ public class SaveAs implements Extension {
 		else
 		{
 			for(int i=bitSet.nextSetBit(0); i>=0; i=bitSet.nextSetBit(i+1)) {
-				IFeature feat = va.getFeature(i);
+				IGeometry geom = va.getShape(i);
 
-				if (feat != null) {
+				if (geom != null) {
+					Value[] values = sds.getRow(i);
+					IFeature feat = new DefaultFeature(geom, values, ""+i);
 					DefaultRowEdited edRow = new DefaultRowEdited(feat,
 							DefaultRowEdited.STATUS_ADDED, i);
+
 					writer.process(edRow);
 				}
 			}
