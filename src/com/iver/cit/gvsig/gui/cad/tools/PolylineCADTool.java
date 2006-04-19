@@ -93,7 +93,7 @@ public class PolylineCADTool extends DefaultCADTool {
         FGeometryCollection fgc = new FGeometryCollection(geoms);
 		// No queremos guardar FGeometryCollections:
 		GeneralPathX gp = new GeneralPathX();
-		gp.append(fgc.getGeneralPathXIterator(), true);
+		gp.append(fgc.getPathIterator(null), true);
 		IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
         
         addGeometry(newGeom);

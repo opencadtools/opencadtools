@@ -52,7 +52,6 @@ import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FPoint2D;
@@ -60,7 +59,6 @@ import com.iver.cit.gvsig.fmap.core.FPolygon2D;
 import com.iver.cit.gvsig.fmap.core.FPolyline2D;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
-import com.iver.cit.gvsig.fmap.core.GeneralPathXIterator;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
@@ -71,7 +69,6 @@ import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-//import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EditVertexCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EditVertexCADToolContext.EditVertexCADToolState;
@@ -278,14 +275,14 @@ public class EditVertexCADTool extends DefaultCADTool {
         GeneralPathX newGp = new GeneralPathX();
         double[] theData = new double[6];
 
-        GeneralPathXIterator theIterator;
+        PathIterator theIterator;
         int theType;
         int numParts = 0;
 
         Point2D ptSrc = new Point2D.Double();
         boolean bFirst = false;
 
-        theIterator = gp.getGeneralPathXIterator(); //, flatness);
+        theIterator = gp.getPathIterator(null); //, flatness);
         int numSegmentsAdded = 0;
         while (!theIterator.isDone()) {
             theType = theIterator.currentSegment(theData);
@@ -371,13 +368,13 @@ public class EditVertexCADTool extends DefaultCADTool {
     		GeneralPathX newGp = new GeneralPathX();
             double[] theData = new double[6];
 
-            GeneralPathXIterator theIterator;
+            PathIterator theIterator;
             int theType;
             int numParts = 0;
             Point2D pLast=new Point2D.Double();
             Point2D pAnt = new Point2D.Double();
             Point2D firstPoint=null;
-            theIterator = geome.getGeneralPathXIterator(); //, flatness);
+            theIterator = geome.getPathIterator(null); //, flatness);
             int numSegmentsAdded = 0;
             while (!theIterator.isDone()) {
                 theType = theIterator.currentSegment(theData);

@@ -152,7 +152,7 @@ public abstract class DefaultCADTool implements CADTool {
 		try {
 			if (vea.getShapeType() == FShape.POLYGON) {
 				GeneralPathX gp = new GeneralPathX();
-				gp.append(geometry.getGeneralPathXIterator(), true);
+				gp.append(geometry.getPathIterator(null), true);
 				FConverter.getExteriorPolygon(gp);
 				
 				geometry = ShapeFactory.createPolygon2D(gp);
