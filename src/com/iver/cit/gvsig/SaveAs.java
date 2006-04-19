@@ -104,7 +104,8 @@ public class SaveAs implements Extension {
 			dbLayerDef.setCatalogName(cs.getDb());
 			dbLayerDef.setTableName(tableName);
 			dbLayerDef.setShapeType(layer.getShapeType());
-			FieldDescription[] fieldsDescrip = EditionUtilities.getFieldsDescription(layer);
+		    SelectableDataSource sds = layer.getRecordset();
+		    FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 			dbLayerDef.setFieldsDesc(fieldsDescrip);
 			dbLayerDef.setFieldGeometry("the_geom");
 			dbLayerDef.setFieldID("gid");
@@ -129,6 +130,9 @@ public class SaveAs implements Extension {
 		} catch (SQLException e) {
 			throw new EditionException(e);
 		} catch (DriverIOException e) {
+			throw new EditionException(e);
+		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
+			e.printStackTrace();
 			throw new EditionException(e);
 		}
 
@@ -202,7 +206,8 @@ public class SaveAs implements Extension {
 				ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
 						"Shape Writer");
     		    SHPLayerDefinition lyrDef = new SHPLayerDefinition();
-    		    FieldDescription[] fieldsDescrip = EditionUtilities.getFieldsDescription(layer);
+    		    SelectableDataSource sds = layer.getRecordset();
+    		    FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
     		    lyrDef.setFieldsDesc(fieldsDescrip);
     		    lyrDef.setFile(newFile);
     		    lyrDef.setName(newFile.getName());
@@ -217,6 +222,9 @@ public class SaveAs implements Extension {
 			e.printStackTrace();
 			throw new EditionException(e);
 		} catch (DriverException e) {
+			e.printStackTrace();
+			throw new EditionException(e);
+		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
 			e.printStackTrace();
 			throw new EditionException(e);
 		}
