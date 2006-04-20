@@ -78,7 +78,7 @@ public class CADExtension implements Extension {
    private static CADToolAdapter adapter=new CADToolAdapter();
    private static EditionManager editionManager = new EditionManager();
    private static HashMap namesCadTools = new HashMap();
-   private MapControl mapControl;
+   ///private MapControl mapControl;
    private static View view;
    public static CADToolAdapter getCADToolAdapter(){
 	    return adapter;
@@ -99,7 +99,6 @@ public class CADExtension implements Extension {
         addCADTool("rotate",rotate);
         addCADTool("scale",scale);
         addCADTool("editvertex",editvertex);
-
         KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
     }
@@ -108,25 +107,7 @@ public class CADExtension implements Extension {
      * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
      */
     public void execute(String s) {
-        view = (View) PluginServices.getMDIManager().getActiveView();
-        mapControl = (MapControl) view.getMapControl();
-        if (!mapControl.getNamesMapTools().containsKey("cadtooladapter"))
-        	mapControl.addMapTool("cadtooladapter",adapter);
-        	view.getMapControl().setTool("cadtooladapter");
-        	view.addConsoleListener("cad", new ResponseListener() {
-     			public void acceptResponse(String response) {
-     				adapter.textEntered(response);
-     				// TODO:
-     				// FocusManager fm=FocusManager.getCurrentManager();
-     				// fm.focusPreviousComponent(mapControl);
-     				/*if (popup.isShowing()){
-     				    popup.setVisible(false);
-     				}*/
-
-     			}
-     		});
-
-        view.getMapControl().setTool("cadtooladapter");
+       initFocus();
 
         if (s.equals("SPLINE")) {
         	setCADTool("spline",true);
@@ -168,7 +149,6 @@ public class CADExtension implements Extension {
     }
     public static void addCADTool(String name, CADTool c){
 		namesCadTools.put(name, c);
-
 	}
     public static void setCADTool(String text,boolean showCommand){
 		CADTool ct = (CADTool) namesCadTools.get(text);
@@ -229,7 +209,7 @@ public class CADExtension implements Extension {
     	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
 		{
 			// Queremos que siempre que haya edición esto esté funcionando.
-	        editionManager.setMapControl(mapControl);
+	        ///editionManager.setMapControl(mapControl);
 			return true;
 		}
 		else
@@ -250,7 +230,7 @@ public class CADExtension implements Extension {
 //        return false;
     }
 	public MapControl getMapControl() {
-		return this.mapControl;
+		return editionManager.getMapControl();
 	}
 	class KeyAction extends AbstractAction{
 
@@ -400,5 +380,26 @@ public class CADExtension implements Extension {
 	}
 	public static CADTool[] getCADTools(){
 		return (CADTool[])namesCadTools.values().toArray(new CADTool[0]);
+	}
+	public static void initFocus(){
+		 view = (View) PluginServices.getMDIManager().getActiveView();
+	     MapControl mapControl = (MapControl) view.getMapControl();
+	        if (!mapControl.getNamesMapTools().containsKey("cadtooladapter"))
+	        	mapControl.addMapTool("cadtooladapter",adapter);
+	        	view.getMapControl().setTool("cadtooladapter");
+	        	view.addConsoleListener("cad", new ResponseListener() {
+	     			public void acceptResponse(String response) {
+	     				adapter.textEntered(response);
+	     				// TODO:
+	     				// FocusManager fm=FocusManager.getCurrentManager();
+	     				// fm.focusPreviousComponent(mapControl);
+	     				/*if (popup.isShowing()){
+	     				    popup.setVisible(false);
+	     				}*/
+
+	     			}
+	     		});
+	       editionManager.setMapControl(mapControl);
+	       view.getMapControl().setTool("cadtooladapter");
 	}
 }

@@ -72,8 +72,7 @@ public class InsertPolyLineExtension implements Extension {
 	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
-		mapControl.addMapTool("cadtooladapter",CADExtension.getCADToolAdapter());
-		mapControl.setTool("cadtooladapter");
+		CADExtension.initFocus();
 		if (s.equals("POLYLINE")) {
 			CADExtension.setCADTool("polyline",true);
 			CADExtension.getEditionManager().setMapControl(mapControl);

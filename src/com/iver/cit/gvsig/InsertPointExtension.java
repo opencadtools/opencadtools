@@ -70,8 +70,7 @@ public class InsertPointExtension implements Extension {
      * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
      */
     public void execute(String s) {
-    	mapControl.addMapTool("cadtooladapter",CADExtension.getCADToolAdapter());
-        mapControl.setTool("cadtooladapter");
+    	CADExtension.initFocus();
 
         if (s.equals("POINT")) {
         	CADExtension.setCADTool("point",true);

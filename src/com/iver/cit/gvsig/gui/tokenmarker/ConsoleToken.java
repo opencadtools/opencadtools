@@ -24,7 +24,7 @@ public class ConsoleToken extends TokenMarker{
 		JConsole console = new JConsole();
 		//console.addText("-", 0);
 		KeywordMap keywordMap=new KeywordMap(true);
-		keywordMap.add("hola",Token.KEYWORD1);
+		keywordMap.add("hola",Token.LABEL);
 		ConsoleToken consoleToken=new ConsoleToken(keywordMap);
 		console.setTokenMarker(consoleToken);
 		JFrame frame = new JFrame();
@@ -71,7 +71,7 @@ public class ConsoleToken extends TokenMarker{
 	            case '#':
 	              doKeyword(line, i, c);
 	              addToken(i - lastOffset,token);
-	              token = Token.LITERAL1;
+	              token = Token.LABEL;
 	              lastOffset = lastKeyword = i;
 	              break;
 	            case '*':
@@ -85,7 +85,7 @@ public class ConsoleToken extends TokenMarker{
 	              doKeyword(line, i, c);
 	          }
 	          break;
-	        case Token.LITERAL1:
+	        case Token.LABEL:
 	          if(c == '>')
 	          {
 	            addToken(i1 - lastOffset, token);
@@ -130,7 +130,7 @@ public class ConsoleToken extends TokenMarker{
 
 	    switch(token)
 	    {
-	      case Token.LITERAL1:
+	      case Token.LABEL:
 	      case Token.LITERAL2:
 	        addToken(length - lastOffset, token);
 	        token = Token.NULL;

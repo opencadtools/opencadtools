@@ -75,8 +75,9 @@ public class InsertLineExtension implements Extension {
 	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
-		mapControl.addMapTool("cadtooladapter",CADExtension.getCADToolAdapter());
-		mapControl.setTool("cadtooladapter");
+		CADExtension.initFocus();
+		//mapControl.addMapTool("cadtooladapter",CADExtension.getCADToolAdapter());
+		//mapControl.setTool("cadtooladapter");
 		if (s.equals("LINE")) {
 			CADExtension.setCADTool("line",true);
 			CADExtension.getEditionManager().setMapControl(mapControl);

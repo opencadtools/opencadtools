@@ -81,8 +81,7 @@ public class InsertPolygonExtension implements Extension {
 	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
-		mapControl.addMapTool("cadtooladapter",CADExtension.getCADToolAdapter());
-		mapControl.setTool("cadtooladapter");
+		CADExtension.initFocus();
 		if (s.equals("POLYGON")) {
 			CADExtension.setCADTool("polygon",true);
 		}else if (s.equals("CIRCLE")) {
