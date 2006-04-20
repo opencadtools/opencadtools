@@ -283,9 +283,11 @@ public class CADExtension implements Extension {
         	else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
         		adapter.keyPressed("escape");
         	else if (e.getKeyCode() == KeyEvent.VK_ENTER)
+        	{
         		// TODO: REVISAR ESTO CUANDO VIENE UN INTRO DESDE UN JTEXTAREA
         		// QUE NO ES EL DE CONSOLA
-        		view.focusConsole("");
+        		// view.focusConsole("");
+        	}
         	else
         	{
         		if ((e.getID() == KeyEvent.KEY_RELEASED) && (!e.isActionKey()))
