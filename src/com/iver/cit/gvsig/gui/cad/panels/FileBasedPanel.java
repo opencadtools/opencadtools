@@ -1,37 +1,32 @@
 package com.iver.cit.gvsig.gui.cad.panels;
 
-import jwizardcomponent.JWizardComponents;
-import jwizardcomponent.JWizardPanel;
+import java.awt.Component;
+import java.io.File;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JButton;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import jwizardcomponent.JWizardComponents;
+import jwizardcomponent.JWizardPanel;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.View;
-import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
-import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.FOpenDialog;
 import com.iver.cit.gvsig.gui.Panels.ProjChooserPanel;
 import com.iver.utiles.SimpleFileFilter;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.io.File;
-import javax.swing.JPanel;
-
-public class ShpPanel extends JWizardPanel {
+public class FileBasedPanel extends JWizardPanel {
 
 	private static final long serialVersionUID = -1431370928697152515L;
 	private JLabel jLabel = null;
 	private JTextField jTextFieldPath = null;
 	private JButton jButtonSelectPath = null;
 	private ProjChooserPanel chooserPanel = null;
+	private String fileExt;
 
 	private class MyInputEventListener implements CaretListener
 	{
@@ -46,7 +41,7 @@ public class ShpPanel extends JWizardPanel {
 	}
 
 
-	public ShpPanel(JWizardComponents wizardComponents) {
+	public FileBasedPanel(JWizardComponents wizardComponents) {
 		super(wizardComponents);
 		initialize();
 	}
@@ -95,14 +90,14 @@ public class ShpPanel extends JWizardPanel {
 			jButtonSelectPath.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 		            JFileChooser jfc = new JFileChooser();
-		            SimpleFileFilter filterShp = new SimpleFileFilter("shp", PluginServices.getText(this,"shp_files"));
+		            SimpleFileFilter filterShp = new SimpleFileFilter(fileExt, PluginServices.getText(this,"shp_files"));
 		            jfc.setFileFilter(filterShp);
 		            if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
 		        		    File newFile = jfc.getSelectedFile();
 		        		    String path = newFile.getAbsolutePath();
-		        		    if (!(path.toLowerCase().endsWith(".shp")))
+		        		    if (!(path.toLowerCase().endsWith("." + fileExt)))
 		        		    {
-		        		    	path = path + ".shp";
+		        		    	path = path + "." + fileExt;
 		        		    }
 		        		    jTextFieldPath.setText(path);
 		                }
@@ -115,6 +110,16 @@ public class ShpPanel extends JWizardPanel {
 
 	public String getPath() {
 		return jTextFieldPath.getText();
+	}
+	
+	/**
+	 * Use it to set the extension of the file you want to receive.
+	 * (Without . : Example: for shps: shp for dxfs: dxf)
+	 * @param extension
+	 */
+	public void setFileExtension(String extension)
+	{
+		this.fileExt = extension;
 	}
 
 	/**

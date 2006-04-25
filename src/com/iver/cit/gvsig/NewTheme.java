@@ -19,7 +19,7 @@ import com.iver.cit.gvsig.gui.cad.WizardAndami;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
-import com.iver.cit.gvsig.gui.cad.panels.ShpPanel;
+import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 
 /**
  * DOCUMENT ME!
@@ -76,8 +76,9 @@ public void execute(String actionCommand) {
 			if (actionCommand.equals("SHP"))
 			{
 				panelChoose.setDriver((ISpatialWriter) writerManager.getDriver("gvSIG shp driver"));
-				wizard.getWizardComponents().addWizardPanel(
-					new ShpPanel(wizard.getWizardComponents()));
+				FileBasedPanel filePanel = new FileBasedPanel(wizard.getWizardComponents());
+				filePanel.setFileExtension("shp");
+				wizard.getWizardComponents().addWizardPanel(filePanel);
 				
 				wizard.getWizardComponents().setFinishAction(
 						new MyFinishAction(wizard.getWizardComponents(),
@@ -85,9 +86,15 @@ public void execute(String actionCommand) {
 			}
 			if (actionCommand.equals("DXF"))
 			{
-				wizard.getWizardComponents().addWizardPanel(
-					new SimpleLabelWizardPanel(wizard
-							.getWizardComponents(), new JLabel("Done!")));
+				panelChoose.setDriver((ISpatialWriter) writerManager.getDriver("gvSIG DXF Memory Driver"));
+				FileBasedPanel filePanel = new FileBasedPanel(wizard.getWizardComponents());
+				filePanel.setFileExtension("dxf");
+				wizard.getWizardComponents().addWizardPanel(filePanel);
+
+			
+				wizard.getWizardComponents().setFinishAction(
+					new MyFinishAction(wizard.getWizardComponents(),
+							vista, actionCommand));
 			}
 			if (actionCommand.equals("POSTGIS"))
 			{

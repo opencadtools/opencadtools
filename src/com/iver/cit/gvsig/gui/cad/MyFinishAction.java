@@ -23,6 +23,7 @@ import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
 import com.iver.cit.gvsig.fmap.drivers.VectorialJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
@@ -30,7 +31,7 @@ import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
-import com.iver.cit.gvsig.gui.cad.panels.ShpPanel;
+import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 
 public class MyFinishAction extends FinishAction
@@ -67,7 +68,7 @@ public class MyFinishAction extends FinishAction
 			mapCtrl.getMapContext().beginAtomicEvent();
 			if (actionComand.equals("SHP"))
 			{
-	    		ShpPanel shpPanel = (ShpPanel) myWizardComponents.getWizardPanel(2);
+	    		FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(2);
     		    File newFile = new File(shpPanel.getPath());
     		    SHPLayerDefinition lyrDef = new SHPLayerDefinition();
     		    lyrDef.setFieldsDesc(fieldsDesc);
@@ -85,6 +86,26 @@ public class MyFinishAction extends FinishAction
                         (VectorialFileDriver) drv, newFile, mapCtrl.getProjection());
                                 
 			}
+			else if (actionComand.equals("DXF"))
+			{
+	    		FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(2);
+    		    File newFile = new File(shpPanel.getPath());
+    		    SHPLayerDefinition lyrDef = new SHPLayerDefinition();
+    		    lyrDef.setFieldsDesc(fieldsDesc);
+    		    lyrDef.setFile(newFile);
+    		    lyrDef.setName(layerName);
+    		    lyrDef.setShapeType(geometryType);
+    			DxfWriter writer= (DxfWriter)LayerFactory.getWM().getWriter("DXF Writer");
+    			writer.setFile(newFile);
+    			writer.initialize(lyrDef);
+    			writer.preProcess();
+    			writer.postProcess();
+	    		
+				
+                lyr = (FLyrVect) LayerFactory.createLayer(layerName,
+                        (VectorialFileDriver) drv, newFile, mapCtrl.getProjection());
+                                
+			}			
 			else if (drv instanceof VectorialJDBCDriver)
 			{
 				VectorialJDBCDriver dbDriver = (VectorialJDBCDriver) drv;

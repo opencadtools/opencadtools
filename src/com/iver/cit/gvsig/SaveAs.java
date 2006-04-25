@@ -27,6 +27,8 @@ import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
+import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfFieldsMapping;
+import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -107,8 +109,8 @@ public class SaveAs implements Extension {
 			dbLayerDef.setCatalogName(cs.getDb());
 			dbLayerDef.setTableName(tableName);
 			dbLayerDef.setShapeType(layer.getShapeType());
-		    SelectableDataSource sds = layer.getRecordset();
-		    FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
+			SelectableDataSource sds = layer.getRecordset();
+			FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 			dbLayerDef.setFieldsDesc(fieldsDescrip);
 			dbLayerDef.setFieldGeometry("the_geom");
 			dbLayerDef.setFieldID("gid");
@@ -119,7 +121,7 @@ public class SaveAs implements Extension {
 			dbLayerDef.setConnection(conex);
 
 			PostGISWriter writer = new PostGISWriter(); // (PostGISWriter)LayerFactory.getWM().getWriter("PostGIS
-														// Writer");
+			// Writer");
 			writer.setWriteAll(true);
 			writer.setCreateTable(true);
 			writer.initialize(dbLayerDef);
@@ -142,60 +144,104 @@ public class SaveAs implements Extension {
 	}
 
 	/**
-	 * @param layer FLyrVect to obtain features. If selection, only selected features will be precessed.
-	 * @param writer (Must be already initialized)
+	 * @param layer
+	 *            FLyrVect to obtain features. If selection, only selected
+	 *            features will be precessed.
+	 * @param writer
+	 *            (Must be already initialized)
 	 * @throws EditionException
 	 * @throws DriverException
 	 * @throws DriverIOException
-	 * @throws com.hardcode.gdbms.engine.data.driver.DriverException 
+	 * @throws com.hardcode.gdbms.engine.data.driver.DriverException
 	 */
-	public void writeFeatures(FLyrVect layer, IWriter writer) throws EditionException, DriverException, DriverIOException, com.hardcode.gdbms.engine.data.driver.DriverException {
+	public void writeFeatures(FLyrVect layer, IWriter writer)
+			throws EditionException, DriverException, DriverIOException,
+			com.hardcode.gdbms.engine.data.driver.DriverException {
 		ReadableVectorial va = layer.getSource();
 		SelectableDataSource sds = layer.getRecordset();
-		
+
 		// Creamos la tabla.
 		writer.preProcess();
 
 		int rowCount;
-		FBitSet bitSet = layer.getRecordset().getSelection(); 
-		if (bitSet.cardinality() == 0)
-		{
+		FBitSet bitSet = layer.getRecordset().getSelection();
+		if (bitSet.cardinality() == 0) {
 			rowCount = va.getShapeCount();
 			for (int i = 0; i < rowCount; i++) {
 				IGeometry geom = va.getShape(i);
 
 				if (geom != null) {
 					Value[] values = sds.getRow(i);
-					IFeature feat = new DefaultFeature(geom, values, ""+i);
+					IFeature feat = new DefaultFeature(geom, values, "" + i);
 					DefaultRowEdited edRow = new DefaultRowEdited(feat,
 							DefaultRowEdited.STATUS_ADDED, i);
 					writer.process(edRow);
 				}
 			}
-		}
-		else
-		{
-			for(int i=bitSet.nextSetBit(0); i>=0; i=bitSet.nextSetBit(i+1)) {
+		} else {
+			for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
+					.nextSetBit(i + 1)) {
 				IGeometry geom = va.getShape(i);
 
 				if (geom != null) {
 					Value[] values = sds.getRow(i);
-					IFeature feat = new DefaultFeature(geom, values, ""+i);
+					IFeature feat = new DefaultFeature(geom, values, "" + i);
 					DefaultRowEdited edRow = new DefaultRowEdited(feat,
 							DefaultRowEdited.STATUS_ADDED, i);
 
 					writer.process(edRow);
 				}
 			}
-			
+
 		}
 
 		writer.postProcess();
 	}
 
-	public void saveToDxf(FLyrVect lv) {
-		// TODO Auto-generated method stub
-		System.err.println("Not implemented yet");
+	public void saveToDxf(FLyrVect layer) throws EditionException {
+		try {
+			JFileChooser jfc = new JFileChooser();
+			SimpleFileFilter filterShp = new SimpleFileFilter("dxf",
+					PluginServices.getText(this, "dxf_files"));
+			jfc.setFileFilter(filterShp);
+			if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION)
+			{
+				File newFile = jfc.getSelectedFile();
+				String path = newFile.getAbsolutePath();
+				if (!(path.toLowerCase().endsWith(".dxf"))) {
+					path = path + ".dxf";
+				}
+				newFile = new File(path);
+
+				DxfWriter writer = (DxfWriter) LayerFactory.getWM().getWriter(
+						"DXF Writer");
+				SHPLayerDefinition lyrDef = new SHPLayerDefinition();
+				SelectableDataSource sds = layer.getRecordset();
+				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
+				lyrDef.setFieldsDesc(fieldsDescrip);
+				lyrDef.setFile(newFile);
+				lyrDef.setName(newFile.getName());
+				lyrDef.setShapeType(layer.getShapeType());
+				writer.setFile(newFile);
+				writer.initialize(lyrDef);
+				writer.setProjection(layer.getProjection());
+				DxfFieldsMapping fieldsMapping = new DxfFieldsMapping();
+				// TODO: Recuperar aquí los campos del cuadro de diálogo.
+				writer.setFieldMapping(fieldsMapping);
+
+				writeFeatures(layer, writer);
+			}
+
+		} catch (DriverIOException e) {
+			e.printStackTrace();
+			throw new EditionException(e);
+		} catch (DriverException e) {
+			e.printStackTrace();
+			throw new EditionException(e);
+		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
+			e.printStackTrace();
+			throw new EditionException(e);
+		}
 
 	}
 
@@ -215,16 +261,16 @@ public class SaveAs implements Extension {
 
 				ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
 						"Shape Writer");
-    		    SHPLayerDefinition lyrDef = new SHPLayerDefinition();
-    		    SelectableDataSource sds = layer.getRecordset();
-    		    FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
-    		    lyrDef.setFieldsDesc(fieldsDescrip);
-    		    lyrDef.setFile(newFile);
-    		    lyrDef.setName(newFile.getName());
-    		    lyrDef.setShapeType(layer.getShapeType());
-    			writer.setFile(newFile);
-    			writer.initialize(lyrDef);
-				
+				SHPLayerDefinition lyrDef = new SHPLayerDefinition();
+				SelectableDataSource sds = layer.getRecordset();
+				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
+				lyrDef.setFieldsDesc(fieldsDescrip);
+				lyrDef.setFile(newFile);
+				lyrDef.setName(newFile.getName());
+				lyrDef.setShapeType(layer.getShapeType());
+				writer.setFile(newFile);
+				writer.initialize(lyrDef);
+
 				writeFeatures(layer, writer);
 
 			}
