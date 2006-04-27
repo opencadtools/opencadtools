@@ -31,7 +31,7 @@ import com.iver.utiles.SimpleFileFilter;
 
 /**
  * @author Francisco José
- * 
+ *
  * Cuando un tema se pone en edición, puede que su driver implemente
  * ISpatialWriter. En ese caso, es capaz de guardarse sobre sí mismo. Si no lo
  * implementa, esta opción estará deshabilitada y la única posibilidad de
@@ -85,26 +85,26 @@ public boolean isEnabled() {
 		FLayer[] lyrs = EditionUtilities.getActiveAndEditedLayers();
 		if (lyrs == null) return false;
 		FLyrVect lyrVect = (FLyrVect) lyrs[0];
-		VectorialEditableAdapter vea = (VectorialEditableAdapter) lyrVect.getSource();
-		
+		if (lyrVect.getSource() instanceof VectorialEditableAdapter){
+			VectorialEditableAdapter vea = (VectorialEditableAdapter) lyrVect.getSource();
 		if (vea.getDriver() instanceof ISpatialWriter)
 			return true;
-		else
-			return false;
+		}
+		return false;
     }
 	/**
 	 * DOCUMENT ME!
 	 */
 public void stopEditing(FLyrVect layer,MapControl mapControl) {
     	VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
-    	
+
 		ISpatialWriter writer = (ISpatialWriter) vea.getDriver();
-		
+
 		try {
 			writer.initialize(layer);
 	        vea.stopEdition(writer);
 	        vea.getCommandRecord().removeCommandListener(mapControl);
-	        
+
 	        layer.setEditing(false);
 	        mapControl.setTool("zoomIn");
 	        vista.hideConsole();
@@ -112,7 +112,7 @@ public void stopEditing(FLyrVect layer,MapControl mapControl) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	        
+
     }
 	/**
 	 * @see com.iver.andami.plugins.Extension#isVisible()

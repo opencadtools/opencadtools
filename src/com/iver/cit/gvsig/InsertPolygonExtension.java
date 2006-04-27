@@ -49,6 +49,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
@@ -71,10 +72,12 @@ public class InsertPolygonExtension implements Extension {
 		CircleCADTool circle=new CircleCADTool();
         RectangleCADTool rectangle=new RectangleCADTool();
         EllipseCADTool ellipse=new EllipseCADTool();
+        EditVertexCADTool editvertex=new EditVertexCADTool();
 		CADExtension.addCADTool("polygon", polygon);
 		CADExtension.addCADTool("circle",circle);
 	    CADExtension.addCADTool("rectangle", rectangle);
 	    CADExtension.addCADTool("ellipse", ellipse);
+	    CADExtension.addCADTool("editvertex",editvertex);
 	}
 
 	/**
@@ -90,6 +93,8 @@ public class InsertPolygonExtension implements Extension {
         	CADExtension.setCADTool("ellipse",true);
         }else if (s.equals("RECTANGLE")) {
         	CADExtension.setCADTool("rectangle",true);
+        }else if (s.equals("EDITVERTEX")) {
+        	CADExtension.setCADTool("editvertex",true);
         }
 		CADExtension.getEditionManager().setMapControl(mapControl);
 		CADExtension.getCADToolAdapter().configureMenu();

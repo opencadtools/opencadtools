@@ -51,21 +51,19 @@ import java.util.HashMap;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JTextArea;
 import javax.swing.text.JTextComponent;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.utiles.console.JConsole;
 import com.iver.utiles.console.ResponseListener;
 /**
@@ -80,6 +78,7 @@ public class CADExtension implements Extension {
    private static HashMap namesCadTools = new HashMap();
    ///private MapControl mapControl;
    private static View view;
+   private MapControl mapControl;
    public static CADToolAdapter getCADToolAdapter(){
 	    return adapter;
    }
@@ -87,18 +86,18 @@ public class CADExtension implements Extension {
      * @see com.iver.andami.plugins.Extension#inicializar()
      */
     public void inicializar() {
-        SelectionCADTool selection=new SelectionCADTool();
+
         CopyCADTool copy=new CopyCADTool();
-        MoveCADTool move=new MoveCADTool();
+
         RotateCADTool rotate=new RotateCADTool();
         ScaleCADTool scale=new ScaleCADTool();
-        EditVertexCADTool editvertex=new EditVertexCADTool();
-        addCADTool("selection", selection);
+
+
         addCADTool("copy",copy);
-        addCADTool("move",move);
+
         addCADTool("rotate",rotate);
         addCADTool("scale",scale);
-        addCADTool("editvertex",editvertex);
+
         KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
     }
@@ -113,8 +112,6 @@ public class CADExtension implements Extension {
         	setCADTool("spline",true);
         } else if (s.equals("COPY")) {
         	setCADTool("copy",true);
-        } else if (s.equals("MOVE")) {
-        	setCADTool("move",true);
         } else if (s.equals("EQUIDISTANCE")) {
         	setCADTool("equidistance",true);
         } else if (s.equals("MATRIZ")) {
@@ -139,10 +136,6 @@ public class CADExtension implements Extension {
         	setCADTool("chaflan",true);
         } else if (s.equals("JOIN")) {
         	setCADTool("join",true);
-        } else if (s.equals("SELCAD")) {
-        	setCADTool("selection",true);
-        } else if (s.equals("EDITVERTEX")) {
-        	setCADTool("editvertex",true);
         }
         adapter.configureMenu();
         //ViewControls.CANCELED=false;
@@ -170,35 +163,6 @@ public class CADExtension implements Extension {
      * @see com.iver.andami.plugins.Extension#isEnabled()
      */
     public boolean isEnabled() {
-        /* com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
-                                                             .getActiveView();
-
-        if (f == null) {
-            return false;
-        }
-
-        if (f.getClass() == View.class) {
-            FLayer[] l = ((View) f).getModel().getMapContext().getLayers()
-                          .getActives();
-
-            for (int i = 0; i < l.length; i++) {
-                if (l[i] instanceof FLyrVect && ((FLyrVect) l[i]).isEditing()) {
-                    return true;
-                }
-            }
-        }
-
-        return false; */
-		/*if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-		{
-			// Queremos que siempre que haya edición esto esté funcionando.
-	        editionManager.setMapControl(mapControl);
-			return true;
-		}
-		else
-			return false;
-
-    */
     	return true;
     }
 
@@ -206,28 +170,16 @@ public class CADExtension implements Extension {
      * @see com.iver.andami.plugins.Extension#isVisible()
      */
     public boolean isVisible() {
-    	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-		{
-			// Queremos que siempre que haya edición esto esté funcionando.
-	        ///editionManager.setMapControl(mapControl);
-			return true;
-		}
-		else
-			return false;
-//        com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
-//                                                             .getActiveView();
-//
-//        if (f == null) {
-//            return false;
-//        }
-//
-//        if (f.getClass() == View.class) {
-//        	FLayer[] layers=getMapControl().getMapContext().getLayers().getActives();
-//        	if (layers[0] instanceof FLyrVect && ((FLyrVect)layers[0]).isEditing()){
-//        		return true;
-//        	}
-//        }
-//        return false;
+    	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+				view = (View) PluginServices.getMDIManager().getActiveView();
+				mapControl = (MapControl) view.getMapControl();
+				FLayer[] layers = mapControl.getMapContext().getLayers()
+						.getActives();
+				if (!(layers[0] instanceof FLyrAnnotation)) {
+					return true;
+				}
+			}
+		return false;
     }
 	public MapControl getMapControl() {
 		return editionManager.getMapControl();
