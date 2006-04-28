@@ -16,6 +16,7 @@ import com.iver.cit.gvsig.project.ProjectView;
  * @author Vicente Caballero Navarro
  */
 public class ViewCommandStackExtension implements Extension {
+	private CommandStackDialog csd=null;
 	/**
 	 * @see com.iver.andami.plugins.Extension#inicializar()
 	 */
@@ -35,13 +36,15 @@ public class ViewCommandStackExtension implements Extension {
 		FLayers layers = mapa.getLayers();
 		if (s.equals("COMMANDSTACK")) {
 			for (int i =0;i<layers.getLayersCount();i++){
-				if (layers.getLayer(i) instanceof FLyrVect && ((FLyrVect)layers.getLayer(i)).isEditing()){
-					CommandStackDialog csd=new CommandStackDialog(((IEditableSource)((FLyrVect)layers.getLayer(i)).getSource()).getCommandRecord());
-					PluginServices.getMDIManager().addView(csd);
+				if (layers.getLayer(i) instanceof FLyrVect){
+					FLyrVect lyrVect=(FLyrVect)layers.getLayer(i);
+					if (lyrVect.isEditing() && lyrVect.isActive()){
+						csd=new CommandStackDialog();
+						csd.setModel(((IEditableSource)lyrVect.getSource()).getCommandRecord());
+						PluginServices.getMDIManager().addView(csd);
+					}
 				}
 			}
-
-
 		}
 
 		//PluginServices.getMainFrame().enableControls();
@@ -52,6 +55,25 @@ public class ViewCommandStackExtension implements Extension {
 	 * @see com.iver.andami.plugins.Extension#isEnabled()
 	 */
 	public boolean isEnabled() {
+		if (csd!=null){
+		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+				.getActiveView();
+
+		View vista = (View) f;
+		ProjectView model = vista.getModel();
+		FMap mapa = model.getMapContext();
+		FLayers layers = mapa.getLayers();
+		for (int i = 0; i < layers.getLayersCount(); i++) {
+			if (layers.getLayer(i) instanceof FLyrVect) {
+				FLyrVect lyrVect = (FLyrVect) layers.getLayer(i);
+				if (lyrVect.isEditing() && lyrVect.isActive()) {
+					csd.setModel(((IEditableSource) lyrVect.getSource())
+							.getCommandRecord());
+
+				}
+			}
+		}
+		}
 		return true;
 	}
 

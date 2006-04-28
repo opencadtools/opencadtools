@@ -44,7 +44,8 @@ public class TableCommandStackExtension implements Extension {
 				cr=model.getModelo().getCommandRecord();
 				cr.addCommandListener(table);
 			}
-			CommandStackDialog csd = new CommandStackDialog(cr);
+			CommandStackDialog csd = new CommandStackDialog();
+			csd.setModel(cr);
 			PluginServices.getMDIManager().addView(csd);
 		}
 	}
