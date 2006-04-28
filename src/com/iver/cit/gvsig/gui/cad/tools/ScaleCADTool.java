@@ -317,7 +317,7 @@ public class ScaleCADTool extends DefaultCADTool {
     	}
     }
     private void scale(double scaleFactor) throws DriverIOException, IOException {
-    		VectorialEditableAdapter vea=getCadToolAdapter().getVectorialAdapter();
+    		VectorialEditableAdapter vea=getVLE().getVEA();
     		vea.startComplexRow();
     		ArrayList selectedRow=getSelectedRows();
     		ArrayList selectedRowAux=new ArrayList();

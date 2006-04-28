@@ -103,7 +103,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 	}
 	public void selectWithSecondPoint(double x, double y) {
-		VectorialEditableAdapter vea = (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
+		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
 		lastPoint = new Point2D.Double(x, y);
 		ViewPort vp=getLayer().getFMap().getViewPort();
@@ -169,7 +169,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 	}
 	public void selectInsidePolygon(IGeometry polygon) {
-		VectorialEditableAdapter vea = (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
+		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
 		ViewPort vp=getLayer().getFMap().getViewPort();
 		selection.clear();
@@ -202,7 +202,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	}
 
 	public void selectCrossPolygon(IGeometry polygon) {
-		VectorialEditableAdapter vea = (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
+		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
 		ViewPort vp=getLayer().getFMap().getViewPort();
 		selection.clear();
@@ -235,7 +235,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	}
 
 	public void selectOutPolygon(IGeometry polygon) {
-		VectorialEditableAdapter vea = (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
+		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
 		ViewPort vp=getLayer().getFMap().getViewPort();
 		selection.clear();
@@ -266,7 +266,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		}
 	}
 	public void selectAll() {
-		VectorialEditableAdapter vea = (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
+		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
 		ViewPort vp=getLayer().getFMap().getViewPort();
 		selection.clear();

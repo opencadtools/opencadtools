@@ -55,6 +55,7 @@ import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.InsertPointExtension;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -149,8 +150,7 @@ public abstract class DefaultCADTool implements CADTool {
 	 *            DOCUMENT ME!
 	 */
 	public void addGeometry(IGeometry geometry) {
-		VectorialEditableAdapter vea = getCadToolAdapter()
-				.getVectorialAdapter();
+		VectorialEditableAdapter vea = getVLE().getVEA();
 		try {
 			if (vea.getShapeType() == FShape.POLYGON) {
 				GeneralPathX gp = new GeneralPathX();
@@ -159,8 +159,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 				geometry = ShapeFactory.createPolygon2D(gp);
 			}
-			int numAttr = getCadToolAdapter().getVectorialAdapter()
-					.getRecordset().getFieldCount();
+			int numAttr = vea.getRecordset().getFieldCount();
 			Value[] values = new Value[numAttr];
 			for (int i = 0; i < numAttr; i++) {
 				values[i] = ValueFactory.createNullValue();
@@ -204,7 +203,7 @@ public abstract class DefaultCADTool implements CADTool {
 	 */
 	public void modifyFeature(int index, IFeature row) {
 		try {
-			getCadToolAdapter().getVectorialAdapter().modifyRow(index, row,
+			getVLE().getVEA().modifyRow(index, row,
 					getName());
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -336,6 +335,8 @@ public abstract class DefaultCADTool implements CADTool {
 		for (int i=0;i<cadtools.length;i++){
 			CADTool ct=cadtools[i];
 			if (name.equalsIgnoreCase(ct.getName())|| name.equalsIgnoreCase(ct.toString())){
+				///InsertPointExtension ipe=(InsertPointExtension)PluginServices.getExtension(InsertPointExtension.class);
+
 				getCadToolAdapter().setCadTool(ct);
 				ct.init();
 				View vista = (View) PluginServices.getMDIManager().getActiveView();

@@ -562,11 +562,11 @@ public class EditVertexCADTool extends DefaultCADTool {
 					boolean isSelectedGeometry = false;
 					try {
 
-						VectorialEditableAdapter vea = getCadToolAdapter()
-								.getVectorialAdapter();
-						String strEPSG = getCadToolAdapter().getMapControl()
-								.getViewPort().getProjection().getAbrev()
-								.substring(5);
+						//VectorialEditableAdapter vea = getCadToolAdapter()
+						//		.getVectorialAdapter();
+						//String strEPSG = getCadToolAdapter().getMapControl()
+						//		.getViewPort().getProjection().getAbrev()
+						//		.substring(5);
 						//IRowEdited[] feats = vea.getFeatures(rect, strEPSG);
 
 						//for (int i = 0; i < feats.length; i++) {
