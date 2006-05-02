@@ -1,33 +1,18 @@
 package com.iver.cit.gvsig;
 
-import java.awt.Component;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.JFileChooser;
-
-import com.hardcode.driverManager.Driver;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
-import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
-//import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.LayerFactory;
-import com.iver.cit.gvsig.fmap.layers.VectorialAdapter;
-import com.iver.cit.gvsig.fmap.layers.VectorialFileAdapter;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.ProjectView;
-import com.iver.utiles.SimpleFileFilter;
 
 /**
  * @author Francisco José
@@ -37,17 +22,17 @@ import com.iver.utiles.SimpleFileFilter;
  * implementa, esta opción estará deshabilitada y la única posibilidad de
  * guardar este tema será "Guardando como..."
  */
-public class StopEditing implements Extension {
+public class StopEditing extends Extension {
 	private View vista;
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-	public void inicializar() {
+	public void initialize() {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
@@ -79,7 +64,7 @@ public class StopEditing implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 public boolean isEnabled() {
 		FLayer[] lyrs = EditionUtilities.getActiveAndEditedLayers();
@@ -115,7 +100,7 @@ public void stopEditing(FLyrVect layer,MapControl mapControl) {
 
     }
 	/**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)

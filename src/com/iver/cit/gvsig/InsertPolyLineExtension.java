@@ -55,21 +55,21 @@ import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
  *
  * @author Vicente Caballero Navarro
  */
-public class InsertPolyLineExtension implements Extension {
+public class InsertPolyLineExtension extends Extension {
 	private View view;
 
 	private MapControl mapControl;
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-	public void inicializar() {
+	public void initialize() {
 		PolylineCADTool polyline = new PolylineCADTool();
 		CADExtension.addCADTool("polyline", polyline);
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
@@ -81,7 +81,7 @@ public class InsertPolyLineExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
 
@@ -104,7 +104,7 @@ public class InsertPolyLineExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)

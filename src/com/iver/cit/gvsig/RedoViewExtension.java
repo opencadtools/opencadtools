@@ -40,18 +40,17 @@
  */
 package com.iver.cit.gvsig;
 
+import java.io.IOException;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
-
-import java.io.IOException;
 
 
 /**
@@ -60,15 +59,15 @@ import java.io.IOException;
  *
  * @author Vicente Caballero Navarro
  */
-public class RedoViewExtension implements Extension {
+public class RedoViewExtension extends Extension {
 	/**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-	public void inicializar() {
+	public void initialize() {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
 		View vista = (View) PluginServices.getMDIManager().getActiveView();
@@ -100,7 +99,7 @@ public class RedoViewExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
 		View vista = (View) PluginServices.getMDIManager().getActiveView();
@@ -118,7 +117,7 @@ public class RedoViewExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()

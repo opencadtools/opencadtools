@@ -43,16 +43,16 @@ import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 import com.iver.cit.gvsig.project.ProjectView;
 import com.iver.utiles.SimpleFileFilter;
 
-public class SaveAs implements Extension {
+public class SaveAs extends Extension {
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-	public void inicializar() {
+	public void initialize() {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String actionCommand) {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
@@ -288,7 +288,7 @@ public class SaveAs implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
 		View f = (View) PluginServices.getMDIManager().getActiveView();
@@ -300,7 +300,7 @@ public class SaveAs implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()

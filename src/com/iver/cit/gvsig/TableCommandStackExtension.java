@@ -2,31 +2,27 @@ package com.iver.cit.gvsig;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.commands.CommandRecord;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.Table;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.command.CommandStackDialog;
 import com.iver.cit.gvsig.project.ProjectTable;
-import com.iver.cit.gvsig.project.ProjectView;
 
 /**
  * DOCUMENT ME!
  *
  * @author Vicente Caballero Navarro
  */
-public class TableCommandStackExtension implements Extension {
+public class TableCommandStackExtension extends Extension {
 	/**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-	public void inicializar() {
+	public void initialize() {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
@@ -51,14 +47,14 @@ public class TableCommandStackExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
 		return true;
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()

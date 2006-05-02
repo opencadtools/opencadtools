@@ -28,15 +28,15 @@ import com.iver.utiles.SimpleFileFilter;
  * 
  * @author Vicente Caballero Navarro
  */
-public class StopEditingToGT2Shp implements Extension {
+public class StopEditingToGT2Shp extends Extension {
     /**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-    public void inicializar() {
+    public void initialize() {
     }
 
     /**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
     public void execute(String s) {
         com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
@@ -61,7 +61,7 @@ public class StopEditingToGT2Shp implements Extension {
     }
 
     /**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
     public boolean isEnabled() {
         return true;
@@ -120,7 +120,7 @@ public class StopEditingToGT2Shp implements Extension {
 
 
     /**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
     public boolean isVisible() {
         if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)

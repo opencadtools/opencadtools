@@ -59,15 +59,15 @@ import com.iver.cit.gvsig.gui.View;
  *
  * @author Vicente Caballero Navarro
  */
-public class UndoViewExtension implements Extension {
+public class UndoViewExtension extends Extension {
 	/**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-	public void inicializar() {
+	public void initialize() {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
 		View vista = (View) PluginServices.getMDIManager().getActiveView();
@@ -104,7 +104,7 @@ public class UndoViewExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
 		View vista = (View) PluginServices.getMDIManager().getActiveView();
@@ -122,7 +122,7 @@ public class UndoViewExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()

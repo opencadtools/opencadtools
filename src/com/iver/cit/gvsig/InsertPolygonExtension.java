@@ -59,15 +59,15 @@ import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
  *
  * @author Vicente Caballero Navarro
  */
-public class InsertPolygonExtension implements Extension {
+public class InsertPolygonExtension extends Extension {
 	private View view;
 
 	private MapControl mapControl;
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-	public void inicializar() {
+	public void initialize() {
 		PolygonCADTool polygon = new PolygonCADTool();
 		CircleCADTool circle=new CircleCADTool();
         RectangleCADTool rectangle=new RectangleCADTool();
@@ -81,7 +81,7 @@ public class InsertPolygonExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
@@ -101,7 +101,7 @@ public class InsertPolygonExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
 
@@ -124,7 +124,7 @@ public class InsertPolygonExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)

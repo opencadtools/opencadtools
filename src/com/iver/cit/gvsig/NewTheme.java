@@ -3,9 +3,6 @@ package com.iver.cit.gvsig;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
-import jwizardcomponent.example.SimpleLabelWizardPanel;
 
 import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverManager;
@@ -17,26 +14,26 @@ import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
 import com.iver.cit.gvsig.gui.cad.WizardAndami;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
+import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
-import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 
 /**
  * DOCUMENT ME!
  * 
  * @author Vicente Caballero Navarro
  */
-public class NewTheme implements Extension {
+public class NewTheme extends Extension {
 	static ImageIcon LOGO;
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-	public void inicializar() {
+	public void initialize() {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 public void execute(String actionCommand) {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
@@ -117,7 +114,7 @@ public void execute(String actionCommand) {
 		}
 	}
 	/**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
 		View f = (View) PluginServices.getMDIManager().getActiveView();
@@ -129,7 +126,7 @@ public void execute(String actionCommand) {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()

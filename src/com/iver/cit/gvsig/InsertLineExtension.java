@@ -56,15 +56,15 @@ import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
  *
  * @author Vicente Caballero Navarro
  */
-public class InsertLineExtension implements Extension {
+public class InsertLineExtension extends Extension {
 	private View view;
 
 	private MapControl mapControl;
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#inicializar()
+	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
-	public void inicializar() {
+	public void initialize() {
 		LineCADTool line = new LineCADTool();
 		CADExtension.addCADTool("line", line);
 		ArcCADTool arc=new ArcCADTool();
@@ -72,7 +72,7 @@ public class InsertLineExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
@@ -89,7 +89,7 @@ public class InsertLineExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isEnabled()
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
 
@@ -111,7 +111,7 @@ public class InsertLineExtension implements Extension {
 	}
 
 	/**
-	 * @see com.iver.andami.plugins.Extension#isVisible()
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)

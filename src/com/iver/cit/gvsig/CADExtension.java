@@ -72,7 +72,7 @@ import com.iver.utiles.console.ResponseListener;
  *
  * @author Vicente Caballero Navarro
  */
-public class CADExtension implements Extension {
+public class CADExtension extends Extension {
    private static CADToolAdapter adapter=new CADToolAdapter();
    private static EditionManager editionManager = new EditionManager();
    private static HashMap namesCadTools = new HashMap();
@@ -83,9 +83,9 @@ public class CADExtension implements Extension {
 	    return adapter;
    }
    /**
-     * @see com.iver.andami.plugins.Extension#inicializar()
+     * @see com.iver.andami.plugins.IExtension#initialize()
      */
-    public void inicializar() {
+    public void initialize() {
 
         CopyCADTool copy=new CopyCADTool();
 
@@ -103,7 +103,7 @@ public class CADExtension implements Extension {
     }
 
     /**
-     * @see com.iver.andami.plugins.Extension#execute(java.lang.String)
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
      */
     public void execute(String s) {
        initFocus();
@@ -160,14 +160,14 @@ public class CADExtension implements Extension {
     	return adapter.getCadTool();
     }
     /**
-     * @see com.iver.andami.plugins.Extension#isEnabled()
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
      */
     public boolean isEnabled() {
     	return true;
     }
 
     /**
-     * @see com.iver.andami.plugins.Extension#isVisible()
+     * @see com.iver.andami.plugins.IExtension#isVisible()
      */
     public boolean isVisible() {
     	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
