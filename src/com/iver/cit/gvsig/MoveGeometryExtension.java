@@ -58,7 +58,7 @@ public class MoveGeometryExtension extends Extension {
 	 */
 	public void initialize() {
 		MoveCADTool move=new MoveCADTool();
-		CADExtension.addCADTool("move",move);
+		CADExtension.addCADTool("_move",move);
 	}
 
 	/**
@@ -66,8 +66,8 @@ public class MoveGeometryExtension extends Extension {
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
-		 if (s.equals("MOVE")) {
-			 CADExtension.setCADTool("move",true);
+		 if (s.equals("_move")) {
+			 CADExtension.setCADTool("_move",true);
 	        }
 		CADExtension.getEditionManager().setMapControl(mapControl);
 		CADExtension.getCADToolAdapter().configureMenu();

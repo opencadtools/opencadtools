@@ -65,7 +65,7 @@ public class InsertPolyLineExtension extends Extension {
 	 */
 	public void initialize() {
 		PolylineCADTool polyline = new PolylineCADTool();
-		CADExtension.addCADTool("polyline", polyline);
+		CADExtension.addCADTool("_polyline", polyline);
 	}
 
 	/**
@@ -73,8 +73,8 @@ public class InsertPolyLineExtension extends Extension {
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
-		if (s.equals("POLYLINE")) {
-			CADExtension.setCADTool("polyline",true);
+		if (s.equals("_polyline")) {
+			CADExtension.setCADTool("_polyline",true);
 			CADExtension.getEditionManager().setMapControl(mapControl);
 		}
 		CADExtension.getCADToolAdapter().configureMenu();

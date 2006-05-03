@@ -93,10 +93,10 @@ public class CADExtension extends Extension {
         ScaleCADTool scale=new ScaleCADTool();
 
 
-        addCADTool("copy",copy);
+        addCADTool("_copy",copy);
 
-        addCADTool("rotate",rotate);
-        addCADTool("scale",scale);
+        addCADTool("_rotate",rotate);
+        addCADTool("_scale",scale);
 
         KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
@@ -108,37 +108,23 @@ public class CADExtension extends Extension {
     public void execute(String s) {
        initFocus();
 
-        if (s.equals("SPLINE")) {
-        	setCADTool("spline",true);
-        } else if (s.equals("COPY")) {
-        	setCADTool("copy",true);
-        } else if (s.equals("EQUIDISTANCE")) {
-        	setCADTool("equidistance",true);
-        } else if (s.equals("MATRIZ")) {
-        	setCADTool("matriz",true);
-        } else if (s.equals("SYMMETRY")) {
-        	setCADTool("symmetry",true);
-        } else if (s.equals("ROTATION")) {
-        	setCADTool("rotate",true);
-        } else if (s.equals("STRETCHING")) {
-        	setCADTool("stretching",true);
-        } else if (s.equals("SCALE")) {
-        	setCADTool("scale",true);
-        } else if (s.equals("EXTEND")) {
-        	setCADTool("extend",true);
-        } else if (s.equals("TRIM")) {
-        	setCADTool("trim",true);
-        } else if (s.equals("UNIT")) {
-        	setCADTool("unit",true);
-        } else if (s.equals("EXPLOIT")) {
-        	setCADTool("exploit",true);
-        } else if (s.equals("CHAFLAN")) {
-        	setCADTool("chaflan",true);
-        } else if (s.equals("JOIN")) {
-        	setCADTool("join",true);
+        if (s.equals("_spline")||
+        		s.equals("_copy")||
+        		s.equals("_equidistance")||
+        		s.equals("_matriz")||
+        		s.equals("_symmetry")||
+        		s.equals("_rotate")||
+        		s.equals("_stretch")||
+        		s.equals("_scale")||
+        		s.equals("_extend")||
+        		s.equals("_trim")||
+        		s.equals("_unit")||
+        		s.equals("_exploit")||
+        		s.equals("_chaflan")||
+        		s.equals("_join")) {
+        	setCADTool(s,true);
         }
         adapter.configureMenu();
-        //ViewControls.CANCELED=false;
     }
     public static void addCADTool(String name, CADTool c){
 		namesCadTools.put(name, c);

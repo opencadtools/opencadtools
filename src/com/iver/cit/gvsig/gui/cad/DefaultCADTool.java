@@ -291,8 +291,8 @@ public abstract class DefaultCADTool implements CADTool {
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
 	 */
 	public void end() {
-		CADExtension.setCADTool("selection",true);
-		PluginServices.getMainFrame().setSelectedTool("SELCAD");
+		CADExtension.setCADTool("_selection",true);
+		PluginServices.getMainFrame().setSelectedTool("_selection");
 	}
 
 	public void init() {

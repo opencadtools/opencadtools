@@ -58,7 +58,7 @@ public class SelectionGeometryExtension extends Extension {
 	 */
 	public void initialize() {
 		 SelectionCADTool selection=new SelectionCADTool();
-		CADExtension.addCADTool("selection", selection);
+		CADExtension.addCADTool("_selection", selection);
 	}
 
 	/**
@@ -66,8 +66,8 @@ public class SelectionGeometryExtension extends Extension {
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
-		if (s.equals("SELCAD")) {
-        	CADExtension.setCADTool("selection",true);
+		if (s.equals("_selection")) {
+        	CADExtension.setCADTool("_selection",true);
         }
 		CADExtension.getEditionManager().setMapControl(mapControl);
 		CADExtension.getCADToolAdapter().configureMenu();

@@ -66,9 +66,9 @@ public class InsertLineExtension extends Extension {
 	 */
 	public void initialize() {
 		LineCADTool line = new LineCADTool();
-		CADExtension.addCADTool("line", line);
+		CADExtension.addCADTool("_line", line);
 		ArcCADTool arc=new ArcCADTool();
-		CADExtension.addCADTool("arc", arc);
+		CADExtension.addCADTool("_arc", arc);
 	}
 
 	/**
@@ -76,13 +76,9 @@ public class InsertLineExtension extends Extension {
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
-		//mapControl.addMapTool("cadtooladapter",CADExtension.getCADToolAdapter());
-		//mapControl.setTool("cadtooladapter");
-		if (s.equals("LINE")) {
-			CADExtension.setCADTool("line",true);
-			CADExtension.getEditionManager().setMapControl(mapControl);
-		} else if (s.equals("ARC")) {
-        	CADExtension.setCADTool("arc",true);
+		if (s.equals("_line")||
+				s.equals("_arc")) {
+        	CADExtension.setCADTool(s,true);
         	CADExtension.getEditionManager().setMapControl(mapControl);
         }
 		CADExtension.getCADToolAdapter().configureMenu();

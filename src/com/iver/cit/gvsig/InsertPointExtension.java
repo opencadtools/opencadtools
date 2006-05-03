@@ -63,7 +63,7 @@ public class InsertPointExtension extends Extension {
      */
     public void initialize() {
         PointCADTool point = new PointCADTool();
-        CADExtension.addCADTool("point", point);
+        CADExtension.addCADTool("_point", point);
     }
 
     /**
@@ -72,8 +72,8 @@ public class InsertPointExtension extends Extension {
     public void execute(String s) {
     	CADExtension.initFocus();
 
-        if (s.equals("POINT")) {
-        	CADExtension.setCADTool("point",true);
+        if (s.equals("_point")) {
+        	CADExtension.setCADTool("_point",true);
         	CADExtension.getEditionManager().setMapControl(mapControl);
         }
         CADExtension.getCADToolAdapter().configureMenu();

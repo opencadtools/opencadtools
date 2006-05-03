@@ -73,11 +73,11 @@ public class InsertPolygonExtension extends Extension {
         RectangleCADTool rectangle=new RectangleCADTool();
         EllipseCADTool ellipse=new EllipseCADTool();
         EditVertexCADTool editvertex=new EditVertexCADTool();
-		CADExtension.addCADTool("polygon", polygon);
-		CADExtension.addCADTool("circle",circle);
-	    CADExtension.addCADTool("rectangle", rectangle);
-	    CADExtension.addCADTool("ellipse", ellipse);
-	    CADExtension.addCADTool("editvertex",editvertex);
+		CADExtension.addCADTool("_polygon", polygon);
+		CADExtension.addCADTool("_circle",circle);
+	    CADExtension.addCADTool("_rectangle", rectangle);
+	    CADExtension.addCADTool("_ellipse", ellipse);
+	    CADExtension.addCADTool("_editvertex",editvertex);
 	}
 
 	/**
@@ -85,16 +85,12 @@ public class InsertPolygonExtension extends Extension {
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
-		if (s.equals("POLYGON")) {
-			CADExtension.setCADTool("polygon",true);
-		}else if (s.equals("CIRCLE")) {
-			CADExtension.setCADTool("circle",true);
-        } else if (s.equals("ELLIPSE")) {
-        	CADExtension.setCADTool("ellipse",true);
-        }else if (s.equals("RECTANGLE")) {
-        	CADExtension.setCADTool("rectangle",true);
-        }else if (s.equals("EDITVERTEX")) {
-        	CADExtension.setCADTool("editvertex",true);
+		if (s.equals("_polygon")||
+				s.equals("_circle")||
+				s.equals("_ellipse")||
+				s.equals("_rectangle")||
+				s.equals("_editvertex")) {
+        	CADExtension.setCADTool(s,true);
         }
 		CADExtension.getEditionManager().setMapControl(mapControl);
 		CADExtension.getCADToolAdapter().configureMenu();
