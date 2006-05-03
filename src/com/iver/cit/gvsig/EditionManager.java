@@ -3,6 +3,7 @@ package com.iver.cit.gvsig;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.AtomicEvent;
 import com.iver.cit.gvsig.fmap.AtomicEventListener;
 import com.iver.cit.gvsig.fmap.MapControl;
@@ -29,7 +30,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * Lo principal es una colección de LayerEdited, y cada
  * LayerEdited es un wrapper alrededor de un tema que guarda
  * las propiedades de la edición.
- * 
+ *
  * Nuevo: Llevar aquí el control de las tablas en edición también
  * y centralizar los listeners interesados en los eventos de edición.
  *
@@ -40,8 +41,10 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 public class EditionManager implements LayerListener {
 	private ArrayList editedLayers = new ArrayList();
 	private ArrayList editedTables = new ArrayList();
-	private ILayerEdited activeLayerEdited = null;
+	//private ArrayList activeLayerEdited = new ArrayList();
 	private MapControl mapCtrl = null;
+	private ILayerEdited ile=null;
+	//private int idActiveLayer=0;
 
 
 	/**
@@ -64,27 +67,31 @@ public class EditionManager implements LayerListener {
 	}
 
 	public void activationChanged(LayerEvent e) {
-		// Aquí controlamos que solo exista un tema activo y en edición
-		// a la vez. Recorremos los temas en edición, y dejamos el primero que encontremos
-		// activado, mientras el resto los desactivamos.
-//		ILayerEdited aux = null;
-//		boolean bFirst = true;
-//		mapCtrl.getMapContext().beginAtomicEvent();
-//		for (int i=0; i < editedLayers.size(); i++)
-//		{
-//			aux = (ILayerEdited) editedLayers.get(i);
-//			if (aux.getLayer().isActive())
-//			{
-//				if (!bFirst)
-//					aux.getLayer().setActive(false);
-//				else
-//					activeLayerEdited = aux;
-//				bFirst = false;
-//			}
-//		}
-//		mapCtrl.getMapContext().endAtomicEvent();
-		if (e.getSource() instanceof FLyrVect){
-			activeLayerEdited=new VectorialLayerEdited(e.getSource());
+
+		if (ile!=null) {
+			VectorialLayerEdited lastVLE = (VectorialLayerEdited)ile;
+			lastVLE.activationLost(e);
+		}
+		if (e.getSource() instanceof FLyrVect) {
+			VectorialLayerEdited vle = null;
+			vle=(VectorialLayerEdited)getLayerEdited(e.getSource());
+			// for (int i = 0; i < editedLayers.size(); i++) {
+			// vle = (VectorialLayerEdited) editedLayers.get(i);
+			// if (vle.getLayer().equals(e.getSource())) {
+					// idActiveLayer = i;
+			ile=vle;
+			if (getMapControl()!=null && vle!=null){
+				getMapControl().setTool("cadtooladapter");
+				vle.activationGained(e);
+				return;
+			}
+		}
+		// }
+		// idActiveLayer=-1;
+		//ile=null;
+		if (getMapControl()!=null){
+			getMapControl().setTool("zoomIn");
+			PluginServices.getMainFrame().setSelectedTool("ZOOM_IN");
 		}
 	}
 
@@ -101,24 +108,41 @@ public class EditionManager implements LayerListener {
 		{
 			lyrEdit = FactoryLayerEdited.createLayerEdited(e.getSource());
 			editedLayers.add(lyrEdit);
+			if (getMapControl()!=null){
+				getMapControl().setTool("cadtooladapter");
+				CADExtension.setCADTool("_selection",true);
+			}
+			PluginServices.getMainFrame().setSelectedTool("_selection");
+			//idActiveLayer = editedLayers.size() - 1;
+			ile=getLayerEdited(e.getSource());
 			System.out.println("NUEVA CAPA EN EDICION: " + lyrEdit.getLayer().getName());
-			activationChanged(e);
-			
+			//activationChanged(e);
+
 			// Ponemos el resto de temas desactivados
 			if (mapCtrl != null)
 				mapCtrl.getMapContext().getLayers().setActive(false);
 			// y activamos el nuevo.
 			e.getSource().setActive(true);
-			
+
+		}else{
+			for (int i = 0; i < editedLayers.size(); i++) {
+				VectorialLayerEdited vle = (VectorialLayerEdited) editedLayers.get(i);
+				if (vle.equals(lyrEdit)) {
+					editedLayers.remove(i);
+					ile=null;
+					//idActiveLayer=-1;
+					return;
+				}
+			}
 		}
-		
+
 	}
 
 	/**
 	 * @return Returns the activeLayerEdited. Null if there isn't any active AND edited
 	 */
 	public ILayerEdited getActiveLayerEdited() {
-		return activeLayerEdited;
+		return ile;
 	}
 
 	/**
