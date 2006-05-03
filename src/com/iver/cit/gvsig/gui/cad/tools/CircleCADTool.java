@@ -45,8 +45,6 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
-import statemap.TransitionUndefinedException;
-
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
