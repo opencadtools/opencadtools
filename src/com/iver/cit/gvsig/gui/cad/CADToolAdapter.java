@@ -25,6 +25,7 @@ import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.tools.BehaviorException;
@@ -39,6 +40,12 @@ import com.vividsolutions.jts.index.SpatialIndex;
 
 public class CADToolAdapter extends Behavior {
 	public static int MAX_ENTITIES_IN_SPATIAL_CACHE = 5000;
+	public static final int ABSOLUTE=0;
+	public static final int RELATIVE_SCP=1;
+	public static final int RELATIVE_SCU=2;
+	public static final int POLAR_SCP=3;
+	public static final int POLAR_SCU=4;
+	private double[] previousPoint=null;
 
 	private Stack cadToolStack = new Stack();
 
@@ -123,7 +130,7 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				p = vp.toMapPoint(adjustedPoint);
 			}
-			transition(new double[] { p.getX(), p.getY() }, e);
+			transition(new double[] { p.getX(), p.getY() }, e,ABSOLUTE);
 		}
 	}
 
@@ -388,8 +395,33 @@ public class CADToolAdapter extends Behavior {
 			 * if ("".equals(text)) { transition("aceptar"); } else {
 			 */
 			text = text.trim();
+			int type=ABSOLUTE;
+			String[] numbers=null;
+			if (text.indexOf(",")!=-1){
 
-			String[] numbers = text.split(",");
+				numbers = text.split(",");
+				if (numbers[0].substring(0,1).equals("@")){
+					numbers[0]=numbers[0].substring(1,numbers[0].length());
+					type=RELATIVE_SCU;
+					if (numbers[0].substring(0,1).equals("*")){
+						type=RELATIVE_SCP;
+						numbers[0]=numbers[0].substring(1,numbers[0].length());
+					}
+				}
+			}else if (text.indexOf("<")!=-1){
+				type=POLAR_SCP;
+				numbers = text.split("<");
+				if (numbers[0].substring(0,1).equals("@")){
+					numbers[0]=numbers[0].substring(1,numbers[0].length());
+					type=POLAR_SCU;
+					if (numbers[0].substring(0,1).equals("*")){
+						type=POLAR_SCP;
+						numbers[0]=numbers[0].substring(1,numbers[0].length());
+					}
+				}
+			}
+
+
 			double[] values = null;
 
 			try {
@@ -397,7 +429,7 @@ public class CADToolAdapter extends Behavior {
 					// punto
 					values = new double[] { Double.parseDouble(numbers[0]),
 							Double.parseDouble(numbers[1]) };
-					transition(values, null);
+					transition(values, null,type);
 				} else if (numbers.length == 1) {
 					// valor
 					values = new double[] { Double.parseDouble(numbers[0]) };
@@ -438,44 +470,69 @@ public class CADToolAdapter extends Behavior {
 	 * @param values
 	 * @param event
 	 */
-	private void transition(double[] values, InputEvent event) {
+	private void transition(double[] values, InputEvent event,int type) {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()) {
 			CADTool ct = (CADTool) cadToolStack.peek();
-			// /String[] trs = ct.getAutomaton().getCurrentTransitions();
-			boolean esta = true;
-			/*
-			 * for (int i = 0; i < trs.length; i++) { if
-			 * (trs[i].toUpperCase().equals(text.toUpperCase())) esta = true; }
-			 */
-			if (!esta) {
-				askQuestion();
-			} else {
-				ct.transition(values[0], values[1], event);
-				// Si es la transición que finaliza una geometria hay que
-				// redibujar la vista.
 
-				askQuestion();
-				/*
-				 * if ((ret & Automaton.AUTOMATON_FINISHED) ==
-				 * Automaton.AUTOMATON_FINISHED) { popCadTool();
-				 *
-				 * if (cadToolStack.isEmpty()) { pushCadTool(new
-				 * com.iver.cit.gvsig.gui.cad.smc.gen.CADTool());//new
-				 * SelectionCadTool());
-				 * PluginServices.getMainFrame().setSelectedTool("selection"); }
-				 *
-				 * askQuestion();
-				 *
-				 * getMapControl().drawMap(false); } else { if (((CadTool)
-				 * cadToolStack.peek()).getAutomaton().checkState('c')) {
-				 * getMapControl().drawMap(false); }
-				 *
-				 * if (!questionAsked) { askQuestion(); } }
-				 *
-				 * configureMenu();
-				 */
+			switch (type) {
+			case ABSOLUTE:
+				ct.transition(values[0], values[1], event);
+				previousPoint=values;
+				break;
+			case RELATIVE_SCU:
+				//Comprobar que tenemos almacenado el punto anterior
+				//y crear nuevo con coordenadas relativas a él.
+				double[] auxSCU=values;
+				if (previousPoint!=null){
+					auxSCU[0]=previousPoint[0]+values[0];
+					auxSCU[1]=previousPoint[1]+values[1];
+				}
+				ct.transition(auxSCU[0], auxSCU[1], event);
+
+				previousPoint=auxSCU;
+				break;
+			case RELATIVE_SCP:
+				//TODO de momento no implementado.
+				ct.transition(values[0], values[1], event);
+				previousPoint=values;
+				break;
+			case POLAR_SCU:
+				//Comprobar que tenemos almacenado el punto anterior
+				//y crear nuevo con coordenadas relativas a él.
+				double[] auxPolarSCU=values;
+				if (previousPoint!=null){
+					Point2D point=UtilFunctions.getPoint(new Point2D.Double(previousPoint[0],previousPoint[1]),values[1],values[0]);
+					auxPolarSCU[0]=point.getX();
+					auxPolarSCU[1]=point.getY();
+					ct.transition(auxPolarSCU[0], auxPolarSCU[1], event);
+				}else{
+					Point2D point=UtilFunctions.getPoint(new Point2D.Double(0,0),values[1],values[0]);
+					auxPolarSCU[0]=point.getX();
+					auxPolarSCU[1]=point.getY();
+					ct.transition(auxPolarSCU[0], auxPolarSCU[1], event);
+				}
+				previousPoint=auxPolarSCU;
+				break;
+			case POLAR_SCP:
+				double[] auxPolarSCP=values;
+				if (previousPoint!=null){
+					Point2D point=UtilFunctions.getPoint(new Point2D.Double(previousPoint[0],previousPoint[1]),values[1],values[0]);
+					auxPolarSCP[0]=point.getX();
+					auxPolarSCP[1]=point.getY();
+					ct.transition(auxPolarSCP[0], auxPolarSCP[1], event);
+				}else{
+					Point2D point=UtilFunctions.getPoint(new Point2D.Double(0,0),values[1],values[0]);
+					auxPolarSCP[0]=point.getX();
+					auxPolarSCP[1]=point.getY();
+					ct.transition(auxPolarSCP[0], auxPolarSCP[1], event);
+				}
+				previousPoint=auxPolarSCP;
+				break;
+			default:
+				break;
 			}
+			askQuestion();
 		}
 		configureMenu();
 		PluginServices.getMainFrame().enableControls();
@@ -774,7 +831,7 @@ public class CADToolAdapter extends Behavior {
 				pushCadTool(selCad);
 				// getVectorialAdapter().getSelection().clear();
 				getMapControl().drawMap(false);
-				PluginServices.getMainFrame().setSelectedTool("SELCAD");
+				PluginServices.getMainFrame().setSelectedTool("_selection");
 				//askQuestion();
 			}else{
 				getMapControl().setPrevTool();
