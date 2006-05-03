@@ -7,7 +7,12 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 
+import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.AtomicEvent;
+import com.iver.cit.gvsig.fmap.AtomicEventListener;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
@@ -26,6 +31,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawingListener;
+import com.iver.cit.gvsig.fmap.layers.LayerEvent;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
@@ -36,6 +42,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	private ArrayList selectedRow = new ArrayList();
 	private Point2D lastPoint;
 	private Point2D firstPoint;
+	private CADTool cadtool=null;
 
 	public VectorialLayerEdited(FLayer lyr)
 	{
@@ -350,7 +357,10 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		return getVEA().getHandlersImage();
 	}
 	public VectorialEditableAdapter getVEA(){
-		return (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
+		if (((FLyrVect)getLayer()).getSource() instanceof VectorialEditableAdapter)
+			return (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
+		else
+			return null;
 	}
 
 	public void beforeLayerDraw(LayerDrawEvent e) throws CancelationException {
@@ -396,5 +406,23 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		Geometry geometry2=g2.toJTSGeometry();
 		if (geometry1==null || geometry2==null)return false;
 		return geometry1.intersects(geometry2);
+	}
+
+	public void activationGained(LayerEvent e) {
+
+		if (cadtool!=null){
+			CADExtension.getCADToolAdapter().setCadTool(cadtool);
+			PluginServices.getMainFrame().setSelectedTool(cadtool.toString());
+		}
+	}
+
+	public void activationLost(LayerEvent e) {
+		try{
+			cadtool=CADExtension.getCADTool();
+		}catch (EmptyStackException e1) {
+			cadtool=new SelectionCADTool();
+			cadtool.init();
+		}
+
 	}
 }
