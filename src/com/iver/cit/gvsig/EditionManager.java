@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.iver.andami.PluginServices;
-import com.iver.cit.gvsig.fmap.AtomicEvent;
-import com.iver.cit.gvsig.fmap.AtomicEventListener;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
@@ -123,7 +122,13 @@ public class EditionManager implements LayerListener {
 				mapCtrl.getMapContext().getLayers().setActive(false);
 			// y activamos el nuevo.
 			e.getSource().setActive(true);
-
+			
+			if (e.getSource() instanceof FLyrVect){
+				FLyrVect fLyrVect = (FLyrVect)e.getSource();
+				VectorialEditableAdapter vea = 
+					(VectorialEditableAdapter)fLyrVect.getSource();
+				vea.addEditionListener(new EditionChangeManager(lyrEdit.getLayer()));	
+			}
 		}else{
 			for (int i = 0; i < editedLayers.size(); i++) {
 				VectorialLayerEdited vle = (VectorialLayerEdited) editedLayers.get(i);
@@ -135,6 +140,8 @@ public class EditionManager implements LayerListener {
 				}
 			}
 		}
+		
+		
 
 	}
 

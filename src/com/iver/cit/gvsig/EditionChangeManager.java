@@ -1,0 +1,112 @@
+package com.iver.cit.gvsig;
+
+import com.iver.andami.PluginServices;
+import com.iver.andami.ui.mdiManager.View;
+import com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent;
+import com.iver.cit.gvsig.fmap.edition.BeforeRowEditEvent;
+import com.iver.cit.gvsig.fmap.edition.EditionEvent;
+import com.iver.cit.gvsig.fmap.edition.IEditionListener;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.gui.Table;
+
+/* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
+ *
+ * Copyright (C) 2004 IVER T.I. and Generalitat Valenciana.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ *
+ * For more information, contact:
+ *
+ *  Generalitat Valenciana
+ *   Conselleria d'Infraestructures i Transport
+ *   Av. Blasco Ibáñez, 50
+ *   46010 VALENCIA
+ *   SPAIN
+ *
+ *      +34 963862235
+ *   gvsig@gva.es
+ *      www.gvsig.gva.es
+ *
+ *    or
+ *
+ *   IVER T.I. S.A
+ *   Salamanca 50
+ *   46005 Valencia
+ *   Spain
+ *
+ *   +34 963163400
+ *   dac@iver.es
+ */
+/* CVS MESSAGES:
+ *
+ * $Id$
+ * $Log$
+ * Revision 1.1  2006-05-05 09:06:09  jorpiell
+ * Se a añadido la clase EditionChangeManager, que no es más que un listener que se ejecuta cuando se produce un evento de edición.
+ *
+ *
+ */
+/**
+ * Cuando un tema se pone en edición se le debe asociar
+ * un listener de este tipo, que se dispará cuando se produzca
+ * un evento de edición (borrado, modificación,... sobre la capa.
+ * 
+ * @author Jorge Piera Llodrá (piera_jor@gva.es)
+ */
+public class EditionChangeManager implements IEditionListener{
+	private FLayer fLayer = null;
+	
+	/**
+	 * Constructor
+	 * @param fLayer
+	 * Tema que se está editando
+	 */
+	public EditionChangeManager(FLayer fLayer){
+		this.fLayer = fLayer;
+	}
+	/*
+	 *  (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#processEvent(com.iver.cit.gvsig.fmap.edition.EditionEvent)
+	 */
+	public void processEvent(EditionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/*
+	 *  (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#beforeRowEditEvent(com.iver.cit.gvsig.fmap.edition.BeforeRowEditEvent)
+	 */
+	public void beforeRowEditEvent(BeforeRowEditEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/*
+	 *  (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#afterRowEditEvent(com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent)
+	 */
+	public void afterRowEditEvent(AfterRowEditEvent e) {
+		View[] views = (View[]) PluginServices.getMDIManager().getAllViews();
+
+		for (int i=0 ; i<views.length ; i++){
+			if (views[i] instanceof Table){
+				((Table)views[i]).refresh();				
+			}
+		}
+		
+	}
+
+}
