@@ -1,13 +1,14 @@
 package com.iver.cit.gvsig;
 
+import java.io.IOException;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.FMap;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
-import com.iver.cit.gvsig.project.ProjectView;
 
 /**
  * DOCUMENT ME!
@@ -29,30 +30,40 @@ public class EditingExtension extends Extension {
 				.getActiveView();
 
 		View vista = (View) f;
-		ProjectView model = vista.getModel();
-		FMap mapa = model.getMapContext();
-		FLayers layers = mapa.getLayers();
 		if (s.equals("CANCELEDITING")) {
 			EditionManager editionManager = CADExtension.getEditionManager();
-
-			for (int i = 0; i < layers.getLayersCount(); i++) {
-				vista.hideConsole();
-				if (layers.getLayer(i) instanceof FLyrVect
-						&& layers.getLayer(i).isEditing()) {
-					FLyrVect lv = (FLyrVect) layers.getLayer(i);
-					// stopEditing(lv);
-					// VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) layers
-					// 		.getLayer(i)).getSource();
-					// lv.setSource(vea.getOriginalAdapter());
-					VectorialLayerEdited lyrEdited = (VectorialLayerEdited) editionManager.getLayerEdited(lv);
-					lyrEdited.clearSelection();
-					lv.setEditing(false);
-					vista.getMapControl().setTool("zoomIn");
-					return;
+			VectorialLayerEdited vle = (VectorialLayerEdited) editionManager
+					.getActiveLayerEdited();
+			FLyrVect lv = (FLyrVect) vle.getLayer();
+			com.iver.andami.ui.mdiManager.View[] views = PluginServices
+				.getMDIManager().getAllViews();
+			for (int j = 0; j < views.length; j++) {
+				if (views[j] instanceof Table) {
+					Table table = (Table) views[j];
+					if (table.getModel().getAssociatedTable().equals(lv)) {
+						try {
+							table.cancelEditing();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}else if(views[j] instanceof View){
+					View view=(View)views[j];
+					FLyrVect layer=(FLyrVect)view.getMapControl().getMapContext().getLayers().getActives()[0];
+					if (layer.equals(lv)){
+						view.hideConsole();
+					}
 				}
 			}
+			vle.clearSelection();
+			lv.setEditing(false);
+
+			vista.getMapControl().setTool("zoomIn");
+
+
 		} else if (s.equals("SHOWGRID")) {
-			CADExtension.getCADToolAdapter().setMapControl(vista.getMapControl());
+			CADExtension.getCADToolAdapter().setMapControl(
+					vista.getMapControl());
 			CADExtension.getCADToolAdapter().setGrid(true);
 		} else if (s.equals("HIDEGRID")) {
 			CADExtension.getCADToolAdapter().setMapControl(vista.getMapControl());
