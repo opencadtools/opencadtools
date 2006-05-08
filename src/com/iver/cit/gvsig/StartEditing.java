@@ -32,6 +32,7 @@ public class StartEditing extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String actionCommand) {
+		CADExtension.initFocus();
 		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
 				.getActiveView();
 
@@ -49,6 +50,7 @@ public class StartEditing extends Extension {
 			vista.getConsolePanel().setTokenMarker(consoletoken);
 			vista.showConsole();
 			MapControl mapControl = (MapControl) vista.getMapControl();
+			CADExtension.getEditionManager().setMapControl(mapControl);
 			ProjectView model = vista.getModel();
 			FMap mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
