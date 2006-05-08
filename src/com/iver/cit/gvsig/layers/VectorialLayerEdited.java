@@ -11,18 +11,17 @@ import java.util.EmptyStackException;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.fmap.AtomicEvent;
-import com.iver.cit.gvsig.fmap.AtomicEventListener;
+import com.iver.cit.gvsig.ViewCommandStackExtension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.CancelationException;
@@ -409,6 +408,25 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	}
 
 	public void activationGained(LayerEvent e) {
+		if (ViewCommandStackExtension.csd!=null){
+//			com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+//					.getActiveView();
+
+//			View vista = (View) f;
+//			ProjectView model = vista.getModel();
+//			FMap mapa = model.getMapContext();
+//			FLayers layers = mapa.getLayers();
+//			for (int i = 0; i < layers.getLayersCount(); i++) {
+//				if (layers.getLayer(i) instanceof FLyrVect) {
+//					FLyrVect lyrVect = (FLyrVect) layers.getLayer(i);
+//					if (lyrVect.isEditing() && lyrVect.isActive() && lyrVect.getSource() instanceof IEditableSource) {
+						ViewCommandStackExtension.csd.setModel(((IEditableSource) ((FLyrVect)getLayer()).getSource())
+								.getCommandRecord());
+
+//					}
+//				}
+//			}
+		}
 
 		if (cadtool!=null){
 			CADExtension.getCADToolAdapter().setCadTool(cadtool);

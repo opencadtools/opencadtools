@@ -16,7 +16,7 @@ import com.iver.cit.gvsig.project.ProjectView;
  * @author Vicente Caballero Navarro
  */
 public class ViewCommandStackExtension extends Extension {
-	private CommandStackDialog csd=null;
+	public static CommandStackDialog csd=null;
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
@@ -55,25 +55,7 @@ public class ViewCommandStackExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		if (csd!=null){
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
-				.getActiveView();
-
-		View vista = (View) f;
-		ProjectView model = vista.getModel();
-		FMap mapa = model.getMapContext();
-		FLayers layers = mapa.getLayers();
-		for (int i = 0; i < layers.getLayersCount(); i++) {
-			if (layers.getLayer(i) instanceof FLyrVect) {
-				FLyrVect lyrVect = (FLyrVect) layers.getLayer(i);
-				if (lyrVect.isEditing() && lyrVect.isActive() && lyrVect.getSource() instanceof IEditableSource) {
-					csd.setModel(((IEditableSource) lyrVect.getSource())
-							.getCommandRecord());
-
-				}
-			}
-		}
-		}
+		
 		return true;
 	}
 
