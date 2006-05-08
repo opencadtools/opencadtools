@@ -437,6 +437,8 @@ public class CADToolAdapter extends Behavior {
 				}
 			} catch (NumberFormatException e) {
 				transition(text);
+			} catch (NullPointerException e) {
+				transition(text);
 			}
 			// }
 		}
@@ -502,12 +504,12 @@ public class CADToolAdapter extends Behavior {
 				//y crear nuevo con coordenadas relativas a él.
 				double[] auxPolarSCU=values;
 				if (previousPoint!=null){
-					Point2D point=UtilFunctions.getPoint(new Point2D.Double(previousPoint[0],previousPoint[1]),values[1],values[0]);
+					Point2D point=UtilFunctions.getPoint(new Point2D.Double(previousPoint[0],previousPoint[1]),Math.toRadians(values[1]),values[0]);
 					auxPolarSCU[0]=point.getX();
 					auxPolarSCU[1]=point.getY();
 					ct.transition(auxPolarSCU[0], auxPolarSCU[1], event);
 				}else{
-					Point2D point=UtilFunctions.getPoint(new Point2D.Double(0,0),values[1],values[0]);
+					Point2D point=UtilFunctions.getPoint(new Point2D.Double(0,0),Math.toRadians(values[1]),values[0]);
 					auxPolarSCU[0]=point.getX();
 					auxPolarSCU[1]=point.getY();
 					ct.transition(auxPolarSCU[0], auxPolarSCU[1], event);
