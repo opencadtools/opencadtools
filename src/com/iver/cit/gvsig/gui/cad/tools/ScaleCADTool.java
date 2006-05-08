@@ -126,9 +126,9 @@ public class ScaleCADTool extends DefaultCADTool {
     public void selection() {
         ArrayList rowSelected=getSelectedRows();
         if (rowSelected.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
-            CADExtension.setCADTool("selection",false);
+            CADExtension.setCADTool("_selection",false);
             ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
-                "scale");
+                "_scale");
         }
     }
 

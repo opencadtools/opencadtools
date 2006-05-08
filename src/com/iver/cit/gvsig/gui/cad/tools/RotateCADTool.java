@@ -117,9 +117,9 @@ public class RotateCADTool extends DefaultCADTool {
     public void selection() {
        ArrayList selectedRows=getSelectedRows();
         if (selectedRows.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
-            CADExtension.setCADTool("selection",false);
+            CADExtension.setCADTool("_selection",false);
             ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
-                "rotate");
+                "_rotate");
         }
     }
 

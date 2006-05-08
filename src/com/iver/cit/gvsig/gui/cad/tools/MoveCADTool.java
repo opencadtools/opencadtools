@@ -116,9 +116,9 @@ public class MoveCADTool extends DefaultCADTool {
     public void selection() {
     	ArrayList selectedRow=getSelectedRows();
         if (selectedRow.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
-            CADExtension.setCADTool("selection",false);
+            CADExtension.setCADTool("_selection",false);
             ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
-                "move");
+                "_move");
         }
     }
 
