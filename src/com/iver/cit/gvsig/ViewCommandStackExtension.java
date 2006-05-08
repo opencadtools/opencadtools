@@ -66,7 +66,7 @@ public class ViewCommandStackExtension extends Extension {
 		for (int i = 0; i < layers.getLayersCount(); i++) {
 			if (layers.getLayer(i) instanceof FLyrVect) {
 				FLyrVect lyrVect = (FLyrVect) layers.getLayer(i);
-				if (lyrVect.isEditing() && lyrVect.isActive()) {
+				if (lyrVect.isEditing() && lyrVect.isActive() && lyrVect.getSource() instanceof IEditableSource) {
 					csd.setModel(((IEditableSource) lyrVect.getSource())
 							.getCommandRecord());
 
