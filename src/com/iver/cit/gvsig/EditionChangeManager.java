@@ -7,6 +7,7 @@ import com.iver.cit.gvsig.fmap.edition.BeforeRowEditEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IEditionListener;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.gui.Table;
 
 /* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
@@ -53,7 +54,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.1  2006-05-05 09:06:09  jorpiell
+ * Revision 1.2  2006-05-09 09:26:04  caballero
+ * refrescar las vistas y tablas
+ *
+ * Revision 1.1  2006/05/05 09:06:09  jorpiell
  * Se a añadido la clase EditionChangeManager, que no es más que un listener que se ejecuta cuando se produce un evento de edición.
  *
  *
@@ -62,12 +66,12 @@ import com.iver.cit.gvsig.gui.Table;
  * Cuando un tema se pone en edición se le debe asociar
  * un listener de este tipo, que se dispará cuando se produzca
  * un evento de edición (borrado, modificación,... sobre la capa.
- * 
+ *
  * @author Jorge Piera Llodrá (piera_jor@gva.es)
  */
 public class EditionChangeManager implements IEditionListener{
 	private FLayer fLayer = null;
-	
+
 	/**
 	 * Constructor
 	 * @param fLayer
@@ -82,7 +86,7 @@ public class EditionChangeManager implements IEditionListener{
 	 */
 	public void processEvent(EditionEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/*
@@ -91,7 +95,7 @@ public class EditionChangeManager implements IEditionListener{
 	 */
 	public void beforeRowEditEvent(BeforeRowEditEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/*
@@ -103,10 +107,20 @@ public class EditionChangeManager implements IEditionListener{
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){
-				((Table)views[i]).refresh();				
+				Table table=(Table)views[i];
+				if (table.getModel().getAssociatedTable().equals(fLayer))
+					table.refresh();
+			}else if (views[i] instanceof com.iver.cit.gvsig.gui.View){
+				com.iver.cit.gvsig.gui.View view=(com.iver.cit.gvsig.gui.View)views[i];
+				FLayers layers=view.getMapControl().getMapContext().getLayers();
+				for (int j=0;j<layers.getLayersCount();j++){
+					if (layers.getLayer(j).equals(fLayer)){
+						view.repaintMap();
+					}
+				}
 			}
 		}
-		
+
 	}
 
 }
