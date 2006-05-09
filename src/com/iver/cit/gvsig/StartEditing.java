@@ -1,5 +1,6 @@
 package com.iver.cit.gvsig;
 
+import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
@@ -8,9 +9,11 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
+import com.iver.cit.gvsig.project.ProjectFactory;
 import com.iver.cit.gvsig.project.ProjectTable;
 import com.iver.cit.gvsig.project.ProjectView;
 import com.iver.utiles.console.jedit.KeywordMap;
@@ -50,11 +53,12 @@ public class StartEditing extends Extension {
 			vista.getConsolePanel().setTokenMarker(consoletoken);
 			vista.showConsole();
 			MapControl mapControl = (MapControl) vista.getMapControl();
-			CADExtension.getEditionManager().setMapControl(mapControl);
+			EditionManager editionManager=CADExtension.getEditionManager();
+			editionManager.setMapControl(mapControl);
+
 			ProjectView model = vista.getModel();
 			FMap mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
-
 			for (int i = 0; i < layers.getLayersCount(); i++) {
 				if (layers.getLayer(i) instanceof FLyrVect
 						&& layers.getLayer(i).isActive()) {
@@ -78,9 +82,10 @@ public class StartEditing extends Extension {
 					ProjectExtension pe = (ProjectExtension) PluginServices
 							.getExtension(ProjectExtension.class);
 					ProjectTable pt = pe.getProject().getTable(lv);
-					if (pt != null)
+					if (pt != null){
 						pt.setModel(vea);
-
+						changeModelTable(pt);
+					}
 					return;
 				}
 			}
@@ -104,7 +109,19 @@ public class StartEditing extends Extension {
 			// vista.getMapControl().drawMap(false);
 		}
 	}
+	 private void changeModelTable(ProjectTable pt){
+    	 com.iver.andami.ui.mdiManager.View[] views = (com.iver.andami.ui.mdiManager.View[]) PluginServices.getMDIManager().getAllViews();
 
+ 		for (int i=0 ; i<views.length ; i++){
+ 			if (views[i] instanceof Table){
+ 				Table table=(Table)views[i];
+ 				ProjectTable model =table.getModel();
+ 				if (model.equals(pt)){
+ 						table.setModel(pt);
+ 				}
+ 			}
+ 		}
+    }
 	/**
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
