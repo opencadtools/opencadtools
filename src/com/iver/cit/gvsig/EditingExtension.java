@@ -40,7 +40,7 @@ public class EditingExtension extends Extension {
 			for (int j = 0; j < views.length; j++) {
 				if (views[j] instanceof Table) {
 					Table table = (Table) views[j];
-					if (table.getModel().getAssociatedTable().equals(lv)) {
+					if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(lv)) {
 						try {
 							table.cancelEditing();
 						} catch (IOException e) {
