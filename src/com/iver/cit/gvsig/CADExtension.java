@@ -66,119 +66,129 @@ import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.utiles.console.JConsole;
 import com.iver.utiles.console.ResponseListener;
+
 /**
- * Extensión dedicada a controlar las diferentes operaciones sobre el editado
- * de una capa.
+ * Extensión dedicada a controlar las diferentes operaciones sobre el editado de
+ * una capa.
  *
  * @author Vicente Caballero Navarro
  */
 public class CADExtension extends Extension {
-   private static CADToolAdapter adapter=new CADToolAdapter();
-   private static EditionManager editionManager = new EditionManager();
-   private static HashMap namesCadTools = new HashMap();
-   ///private MapControl mapControl;
-   private static View view;
-   private MapControl mapControl;
-   public static CADToolAdapter getCADToolAdapter(){
-	    return adapter;
-   }
-   /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
-    public void initialize() {
+	private static CADToolAdapter adapter = new CADToolAdapter();
 
-        CopyCADTool copy=new CopyCADTool();
+	private static EditionManager editionManager = new EditionManager();
 
-        RotateCADTool rotate=new RotateCADTool();
-        ScaleCADTool scale=new ScaleCADTool();
+	private static HashMap namesCadTools = new HashMap();
 
+	// /private MapControl mapControl;
+	private static View view;
 
-        addCADTool("_copy",copy);
+	private MapControl mapControl;
 
-        addCADTool("_rotate",rotate);
-        addCADTool("_scale",scale);
+	public static CADToolAdapter getCADToolAdapter() {
+		return adapter;
+	}
 
-        KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
-    }
+	/**
+	 * @see com.iver.andami.plugins.IExtension#initialize()
+	 */
+	public void initialize() {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-     */
-    public void execute(String s) {
-       initFocus();
+		CopyCADTool copy = new CopyCADTool();
 
-        if (s.equals("_spline")||
-        		s.equals("_copy")||
-        		s.equals("_equidistance")||
-        		s.equals("_matriz")||
-        		s.equals("_symmetry")||
-        		s.equals("_rotate")||
-        		s.equals("_stretch")||
-        		s.equals("_scale")||
-        		s.equals("_extend")||
-        		s.equals("_trim")||
-        		s.equals("_unit")||
-        		s.equals("_exploit")||
-        		s.equals("_chaflan")||
-        		s.equals("_join")) {
-        	setCADTool(s,true);
-        }
-        adapter.configureMenu();
-    }
-    public static void addCADTool(String name, CADTool c){
+		RotateCADTool rotate = new RotateCADTool();
+		ScaleCADTool scale = new ScaleCADTool();
+
+		addCADTool("_copy", copy);
+
+		addCADTool("_rotate", rotate);
+		addCADTool("_scale", scale);
+
+		KeyboardFocusManager kfm = KeyboardFocusManager
+				.getCurrentKeyboardFocusManager();
+		kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
+	}
+
+	/**
+	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+	 */
+	public void execute(String s) {
+		initFocus();
+
+		if (s.equals("_spline") || s.equals("_copy")
+				|| s.equals("_equidistance") || s.equals("_matriz")
+				|| s.equals("_symmetry") || s.equals("_rotate")
+				|| s.equals("_stretch") || s.equals("_scale")
+				|| s.equals("_extend") || s.equals("_trim")
+				|| s.equals("_unit") || s.equals("_exploit")
+				|| s.equals("_chaflan") || s.equals("_join")) {
+			setCADTool(s, true);
+		}
+		adapter.configureMenu();
+	}
+
+	public static void addCADTool(String name, CADTool c) {
 		namesCadTools.put(name, c);
 	}
-    public static void setCADTool(String text,boolean showCommand){
+
+	public static void setCADTool(String text, boolean showCommand) {
 		CADTool ct = (CADTool) namesCadTools.get(text);
-		if (ct == null) throw new RuntimeException("No such cad tool");
+		if (ct == null)
+			throw new RuntimeException("No such cad tool");
 		adapter.setCadTool(ct);
 		ct.init();
-		if (showCommand){
+		if (showCommand) {
 			View vista = (View) PluginServices.getMDIManager().getActiveView();
-			vista.getConsolePanel().addText("\n" + ct.getName(),JConsole.COMMAND);
+			vista.getConsolePanel().addText("\n" + ct.getName(),
+					JConsole.COMMAND);
 			adapter.askQuestion();
 		}
-		//PluginServices.getMainFrame().setSelectedTool("SELECT");
-		//PluginServices.getMainFrame().enableControls();
+		// PluginServices.getMainFrame().setSelectedTool("SELECT");
+		// PluginServices.getMainFrame().enableControls();
 	}
-    public static CADTool getCADTool(){
-    	return adapter.getCadTool();
-    }
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    public boolean isEnabled() {
-    	return true;
-    }
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    public boolean isVisible() {
-    	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-				view = (View) PluginServices.getMDIManager().getActiveView();
-				mapControl = (MapControl) view.getMapControl();
-				FLayer[] layers = mapControl.getMapContext().getLayers()
-						.getActives();
-				if (!(layers[0] instanceof FLyrAnnotation)) {
-					return true;
-				}
+	public static CADTool getCADTool() {
+		return adapter.getCadTool();
+	}
+
+	/**
+	 * @see com.iver.andami.plugins.IExtension#isEnabled()
+	 */
+	public boolean isEnabled() {
+		return true;
+	}
+
+	/**
+	 * @see com.iver.andami.plugins.IExtension#isVisible()
+	 */
+	public boolean isVisible() {
+		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+			view = (View) PluginServices.getMDIManager().getActiveView();
+			mapControl = (MapControl) view.getMapControl();
+			FLayer[] layers = mapControl.getMapContext().getLayers()
+					.getActives();
+			if (!(layers[0] instanceof FLyrAnnotation)) {
+				return true;
 			}
+		}
 		return false;
-    }
+	}
+
 	public MapControl getMapControl() {
 		return editionManager.getMapControl();
 	}
-	class KeyAction extends AbstractAction{
+
+	class KeyAction extends AbstractAction {
 
 		private String key;
 
-		public KeyAction(String key){
+		public KeyAction(String key) {
 			this.key = key;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
@@ -187,10 +197,10 @@ public class CADExtension extends Extension {
 
 	}
 
-	class MyAction extends AbstractAction{
+	class MyAction extends AbstractAction {
 		private String actionCommand;
 
-		public MyAction(String command){
+		public MyAction(String command) {
 			actionCommand = command;
 		}
 
@@ -206,92 +216,92 @@ public class CADExtension extends Extension {
 	/**
 	 * @author fjp
 	 *
-	 * La idea es usar esto para recibir lo que el usuario escribe y enviarlo
-	 * a la consola de la vista para que salga por allí.
+	 * La idea es usar esto para recibir lo que el usuario escribe y enviarlo a
+	 * la consola de la vista para que salga por allí.
 	 */
-	private class myKeyEventPostProcessor implements KeyEventPostProcessor
-	{
+	private class myKeyEventPostProcessor implements KeyEventPostProcessor {
 
 		public boolean postProcessKeyEvent(KeyEvent e) {
 			// System.out.println("KeyEvent e = " + e);
-			if ((adapter==null) ||  (view == null)) return false;
-			if (e.getID() != KeyEvent.KEY_RELEASED) return false;
-        	if (e.getKeyCode() == KeyEvent.VK_DELETE)
-        		adapter.keyPressed("eliminar");
-        	else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-        		adapter.keyPressed("escape");
-        	else if (e.getKeyCode() == KeyEvent.VK_ENTER)
-        	{
-        		// TODO: REVISAR ESTO CUANDO VIENE UN INTRO DESDE UN JTEXTAREA
-        		// QUE NO ES EL DE CONSOLA
-        		// view.focusConsole("");
-        	}
-        	else
-        	{
-        		if ((e.getID() == KeyEvent.KEY_RELEASED) && (!e.isActionKey()))
-        		{
-	    			if (Character.isLetterOrDigit(e.getKeyChar()))
-	    			{
-	    				Character keyChar = new Character(e.getKeyChar());
-	            		if (e.getComponent().getName() != null)
-	            		{
-	    	        		System.out.println("Evento de teclado desde el componente " + e.getComponent().getName());
-	    	        		if (!e.getComponent().getName().equals("CADConsole"))
-	    	        		{
-	    	        			view.focusConsole(keyChar+"");
-	    	        		}
-	            		}
-	            		else
-	            		{
-	    	        		if (!(e.getComponent() instanceof JTextComponent))
-	    	        		{
-	    	        			view.focusConsole(keyChar+"");
-	    	        		}
-	            		}
-	        		}
-        		}
-        	}
+			if ((adapter == null) || (view == null))
+				return false;
+
+			if (e.getID() != KeyEvent.KEY_RELEASED)
+				return false;
+			if (!(e.getComponent() instanceof JTextComponent)) {
+				if (e.getKeyCode() == KeyEvent.VK_DELETE)
+					adapter.keyPressed("eliminar");
+				else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+					adapter.keyPressed("escape");
+				else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					// TODO: REVISAR ESTO CUANDO VIENE UN INTRO DESDE UN
+					// JTEXTAREA
+					// QUE NO ES EL DE CONSOLA
+					// view.focusConsole("");
+				}
+
+				else {
+					if ((e.getID() == KeyEvent.KEY_RELEASED)
+							&& (!e.isActionKey())) {
+						if (Character.isLetterOrDigit(e.getKeyChar())) {
+							Character keyChar = new Character(e.getKeyChar());
+							if (e.getComponent().getName() != null) {
+								System.out
+										.println("Evento de teclado desde el componente "
+												+ e.getComponent().getName());
+								if (!e.getComponent().getName().equals(
+										"CADConsole")) {
+									view.focusConsole(keyChar + "");
+								}
+							} else {
+								if (!(e.getComponent() instanceof JTextComponent)) {
+									view.focusConsole(keyChar + "");
+								}
+							}
+						}
+					}
+				}
+			}
 			return false;
 		}
 
 	}
 
-/*	private void registerKeyStrokes(){
-		for (char key = '0'; key <= '9'; key++){
-			Character keyChar = new Character(key);
-			mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), keyChar);
-			mapControl.getActionMap().put(keyChar, new KeyAction(keyChar+""));
-		}
-		for (char key = 'a'; key <= 'z'; key++){
-			Character keyChar = new Character(key);
-			mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), keyChar);
-			mapControl.getActionMap().put(keyChar, new KeyAction(keyChar+""));
-		}
-		for (char key = 'A'; key <= 'Z'; key++){
-			Character keyChar = new Character(key);
-			mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), keyChar);
-			mapControl.getActionMap().put(keyChar, new KeyAction(keyChar+""));
-		}
-		//this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enter");
-        //this.getActionMap().put("enter", new MyAction("enter"));
-		Character keyChar = new Character(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0).getKeyChar());
-		mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),keyChar);
-		mapControl.getActionMap().put(keyChar, new KeyAction(""));
-
-		// El espacio como si fuera INTRO
-		Character keyCharSpace = new Character(' ');
-		mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(' '), keyCharSpace);
-		mapControl.getActionMap().put(keyCharSpace, new KeyAction(""));
-
-
-	}
-*/
+	/*
+	 * private void registerKeyStrokes(){ for (char key = '0'; key <= '9';
+	 * key++){ Character keyChar = new Character(key);
+	 * mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key),
+	 * keyChar); mapControl.getActionMap().put(keyChar, new
+	 * KeyAction(keyChar+"")); } for (char key = 'a'; key <= 'z'; key++){
+	 * Character keyChar = new Character(key);
+	 * mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key),
+	 * keyChar); mapControl.getActionMap().put(keyChar, new
+	 * KeyAction(keyChar+"")); } for (char key = 'A'; key <= 'Z'; key++){
+	 * Character keyChar = new Character(key);
+	 * mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key),
+	 * keyChar); mapControl.getActionMap().put(keyChar, new
+	 * KeyAction(keyChar+"")); }
+	 * //this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
+	 * 0), "enter"); //this.getActionMap().put("enter", new MyAction("enter"));
+	 * Character keyChar = new
+	 * Character(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0).getKeyChar());
+	 * mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
+	 * 0),keyChar); mapControl.getActionMap().put(keyChar, new KeyAction(""));
+	 *  // El espacio como si fuera INTRO Character keyCharSpace = new
+	 * Character(' ');
+	 * mapControl.getInputMap(MapControl.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('
+	 * '), keyCharSpace); mapControl.getActionMap().put(keyCharSpace, new
+	 * KeyAction(""));
+	 *
+	 *  }
+	 */
 	private static JPopupMenu popup = new JPopupMenu();
-	public static  void clearMenu(){
+
+	public static void clearMenu() {
 		popup.removeAll();
 	}
 
-	public static void addMenuEntry(String text){
+	public static void addMenuEntry(String text) {
 		JMenuItem menu = new JMenuItem(text);
 		menu.setActionCommand(text);
 		menu.setEnabled(true);
@@ -304,10 +314,11 @@ public class CADExtension extends Extension {
 
 		popup.add(menu);
 	}
+
 	public static void showPopup(MouseEvent e) {
-		    popup.show(e.getComponent(),
-                       e.getX(), e.getY());
-    }
+		popup.show(e.getComponent(), e.getX(), e.getY());
+	}
+
 	public static View getView() {
 		return view;
 	}
@@ -318,28 +329,30 @@ public class CADExtension extends Extension {
 	public static EditionManager getEditionManager() {
 		return editionManager;
 	}
-	public static CADTool[] getCADTools(){
-		return (CADTool[])namesCadTools.values().toArray(new CADTool[0]);
-	}
-	public static void initFocus(){
-		 view = (View) PluginServices.getMDIManager().getActiveView();
-	     MapControl mapControl = (MapControl) view.getMapControl();
-	        if (!mapControl.getNamesMapTools().containsKey("cadtooladapter"))
-	        	mapControl.addMapTool("cadtooladapter",adapter);
-	        	view.getMapControl().setTool("cadtooladapter");
-	        	view.addConsoleListener("cad", new ResponseListener() {
-	     			public void acceptResponse(String response) {
-	     				adapter.textEntered(response);
-	     				// TODO:
-	     				// FocusManager fm=FocusManager.getCurrentManager();
-	     				// fm.focusPreviousComponent(mapControl);
-	     				/*if (popup.isShowing()){
-	     				    popup.setVisible(false);
-	     				}*/
 
-	     			}
-	     		});
-	       editionManager.setMapControl(mapControl);
-	       view.getMapControl().setTool("cadtooladapter");
+	public static CADTool[] getCADTools() {
+		return (CADTool[]) namesCadTools.values().toArray(new CADTool[0]);
+	}
+
+	public static void initFocus() {
+		view = (View) PluginServices.getMDIManager().getActiveView();
+		MapControl mapControl = (MapControl) view.getMapControl();
+		if (!mapControl.getNamesMapTools().containsKey("cadtooladapter"))
+			mapControl.addMapTool("cadtooladapter", adapter);
+		view.getMapControl().setTool("cadtooladapter");
+		view.addConsoleListener("cad", new ResponseListener() {
+			public void acceptResponse(String response) {
+				adapter.textEntered(response);
+				// TODO:
+				// FocusManager fm=FocusManager.getCurrentManager();
+				// fm.focusPreviousComponent(mapControl);
+				/*
+				 * if (popup.isShowing()){ popup.setVisible(false); }
+				 */
+
+			}
+		});
+		editionManager.setMapControl(mapControl);
+		view.getMapControl().setTool("cadtooladapter");
 	}
 }

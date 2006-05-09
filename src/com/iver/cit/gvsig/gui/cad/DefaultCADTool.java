@@ -68,6 +68,7 @@ import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
@@ -204,7 +205,7 @@ public abstract class DefaultCADTool implements CADTool {
 	public void modifyFeature(int index, IFeature row) {
 		try {
 			getVLE().getVEA().modifyRow(index, row,
-					getName());
+					getName(), IEditableSource.GRAPHIC);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} catch (DriverIOException e1) {

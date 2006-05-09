@@ -58,6 +58,7 @@ import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -326,7 +327,7 @@ public class ScaleCADTool extends DefaultCADTool {
     			DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
 				UtilFunctions.scaleGeom(fea.getGeometry(), scalePoint, scaleFactor, scaleFactor);
     				// df.getGeometry().scale(scalePoint, scaleFactor, scaleFactor);
-    			int index=	vea.modifyRow(edRow.getIndex(), fea,getName());
+    			int index=	vea.modifyRow(edRow.getIndex(), fea,getName(), IEditableSource.GRAPHIC);
     			selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
     		}
     		vea.endComplexRow();

@@ -54,6 +54,7 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -155,7 +156,7 @@ public class MoveCADTool extends DefaultCADTool {
                     UtilFunctions.moveGeom(ig, lastPoint.getX() -
                             firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
 
-                    int index=vea.modifyRow(edRow.getIndex(),feat,getName());
+                    int index=vea.modifyRow(edRow.getIndex(),feat,getName(),IEditableSource.GRAPHIC);
                    /// selectedRowAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,index));
               }
                 vea.endComplexRow();

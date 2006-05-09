@@ -55,6 +55,7 @@ import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -160,7 +161,7 @@ public class RotateCADTool extends DefaultCADTool {
 							.getY());
 
 					int index=vea.modifyRow(row.getIndex(), fea,
-							getName());
+							getName(), IEditableSource.GRAPHIC);
 					///selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
 				}
 
@@ -282,7 +283,7 @@ public class RotateCADTool extends DefaultCADTool {
 						at.rotate(Math.toRadians(d),
 	    						firstPoint.getX(), firstPoint.getY());
 						fea.getGeometry().transform(at);
-    					int index=vea.modifyRow(row.getIndex(), fea,getName());
+    					int index=vea.modifyRow(row.getIndex(), fea,getName(), IEditableSource.GRAPHIC);
     					///selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
 				}
 				vea.endComplexRow();
