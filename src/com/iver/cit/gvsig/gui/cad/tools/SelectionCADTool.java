@@ -45,21 +45,32 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.hardcode.driverManager.DriverLoadException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.v02.FLabel;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.tools.BehaviorException;
+import com.iver.cit.gvsig.fmap.tools.Events.PointEvent;
+import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.Panels.TextFieldEdit;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext;
@@ -115,7 +126,8 @@ public class SelectionCADTool extends DefaultCADTool {
 				+ " x= " + x + " y=" + y);
 		_fsm.addPoint(x, y, event);
 		System.out.println("ESTADO ACTUAL: " + getStatus());
-
+		FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
+		lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents();
 	}
 
 	/*
@@ -144,6 +156,34 @@ public class SelectionCADTool extends DefaultCADTool {
 		return nextState;
 	}
 
+	private void pointDoubleClick(MapControl map) {
+		try {
+			FLayer[] actives = map.getMapContext()
+            .getLayers().getActives();
+            for (int i=0; i < actives.length; i++){
+                if (actives[i] instanceof FLyrAnnotation && actives[i].isEditing()) {
+                    FLyrAnnotation lyrAnnotation = (FLyrAnnotation) actives[i];
+
+                    	lyrAnnotation.setSelectedEditing();
+                    	lyrAnnotation.setInEdition(lyrAnnotation.getRecordset().getSelection().nextSetBit(0));
+                    	FLabel fl=lyrAnnotation.getLabel(lyrAnnotation.getInEdition());
+        				if (fl!=null){
+
+        					View vista=(View)PluginServices.getMDIManager().getActiveView();
+        					TextFieldEdit tfe=new TextFieldEdit(lyrAnnotation);
+
+        					tfe.show(vista.getMapControl().getViewPort().fromMapPoint(fl.getOrig()),vista.getMapControl());
+        				}
+                }
+            }
+
+		} catch (DriverLoadException e) {
+			e.printStackTrace();
+		} catch (com.iver.cit.gvsig.fmap.DriverException e) {
+			e.printStackTrace();
+		}
+
+}
 	/**
 	 * Equivale al transition del prototipo pero sin pasarle como pará metro el
 	 * editableFeatureSource que ya estará creado.
@@ -156,6 +196,10 @@ public class SelectionCADTool extends DefaultCADTool {
 	 *            parámetro y del punto que se pase en esta transición.
 	 */
 	public void addPoint(double x, double y, InputEvent event) {
+		if (((MouseEvent)event).getClickCount()==2){
+			pointDoubleClick((MapControl)event.getComponent());
+			return;
+		}
 		SelectionCADToolState actualState = (SelectionCADToolState) _fsm
 				.getPreviousState();
 		String status = actualState.getName();
