@@ -54,7 +54,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.2  2006-05-09 09:26:04  caballero
+ * Revision 1.3  2006-05-10 06:26:24  caballero
+ * comprobar si tiene capa asociada
+ *
+ * Revision 1.2  2006/05/09 09:26:04  caballero
  * refrescar las vistas y tablas
  *
  * Revision 1.1  2006/05/05 09:06:09  jorpiell
@@ -108,7 +111,7 @@ public class EditionChangeManager implements IEditionListener{
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){
 				Table table=(Table)views[i];
-				if (table.getModel().getAssociatedTable().equals(fLayer))
+				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(fLayer))
 					table.refresh();
 			}else if (views[i] instanceof com.iver.cit.gvsig.gui.View){
 				com.iver.cit.gvsig.gui.View view=(com.iver.cit.gvsig.gui.View)views[i];
