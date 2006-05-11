@@ -2,9 +2,11 @@ package com.iver.cit.gvsig;
 
 import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -70,7 +72,12 @@ public class StartEditing extends Extension {
 					FLyrVect lv = (FLyrVect) layers.getLayer(i);
 					// lv.setVisible(true);
 					lv.addLayerListener(CADExtension.getEditionManager());
-					lv.setEditing(true);
+					try {
+						lv.setEditing(true);
+					} catch (EditionException e) {
+						e.printStackTrace();
+						NotificationManager.addError(e);
+					}
 					VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
 							.getSource();
 					// TODO: Provisional, para que al poner

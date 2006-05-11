@@ -12,26 +12,30 @@ import org.cresques.cts.IProjection;
 import org.cresques.cts.ProjectionPool;
 
 import com.hardcode.driverManager.Driver;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.core.ICanReproject;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.DXFLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
 import com.iver.cit.gvsig.fmap.drivers.VectorialJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
+import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfFieldsMapping;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
+import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
-import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 
 public class MyFinishAction extends FinishAction
@@ -55,19 +59,20 @@ public class MyFinishAction extends FinishAction
 		MapControl mapCtrl = view.getMapControl();
 		try {			
 			// ChooseWriteDriver driverPanel = (ChooseWriteDriver) myWizardComponents.getWizardPanel(0);
-			ChooseGeometryType geometryTypePanel = (ChooseGeometryType) myWizardComponents.getWizardPanel(0);
-			JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(1);
-			
-			 
-			String layerName = geometryTypePanel.getLayerName();
-			String selectedDriver = geometryTypePanel.getSelectedDriver();
-			int geometryType = geometryTypePanel.getSelectedGeometryType();
-			FieldDescription[] fieldsDesc = fieldDefinitionPanel.getFieldsDescription();
-			
-			Driver drv = LayerFactory.getDM().getDriver(selectedDriver);    		
 			mapCtrl.getMapContext().beginAtomicEvent();
 			if (actionComand.equals("SHP"))
 			{
+				ChooseGeometryType geometryTypePanel = (ChooseGeometryType) myWizardComponents.getWizardPanel(0);
+				JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(1);
+				
+				 
+				String layerName = geometryTypePanel.getLayerName();
+				String selectedDriver = geometryTypePanel.getSelectedDriver();
+				int geometryType = geometryTypePanel.getSelectedGeometryType();
+				FieldDescription[] fieldsDesc = fieldDefinitionPanel.getFieldsDescription();
+				
+				Driver drv = LayerFactory.getDM().getDriver(selectedDriver);    		
+				
 	    		FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(2);
     		    File newFile = new File(shpPanel.getPath());
     		    SHPLayerDefinition lyrDef = new SHPLayerDefinition();
@@ -88,26 +93,46 @@ public class MyFinishAction extends FinishAction
 			}
 			else if (actionComand.equals("DXF"))
 			{
-	    		FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(2);
+	    		FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(0);
     		    File newFile = new File(shpPanel.getPath());
-    		    SHPLayerDefinition lyrDef = new SHPLayerDefinition();
-    		    lyrDef.setFieldsDesc(fieldsDesc);
+    		    DXFLayerDefinition lyrDef = new DXFLayerDefinition();
     		    lyrDef.setFile(newFile);
+    		    String layerName = newFile.getName();
     		    lyrDef.setName(layerName);
-    		    lyrDef.setShapeType(geometryType);
     			DxfWriter writer= (DxfWriter)LayerFactory.getWM().getWriter("DXF Writer");
     			writer.setFile(newFile);
+    			DxfFieldsMapping fieldsMapping = new DxfFieldsMapping();
+    			fieldsMapping.setLayerField("Layer");
+    			fieldsMapping.setColorField("Color");
+    			fieldsMapping.setElevationField("Elevation");
+    			fieldsMapping.setThicknessField("Thickness");
+    			fieldsMapping.setTextField("Text");
+    			fieldsMapping.setHeightText("HeightText");
+    			fieldsMapping.setRotationText("RotationText");
+    			writer.setFieldMapping(fieldsMapping);
+    			writer.setProjection(mapCtrl.getProjection());
     			writer.initialize(lyrDef);
     			writer.preProcess();
     			writer.postProcess();
-	    		
+    			Driver drv = LayerFactory.getDM().getDriver("gvSIG DXF Memory Driver");
 				
                 lyr = (FLyrVect) LayerFactory.createLayer(layerName,
                         (VectorialFileDriver) drv, newFile, mapCtrl.getProjection());
                                 
 			}			
-			else if (drv instanceof VectorialJDBCDriver)
+			else if (actionComand.equals("POSTGIS"))
 			{
+				ChooseGeometryType geometryTypePanel = (ChooseGeometryType) myWizardComponents.getWizardPanel(0);
+				JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(1);
+				
+				 
+				String layerName = geometryTypePanel.getLayerName();
+				String selectedDriver = geometryTypePanel.getSelectedDriver();
+				int geometryType = geometryTypePanel.getSelectedGeometryType();
+				FieldDescription[] fieldsDesc = fieldDefinitionPanel.getFieldsDescription();
+				
+				Driver drv = LayerFactory.getDM().getDriver(selectedDriver);    		
+				
 				VectorialJDBCDriver dbDriver = (VectorialJDBCDriver) drv;
 	    		PostGISpanel postgisPanel = (PostGISpanel) myWizardComponents.getWizardPanel(2);
 				ConnectionSettings cs = postgisPanel.getConnSettings();
@@ -200,7 +225,12 @@ public class MyFinishAction extends FinishAction
 		mapCtrl.getMapContext().endAtomicEvent();
 		lyr.addLayerListener(CADExtension.getEditionManager());
 		lyr.setActive(true);
-		lyr.setEditing(true);
+		try {
+			lyr.setEditing(true);
+		} catch (EditionException e) {
+			e.printStackTrace();
+			NotificationManager.addError(e);
+		}
         VectorialEditableAdapter vea = (VectorialEditableAdapter) lyr.getSource();
         // TODO: Provisional, para que al poner
         // un tema en edición el CADToolAdapter se entere

@@ -66,12 +66,12 @@ public void execute(String actionCommand) {
 
 			ChooseGeometryType panelChoose = new ChooseGeometryType(wizard.getWizardComponents());
 			JPanelFieldDefinition panelFields = new JPanelFieldDefinition(wizard.getWizardComponents());			
-			wizard.getWizardComponents().addWizardPanel(panelChoose);
-
-			wizard.getWizardComponents().addWizardPanel(panelFields);
 
 			if (actionCommand.equals("SHP"))
 			{
+				wizard.getWizardComponents().addWizardPanel(panelChoose);
+				wizard.getWizardComponents().addWizardPanel(panelFields);
+
 				panelChoose.setDriver((ISpatialWriter) writerManager.getDriver("gvSIG shp driver"));
 				FileBasedPanel filePanel = new FileBasedPanel(wizard.getWizardComponents());
 				filePanel.setFileExtension("shp");
@@ -95,6 +95,9 @@ public void execute(String actionCommand) {
 			}
 			if (actionCommand.equals("POSTGIS"))
 			{
+				wizard.getWizardComponents().addWizardPanel(panelChoose);
+				wizard.getWizardComponents().addWizardPanel(panelFields);
+				
 				panelChoose.setDriver((ISpatialWriter) writerManager.getDriver("PostGIS JDBC Driver"));
 				wizard.getWizardComponents().addWizardPanel(
 					new PostGISpanel(wizard.getWizardComponents()));

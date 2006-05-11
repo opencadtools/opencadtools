@@ -3,7 +3,9 @@ package com.iver.cit.gvsig;
 import java.io.IOException;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.Table;
@@ -56,7 +58,12 @@ public class EditingExtension extends Extension {
 				}
 			}
 			vle.clearSelection();
-			lv.setEditing(false);
+			try {
+				lv.setEditing(false);
+			} catch (EditionException e) {
+				e.printStackTrace();
+				NotificationManager.addError(e);
+			}
 
 			vista.getMapControl().setTool("zoomIn");
 

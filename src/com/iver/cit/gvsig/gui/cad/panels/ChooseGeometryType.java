@@ -218,7 +218,7 @@ public class ChooseGeometryType extends JWizardPanel {
 		if (jTextFieldLayerName == null) {
 			jTextFieldLayerName = new JTextField();
 			jTextFieldLayerName.setBounds(new java.awt.Rectangle(13,36,323,20));
-			jTextFieldLayerName.setText(PluginServices.getText(this,"new_layer"));
+			jTextFieldLayerName.setText("layer1"); //PluginServices.getText(this,"new_layer"));
 			jTextFieldLayerName.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 			jTextFieldLayerName.addCaretListener(new MyInputEventListener());
 		}
