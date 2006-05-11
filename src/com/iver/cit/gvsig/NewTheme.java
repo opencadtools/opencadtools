@@ -87,7 +87,8 @@ public void execute(String actionCommand) {
 				FileBasedPanel filePanel = new FileBasedPanel(wizard.getWizardComponents());
 				filePanel.setFileExtension("dxf");
 				wizard.getWizardComponents().addWizardPanel(filePanel);
-
+				wizard.getWizardComponents().getBackButton().setEnabled(false);
+				wizard.getWizardComponents().getNextButton().setEnabled(false);
 			
 				wizard.getWizardComponents().setFinishAction(
 					new MyFinishAction(wizard.getWizardComponents(),
@@ -106,7 +107,7 @@ public void execute(String actionCommand) {
 						new MyFinishAction(wizard.getWizardComponents(),
 								vista, actionCommand));
 			}			
-			
+			wizard.getWizardComponents().getFinishButton().setEnabled(false);
 			wizard.getViewInfo().setWidth(540);
 			wizard.getViewInfo().setHeight(350);
 			wizard.getViewInfo().setTitle(PluginServices.getText(this,"new_theme"));

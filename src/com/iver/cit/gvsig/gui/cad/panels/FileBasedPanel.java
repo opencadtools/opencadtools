@@ -100,6 +100,7 @@ public class FileBasedPanel extends JWizardPanel {
 		        		    	path = path + "." + fileExt;
 		        		    }
 		        		    jTextFieldPath.setText(path);
+		        		    setFinishButtonEnabled(true);
 		                }
 
 				}
