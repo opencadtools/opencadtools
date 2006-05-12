@@ -30,17 +30,17 @@ FirstPoint
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			NextPointOrArcOrClose{
 				setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-				setDescription(new String[]{"arc","close","cancel"});
+				setDescription(new String[]{"inter_arc","close","cancel"});
 				addPoint( pointX,pointY,event);
 				}
 	}
 NextPointOrArcOrClose{
 
 	addOption(s:String)
-		[s.equals("A") ||  s.equals("a") || s.equals(PluginServices.getText(this,"arc"))]
+		[s.equals("A") ||  s.equals("a") || s.equals(PluginServices.getText(this,"inter_arc"))]
 		NextPointOrLineOrClose {
 			setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
-			setDescription(new String[]{"line","close","cancel"});
+			setDescription(new String[]{"inter_line","close","cancel"});
 			addOption(s);
 			}
 	addOption(s:String)
@@ -54,7 +54,7 @@ NextPointOrArcOrClose{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrArcOrClose {
 			setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-			setDescription(new String[]{"arc","close","cancel"});
+			setDescription(new String[]{"inter_arc","close","cancel"});
 			addPoint( pointX,pointY,event);
 			}
 }
@@ -62,14 +62,14 @@ NextPointOrLineOrClose{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrLineOrClose {
 			setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
-			setDescription(new String[]{"line","close","cancel"});
+			setDescription(new String[]{"inter_line","close","cancel"});
 			addPoint( pointX,pointY,event);
 			}
 	addOption(s:String)
-		[s.equals("N") ||  s.equals("n") || s.equals(PluginServices.getText(this,"line"))]
+		[s.equals("N") ||  s.equals("n") || s.equals(PluginServices.getText(this,"inter_line"))]
 		NextPointOrArcOrClose {
 			setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-			setDescription(new String[]{"arc","close","cancel"});
+			setDescription(new String[]{"inter_arc","close","cancel"});
 			addOption(s);
 			}
 	addOption(s:String)
