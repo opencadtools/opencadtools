@@ -55,6 +55,7 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
@@ -73,6 +74,7 @@ import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.Panels.TextFieldEdit;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.gui.cad.exception.CommadException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext.SelectionCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
@@ -124,7 +126,11 @@ public class SelectionCADTool extends DefaultCADTool {
 	public void transition(double x, double y, InputEvent event) {
 		System.out.println("TRANSICION DESDE ESTADO " + _fsm.getState()
 				+ " x= " + x + " y=" + y);
+		try{
 		_fsm.addPoint(x, y, event);
+		}catch (Exception e) {
+			init();
+		}
 		System.out.println("ESTADO ACTUAL: " + getStatus());
 		/* FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
 		lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents(); */
@@ -146,9 +152,11 @@ public class SelectionCADTool extends DefaultCADTool {
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
 	 *      java.lang.String)
 	 */
-	public void transition(String s) {
+	public void transition(String s) throws CommadException {
 		if (!super.changeCommand(s)){
-    		_fsm.addOption(s);
+
+			_fsm.addOption(s);
+
     	}
 	}
 
@@ -422,14 +430,17 @@ public class SelectionCADTool extends DefaultCADTool {
 		}
 		if (status.equals("Selection.FirstPoint")) {
 			setType(s);
+			return;
 		}else if (status.equals("Selection.NextPointPolygon")){
 			if (s.equals(PluginServices.getText(this,"end_polygon")) || s.equals("E") || s.equals("e")) {
 			IGeometry polygon=getGeometryPolygon(null);
 			selectWithPolygon(polygon);
 			pointsPolygon.clear();
 			setType(PluginServices.getText(this,"simple"));
+			return;
 			}
 		}
+		init();
 	}
 	private int selectAll() {
 		VectorialLayerEdited vle = getVLE();
@@ -606,4 +617,5 @@ public class SelectionCADTool extends DefaultCADTool {
 	public String toString() {
 		return "_selection";
 	}
+
 }
