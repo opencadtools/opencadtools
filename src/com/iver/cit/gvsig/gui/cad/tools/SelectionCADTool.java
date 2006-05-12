@@ -132,6 +132,10 @@ public class SelectionCADTool extends DefaultCADTool {
 			init();
 		}
 		System.out.println("ESTADO ACTUAL: " + getStatus());
+		
+		// ESTO LO QUITO POR AHORA, PERO PUEDE QUE LO NECESITEMOS VOLVER A PONER.
+		// Lo he quitado porque cuando seleccionas algo con CAD, molesta que
+		// te hagan un redibujado.
 		/* FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
 		lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents(); */
 	}
