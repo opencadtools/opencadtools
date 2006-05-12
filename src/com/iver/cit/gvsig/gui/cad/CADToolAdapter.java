@@ -13,18 +13,20 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.MemoryImageSource;
 import java.io.IOException;
-import java.util.List;
 import java.util.Stack;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.Handler;
+import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
@@ -40,12 +42,18 @@ import com.vividsolutions.jts.index.SpatialIndex;
 
 public class CADToolAdapter extends Behavior {
 	public static int MAX_ENTITIES_IN_SPATIAL_CACHE = 5000;
-	public static final int ABSOLUTE=0;
-	public static final int RELATIVE_SCP=1;
-	public static final int RELATIVE_SCU=2;
-	public static final int POLAR_SCP=3;
-	public static final int POLAR_SCU=4;
-	private double[] previousPoint=null;
+
+	public static final int ABSOLUTE = 0;
+
+	public static final int RELATIVE_SCP = 1;
+
+	public static final int RELATIVE_SCU = 2;
+
+	public static final int POLAR_SCP = 3;
+
+	public static final int POLAR_SCU = 4;
+
+	private double[] previousPoint = null;
 
 	private Stack cadToolStack = new Stack();
 
@@ -76,7 +84,7 @@ public class CADToolAdapter extends Behavior {
 	 * Pinta de alguna manera especial las geometrias seleccionadas para la
 	 * edición. En caso de que el snapping esté activado, pintará el efecto del
 	 * mismo.
-	 *
+	 * 
 	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#paintComponent(java.awt.Graphics)
 	 */
 	public void paintComponent(Graphics g) {
@@ -130,63 +138,65 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				p = vp.toMapPoint(adjustedPoint);
 			}
-			transition(new double[] { p.getX(), p.getY() }, e,ABSOLUTE);
+			transition(new double[] { p.getX(), p.getY() }, e, ABSOLUTE);
 		}
 	}
 
 	/**
 	 * Ajusta un punto de la imagen que se pasa como parámetro al grid si éste
 	 * está activo y devuelve la distancia de un punto al punto ajustado
-	 *
+	 * 
 	 * @param point
 	 * @param mapHandlerAdjustedPoint
 	 *            DOCUMENT ME!
-	 *
+	 * 
 	 * @return Distancia del punto que se pasa como parámetro al punto ajustado
 	 */
 	private double adjustToHandler(Point2D point,
 			Point2D mapHandlerAdjustedPoint) {
-		// if (selection.cardinality() > 0) {
-		if (getSpatialCache() == null)
-			return Double.MAX_VALUE;
 
 		double rw = getMapControl().getViewPort().toMapDistance(5);
 		Point2D mapPoint = point;
 		Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - rw / 2,
 				mapPoint.getY() - rw / 2, rw, rw);
 
-		// int[] indexes = vea.getRowsIndexes_OLD(r);
 		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
-		List l = getSpatialCache().query(e);
 		double min = Double.MAX_VALUE;
 		Point2D argmin = null;
 		Point2D mapArgmin = null;
 
-		for (int i = 0; i < l.size(); i++) {
-		// for (int i = 0; i < indexes.length; i++) {
+		IRowEdited[] feats;
+		ViewPort vp = getMapControl().getViewPort();
+		String strEPSG = vp.getProjection().getAbrev()
+				.substring(5);
+		try {
+			feats = vea.getFeatures(r, strEPSG);
 			IGeometry geometry = null;
-			/* try {
-				geometry = vea.getShape(indexes[i]);
-			} catch (DriverIOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} */
-			geometry = (IGeometry) l.get(i);// getFeature(indexes[i]);
-			Handler[] handlers = geometry.getHandlers(IGeometry.SELECTHANDLER);
-
-			for (int j = 0; j < handlers.length; j++) {
-				Point2D handlerPoint = handlers[j].getPoint();
-				// System.err.println("handlerPoint= "+ handlerPoint);
-				Point2D handlerImagePoint = handlerPoint;
-				double dist = handlerImagePoint.distance(point);
-				if ((dist < getMapControl().getViewPort().toMapDistance(
-						SelectionCADTool.tolerance))
-						&& (dist < min)) {
-					min = dist;
-					argmin = handlerImagePoint;
-					mapArgmin = handlerPoint;
+			for (int i = 0; i < feats.length; i++) {
+				IFeature feat = (IFeature) feats[i].getLinkedRow();
+				geometry = feat.getGeometry();
+				// TODO: PROVISIONAL. AVERIGUAR PORQUÉ DA FALLO EL DRIVER INDEXEDSHAPEDRIVER
+				
+				if (geometry == null) break;
+				Handler[] handlers = geometry.getHandlers(IGeometry.SELECTHANDLER);
+	
+				for (int j = 0; j < handlers.length; j++) {
+					Point2D handlerPoint = handlers[j].getPoint();
+					// System.err.println("handlerPoint= "+ handlerPoint);
+					Point2D handlerImagePoint = handlerPoint;
+					double dist = handlerImagePoint.distance(point);
+					if ((dist < vp.toMapDistance(
+							SelectionCADTool.tolerance))
+							&& (dist < min)) {
+						min = dist;
+						argmin = handlerImagePoint;
+						mapArgmin = handlerPoint;
+					}
 				}
 			}
+		} catch (DriverException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 		if (argmin != null) {
@@ -246,7 +256,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param g
 	 *            DOCUMENT ME!
 	 */
@@ -288,7 +298,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param point
 	 */
 	private void calculateSnapPoint(Point point) {
@@ -383,7 +393,7 @@ public class CADToolAdapter extends Behavior {
 	/**
 	 * Método que realiza las transiciones en las herramientas en función de un
 	 * texto introducido en la consola
-	 *
+	 * 
 	 * @param text
 	 *            DOCUMENT ME!
 	 */
@@ -395,32 +405,33 @@ public class CADToolAdapter extends Behavior {
 			 * if ("".equals(text)) { transition("aceptar"); } else {
 			 */
 			text = text.trim();
-			int type=ABSOLUTE;
-			String[] numbers=null;
-			if (text.indexOf(",")!=-1){
+			int type = ABSOLUTE;
+			String[] numbers = null;
+			if (text.indexOf(",") != -1) {
 
 				numbers = text.split(",");
-				if (numbers[0].substring(0,1).equals("@")){
-					numbers[0]=numbers[0].substring(1,numbers[0].length());
-					type=RELATIVE_SCU;
-					if (numbers[0].substring(0,1).equals("*")){
-						type=RELATIVE_SCP;
-						numbers[0]=numbers[0].substring(1,numbers[0].length());
+				if (numbers[0].substring(0, 1).equals("@")) {
+					numbers[0] = numbers[0].substring(1, numbers[0].length());
+					type = RELATIVE_SCU;
+					if (numbers[0].substring(0, 1).equals("*")) {
+						type = RELATIVE_SCP;
+						numbers[0] = numbers[0].substring(1, numbers[0]
+								.length());
 					}
 				}
-			}else if (text.indexOf("<")!=-1){
-				type=POLAR_SCP;
+			} else if (text.indexOf("<") != -1) {
+				type = POLAR_SCP;
 				numbers = text.split("<");
-				if (numbers[0].substring(0,1).equals("@")){
-					numbers[0]=numbers[0].substring(1,numbers[0].length());
-					type=POLAR_SCU;
-					if (numbers[0].substring(0,1).equals("*")){
-						type=POLAR_SCP;
-						numbers[0]=numbers[0].substring(1,numbers[0].length());
+				if (numbers[0].substring(0, 1).equals("@")) {
+					numbers[0] = numbers[0].substring(1, numbers[0].length());
+					type = POLAR_SCU;
+					if (numbers[0].substring(0, 1).equals("*")) {
+						type = POLAR_SCP;
+						numbers[0] = numbers[0].substring(1, numbers[0]
+								.length());
 					}
 				}
 			}
-
 
 			double[] values = null;
 
@@ -429,7 +440,7 @@ public class CADToolAdapter extends Behavior {
 					// punto
 					values = new double[] { Double.parseDouble(numbers[0]),
 							Double.parseDouble(numbers[1]) };
-					transition(values, null,type);
+					transition(values, null, type);
 				} else if (numbers.length == 1) {
 					// valor
 					values = new double[] { Double.parseDouble(numbers[0]) };
@@ -445,7 +456,6 @@ public class CADToolAdapter extends Behavior {
 		getMapControl().repaint();
 	}
 
-
 	/**
 	 * DOCUMENT ME!
 	 */
@@ -457,7 +467,9 @@ public class CADToolAdapter extends Behavior {
 
 		for (int i = 0; i < desc.length; i++) {
 			if (desc[i] != null) {
-				CADExtension.addMenuEntry(PluginServices.getText(this,desc[i]));// , labels[i]);
+				CADExtension
+						.addMenuEntry(PluginServices.getText(this, desc[i]));// ,
+																				// labels[i]);
 			}
 		}
 
@@ -465,14 +477,14 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * Recibe los valores de la transición (normalmente un punto) y el evento
-	 * con el que se generó (si fue de ratón será MouseEvent, el que viene
-	 * en el pressed) y si es de teclado, será un KeyEvent.
-	 * Del evento se puede sacar información acerca de si estaba pulsada la tecla
-	 * CTRL, o Alt, etc.
+	 * con el que se generó (si fue de ratón será MouseEvent, el que viene en el
+	 * pressed) y si es de teclado, será un KeyEvent. Del evento se puede sacar
+	 * información acerca de si estaba pulsada la tecla CTRL, o Alt, etc.
+	 * 
 	 * @param values
 	 * @param event
 	 */
-	private void transition(double[] values, InputEvent event,int type) {
+	private void transition(double[] values, InputEvent event, int type) {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()) {
 			CADTool ct = (CADTool) cadToolStack.peek();
@@ -480,56 +492,62 @@ public class CADToolAdapter extends Behavior {
 			switch (type) {
 			case ABSOLUTE:
 				ct.transition(values[0], values[1], event);
-				previousPoint=values;
+				previousPoint = values;
 				break;
 			case RELATIVE_SCU:
-				//Comprobar que tenemos almacenado el punto anterior
-				//y crear nuevo con coordenadas relativas a él.
-				double[] auxSCU=values;
-				if (previousPoint!=null){
-					auxSCU[0]=previousPoint[0]+values[0];
-					auxSCU[1]=previousPoint[1]+values[1];
+				// Comprobar que tenemos almacenado el punto anterior
+				// y crear nuevo con coordenadas relativas a él.
+				double[] auxSCU = values;
+				if (previousPoint != null) {
+					auxSCU[0] = previousPoint[0] + values[0];
+					auxSCU[1] = previousPoint[1] + values[1];
 				}
 				ct.transition(auxSCU[0], auxSCU[1], event);
 
-				previousPoint=auxSCU;
+				previousPoint = auxSCU;
 				break;
 			case RELATIVE_SCP:
-				//TODO de momento no implementado.
+				// TODO de momento no implementado.
 				ct.transition(values[0], values[1], event);
-				previousPoint=values;
+				previousPoint = values;
 				break;
 			case POLAR_SCU:
-				//Comprobar que tenemos almacenado el punto anterior
-				//y crear nuevo con coordenadas relativas a él.
-				double[] auxPolarSCU=values;
-				if (previousPoint!=null){
-					Point2D point=UtilFunctions.getPoint(new Point2D.Double(previousPoint[0],previousPoint[1]),Math.toRadians(values[1]),values[0]);
-					auxPolarSCU[0]=point.getX();
-					auxPolarSCU[1]=point.getY();
+				// Comprobar que tenemos almacenado el punto anterior
+				// y crear nuevo con coordenadas relativas a él.
+				double[] auxPolarSCU = values;
+				if (previousPoint != null) {
+					Point2D point = UtilFunctions.getPoint(new Point2D.Double(
+							previousPoint[0], previousPoint[1]), Math
+							.toRadians(values[1]), values[0]);
+					auxPolarSCU[0] = point.getX();
+					auxPolarSCU[1] = point.getY();
 					ct.transition(auxPolarSCU[0], auxPolarSCU[1], event);
-				}else{
-					Point2D point=UtilFunctions.getPoint(new Point2D.Double(0,0),Math.toRadians(values[1]),values[0]);
-					auxPolarSCU[0]=point.getX();
-					auxPolarSCU[1]=point.getY();
+				} else {
+					Point2D point = UtilFunctions.getPoint(new Point2D.Double(
+							0, 0), Math.toRadians(values[1]), values[0]);
+					auxPolarSCU[0] = point.getX();
+					auxPolarSCU[1] = point.getY();
 					ct.transition(auxPolarSCU[0], auxPolarSCU[1], event);
 				}
-				previousPoint=auxPolarSCU;
+				previousPoint = auxPolarSCU;
 				break;
 			case POLAR_SCP:
-				double[] auxPolarSCP=values;
-				if (previousPoint!=null){
-					Point2D point=UtilFunctions.getPoint(new Point2D.Double(previousPoint[0],previousPoint[1]),values[1],values[0]);
-					auxPolarSCP[0]=point.getX();
-					auxPolarSCP[1]=point.getY();
+				double[] auxPolarSCP = values;
+				if (previousPoint != null) {
+					Point2D point = UtilFunctions.getPoint(new Point2D.Double(
+							previousPoint[0], previousPoint[1]), values[1],
+							values[0]);
+					auxPolarSCP[0] = point.getX();
+					auxPolarSCP[1] = point.getY();
 					ct.transition(auxPolarSCP[0], auxPolarSCP[1], event);
-				}else{
-					Point2D point=UtilFunctions.getPoint(new Point2D.Double(0,0),values[1],values[0]);
-					auxPolarSCP[0]=point.getX();
-					auxPolarSCP[1]=point.getY();
+				} else {
+					Point2D point = UtilFunctions.getPoint(new Point2D.Double(
+							0, 0), values[1], values[0]);
+					auxPolarSCP[0] = point.getX();
+					auxPolarSCP[1] = point.getY();
 					ct.transition(auxPolarSCP[0], auxPolarSCP[1], event);
 				}
-				previousPoint=auxPolarSCP;
+				previousPoint = auxPolarSCP;
 				break;
 			default:
 				break;
@@ -542,7 +560,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param text
 	 *            DOCUMENT ME!
 	 * @param source
@@ -567,11 +585,14 @@ public class CADToolAdapter extends Behavior {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()) {
 			CADTool ct = (CADTool) cadToolStack.peek();
-			try{
-			ct.transition(option);
-			}catch (Exception e) {
-				View vista = (View) PluginServices.getMDIManager().getActiveView();
-				vista.getConsolePanel().addText("\n" + PluginServices.getText(this,"incorrect_option")+ " : "+ option,JConsole.ERROR);
+			try {
+				ct.transition(option);
+			} catch (Exception e) {
+				View vista = (View) PluginServices.getMDIManager()
+						.getActiveView();
+				vista.getConsolePanel().addText(
+						"\n" + PluginServices.getText(this, "incorrect_option")
+								+ " : " + option, JConsole.ERROR);
 			}
 			askQuestion();
 		}
@@ -581,7 +602,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param value
 	 *            DOCUMENT ME!
 	 */
@@ -593,7 +614,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param activated
 	 *            DOCUMENT ME!
 	 */
@@ -603,7 +624,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param x
 	 *            DOCUMENT ME!
 	 * @param y
@@ -637,7 +658,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @return DOCUMENT ME!
 	 */
 	public CADTool getCadTool() {
@@ -646,7 +667,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param cadTool
 	 *            DOCUMENT ME!
 	 */
@@ -658,17 +679,17 @@ public class CADToolAdapter extends Behavior {
 		/*
 		 * int ret = cadTool.transition(null, editableFeatureSource, selection,
 		 * new double[0]);
-		 *
+		 * 
 		 * if ((ret & Automaton.AUTOMATON_FINISHED) ==
 		 * Automaton.AUTOMATON_FINISHED) { popCadTool();
-		 *
+		 * 
 		 * if (cadToolStack.isEmpty()) { pushCadTool(new
 		 * com.iver.cit.gvsig.gui.cad.smc.gen.CADTool());//new
 		 * SelectionCadTool());
 		 * PluginServices.getMainFrame().setSelectedTool("selection"); }
-		 *
+		 * 
 		 * askQuestion();
-		 *
+		 * 
 		 * getMapControl().drawMap(false); }
 		 */
 	}
@@ -691,7 +712,8 @@ public class CADToolAdapter extends Behavior {
 		 * +cadtool.getName()); }
 		 */
 		View vista = (View) PluginServices.getMDIManager().getActiveView();
-		vista.getConsolePanel().addText("\n" +"#" +cadtool.getQuestion() + " > ",JConsole.MESSAGE);
+		vista.getConsolePanel().addText(
+				"\n" + "#" + cadtool.getQuestion() + " > ", JConsole.MESSAGE);
 		// ***PluginServices.getMainFrame().addTextToConsole("\n" +
 		// cadtool.getQuestion());
 		questionAsked = true;
@@ -700,19 +722,19 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param cadTool
 	 *            DOCUMENT ME!
 	 */
 	public void setCadTool(CADTool cadTool) {
 		cadToolStack.clear();
 		pushCadTool(cadTool);
-		//askQuestion();
+		// askQuestion();
 	}
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @return DOCUMENT ME!
 	 */
 	public VectorialEditableAdapter getVectorialAdapter() {
@@ -721,7 +743,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param editableFeatureSource
 	 *            DOCUMENT ME!
 	 * @param selection
@@ -733,7 +755,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @return DOCUMENT ME!
 	 */
 	/*
@@ -741,7 +763,7 @@ public class CADToolAdapter extends Behavior {
 	 */
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param cadMapControl
 	 *            DOCUMENT ME!
 	 */
@@ -764,18 +786,18 @@ public class CADToolAdapter extends Behavior {
 				indexesToDel[j++] = i;
 				// /vea.removeRow(i);
 			}
-			/* VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-				.getEditionManager().getActiveLayerEdited();
-			ArrayList selectedRow = vle.getSelectedRow();
-
-			int[] indexesToDel = new int[selectedRow.size()];
-			for (int i = 0; i < selectedRow.size(); i++)
-			{
-				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
-				indexesToDel[i] = edRow.getIndex();
-			}	*/
+			/*
+			 * VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+			 * .getEditionManager().getActiveLayerEdited(); ArrayList
+			 * selectedRow = vle.getSelectedRow();
+			 * 
+			 * int[] indexesToDel = new int[selectedRow.size()]; for (int i = 0;
+			 * i < selectedRow.size(); i++) { IRowEdited edRow = (IRowEdited)
+			 * selectedRow.get(i); indexesToDel[i] = edRow.getIndex(); }
+			 */
 			for (int i = indexesToDel.length - 1; i >= 0; i--) {
-				vea.removeRow(indexesToDel[i],PluginServices.getText(this,"deleted_feature"));
+				vea.removeRow(indexesToDel[i], PluginServices.getText(this,
+						"deleted_feature"));
 			}
 		} catch (DriverIOException e) {
 			e.printStackTrace();
@@ -792,20 +814,19 @@ public class CADToolAdapter extends Behavior {
 		}
 		System.out.println("clear Selection");
 		selection.clear();
-		VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited();
+		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+				.getEditionManager().getActiveLayerEdited();
 		vle.clearSelection();
-	/*	if (getCadTool() instanceof SelectionCADTool)
-		{
-			SelectionCADTool selTool = (SelectionCADTool) getCadTool();
-			selTool.clearSelection();
-		}
-		*/
+		/*
+		 * if (getCadTool() instanceof SelectionCADTool) { SelectionCADTool
+		 * selTool = (SelectionCADTool) getCadTool(); selTool.clearSelection(); }
+		 */
 		getMapControl().drawMap(false);
 	}
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param b
 	 */
 	public void setAdjustGrid(boolean b) {
@@ -814,7 +835,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param actionCommand
 	 */
 	public void keyPressed(String actionCommand) {
@@ -827,15 +848,16 @@ public class CADToolAdapter extends Behavior {
 				cadToolStack.clear();
 				SelectionCADTool selCad = new SelectionCADTool();
 				selCad.init();
-				VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited();
+				VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+						.getEditionManager().getActiveLayerEdited();
 				vle.clearSelection();
 
 				pushCadTool(selCad);
 				// getVectorialAdapter().getSelection().clear();
 				getMapControl().drawMap(false);
 				PluginServices.getMainFrame().setSelectedTool("_selection");
-				//askQuestion();
-			}else{
+				// askQuestion();
+			} else {
 				getMapControl().setPrevTool();
 			}
 		}
@@ -856,43 +878,33 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * Se usa para rellenar la cache de entidades
-	 * con la que queremos trabajar (para hacer snapping,
-	 * por ejemplo. Lo normal será
-	 * rellenarla cada vez que cambie el extent, y
-	 * basándonos en el futuro EditionManager para saber
-	 * de cuántos temas hay que leer. Si el numero de entidades
-	 * supera MAX_ENTITIES_IN_SPATIAL_CACHE, lo pondremos
-	 * a nulo.
+	 * Se usa para rellenar la cache de entidades con la que queremos trabajar
+	 * (para hacer snapping, por ejemplo. Lo normal será rellenarla cada vez que
+	 * cambie el extent, y basándonos en el futuro EditionManager para saber de
+	 * cuántos temas hay que leer. Si el numero de entidades supera
+	 * MAX_ENTITIES_IN_SPATIAL_CACHE, lo pondremos a nulo.
+	 * 
 	 * @throws DriverException
 	 */
-/*	public void createSpatialCache() throws DriverException {
-		ViewPort vp = getMapControl().getViewPort();
-		Rectangle2D extent = vp.getAdjustedExtent();
-		// TODO: Por ahora cogemos el VectorialAdapter
-		// de aquí, pero deberíamos tener un método que
-		// le pregunte al EditionManager el tema sobre
-		// el que estamos pintando.
-		String strEPSG = vp.getProjection().getAbrev().substring(5);
-		IRowEdited[] feats = getVectorialAdapter().getFeatures(extent, strEPSG);
-		if (feats.length > MAX_ENTITIES_IN_SPATIAL_CACHE)
-			this.spatialCache = null;
-		else
-			this.spatialCache = new Quadtree();
-		for (int i=0; i < feats.length; i++)
-		{
-			IFeature feat =  (IFeature)feats[i].getLinkedRow();
-			IGeometry geom = feat.getGeometry();
-			// TODO: EL getBounds2D del IGeometry ralentiza innecesariamente
-			// Podríamos hacer que GeneralPathX lo tenga guardado,
-			// y tenga un constructor en el que se lo fijes.
-			// De esta forma, el driver, a la vez que recupera
-			// las geometrías podría calcular el boundingbox
-			// y asignarlo. Luego habría que poner un método
-			// que recalcule el bounding box bajo demanda.
-
-			Envelope e = FConverter.convertRectangle2DtoEnvelope(geom.getBounds2D());
-			spatialCache.insert(e, geom);
-		}
-	}*/
+	/*
+	 * public void createSpatialCache() throws DriverException { ViewPort vp =
+	 * getMapControl().getViewPort(); Rectangle2D extent =
+	 * vp.getAdjustedExtent(); // TODO: Por ahora cogemos el VectorialAdapter //
+	 * de aquí, pero deberíamos tener un método que // le pregunte al
+	 * EditionManager el tema sobre // el que estamos pintando. String strEPSG =
+	 * vp.getProjection().getAbrev().substring(5); IRowEdited[] feats =
+	 * getVectorialAdapter().getFeatures(extent, strEPSG); if (feats.length >
+	 * MAX_ENTITIES_IN_SPATIAL_CACHE) this.spatialCache = null; else
+	 * this.spatialCache = new Quadtree(); for (int i=0; i < feats.length; i++) {
+	 * IFeature feat = (IFeature)feats[i].getLinkedRow(); IGeometry geom =
+	 * feat.getGeometry(); // TODO: EL getBounds2D del IGeometry ralentiza
+	 * innecesariamente // Podríamos hacer que GeneralPathX lo tenga guardado, //
+	 * y tenga un constructor en el que se lo fijes. // De esta forma, el
+	 * driver, a la vez que recupera // las geometrías podría calcular el
+	 * boundingbox // y asignarlo. Luego habría que poner un método // que
+	 * recalcule el bounding box bajo demanda.
+	 * 
+	 * Envelope e = FConverter.convertRectangle2DtoEnvelope(geom.getBounds2D());
+	 * spatialCache.insert(e, geom); } }
+	 */
 }
