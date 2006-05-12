@@ -58,12 +58,16 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
+import com.iver.cit.gvsig.fmap.tools.CompoundBehavior;
+import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
+import com.iver.cit.gvsig.fmap.tools.Behavior.MouseMovementBehavior;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
+import com.iver.cit.gvsig.gui.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
 import com.iver.utiles.console.ResponseListener;
 
@@ -337,8 +341,10 @@ public class CADExtension extends Extension {
 	public static void initFocus() {
 		view = (View) PluginServices.getMDIManager().getActiveView();
 		MapControl mapControl = (MapControl) view.getMapControl();
-		if (!mapControl.getNamesMapTools().containsKey("cadtooladapter"))
-			mapControl.addMapTool("cadtooladapter", adapter);
+		if (!mapControl.getNamesMapTools().containsKey("cadtooladapter")){
+			StatusBarListener sbl=new StatusBarListener(view.getMapControl());
+			mapControl.addMapTool("cadtooladapter",  new Behavior[]{adapter,new MouseMovementBehavior(sbl)});
+		}
 		view.getMapControl().setTool("cadtooladapter");
 		view.addConsoleListener("cad", new ResponseListener() {
 			public void acceptResponse(String response) {
