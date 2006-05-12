@@ -249,7 +249,7 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-                    ctxt.setDescription(new String[]{"arc", "close", "cancel"});
+                    ctxt.setDescription(new String[]{"inter_arc", "close", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -281,7 +281,7 @@ public final class PolylineCADToolContext
             {
                 PolylineCADTool ctxt = context.getOwner();
 
-                if (s.equals("A") ||  s.equals("a") || s.equals(PluginServices.getText(this,"arc")))
+                if (s.equals("A") ||  s.equals("a") || s.equals(PluginServices.getText(this,"inter_arc")))
                 {
 
                     (context.getState()).Exit(context);
@@ -289,7 +289,7 @@ public final class PolylineCADToolContext
                     try
                     {
                         ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
-                        ctxt.setDescription(new String[]{"line", "close", "cancel"});
+                        ctxt.setDescription(new String[]{"inter_line", "close", "cancel"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -333,7 +333,7 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-                    ctxt.setDescription(new String[]{"arc", "close", "cancel"});
+                    ctxt.setDescription(new String[]{"inter_arc", "close", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -364,7 +364,7 @@ public final class PolylineCADToolContext
             {
                 PolylineCADTool ctxt = context.getOwner();
 
-                if (s.equals("N") ||  s.equals("n") || s.equals(PluginServices.getText(this,"line")))
+                if (s.equals("N") ||  s.equals("n") || s.equals(PluginServices.getText(this,"inter_line")))
                 {
 
                     (context.getState()).Exit(context);
@@ -372,7 +372,7 @@ public final class PolylineCADToolContext
                     try
                     {
                         ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-                        ctxt.setDescription(new String[]{"arc", "close", "cancel"});
+                        ctxt.setDescription(new String[]{"inter_arc", "close", "cancel"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -416,7 +416,7 @@ public final class PolylineCADToolContext
                 try
                 {
                     ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
-                    ctxt.setDescription(new String[]{"line", "close", "cancel"});
+                    ctxt.setDescription(new String[]{"inter_line", "close", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
