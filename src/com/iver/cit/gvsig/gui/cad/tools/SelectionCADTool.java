@@ -126,8 +126,8 @@ public class SelectionCADTool extends DefaultCADTool {
 				+ " x= " + x + " y=" + y);
 		_fsm.addPoint(x, y, event);
 		System.out.println("ESTADO ACTUAL: " + getStatus());
-		FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
-		lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents();
+		/* FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
+		lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents(); */
 	}
 
 	/*
