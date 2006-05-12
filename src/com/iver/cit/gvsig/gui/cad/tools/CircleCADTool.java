@@ -46,10 +46,12 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.gui.cad.exception.CommadException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext.CircleCADToolState;
 
@@ -97,7 +99,7 @@ public class CircleCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s){
+    public void transition(String s) throws CommadException{
     	if (!super.changeCommand(s)){
     		_fsm.addOption(s);
     	}
@@ -207,6 +209,14 @@ public class CircleCADTool extends DefaultCADTool {
 
 	public String toString() {
 		return "_circle";
+	}
+
+	public boolean isApplicable(int shapeType) {
+		switch (shapeType) {
+		case FShape.POINT:
+			return false;
+		}
+		return true;
 	}
 
 }

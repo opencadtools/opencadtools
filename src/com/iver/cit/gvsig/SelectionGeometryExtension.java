@@ -41,7 +41,9 @@
 package com.iver.cit.gvsig;
 
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 
 /**
@@ -52,12 +54,13 @@ import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 public class SelectionGeometryExtension extends Extension {
 
 	private MapControl mapControl;
+	private  SelectionCADTool selection;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		 SelectionCADTool selection=new SelectionCADTool();
+		selection=new SelectionCADTool();
 		CADExtension.addCADTool("_selection", selection);
 	}
 
@@ -77,7 +80,13 @@ public class SelectionGeometryExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		return true;
+		FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
+		try {
+			return selection.isApplicable(lv.getShapeType());
+		} catch (DriverException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	/**

@@ -63,12 +63,13 @@ public class InsertPolygonExtension extends Extension {
 	private View view;
 
 	private MapControl mapControl;
+	private PolygonCADTool polygon;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		PolygonCADTool polygon = new PolygonCADTool();
+		polygon = new PolygonCADTool();
 		CircleCADTool circle=new CircleCADTool();
         RectangleCADTool rectangle=new RectangleCADTool();
         EllipseCADTool ellipse=new EllipseCADTool();
@@ -105,11 +106,8 @@ public class InsertPolygonExtension extends Extension {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 				view = (View) PluginServices.getMDIManager().getActiveView();
 				mapControl = (MapControl) view.getMapControl();
-				FLayer[] layers = mapControl.getMapContext().getLayers()
-						.getActives();
-				if (((FLyrVect) layers[0]).getShapeType() == FShape.POLYGON
-						|| ((FLyrVect) layers[0]).getShapeType() == FShape.MULTI
-						|| ((FLyrVect) layers[0]).getShapeType() == FShape.LINE) {
+				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
+				if (polygon.isApplicable(lv.getShapeType())){
 					return true;
 				}
 			}

@@ -55,6 +55,7 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
@@ -64,6 +65,7 @@ import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.gui.cad.exception.CommadException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ScaleCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ScaleCADToolContext.ScaleCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
@@ -115,7 +117,7 @@ public class ScaleCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s) {
+    public void transition(String s) throws CommadException {
     	if (!super.changeCommand(s)){
     		_fsm.addOption(s);
     	}
@@ -342,4 +344,5 @@ public class ScaleCADTool extends DefaultCADTool {
 	public String toString() {
 		return "_scale";
 	}
+
 }

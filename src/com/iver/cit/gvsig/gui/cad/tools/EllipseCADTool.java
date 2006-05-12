@@ -46,9 +46,11 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.gui.cad.exception.CommadException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext.EllipseCADToolState;
 
@@ -95,7 +97,7 @@ public class EllipseCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s) {
+    public void transition(String s) throws CommadException {
     	if (!super.changeCommand(s)){
     		_fsm.addOption(s);
     	}
@@ -190,5 +192,11 @@ public class EllipseCADTool extends DefaultCADTool {
 	public String toString() {
 		return "_ellipse";
 	}
-
+	public boolean isApplicable(int shapeType) {
+		switch (shapeType) {
+		case FShape.POINT:
+			return false;
+		}
+		return true;
+	}
 }

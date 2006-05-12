@@ -72,7 +72,9 @@ import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.cad.exception.CommadException;
 import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.utiles.console.JConsole;
@@ -331,21 +333,34 @@ public abstract class DefaultCADTool implements CADTool {
 	public void setNextTool(String tool) {
 		this.tool = tool;
 	}
-	public boolean changeCommand(String name){
+	public boolean changeCommand(String name)throws CommadException{
 		CADTool[] cadtools=CADExtension.getCADTools();
 		for (int i=0;i<cadtools.length;i++){
 			CADTool ct=cadtools[i];
 			if (name.equalsIgnoreCase(ct.getName())|| name.equalsIgnoreCase(ct.toString())){
-				///InsertPointExtension ipe=(InsertPointExtension)PluginServices.getExtension(InsertPointExtension.class);
-
-				getCadToolAdapter().setCadTool(ct);
-				ct.init();
-				View vista = (View) PluginServices.getMDIManager().getActiveView();
-				vista.getConsolePanel().addText("\n" + ct.getName(),JConsole.COMMAND);
-				return true;
+				int type=FShape.POINT;
+				try {
+					type=((FLyrVect)getVLE().getLayer()).getShapeType();
+				} catch (com.iver.cit.gvsig.fmap.DriverException e) {
+					e.printStackTrace();
+				}
+				if (ct.isApplicable(type)) {
+					getCadToolAdapter().setCadTool(ct);
+					ct.init();
+					View vista = (View) PluginServices.getMDIManager()
+							.getActiveView();
+					vista.getConsolePanel().addText("\n" + ct.getName(),
+							JConsole.COMMAND);
+					return true;
+				}else{
+					throw new CommadException(name);
+				}
 			}
 		}
 		return false;
+	}
+	public boolean isApplicable(int shapeType) {
+		return true;
 	}
 	public abstract String toString();
 }

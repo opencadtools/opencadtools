@@ -55,6 +55,7 @@ import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.gui.cad.exception.CommadException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADToolState;
 
@@ -85,16 +86,16 @@ public class PolylineCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    	_fsm = new PolylineCADToolContext(this);
+        _fsm = new PolylineCADToolContext(this);
     }
 
     public void endGeometry() {
-    	IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
+        IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
         FGeometryCollection fgc = new FGeometryCollection(geoms);
-		// No queremos guardar FGeometryCollections:
-		GeneralPathX gp = new GeneralPathX();
-		gp.append(fgc.getPathIterator(null), true);
-		IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
+        // No queremos guardar FGeometryCollections:
+        GeneralPathX gp = new GeneralPathX();
+        gp.append(fgc.getPathIterator(null), true);
+        IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
 
         addGeometry(newGeom);
         _fsm = new PolylineCADToolContext(this);
@@ -102,13 +103,13 @@ public class PolylineCADTool extends DefaultCADTool {
         antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
     public void closeGeometry(){
-    	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-				2);
-		elShape.moveTo(antPoint.getX(), antPoint.getY());
-		elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+        GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+                2);
+        elShape.moveTo(antPoint.getX(), antPoint.getY());
+        elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 
-		list.add(ShapeFactory.createPolyline2D(elShape));
-		// list.add(ShapeFactory.createPolyline2D(elShape));
+        list.add(ShapeFactory.createPolyline2D(elShape));
+        // list.add(ShapeFactory.createPolyline2D(elShape));
 
     }
     /* (non-Javadoc)
@@ -128,10 +129,10 @@ public class PolylineCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s) {
-    	if (!super.changeCommand(s)){
-    		_fsm.addOption(s);
-    	}
+    public void transition(String s) throws CommadException {
+        if (!super.changeCommand(s)){
+            _fsm.addOption(s);
+        }
     }
 
     /**
@@ -143,7 +144,7 @@ public class PolylineCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(double x, double y,InputEvent event) {
-    	PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
+        PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
         if (status.equals("Polyline.FirstPoint")) {
@@ -160,7 +161,7 @@ public class PolylineCADTool extends DefaultCADTool {
                         2);
                 elShape.moveTo(antPoint.getX(), antPoint.getY());
                 elShape.lineTo(point.getX(), point.getY());
-				list.add(ShapeFactory.createPolyline2D(elShape));
+                list.add(ShapeFactory.createPolyline2D(elShape));
 
             }
 
@@ -412,20 +413,20 @@ public class PolylineCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status.equals("Polyline.NextPointOrArcOrClose")) {
-            if (s.equals("A") || s.equals("a")) {
+            if (s.equals("A") || s.equals("a") || s.equals(PluginServices.getText(this,"inter_arc"))) {
                 //Arco
             } else if (s.equals("C") || s.equals("c")) {
-            	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
+                GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
                 elShape.moveTo(antPoint.getX(), antPoint.getY());
                 elShape.lineTo(firstPoint.getX(), firstPoint.getY());
                 list.add(ShapeFactory.createPolyline2D(elShape));
-            	//closeGeometry();
+                //closeGeometry();
             }
         } else if (status.equals("Polyline.NextPointOrLineOrClose")) {
-            if (s.equals("N") || s.equals("n")) {
+            if (s.equals("N") || s.equals("n") || s.equals(PluginServices.getText(this,"inter_line"))) {
                 //Línea
             } else if (s.equals("C") || s.equals("c")) {
-            	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
+                GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
                 elShape.moveTo(antPoint.getX(), antPoint.getY());
                 elShape.lineTo(firstPoint.getX(), firstPoint.getY());
                 list.add(ShapeFactory.createPolyline2D(elShape));
@@ -441,21 +442,28 @@ public class PolylineCADTool extends DefaultCADTool {
     }
 
     public void cancel(){
-    	endGeometry();
-    	list.clear();
-    	antantPoint=antCenter=antInter=antPoint=firstPoint=null;
+        endGeometry();
+        list.clear();
+        antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
 
-	public void end() {
-		/* CADExtension.setCADTool("polyline");
-    	PluginServices.getMainFrame().setSelectedTool("POLYLINE"); */
-	}
+    public void end() {
+        /* CADExtension.setCADTool("polyline");
+        PluginServices.getMainFrame().setSelectedTool("POLYLINE"); */
+    }
 
-	public String getName() {
-		return PluginServices.getText(this,"polyline_");
-	}
+    public String getName() {
+        return PluginServices.getText(this,"polyline_");
+    }
 
-	public String toString() {
-		return "_polyline";
-	}
+    public String toString() {
+        return "_polyline";
+    }
+    public boolean isApplicable(int shapeType) {
+        switch (shapeType) {
+        case FShape.POINT:
+            return false;
+        }
+        return true;
+    }
 }

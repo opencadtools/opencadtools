@@ -57,12 +57,13 @@ import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 public class InsertPointExtension extends Extension {
    private View view;
    private MapControl mapControl;
+   private PointCADTool point;
 
    /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
     public void initialize() {
-        PointCADTool point = new PointCADTool();
+        point = new PointCADTool();
         CADExtension.addCADTool("_point", point);
     }
 
@@ -87,11 +88,8 @@ public class InsertPointExtension extends Extension {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE){
 				view = (View) PluginServices.getMDIManager().getActiveView();
 		        mapControl = (MapControl) view.getMapControl();
-				FLayer[] layers = mapControl.getMapContext().getLayers()
-						.getActives();
-				if (((FLyrVect) layers[0]).getShapeType() == FShape.POINT
-						|| ((FLyrVect) layers[0]).getShapeType() == FShape.MULTI
-						|| ((FLyrVect) layers[0]).getShapeType() == FShape.MULTIPOINT) {
+		        FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
+				if (point.isApplicable(lv.getShapeType())){
 					return true;
 				}
 			}

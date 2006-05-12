@@ -41,7 +41,9 @@
 package com.iver.cit.gvsig;
 
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool;
 
 /**
@@ -52,12 +54,12 @@ import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool;
 public class MoveGeometryExtension extends Extension {
 
 	private MapControl mapControl;
-
+	private MoveCADTool move;
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		MoveCADTool move=new MoveCADTool();
+		move=new MoveCADTool();
 		CADExtension.addCADTool("_move",move);
 	}
 
@@ -77,7 +79,13 @@ public class MoveGeometryExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		return true;
+		FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
+		try {
+			return move.isApplicable(lv.getShapeType());
+		} catch (DriverException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	/**

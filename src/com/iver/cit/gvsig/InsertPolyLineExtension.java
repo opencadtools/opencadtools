@@ -59,12 +59,13 @@ public class InsertPolyLineExtension extends Extension {
 	private View view;
 
 	private MapControl mapControl;
+	private PolylineCADTool polyline;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		PolylineCADTool polyline = new PolylineCADTool();
+		polyline = new PolylineCADTool();
 		CADExtension.addCADTool("_polyline", polyline);
 	}
 
@@ -89,11 +90,8 @@ public class InsertPolyLineExtension extends Extension {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 				view = (View) PluginServices.getMDIManager().getActiveView();
 				mapControl = (MapControl) view.getMapControl();
-				FLayer[] layers = mapControl.getMapContext().getLayers()
-						.getActives();
-				if (((FLyrVect) layers[0]).getShapeType() == FShape.LINE
-						|| ((FLyrVect) layers[0]).getShapeType() == FShape.POLYGON
-						|| ((FLyrVect) layers[0]).getShapeType() == FShape.MULTI) {
+				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
+				if (polyline.isApplicable(lv.getShapeType())){
 					return true;
 				}
 			}

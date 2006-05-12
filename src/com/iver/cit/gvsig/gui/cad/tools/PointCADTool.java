@@ -44,8 +44,10 @@ import java.awt.Graphics;
 import java.awt.event.InputEvent;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.gui.cad.exception.CommadException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolState;
 
@@ -93,7 +95,7 @@ public class PointCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s) {
+    public void transition(String s) throws CommadException {
     	if (!super.changeCommand(s)){
     		_fsm.addOption(s);
     	}
@@ -153,5 +155,12 @@ public class PointCADTool extends DefaultCADTool {
 	public String toString() {
 		return "_point";
 	}
-
+	public boolean isApplicable(int shapeType) {
+		switch (shapeType) {
+		case FShape.POLYGON:
+		case FShape.LINE:
+			return false;
+		}
+		return true;
+	}
 }

@@ -58,14 +58,14 @@ import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
  */
 public class InsertLineExtension extends Extension {
 	private View view;
-
+	private LineCADTool line;
 	private MapControl mapControl;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		LineCADTool line = new LineCADTool();
+		line = new LineCADTool();
 		CADExtension.addCADTool("_line", line);
 		ArcCADTool arc=new ArcCADTool();
 		CADExtension.addCADTool("_arc", arc);
@@ -93,12 +93,9 @@ public class InsertLineExtension extends Extension {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 				view = (View) PluginServices.getMDIManager().getActiveView();
 				mapControl = (MapControl) view.getMapControl();
-				FLayer[] layers = mapControl.getMapContext().getLayers()
-						.getActives();
-				if (((FLyrVect) layers[0]).getShapeType() == FShape.LINE
-						|| ((FLyrVect) layers[0]).getShapeType() == FShape.MULTI) {
+				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
+				if (line.isApplicable(lv.getShapeType()))
 					return true;
-				}
 			}
 		} catch (DriverException e) {
 			e.printStackTrace();

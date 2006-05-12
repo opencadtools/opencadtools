@@ -46,10 +46,15 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.gui.cad.exception.CommadException;
+import com.iver.cit.gvsig.gui.cad.exception.OptionException;
+import com.iver.cit.gvsig.gui.cad.exception.PointException;
+import com.iver.cit.gvsig.gui.cad.exception.ValueException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext.ArcCADToolState;
 
@@ -89,14 +94,14 @@ public class ArcCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
      */
-    public void transition(double d) {
+    public void transition(double d){
         //_fsm.addValue(sel,d);
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s) {
+    public void transition(String s) throws CommadException {
     	if (!super.changeCommand(s)){
     		_fsm.addOption(s);
     	}
@@ -186,6 +191,15 @@ public class ArcCADTool extends DefaultCADTool {
 
 	public String toString() {
 		return "_arc";
+	}
+
+	public boolean isApplicable(int shapeType) {
+		switch (shapeType) {
+		case FShape.POINT:
+		case FShape.POLYGON:
+			return false;
+		}
+		return true;
 	}
 
 }

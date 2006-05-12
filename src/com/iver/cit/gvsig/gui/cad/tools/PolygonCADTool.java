@@ -47,12 +47,14 @@ import java.awt.geom.Point2D;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FPolyline2D;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.gui.cad.exception.CommadException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolygonCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolygonCADToolContext.PolygonCADToolState;
 
@@ -100,7 +102,7 @@ public class PolygonCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s) {
+    public void transition(String s) throws CommadException {
     	if (!super.changeCommand(s)){
     		_fsm.addOption(s);
     	}
@@ -148,8 +150,7 @@ public class PolygonCADTool extends DefaultCADTool {
         PolygonCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
-        if (status.equals("Polygon.CenterPoint") ||
-                status.equals("Polygon.OptionOrRadiusOrPoint") ||
+        if (status.equals("Polygon.OptionOrRadiusOrPoint") ||
                 status.equals("Polygon.RadiusOrPoint")) {
             Point2D point = new Point2D.Double(x, y);
             drawLine((Graphics2D) g, center, point);
@@ -234,7 +235,7 @@ public class PolygonCADTool extends DefaultCADTool {
         double an = (Math.PI * 2) / numLines;
         GeneralPathX elShape = new GeneralPathX();
         boolean firstTime=true;
-        for (int i = numLines; i >=1 ; i++) {
+        for (int i = numLines-1; i >=0 ; i--) {
             Point2D p2 = UtilFunctions.getPoint(center, (an * i) + initangle,
                     radio);
             Point2D[] ps1 = UtilFunctions.getPerpendicular(antPoint, center,
@@ -376,8 +377,30 @@ public class PolygonCADTool extends DefaultCADTool {
 		return PluginServices.getText(this,"polygon_");
 	}
 
+	/**
+	 * Devuelve la cadena que corresponde al estado en el que nos encontramos.
+	 *
+	 * @return Cadena para mostrar por consola.
+	 */
+	public String getQuestion() {
+		PolygonCADToolState actualState = (PolygonCADToolState) _fsm.getState();
+        String status = actualState.getName();
+
+        if (status.equals("Polygon.NumberOrCenterPoint")) {
+        	return super.getQuestion()+"<"+numLines+">";
+        }
+        else
+        	return super.getQuestion();
+
+	}
 	public String toString() {
 		return "_polygon";
 	}
-
+	public boolean isApplicable(int shapeType) {
+		switch (shapeType) {
+		case FShape.POINT:
+			return false;
+		}
+		return true;
+	}
 }
