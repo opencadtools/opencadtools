@@ -6,6 +6,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -43,16 +44,7 @@ public class StartEditing extends Extension {
 
 		if (f instanceof View) {
 			View vista = (View) f;
-			CADTool[] cadtools=CADExtension.getCADTools();
-			KeywordMap keywordMap=new KeywordMap(true);
-			for (int i=0;i<cadtools.length;i++){
-				keywordMap.add(cadtools[i].getName(),Token.KEYWORD2);
-				keywordMap.add(cadtools[i].toString(),Token.KEYWORD3);
 
-			}
-			ConsoleToken consoletoken= new ConsoleToken(keywordMap);
-
-			vista.getConsolePanel().setTokenMarker(consoletoken);
 			vista.showConsole();
 			MapControl mapControl = (MapControl) vista.getMapControl();
 			EditionManager editionManager=CADExtension.getEditionManager();
@@ -93,6 +85,7 @@ public class StartEditing extends Extension {
 						pt.setModel(vea);
 						changeModelTable(pt);
 					}
+					startCommandsApplicable(vista,lv);
 					return;
 				}
 			}
@@ -116,7 +109,26 @@ public class StartEditing extends Extension {
 			// vista.getMapControl().drawMap(false);
 		}
 	}
-	 private void changeModelTable(ProjectTable pt){
+	 private void startCommandsApplicable(View vista,FLyrVect lv) {
+		CADTool[] cadtools = CADExtension.getCADTools();
+		KeywordMap keywordMap = new KeywordMap(true);
+		for (int i = 0; i < cadtools.length; i++) {
+			try {
+				if (cadtools[i].isApplicable(lv.getShapeType())){
+					keywordMap.add(cadtools[i].getName(), Token.KEYWORD2);
+					keywordMap.add(cadtools[i].toString(), Token.KEYWORD3);
+				}
+			} catch (com.iver.cit.gvsig.fmap.DriverException e) {
+				e.printStackTrace();
+			}
+
+		}
+		ConsoleToken consoletoken = new ConsoleToken(keywordMap);
+		vista.getConsolePanel().setTokenMarker(consoletoken);
+
+	}
+
+	private void changeModelTable(ProjectTable pt){
     	 com.iver.andami.ui.mdiManager.View[] views = (com.iver.andami.ui.mdiManager.View[]) PluginServices.getMDIManager().getAllViews();
 
  		for (int i=0 ; i<views.length ; i++){
