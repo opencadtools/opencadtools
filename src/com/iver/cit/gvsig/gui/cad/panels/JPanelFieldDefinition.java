@@ -54,7 +54,10 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		// TODO Auto-generated method stub
 		super.next();
 		getWizardComponents().getFinishButton().setVisible(true);
-		getWizardComponents().getFinishButton().setEnabled(true);
+		if (!((FileBasedPanel)getWizardComponents().getWizardPanel(2)).getPath().equals(""))
+			getWizardComponents().getFinishButton().setEnabled(true);
+		else
+			getWizardComponents().getFinishButton().setEnabled(false);
 	}
 
 

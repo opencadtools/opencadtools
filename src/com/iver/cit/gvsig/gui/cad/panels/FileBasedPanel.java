@@ -1,6 +1,7 @@
 package com.iver.cit.gvsig.gui.cad.panels;
 
 import java.awt.Component;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -28,17 +29,17 @@ public class FileBasedPanel extends JWizardPanel {
 	private ProjChooserPanel chooserPanel = null;
 	private String fileExt;
 
-	private class MyInputEventListener implements CaretListener
-	{
-		public void caretUpdate(CaretEvent arg0) {
-			if (jTextFieldPath.getText().length() > 0)
-				setFinishButtonEnabled(true);
-			else
-				setFinishButtonEnabled(false);
-
-		}
-
-	}
+//	private class MyInputEventListener implements CaretListener
+//	{
+//		public void caretUpdate(CaretEvent arg0) {
+//			if (jTextFieldPath.getText().length() > 0)
+//				setFinishButtonEnabled(true);
+//			else
+//				setFinishButtonEnabled(false);
+//
+//		}
+//
+//	}
 
 
 	public FileBasedPanel(JWizardComponents wizardComponents) {
@@ -61,6 +62,7 @@ public class FileBasedPanel extends JWizardPanel {
         this.add(getJButtonSelectPath(), null);
 
         this.add(getChooserPanel(), null);
+        setFinishButtonEnabled(false);
 	}
 
 	/**
@@ -73,6 +75,15 @@ public class FileBasedPanel extends JWizardPanel {
 			jTextFieldPath = new JTextField();
 			jTextFieldPath.setPreferredSize(new java.awt.Dimension(210,20));
 			jTextFieldPath.setBounds(new java.awt.Rectangle(12,38,319,23));
+			jTextFieldPath.addKeyListener(new java.awt.event.KeyAdapter() {
+				public void keyReleased(KeyEvent arg0) {
+					if (!jTextFieldPath.getText().equals(""))
+						setFinishButtonEnabled(true);
+					else
+						setFinishButtonEnabled(false);
+				}
+
+			});
 		}
 		return jTextFieldPath;
 	}
@@ -101,7 +112,9 @@ public class FileBasedPanel extends JWizardPanel {
 		        		    }
 		        		    jTextFieldPath.setText(path);
 		        		    setFinishButtonEnabled(true);
-		                }
+		            }else{
+		            	setFinishButtonEnabled(false);
+		            }
 
 				}
 			});
@@ -112,7 +125,7 @@ public class FileBasedPanel extends JWizardPanel {
 	public String getPath() {
 		return jTextFieldPath.getText();
 	}
-	
+
 	/**
 	 * Use it to set the extension of the file you want to receive.
 	 * (Without . : Example: for shps: shp for dxfs: dxf)
