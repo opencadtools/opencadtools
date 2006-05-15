@@ -9,6 +9,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -59,7 +60,7 @@ public class StopEditingToShp extends Extension {
             		{
             			FLyrVect lv = (FLyrVect) actives[i];
             			MapControl mapControl = (MapControl) vista.getMapControl();
-            			stopEditing(lv,mapControl);                    
+            			stopEditing(lv,mapControl);
             		}
             	}
             }
@@ -95,7 +96,7 @@ public class StopEditingToShp extends Extension {
         			ShpWriter writer= (ShpWriter)LayerFactory.getWM().getWriter("Shape Writer");
         			writer.initialize(layer);
 
-                    vea.stopEdition(writer);
+                    vea.stopEdition(writer,EditionEvent.GRAPHIC);
                     vea.getCommandRecord().removeCommandListener(mapControl);
 
                     layer.setEditing(false);

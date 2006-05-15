@@ -26,6 +26,7 @@ import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -798,7 +799,7 @@ public class CADToolAdapter extends Behavior {
 			 */
 			for (int i = indexesToDel.length - 1; i >= 0; i--) {
 				vea.removeRow(indexesToDel[i], PluginServices.getText(this,
-						"deleted_feature"));
+						"deleted_feature"),EditionEvent.GRAPHIC);
 			}
 		} catch (DriverIOException e) {
 			e.printStackTrace();

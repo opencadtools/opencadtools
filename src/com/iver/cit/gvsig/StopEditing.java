@@ -4,6 +4,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -87,7 +88,7 @@ public void stopEditing(FLyrVect layer,MapControl mapControl) {
 
 		try {
 			writer.initialize(layer);
-	        vea.stopEdition(writer);
+	        vea.stopEdition(writer,EditionEvent.GRAPHIC);
 	        vea.getCommandRecord().removeCommandListener(mapControl);
 
 	        layer.setEditing(false);

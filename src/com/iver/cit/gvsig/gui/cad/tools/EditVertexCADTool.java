@@ -67,6 +67,7 @@ import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -208,7 +209,7 @@ public class EditVertexCADTool extends DefaultCADTool {
         	numHandlers=handlers.length;
         	if (numHandlers ==0){
         		try {
-					vea.removeRow(row.getIndex(),getName());
+					vea.removeRow(row.getIndex(),getName(),EditionEvent.GRAPHIC);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (DriverIOException e) {
@@ -239,7 +240,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 
         			IRow newRow=new DefaultFeature(newGeometry,row.getAttributes());
         			try {
-						vea.modifyRow(row.getIndex(),newRow,getName(),IEditableSource.GRAPHIC);
+						vea.modifyRow(row.getIndex(),newRow,getName(),EditionEvent.GRAPHIC);
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (DriverIOException e) {
@@ -588,7 +589,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 							DefaultFeature df = new DefaultFeature(geom, fea
 									.getAttributes());
 							vle.getVEA().modifyRow(row.getIndex(), df,
-									PluginServices.getText(this,"add_vertex"), IEditableSource.GRAPHIC);
+									PluginServices.getText(this,"add_vertex"),EditionEvent.GRAPHIC);
 
 							Handler[] newHandlers = geom
 									.getHandlers(IGeometry.SELECTHANDLER);

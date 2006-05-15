@@ -14,6 +14,7 @@ import org.geotools.feature.FeatureType;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -25,7 +26,7 @@ import com.iver.utiles.SimpleFileFilter;
 
 /**
  * DOCUMENT ME!
- * 
+ *
  * @author Vicente Caballero Navarro
  */
 public class StopEditingToGT2Shp extends Extension {
@@ -67,17 +68,17 @@ public class StopEditingToGT2Shp extends Extension {
         return true;
     }
 
-    
-    
-    
+
+
+
     /**
 	 * DOCUMENT ME!
 	 */
     public void stopEditing(FLyrVect layer) {
         try {
             // WriterGT2Shp writer = new WriterGT2Shp(layer);
-        	
-        	
+
+
             JFileChooser jfc = new JFileChooser();
             // if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
              /*
@@ -95,21 +96,21 @@ public class StopEditingToGT2Shp extends Extension {
 					URL theUrl = newFile.toURL();
 					ShapefileDataStore dataStore = new ShapefileDataStore(theUrl);
 					dataStore.createSchema(featType);
-					
+
 					String featureName = dataStore.getTypeNames()[0];
 					FeatureStore featStore = (FeatureStore) dataStore.getFeatureSource(featureName);
-					
+
 					// Necesitamos crear de verdad los ficheros antes de usarlos
 					// para meter las features
 					FeatureWriter featWriter = dataStore.getFeatureWriterAppend(featureName, featStore.getTransaction());
 					featWriter.close();
 					// Aquí ya tenemos un fichero vacío, listo para usar.
-					
-					
+
+
 					WriterGT2 writer = new WriterGT2(featStore, true);
-					
+
 		            VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
-		            vea.stopEdition(writer);
+		            vea.stopEdition(writer,EditionEvent.GRAPHIC);
 		            layer.setSource(vea.getOriginalAdapter());
 		            layer.setEditing(false);
              }

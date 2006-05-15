@@ -15,6 +15,7 @@ import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -71,9 +72,9 @@ public class StopEditingToGT2PostGIS extends Extension {
         return true;
     }
 
-    
-    
-    
+
+
+
     /**
 	 * DOCUMENT ME!
 	 */
@@ -86,44 +87,44 @@ public class StopEditingToGT2PostGIS extends Extension {
 	            ConnectionSettings cs = dlg.getConnSettings();
 	            if (cs == null)
 	                return;
-	            
+
 	    	    PostgisDataStore dataStore;
 	            HashMap params = new HashMap();
 	            // Param[] dbParams = postGisFactory.getParametersInfo();
 	            params.put("dbtype", "postgis"); //$NON-NLS-1$
 	            params.put("host", cs.getHost());
 	            params.put("port", new Integer(cs.getPort()));
-	
+
 	            params.put("database", cs.getDb());
-	
+
 	            params.put("user", cs.getUser());
 	            params.put("passwd", cs.getPassw());
-	
+
 	            params.put("wkb enabled", Boolean.TRUE);
 	            params.put("loose bbox", Boolean.TRUE);
-	
+
 	            params.put("namespace", ""); //$NON-NLS-1$
 
 				dataStore = (PostgisDataStore) postGisFactory.createDataStore(params);
-            
+
      		    FeatureType featType = WriterGT2.getFeatureType(layer, "the_geom",
      		    		"autopist2");
 				// dataStore.createSchema(featType);
-				
+
 				String featureName = "autopist2"; // dataStore.getTypeNames()["autopist2"];
 				FeatureStore featStore = (FeatureStore) dataStore.getFeatureSource(featureName);
-				
+
 				// Necesitamos crear de verdad los ficheros antes de usarlos
 				// para meter las features
 				FeatureWriter featWriter = dataStore.getFeatureWriterAppend(featureName, featStore.getTransaction());
 				featWriter.close();
 				// Aquí ya tenemos un fichero vacío, listo para usar.
-				
-				
+
+
 				WriterGT2 writer = new WriterGT2(featStore, true);
-				
+
 	            VectorialEditableAdapter vea = (VectorialEditableAdapter) layer.getSource();
-	            vea.stopEdition(writer);
+	            vea.stopEdition(writer,EditionEvent.GRAPHIC);
 	            layer.setSource(vea.getOriginalAdapter());
 	            layer.setEditing(false);
 			} catch (IOException e) {
@@ -143,9 +144,9 @@ public class StopEditingToGT2PostGIS extends Extension {
 				e.printStackTrace();
 			} catch (SchemaException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace(); 
-			} 
-	         
+				e.printStackTrace();
+			}
+
     }
 
 
