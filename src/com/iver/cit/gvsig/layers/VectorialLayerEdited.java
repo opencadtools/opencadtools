@@ -27,6 +27,7 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.CancelationException;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawingListener;
@@ -346,8 +347,10 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	}
 
 	public void drawHandlers(IGeometry geom, Graphics2D gs, ViewPort vp) {
-		Handler[] handlers = geom.getHandlers(IGeometry.SELECTHANDLER);
-		FGraphicUtilities.DrawHandlers(gs, vp.getAffineTransform(), handlers);
+		if (!(getLayer() instanceof FLyrAnnotation)){
+			Handler[] handlers = geom.getHandlers(IGeometry.SELECTHANDLER);
+			FGraphicUtilities.DrawHandlers(gs, vp.getAffineTransform(), handlers);
+		}
 	}
 	public Image getSelectionImage(){
 		return getVEA().getSelectionImage();
