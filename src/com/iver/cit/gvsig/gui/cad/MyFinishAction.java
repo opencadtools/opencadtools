@@ -232,9 +232,6 @@ public class MyFinishAction extends FinishAction
 			NotificationManager.addError(e);
 		}
         VectorialEditableAdapter vea = (VectorialEditableAdapter) lyr.getSource();
-        // TODO: Provisional, para que al poner
-        // un tema en edición el CADToolAdapter se entere
-        CADExtension.getCADToolAdapter().setVectorialAdapter(vea);
         vea.getCommandRecord().addCommandListener(mapCtrl);
         view.showConsole();
 		

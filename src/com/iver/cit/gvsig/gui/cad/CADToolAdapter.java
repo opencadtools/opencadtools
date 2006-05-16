@@ -17,6 +17,7 @@ import java.util.Stack;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.EditionManager;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.Handler;
@@ -31,18 +32,21 @@ import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.SpatialCache;
 import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.cad.snapping.NearestPointSnapper;
+import com.iver.cit.gvsig.gui.cad.snapping.SnappingVisitor;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
+import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.utiles.console.JConsole;
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.index.SpatialIndex;
 
 public class CADToolAdapter extends Behavior {
-	public static int MAX_ENTITIES_IN_SPATIAL_CACHE = 5000;
 
 	public static final int ABSOLUTE = 0;
 
@@ -75,17 +79,13 @@ public class CADToolAdapter extends Behavior {
 
 	private boolean adjustSnapping = false;
 
-	private VectorialEditableAdapter vea;
-
 	private CADGrid cadgrid = new CADGrid();
-
-	private SpatialIndex spatialCache;
 
 	/**
 	 * Pinta de alguna manera especial las geometrias seleccionadas para la
 	 * edición. En caso de que el snapping esté activado, pintará el efecto del
 	 * mismo.
-	 *
+	 * 
 	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#paintComponent(java.awt.Graphics)
 	 */
 	public void paintComponent(Graphics g) {
@@ -146,69 +146,47 @@ public class CADToolAdapter extends Behavior {
 	/**
 	 * Ajusta un punto de la imagen que se pasa como parámetro al grid si éste
 	 * está activo y devuelve la distancia de un punto al punto ajustado
-	 *
+	 * 
 	 * @param point
 	 * @param mapHandlerAdjustedPoint
 	 *            DOCUMENT ME!
-	 *
-	 * @return Distancia del punto que se pasa como parámetro al punto ajustado
+	 * 
+	 * @return Distancia del punto que se pasa como
+	 *  parámetro al punto ajustado. Si no hay ajuste, 
+	 *  devuelve Double.MAX_VALUE
 	 */
 	private double adjustToHandler(Point2D point,
 			Point2D mapHandlerAdjustedPoint) {
 
+		ILayerEdited aux = CADExtension.getEditionManager().getActiveLayerEdited();
+		if (!(aux instanceof VectorialLayerEdited)) 
+			return Double.MAX_VALUE;
+		VectorialLayerEdited vle = (VectorialLayerEdited) aux;		
+		VectorialEditableAdapter vea = vle.getVEA();
+		FLyrVect lyrVect = (FLyrVect) vle.getLayer();
+		SpatialCache cache = lyrVect.getSpatialCache();
+		ViewPort vp = getMapControl().getViewPort();
+		if (cache == null)
+			return Double.MAX_VALUE;
+		
 		double rw = getMapControl().getViewPort().toMapDistance(5);
 		Point2D mapPoint = point;
 		Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - rw / 2,
 				mapPoint.getY() - rw / 2, rw, rw);
 
 		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
-		double min = Double.MAX_VALUE;
-		Point2D argmin = null;
-		Point2D mapArgmin = null;
+		
+		// TODO: Poner en VectorialLayerEdited los ISnappers que queremos
+		// usar e iterar por ellos para obtener el mejor punto.
+		NearestPointSnapper defaultSnap = new NearestPointSnapper();
+		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
+		SnappingVisitor snapVisitor = new SnappingVisitor(defaultSnap, point, mapTolerance);		
+		cache.query(e, snapVisitor);
+		
 
-		IRowEdited[] feats;
-		ViewPort vp = getMapControl().getViewPort();
-		String strEPSG = vp.getProjection().getAbrev()
-				.substring(5);
-		try {
-			feats = vea.getFeatures(r, strEPSG);
-			IGeometry geometry = null;
-			for (int i = 0; i < feats.length; i++) {
-				IFeature feat = (IFeature) feats[i].getLinkedRow();
-				geometry = feat.getGeometry();
-				// TODO: PROVISIONAL. AVERIGUAR PORQUÉ DA FALLO EL DRIVER INDEXEDSHAPEDRIVER
-
-				if (geometry == null) break;
-				Handler[] handlers = geometry.getHandlers(IGeometry.SELECTHANDLER);
-
-				for (int j = 0; j < handlers.length; j++) {
-					Point2D handlerPoint = handlers[j].getPoint();
-					// System.err.println("handlerPoint= "+ handlerPoint);
-					Point2D handlerImagePoint = handlerPoint;
-					double dist = handlerImagePoint.distance(point);
-					if ((dist < vp.toMapDistance(
-							SelectionCADTool.tolerance))
-							&& (dist < min)) {
-						min = dist;
-						argmin = handlerImagePoint;
-						mapArgmin = handlerPoint;
-					}
-				}
-			}
-		} catch (DriverException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		if (argmin != null) {
-			point.setLocation(argmin);
-
-			// Se hace el casting porque no se quiere redondeo
-			point.setLocation(argmin.getX(), argmin.getY());
-
-			mapHandlerAdjustedPoint.setLocation(mapArgmin);
-
-			return min;
+		if (snapVisitor.getSnapPoint() != null) {
+			mapHandlerAdjustedPoint.setLocation(snapVisitor.getSnapPoint());
+			return snapVisitor.getMinDist();
 		}
 
 		return Double.MAX_VALUE;
@@ -257,7 +235,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param g
 	 *            DOCUMENT ME!
 	 */
@@ -299,7 +277,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param point
 	 */
 	private void calculateSnapPoint(Point point) {
@@ -340,8 +318,7 @@ public class CADToolAdapter extends Behavior {
 
 		if (distance < minDistance) {
 			adjustSnapping = true;
-			adjustedPoint = getMapControl().getViewPort().fromMapPoint(
-					handlerAdjustedPoint);
+			adjustedPoint = getMapControl().getViewPort().fromMapPoint(mapPoint);
 			mapAdjustedPoint = mapPoint;
 			minDistance = distance;
 		}
@@ -394,7 +371,7 @@ public class CADToolAdapter extends Behavior {
 	/**
 	 * Método que realiza las transiciones en las herramientas en función de un
 	 * texto introducido en la consola
-	 *
+	 * 
 	 * @param text
 	 *            DOCUMENT ME!
 	 */
@@ -406,10 +383,10 @@ public class CADToolAdapter extends Behavior {
 			 * if ("".equals(text)) { transition("aceptar"); } else {
 			 */
 			text = text.trim();
-			int type=ABSOLUTE;
-			String[] numbers=new String[1];
-			numbers[0]=text;
-			if (text.indexOf(",")!=-1){
+			int type = ABSOLUTE;
+			String[] numbers = new String[1];
+			numbers[0] = text;
+			if (text.indexOf(",") != -1) {
 
 				numbers = text.split(",");
 				if (numbers[0].substring(0, 1).equals("@")) {
@@ -471,7 +448,7 @@ public class CADToolAdapter extends Behavior {
 			if (desc[i] != null) {
 				CADExtension
 						.addMenuEntry(PluginServices.getText(this, desc[i]));// ,
-																				// labels[i]);
+				// labels[i]);
 			}
 		}
 
@@ -482,7 +459,7 @@ public class CADToolAdapter extends Behavior {
 	 * con el que se generó (si fue de ratón será MouseEvent, el que viene en el
 	 * pressed) y si es de teclado, será un KeyEvent. Del evento se puede sacar
 	 * información acerca de si estaba pulsada la tecla CTRL, o Alt, etc.
-	 *
+	 * 
 	 * @param values
 	 * @param event
 	 */
@@ -562,7 +539,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param text
 	 *            DOCUMENT ME!
 	 * @param source
@@ -604,7 +581,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param value
 	 *            DOCUMENT ME!
 	 */
@@ -616,25 +593,12 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param activated
 	 *            DOCUMENT ME!
 	 */
 	public void setSnapping(boolean activated) {
 		snapping = activated;
-	}
-
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param x
-	 *            DOCUMENT ME!
-	 * @param y
-	 *            DOCUMENT ME!
-	 * @param dist
-	 *            DOCUMENT ME!
-	 */
-	public void getSnapPoint(double x, double y, double dist) {
 	}
 
 	/**
@@ -660,7 +624,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @return DOCUMENT ME!
 	 */
 	public CADTool getCadTool() {
@@ -669,7 +633,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param cadTool
 	 *            DOCUMENT ME!
 	 */
@@ -681,17 +645,17 @@ public class CADToolAdapter extends Behavior {
 		/*
 		 * int ret = cadTool.transition(null, editableFeatureSource, selection,
 		 * new double[0]);
-		 *
+		 * 
 		 * if ((ret & Automaton.AUTOMATON_FINISHED) ==
 		 * Automaton.AUTOMATON_FINISHED) { popCadTool();
-		 *
+		 * 
 		 * if (cadToolStack.isEmpty()) { pushCadTool(new
 		 * com.iver.cit.gvsig.gui.cad.smc.gen.CADTool());//new
 		 * SelectionCadTool());
 		 * PluginServices.getMainFrame().setSelectedTool("selection"); }
-		 *
+		 * 
 		 * askQuestion();
-		 *
+		 * 
 		 * getMapControl().drawMap(false); }
 		 */
 	}
@@ -724,7 +688,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param cadTool
 	 *            DOCUMENT ME!
 	 */
@@ -734,52 +698,20 @@ public class CADToolAdapter extends Behavior {
 		// askQuestion();
 	}
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return DOCUMENT ME!
-	 */
-	public VectorialEditableAdapter getVectorialAdapter() {
-		return vea;
-	}
-
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param editableFeatureSource
-	 *            DOCUMENT ME!
-	 * @param selection
-	 *            DOCUMENT ME!
-	 */
-	public void setVectorialAdapter(VectorialEditableAdapter vea) {
-		this.vea = vea;
-	}
-
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return DOCUMENT ME!
-	 */
-	/*
-	 * public CadMapControl getCadMapControl() { return cadMapControl; }
-	 */
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param cadMapControl
-	 *            DOCUMENT ME!
-	 */
-	/*
-	 * public void setCadMapControl(CadMapControl cadMapControl) {
-	 * this.cadMapControl = cadMapControl; }
-	 */
 
 	/**
 	 * Elimina las geometrías seleccionadas actualmente
 	 */
 	private void delete() {
+		ILayerEdited aux = CADExtension.getEditionManager().getActiveLayerEdited();
+		if (!(aux instanceof VectorialLayerEdited)) 
+			return;
+		VectorialLayerEdited vle = (VectorialLayerEdited) aux;		
+		VectorialEditableAdapter vea = vle.getVEA();
+		FLyrVect lyrVect = (FLyrVect) vle.getLayer();
+
 		vea.startComplexRow();
-		FBitSet selection = getVectorialAdapter().getSelection();
+		FBitSet selection = vea.getSelection();
 		try {
 			int[] indexesToDel = new int[selection.cardinality()];
 			int j = 0;
@@ -792,7 +724,7 @@ public class CADToolAdapter extends Behavior {
 			 * VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
 			 * .getEditionManager().getActiveLayerEdited(); ArrayList
 			 * selectedRow = vle.getSelectedRow();
-			 *
+			 * 
 			 * int[] indexesToDel = new int[selectedRow.size()]; for (int i = 0;
 			 * i < selectedRow.size(); i++) { IRowEdited edRow = (IRowEdited)
 			 * selectedRow.get(i); indexesToDel[i] = edRow.getIndex(); }
@@ -816,8 +748,6 @@ public class CADToolAdapter extends Behavior {
 		}
 		System.out.println("clear Selection");
 		selection.clear();
-		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-				.getEditionManager().getActiveLayerEdited();
 		vle.clearSelection();
 		/*
 		 * if (getCadTool() instanceof SelectionCADTool) { SelectionCADTool
@@ -828,7 +758,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param b
 	 */
 	public void setAdjustGrid(boolean b) {
@@ -837,7 +767,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param actionCommand
 	 */
 	public void keyPressed(String actionCommand) {
@@ -872,41 +802,5 @@ public class CADToolAdapter extends Behavior {
 		return cadgrid;
 	}
 
-	/**
-	 * @return Returns the spatialCache.
-	 */
-	public SpatialIndex getSpatialCache() {
-		return spatialCache;
-	}
 
-	/**
-	 * Se usa para rellenar la cache de entidades con la que queremos trabajar
-	 * (para hacer snapping, por ejemplo. Lo normal será rellenarla cada vez que
-	 * cambie el extent, y basándonos en el futuro EditionManager para saber de
-	 * cuántos temas hay que leer. Si el numero de entidades supera
-	 * MAX_ENTITIES_IN_SPATIAL_CACHE, lo pondremos a nulo.
-	 *
-	 * @throws DriverException
-	 */
-	/*
-	 * public void createSpatialCache() throws DriverException { ViewPort vp =
-	 * getMapControl().getViewPort(); Rectangle2D extent =
-	 * vp.getAdjustedExtent(); // TODO: Por ahora cogemos el VectorialAdapter //
-	 * de aquí, pero deberíamos tener un método que // le pregunte al
-	 * EditionManager el tema sobre // el que estamos pintando. String strEPSG =
-	 * vp.getProjection().getAbrev().substring(5); IRowEdited[] feats =
-	 * getVectorialAdapter().getFeatures(extent, strEPSG); if (feats.length >
-	 * MAX_ENTITIES_IN_SPATIAL_CACHE) this.spatialCache = null; else
-	 * this.spatialCache = new Quadtree(); for (int i=0; i < feats.length; i++) {
-	 * IFeature feat = (IFeature)feats[i].getLinkedRow(); IGeometry geom =
-	 * feat.getGeometry(); // TODO: EL getBounds2D del IGeometry ralentiza
-	 * innecesariamente // Podríamos hacer que GeneralPathX lo tenga guardado, //
-	 * y tenga un constructor en el que se lo fijes. // De esta forma, el
-	 * driver, a la vez que recupera // las geometrías podría calcular el
-	 * boundingbox // y asignarlo. Luego habría que poner un método // que
-	 * recalcule el bounding box bajo demanda.
-	 *
-	 * Envelope e = FConverter.convertRectangle2DtoEnvelope(geom.getBounds2D());
-	 * spatialCache.insert(e, geom); } }
-	 */
 }

@@ -72,9 +72,6 @@ public class StartEditing extends Extension {
 					}
 					VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
 							.getSource();
-					// TODO: Provisional, para que al poner
-					// un tema en edición el CADToolAdapter se entere
-					CADExtension.getCADToolAdapter().setVectorialAdapter(vea);
 					vea.getCommandRecord().addCommandListener(mapControl);
 					// Si existe una tabla asociada a esta capa se cambia su
 					// modelo por el VectorialEditableAdapter.
