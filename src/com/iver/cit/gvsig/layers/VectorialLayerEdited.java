@@ -11,6 +11,7 @@ import java.util.EmptyStackException;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.StartEditing;
 import com.iver.cit.gvsig.ViewCommandStackExtension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -434,6 +435,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		if (cadtool!=null){
 			CADExtension.getCADToolAdapter().setCadTool(cadtool);
 			PluginServices.getMainFrame().setSelectedTool(cadtool.toString());
+			StartEditing.startCommandsApplicable(null,(FLyrVect)getLayer());
 		}
 	}
 
