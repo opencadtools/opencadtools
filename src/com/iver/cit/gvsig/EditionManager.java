@@ -66,8 +66,11 @@ public class EditionManager implements LayerListener {
 	}
 
 	public void activationChanged(LayerEvent e) {
+		if (e.getSource().isActive())
+			ile=getLayerEdited(e.getSource());
+		if (ile.getLayer().equals(e.getSource())){
 
-		if (ile!=null) {
+			if (ile!=null && !ile.getLayer().isActive()) {
 			VectorialLayerEdited lastVLE = (VectorialLayerEdited)ile;
 			lastVLE.activationLost(e);
 		}
@@ -79,7 +82,7 @@ public class EditionManager implements LayerListener {
 			// if (vle.getLayer().equals(e.getSource())) {
 					// idActiveLayer = i;
 			ile=vle;
-			if (getMapControl()!=null && vle!=null){
+			if (getMapControl()!=null && vle!=null && vle.getLayer().isActive()){
 				getMapControl().setTool("cadtooladapter");
 				vle.activationGained(e);
 				return;
@@ -91,6 +94,7 @@ public class EditionManager implements LayerListener {
 		if (getMapControl()!=null){
 			getMapControl().setTool("zoomIn");
 			PluginServices.getMainFrame().setSelectedTool("ZOOM_IN");
+		}
 		}
 	}
 
@@ -122,12 +126,12 @@ public class EditionManager implements LayerListener {
 				mapCtrl.getMapContext().getLayers().setActive(false);
 			// y activamos el nuevo.
 			e.getSource().setActive(true);
-			
+
 			if (e.getSource() instanceof FLyrVect){
 				FLyrVect fLyrVect = (FLyrVect)e.getSource();
-				VectorialEditableAdapter vea = 
+				VectorialEditableAdapter vea =
 					(VectorialEditableAdapter)fLyrVect.getSource();
-				vea.addEditionListener(new EditionChangeManager(lyrEdit.getLayer()));	
+				vea.addEditionListener(new EditionChangeManager(fLyrVect));
 			}
 		}else{
 			for (int i = 0; i < editedLayers.size(); i++) {
@@ -140,8 +144,8 @@ public class EditionManager implements LayerListener {
 				}
 			}
 		}
-		
-		
+
+
 
 	}
 

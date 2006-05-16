@@ -126,9 +126,6 @@ public final class SelectionCADToolContext
         /* package */ static Selection_Default.Selection_SecondPoint SecondPoint;
         /* package */ static Selection_Default.Selection_WithSelectedFeatures WithSelectedFeatures;
         /* package */ static Selection_Default.Selection_WithHandlers WithHandlers;
-        /* package */ static Selection_Default.Selection_SecondPointOutRectangle SecondPointOutRectangle;
-        /* package */ static Selection_Default.Selection_SecondPointCircle SecondPointCircle;
-        /* package */ static Selection_Default.Selection_NextPointPolygon NextPointPolygon;
         private static Selection_Default Default;
 
         static
@@ -137,9 +134,6 @@ public final class SelectionCADToolContext
             SecondPoint = new Selection_Default.Selection_SecondPoint("Selection.SecondPoint", 1);
             WithSelectedFeatures = new Selection_Default.Selection_WithSelectedFeatures("Selection.WithSelectedFeatures", 2);
             WithHandlers = new Selection_Default.Selection_WithHandlers("Selection.WithHandlers", 3);
-            SecondPointOutRectangle = new Selection_Default.Selection_SecondPointOutRectangle("Selection.SecondPointOutRectangle", 4);
-            SecondPointCircle = new Selection_Default.Selection_SecondPointCircle("Selection.SecondPointCircle", 5);
-            NextPointPolygon = new Selection_Default.Selection_NextPointPolygon("Selection.NextPointPolygon", 6);
             Default = new Selection_Default("Selection.Default", -1);
         }
 
@@ -217,8 +211,8 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -231,8 +225,8 @@ public final class SelectionCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                    ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addOption(s);
                 }
                 finally
@@ -246,66 +240,15 @@ public final class SelectionCADToolContext
             {
                 SelectionCADTool ctxt = context.getOwner();
 
-                if (ctxt.getType().equals(PluginServices.getText(this,"out_rectangle")))
+                if (ctxt.getType().equals(PluginServices.getText(this,"simple")) && ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.SecondPoint"))
                 {
 
                     (context.getState()).Exit(context);
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_second_point_selection"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                        ctxt.addPoint(pointX, pointY, event);
-                    }
-                    finally
-                    {
-                        context.setState(Selection.SecondPointOutRectangle);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (ctxt.getType().equals(PluginServices.getText(this,"inside_circle")) || ctxt.getType().equals(PluginServices.getText(this,"cross_circle")) || ctxt.getType().equals(PluginServices.getText(this,"out_circle")))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_second_point_selection"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                        ctxt.addPoint(pointX, pointY, event);
-                    }
-                    finally
-                    {
-                        context.setState(Selection.SecondPointCircle);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (ctxt.getType().equals(PluginServices.getText(this,"inside_polygon")) || ctxt.getType().equals(PluginServices.getText(this,"cross_polygon")) || ctxt.getType().equals(PluginServices.getText(this,"out_polygon")))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_selection_or_end_polygon"));
-                        ctxt.setDescription(new String[]{"end_polygon", "simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                        ctxt.addPoint(pointX, pointY, event);
-                    }
-                    finally
-                    {
-                        context.setState(Selection.NextPointPolygon);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (ctxt.getType().equals(PluginServices.getText(this,"simple")) && ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.SecondPoint"))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_second_point_selection"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_second_point"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
@@ -322,7 +265,7 @@ public final class SelectionCADToolContext
                     try
                     {
                         ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                         ctxt.end();
                     }
@@ -365,8 +308,8 @@ public final class SelectionCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                    ctxt.setDescription(new String[]{"end_polygon", "simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.setType(s);
                 }
                 finally
@@ -389,7 +332,7 @@ public final class SelectionCADToolContext
                     try
                     {
                         ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                         ctxt.end();
                     }
@@ -406,8 +349,8 @@ public final class SelectionCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
@@ -446,8 +389,8 @@ public final class SelectionCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                    ctxt.setDescription(new String[]{"end_polygon", "simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.setType(s);
                 }
                 finally
@@ -470,7 +413,7 @@ public final class SelectionCADToolContext
                     try
                     {
                         ctxt.setQuestion(PluginServices.getText(this,"insert_destination_point"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
@@ -487,7 +430,7 @@ public final class SelectionCADToolContext
                     try
                     {
                         ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
@@ -502,8 +445,8 @@ public final class SelectionCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
+                        ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addPoint(pointX, pointY, event);
                     }
                     finally
@@ -543,7 +486,7 @@ public final class SelectionCADToolContext
                 try
                 {
                     ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
-                    ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
+                    ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                     ctxt.refresh();
                 }
@@ -551,226 +494,6 @@ public final class SelectionCADToolContext
                 {
                     context.setState(Selection.WithSelectedFeatures);
                     (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class Selection_SecondPointOutRectangle
-            extends Selection_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private Selection_SecondPointOutRectangle(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addOption(SelectionCADToolContext context, String s)
-            {
-                SelectionCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                    ctxt.setDescription(new String[]{"end_polygon", "simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                    ctxt.setType(s);
-                }
-                finally
-                {
-                    context.setState(Selection.FirstPoint);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                SelectionCADTool ctxt = context.getOwner();
-
-                if (ctxt.selectWithSecondPointOutRectangle(pointX,pointY, event) > 0)
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                        ctxt.addPoint(pointX, pointY, event);
-                        ctxt.end();
-                    }
-                    finally
-                    {
-                        context.setState(Selection.WithSelectedFeatures);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                        ctxt.addPoint(pointX, pointY, event);
-                    }
-                    finally
-                    {
-                        context.setState(Selection.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
-
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class Selection_SecondPointCircle
-            extends Selection_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private Selection_SecondPointCircle(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addOption(SelectionCADToolContext context, String s)
-            {
-                SelectionCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                    ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                    ctxt.setType(s);
-                }
-                finally
-                {
-                    context.setState(Selection.FirstPoint);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                SelectionCADTool ctxt = context.getOwner();
-
-                if (ctxt.selectWithCircle(pointX,pointY, event) > 0)
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"select_handlers"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                        ctxt.addPoint(pointX, pointY, event);
-                        ctxt.end();
-                    }
-                    finally
-                    {
-                        context.setState(Selection.WithSelectedFeatures);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                        ctxt.setDescription(new String[]{"simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                        ctxt.addPoint(pointX, pointY, event);
-                    }
-                    finally
-                    {
-                        context.setState(Selection.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
-
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class Selection_NextPointPolygon
-            extends Selection_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private Selection_NextPointPolygon(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addOption(SelectionCADToolContext context, String s)
-            {
-                SelectionCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
-                    ctxt.setDescription(new String[]{"end_polygon", "simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                    ctxt.addOption(s);
-                }
-                finally
-                {
-                    context.setState(Selection.FirstPoint);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-            protected void addPoint(SelectionCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                SelectionCADTool ctxt = context.getOwner();
-
-                SelectionCADToolState endState = context.getState();
-
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_selection_or_end_polygon"));
-                    ctxt.setDescription(new String[]{"end_polygon", "simple", "out_rectangle", "inside_polygon", "cross_polygon", "out_polygon", "inside_circle", "cross_circle", "out_circle", "select_all", "cancel"});
-                    ctxt.addPoint(pointX, pointY, event);
-                }
-                finally
-                {
-                    context.setState(endState);
                 }
                 return;
             }

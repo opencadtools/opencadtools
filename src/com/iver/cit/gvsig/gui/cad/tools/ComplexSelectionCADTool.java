@@ -50,35 +50,22 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.hardcode.driverManager.DriverLoadException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
-import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.core.v02.FLabel;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.fmap.layers.FLayer;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
-import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.tools.BehaviorException;
-import com.iver.cit.gvsig.fmap.tools.Events.PointEvent;
-import com.iver.cit.gvsig.gui.Table;
-import com.iver.cit.gvsig.gui.View;
-import com.iver.cit.gvsig.gui.Panels.TextFieldEdit;
 import com.iver.cit.gvsig.gui.cad.CADTool;
-import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommadException;
-import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext.SelectionCADToolState;
+import com.iver.cit.gvsig.gui.cad.tools.smc.ComplexSelectionCADToolContext;
+import com.iver.cit.gvsig.gui.cad.tools.smc.ComplexSelectionCADToolContext.ComplexSelectionCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 /**
@@ -86,125 +73,40 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  *
  * @author Vicente Caballero Navarro
  */
-public class SelectionCADTool extends DefaultCADTool {
-	public final static int tolerance = 4;
+public class ComplexSelectionCADTool extends SelectionCADTool {
+	//public final static int tolerance = 4;
 
-	private SelectionCADToolContext _fsm;
+	private ComplexSelectionCADToolContext _fsm;
 
-	protected Point2D firstPoint;
+	//private Point2D firstPoint;
 
 	//private Point2D lastPoint;
 
 
 
-	protected String nextState;
+	//private String nextState;
 // Registros de los que se ha sleccionado algún handler.
-	protected ArrayList rowselectedHandlers=new ArrayList();
-	protected String type=PluginServices.getText(this,"simple");
-	protected ArrayList pointsPolygon=new ArrayList();
+	//private ArrayList rowselectedHandlers=new ArrayList();
+	//private String type=PluginServices.getText(this,"inside_circle");
+	//private ArrayList pointsPolygon=new ArrayList();
 	/**
-	 * Crea un nuevo SelectionCADTool.
+	 * Crea un nuevo ComplexSelectionCADTool.
 	 */
-	public SelectionCADTool() {
+	public ComplexSelectionCADTool() {
+		type=PluginServices.getText(this,"inside_circle");
 	}
+
 	/**
 	 * Método de incio, para poner el código de todo lo que se requiera de una
 	 * carga previa a la utilización de la herramienta.
 	 */
 	public void init() {
-		_fsm = new SelectionCADToolContext(this);
-		setNextTool("selection");
-		setType(PluginServices.getText(this,"simple"));
+		_fsm = new ComplexSelectionCADToolContext(this);
+		setNextTool("complex_selection");
+
+		setType(PluginServices.getText(this,"inside_circle"));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
-	 *      double, double)
-	 */
-	public void transition(double x, double y, InputEvent event) {
-		System.out.println("TRANSICION DESDE ESTADO " + _fsm.getState()
-				+ " x= " + x + " y=" + y);
-		try{
-		_fsm.addPoint(x, y, event);
-		}catch (Exception e) {
-			init();
-		}
-		System.out.println("ESTADO ACTUAL: " + getStatus());
-
-		// ESTO LO QUITO POR AHORA, PERO PUEDE QUE LO NECESITEMOS VOLVER A PONER.
-		// Lo he quitado porque cuando seleccionas algo con CAD, molesta que
-		// te hagan un redibujado.
-		FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
-		//lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents();
-		com.iver.andami.ui.mdiManager.View[] views = (com.iver.andami.ui.mdiManager.View[]) PluginServices.getMDIManager().getAllViews();
-
-		for (int i=0 ; i<views.length ; i++){
-			if (views[i] instanceof Table){
-				Table table=(Table)views[i];
-				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(lv))
-					table.updateSelection();
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
-	 *      double)
-	 */
-	public void transition(double d) {
-		// _fsm.addValue(sel,d);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
-	 *      java.lang.String)
-	 */
-	public void transition(String s) throws CommadException {
-		if (!super.changeCommand(s)){
-
-			_fsm.addOption(s);
-
-    	}
-	}
-
-	public String getNextState() {
-		return nextState;
-	}
-
-	protected void pointDoubleClick(MapControl map) {
-		try {
-			FLayer[] actives = map.getMapContext()
-            .getLayers().getActives();
-            for (int i=0; i < actives.length; i++){
-                if (actives[i] instanceof FLyrAnnotation && actives[i].isEditing()) {
-                    FLyrAnnotation lyrAnnotation = (FLyrAnnotation) actives[i];
-
-                    	lyrAnnotation.setSelectedEditing();
-                    	lyrAnnotation.setInEdition(lyrAnnotation.getRecordset().getSelection().nextSetBit(0));
-                    	FLabel fl=lyrAnnotation.getLabel(lyrAnnotation.getInEdition());
-        				if (fl!=null){
-
-        					View vista=(View)PluginServices.getMDIManager().getActiveView();
-        					TextFieldEdit tfe=new TextFieldEdit(lyrAnnotation);
-
-        					tfe.show(vista.getMapControl().getViewPort().fromMapPoint(fl.getOrig()),vista.getMapControl());
-        				}
-                }
-            }
-
-		} catch (DriverLoadException e) {
-			e.printStackTrace();
-		} catch (com.iver.cit.gvsig.fmap.DriverException e) {
-			e.printStackTrace();
-		}
-
-}
 	/**
 	 * Equivale al transition del prototipo pero sin pasarle como pará metro el
 	 * editableFeatureSource que ya estará creado.
@@ -221,7 +123,7 @@ public class SelectionCADTool extends DefaultCADTool {
 			pointDoubleClick((MapControl)event.getComponent());
 			return;
 		}
-		SelectionCADToolState actualState = (SelectionCADToolState) _fsm
+		ComplexSelectionCADToolState actualState = (ComplexSelectionCADToolState) _fsm
 				.getPreviousState();
 		String status = actualState.getName();
 		System.out.println("PREVIOUSSTATE =" + status); // + "ESTADO ACTUAL: " +
@@ -256,6 +158,8 @@ public class SelectionCADTool extends DefaultCADTool {
 			} catch (DriverIOException e) {
 				e.printStackTrace();
 			}
+		}else if (status.equals("Selection.NextPointPolygon")) {
+			pointsPolygon.add(new Point2D.Double(x,y));
 		}
 	}
 
@@ -265,14 +169,43 @@ public class SelectionCADTool extends DefaultCADTool {
 	 * @param y
 	 * @return numFeatures selected
 	 */
-	public int selectWithSecondPoint(double x, double y, InputEvent event) {
+	public int selectWithSecondPointOutRectangle(double x, double y, InputEvent event) {
+		Point2D lastPoint=new Point2D.Double(x,y);
+		GeneralPathX gpx=new GeneralPathX();
+		gpx.moveTo(firstPoint.getX(),firstPoint.getY());
+		gpx.lineTo(lastPoint.getX(),firstPoint.getY());
+		gpx.lineTo(lastPoint.getX(),lastPoint.getY());
+		gpx.lineTo(firstPoint.getX(),lastPoint.getY());
+		gpx.closePath();
+		IGeometry rectangle=ShapeFactory.createPolygon2D(gpx);
+		return selectWithPolygon(rectangle);
+	}
+	/**
+	 * Receives second point
+	 * @param x
+	 * @param y
+	 * @return numFeatures selected
+	 */
+	public int selectWithCircle(double x, double y, InputEvent event) {
+		IGeometry circle=ShapeFactory.createCircle(firstPoint,new Point2D.Double(x,y));
+		return selectWithPolygon(circle);
+	}
+	public int selectWithPolygon(IGeometry polygon) {
 		VectorialLayerEdited vle = getVLE();
 		PluginServices.getMDIManager().setWaitCursor();
-		vle.selectWithSecondPoint(x,y);
+
+		if (getType().equals(PluginServices.getText(this,"inside_circle")) || getType().equals(PluginServices.getText(this,"inside_polygon"))) {
+			vle.selectInsidePolygon(polygon);
+		} else if (getType().equals(PluginServices.getText(this,"cross_circle")) || getType().equals(PluginServices.getText(this,"cross_polygon"))) {
+			vle.selectCrossPolygon(polygon);
+		} else if (getType().equals(PluginServices.getText(this,"out_circle")) || getType().equals(PluginServices.getText(this,"out_polygon")) || getType().equals(PluginServices.getText(this,"out_rectangle"))) {
+			vle.selectOutPolygon(polygon);
+		}
 		ArrayList selectedRow = vle.getSelectedRow();
 		PluginServices.getMDIManager().restoreCursor();
 		if (selectedRow.size() > 0) {
 			nextState = "Selection.WithSelectedFeatures";
+			end();
 		} else
 			nextState = "Selection.FirstPoint";
 		return selectedRow.size();
@@ -292,12 +225,12 @@ public class SelectionCADTool extends DefaultCADTool {
 	 *            parámetro x del punto que se pase para dibujar.
 	 */
 	public void drawOperation(Graphics g, double x, double y) {
-		SelectionCADToolState actualState = _fsm.getState();
+		ComplexSelectionCADToolState actualState = _fsm.getState();
 		String status = actualState.getName();
 		VectorialLayerEdited vle = getVLE();
 		ArrayList selectedHandler = vle.getSelectedHandler();
 		ViewPort vp=vle.getLayer().getFMap().getViewPort();
-		if (status.equals("Selection.SecondPoint")) {
+		if (status.equals("Selection.SecondPoint") || status.equals("Selection.SecondPointOutRectangle")) {
 			// Dibuja el rectángulo de selección
 			GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
 					4);
@@ -307,6 +240,23 @@ public class SelectionCADTool extends DefaultCADTool {
 			elShape.lineTo(firstPoint.getX(), y);
 			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
+					vp,
+					CADTool.selectSymbol);
+			Image img = vle.getSelectionImage();
+	        g.drawImage(img, 0, 0, null);
+	        return;
+		}if (status.equals("Selection.SecondPointCircle")) {
+			// Dibuja el círculo de selección
+			ShapeFactory.createCircle(firstPoint,new Point2D.Double(x,y)).draw((Graphics2D) g,
+					vp,
+					CADTool.selectSymbol);
+			Image img = vle.getSelectionImage();
+	        g.drawImage(img, 0, 0, null);
+	        return;
+		}else if (status.equals("Selection.NextPointPolygon")) {
+			// Dibuja el polígono de selección
+			IGeometry polygon=getGeometryPolygon(new Point2D.Double(x,y));
+			polygon.draw((Graphics2D) g,
 					vp,
 					CADTool.selectSymbol);
 			Image img = vle.getSelectionImage();
@@ -351,7 +301,7 @@ public class SelectionCADTool extends DefaultCADTool {
 	 *            Diferent option.
 	 */
 	public void addOption(String s) {
-		SelectionCADToolState actualState = (SelectionCADToolState) _fsm
+		ComplexSelectionCADToolState actualState = (ComplexSelectionCADToolState) _fsm
 				.getPreviousState();
 		String status = actualState.getName();
 		System.out.println("PREVIOUSSTATE =" + status); // + "ESTADO ACTUAL: " +
@@ -360,16 +310,59 @@ public class SelectionCADTool extends DefaultCADTool {
 		if (s.equals(PluginServices.getText(this,"cancel"))){
 			init();
 			return;
+		}else if (s.equals(PluginServices.getText(this,"select_all"))){
+			selectAll();
+			init();
+			return;
 		}
 		if (status.equals("Selection.FirstPoint")) {
 			setType(s);
 			return;
+		}else if (status.equals("Selection.NextPointPolygon")){
+			if (s.equals(PluginServices.getText(this,"end_polygon")) || s.equals("E") || s.equals("e")) {
+			IGeometry polygon=getGeometryPolygon(null);
+			selectWithPolygon(polygon);
+			pointsPolygon.clear();
+			setType(PluginServices.getText(this,"inside_circle"));
+			return;
+			}
 		}
 		init();
 	}
+	private int selectAll() {
+		VectorialLayerEdited vle = getVLE();
+		PluginServices.getMDIManager().setWaitCursor();
+		vle.selectAll();
+		ArrayList selectedRow = vle.getSelectedRow();
+		PluginServices.getMDIManager().restoreCursor();
+		if (selectedRow.size() > 0) {
+			nextState = "Selection.WithSelectedFeatures";
+		} else
+			nextState = "Selection.FirstPoint";
+		end();
+		return selectedRow.size();
+	}
 
-
-
+	private IGeometry getGeometryPolygon(Point2D p) {
+		Point2D[] points = (Point2D[]) pointsPolygon.toArray(new Point2D[0]);
+		GeneralPathX gpx = new GeneralPathX();
+		for (int i = 0; i < points.length; i++) {
+			if (i == 0) {
+				gpx.moveTo(points[i].getX(), points[i].getY());
+			} else {
+				gpx.lineTo(points[i].getX(), points[i].getY());
+			}
+		}
+		if (p!=null){
+			gpx.lineTo(p.getX(),p.getY());
+			gpx.closePath();
+			IGeometry polyline = ShapeFactory.createPolyline2D(gpx);
+			return polyline;
+		}
+		gpx.closePath();
+		IGeometry polygon = ShapeFactory.createPolygon2D(gpx);
+		return polygon;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -379,31 +372,17 @@ public class SelectionCADTool extends DefaultCADTool {
 	public void addValue(double d) {
 	}
 
-	public String getStatus() {
-		try {
-			SelectionCADToolState actualState = (SelectionCADToolState) _fsm
-					.getPreviousState();
-			String status = actualState.getName();
-
-			return status;
-		} catch (NullPointerException e) {
-			return "Selection.FirstPoint";
-		}
-	}
-
-
-
 	public void end() {
-		if (!getNextTool().equals("selection"))
+		if (!getNextTool().equals("complex_selection"))
 			CADExtension.setCADTool(getNextTool(),false);
 	}
 
 	public String getName() {
-		return PluginServices.getText(this,"selection_");
+		return PluginServices.getText(this,"complex_selection_");
 	}
 
 	public boolean selectFeatures(double x, double y, InputEvent event) {
-		SelectionCADToolState actualState = (SelectionCADToolState) _fsm
+		ComplexSelectionCADToolState actualState = (ComplexSelectionCADToolState) _fsm
 				.getState();
 
 		String status = actualState.getName();
@@ -483,16 +462,89 @@ public class SelectionCADTool extends DefaultCADTool {
 	}
 
 	public void setType(String type) {
-		if (type.equals("S") || type.equals("s")){
-			this.type=PluginServices.getText(this,"simple");
+		if (type.equals("OR") || type.equals("or")){
+			this.type=PluginServices.getText(this,"out_rectangle");
+		}else if (type.equals("IP") || type.equals("ip")){
+			this.type=PluginServices.getText(this,"inside_polygon");
+		}else if (type.equals("CP") || type.equals("cp")){
+			this.type=PluginServices.getText(this,"cross_polygon");
+		}else if (type.equals("OP") || type.equals("op")){
+			this.type=PluginServices.getText(this,"out_polygon");
+		}else if (type.equals("IC") || type.equals("ic")){
+			this.type=PluginServices.getText(this,"inside_circle");
+		}else if (type.equals("CC") || type.equals("cc")){
+			this.type=PluginServices.getText(this,"cross_circle");
+		}else if (type.equals("OC") || type.equals("oc")){
+			this.type=PluginServices.getText(this,"cross_circle");
+		}else if (type.equals(PluginServices.getText(this,"select_all"))){
+			selectAll();
+			init();
 		}else{
 			this.type = type;
 		}
 		pointsPolygon.clear();
 	}
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
+	 *      double, double)
+	 */
+	public void transition(double x, double y, InputEvent event) {
+		System.out.println("TRANSICION DESDE ESTADO " + _fsm.getState()
+				+ " x= " + x + " y=" + y);
+		try{
+		_fsm.addPoint(x, y, event);
+		}catch (Exception e) {
+			init();
+		}
+		System.out.println("ESTADO ACTUAL: " + getStatus());
+
+		// ESTO LO QUITO POR AHORA, PERO PUEDE QUE LO NECESITEMOS VOLVER A PONER.
+		// Lo he quitado porque cuando seleccionas algo con CAD, molesta que
+		// te hagan un redibujado.
+		/* FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
+		lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents(); */
+	}
+	public String getStatus() {
+		try {
+			ComplexSelectionCADToolState actualState = (ComplexSelectionCADToolState) _fsm
+					.getPreviousState();
+			String status = actualState.getName();
+
+			return status;
+		} catch (NullPointerException e) {
+			return "Selection.FirstPoint";
+		}
+	}
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
+	 *      java.lang.String)
+	 */
+	public void transition(String s) throws CommadException {
+		if (!super.changeCommand(s)){
+
+			_fsm.addOption(s);
+
+    	}
+	}
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
+	 *      double)
+	 */
+	public void transition(double d) {
+		// _fsm.addValue(sel,d);
+	}
 
 	public String toString() {
-		return "_selection";
+		return "_complex_selection";
+	}
+	public String getNextState() {
+		return nextState;
 	}
 
 }

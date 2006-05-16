@@ -109,7 +109,9 @@ public class StartEditing extends Extension {
 			// vista.getMapControl().drawMap(false);
 		}
 	}
-	 private void startCommandsApplicable(View vista,FLyrVect lv) {
+	 public static void startCommandsApplicable(View vista,FLyrVect lv) {
+		if (vista==null)
+			vista=(View)PluginServices.getMDIManager().getActiveView();
 		CADTool[] cadtools = CADExtension.getCADTools();
 		KeywordMap keywordMap = new KeywordMap(true);
 		for (int i = 0; i < cadtools.length; i++) {
