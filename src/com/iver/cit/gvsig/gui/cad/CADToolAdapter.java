@@ -162,7 +162,6 @@ public class CADToolAdapter extends Behavior {
 		if (!(aux instanceof VectorialLayerEdited)) 
 			return Double.MAX_VALUE;
 		VectorialLayerEdited vle = (VectorialLayerEdited) aux;		
-		VectorialEditableAdapter vea = vle.getVEA();
 		FLyrVect lyrVect = (FLyrVect) vle.getLayer();
 		SpatialCache cache = lyrVect.getSpatialCache();
 		ViewPort vp = getMapControl().getViewPort();
@@ -180,7 +179,8 @@ public class CADToolAdapter extends Behavior {
 		// usar e iterar por ellos para obtener el mejor punto.
 		NearestPointSnapper defaultSnap = new NearestPointSnapper();
 		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
-		SnappingVisitor snapVisitor = new SnappingVisitor(defaultSnap, point, mapTolerance);		
+		SnappingVisitor snapVisitor = new SnappingVisitor(defaultSnap, point, mapTolerance);
+		// System.out.println("Cache size = " + cache.size());
 		cache.query(e, snapVisitor);
 		
 
