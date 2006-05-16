@@ -2,6 +2,7 @@ package com.iver.cit.gvsig;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.View;
+import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent;
 import com.iver.cit.gvsig.fmap.edition.BeforeRowEditEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
@@ -54,7 +55,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.3  2006-05-10 06:26:24  caballero
+ * Revision 1.4  2006-05-16 07:06:02  caballero
+ * Saber si se realiza una operación desde la vista o desde la tabla.
+ *
+ * Revision 1.3  2006/05/10 06:26:24  caballero
  * comprobar si tiene capa asociada
  *
  * Revision 1.2  2006/05/09 09:26:04  caballero
@@ -96,7 +100,7 @@ public class EditionChangeManager implements IEditionListener{
 	 *  (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#beforeRowEditEvent(com.iver.cit.gvsig.fmap.edition.BeforeRowEditEvent)
 	 */
-	public void beforeRowEditEvent(BeforeRowEditEvent e) {
+	public void beforeRowEditEvent(IRow feat,BeforeRowEditEvent e) {
 		// TODO Auto-generated method stub
 
 	}

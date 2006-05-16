@@ -101,11 +101,10 @@ public class SelectionCADTool extends DefaultCADTool {
 	private String type=PluginServices.getText(this,"simple");
 	private ArrayList pointsPolygon=new ArrayList();
 	/**
-	 * Crea un nuevo LineCADTool.
+	 * Crea un nuevo SelectionCADTool.
 	 */
 	public SelectionCADTool() {
 	}
-
 	/**
 	 * Método de incio, para poner el código de todo lo que se requiera de una
 	 * carga previa a la utilización de la herramienta.
@@ -132,7 +131,7 @@ public class SelectionCADTool extends DefaultCADTool {
 			init();
 		}
 		System.out.println("ESTADO ACTUAL: " + getStatus());
-		
+
 		// ESTO LO QUITO POR AHORA, PERO PUEDE QUE LO NECESITEMOS VOLVER A PONER.
 		// Lo he quitado porque cuando seleccionas algo con CAD, molesta que
 		// te hagan un redibujado.
@@ -168,7 +167,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		return nextState;
 	}
 
-	private void pointDoubleClick(MapControl map) {
+	protected void pointDoubleClick(MapControl map) {
 		try {
 			FLayer[] actives = map.getMapContext()
             .getLayers().getActives();
@@ -497,7 +496,7 @@ public class SelectionCADTool extends DefaultCADTool {
 
 			return status;
 		} catch (NullPointerException e) {
-			return "Selection.FisrtPoint";
+			return "Selection.FirstPoint";
 		}
 	}
 
