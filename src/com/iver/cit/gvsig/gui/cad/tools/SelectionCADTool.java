@@ -66,10 +66,12 @@ import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Events.PointEvent;
+import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.Panels.TextFieldEdit;
 import com.iver.cit.gvsig.gui.cad.CADTool;
@@ -135,8 +137,17 @@ public class SelectionCADTool extends DefaultCADTool {
 		// ESTO LO QUITO POR AHORA, PERO PUEDE QUE LO NECESITEMOS VOLVER A PONER.
 		// Lo he quitado porque cuando seleccionas algo con CAD, molesta que
 		// te hagan un redibujado.
-		/* FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
-		lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents(); */
+		FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
+		//lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents();
+		com.iver.andami.ui.mdiManager.View[] views = (com.iver.andami.ui.mdiManager.View[]) PluginServices.getMDIManager().getAllViews();
+
+		for (int i=0 ; i<views.length ; i++){
+			if (views[i] instanceof Table){
+				Table table=(Table)views[i];
+				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(lv))
+					table.updateSelection();
+			}
+		}
 	}
 
 	/*
