@@ -119,7 +119,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	 *            parámetro y del punto que se pase en esta transición.
 	 */
 	public void addPoint(double x, double y, InputEvent event) {
-		if (((MouseEvent)event).getClickCount()==2){
+		if (event!=null && ((MouseEvent)event).getClickCount()==2){
 			pointDoubleClick((MapControl)event.getComponent());
 			return;
 		}
