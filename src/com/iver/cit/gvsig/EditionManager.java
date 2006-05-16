@@ -68,7 +68,7 @@ public class EditionManager implements LayerListener {
 	public void activationChanged(LayerEvent e) {
 		if (e.getSource().isActive())
 			ile=getLayerEdited(e.getSource());
-		if (ile.getLayer().equals(e.getSource())){
+		if (ile==null || ile.getLayer().equals(e.getSource())){
 
 			if (ile!=null && !ile.getLayer().isActive()) {
 			VectorialLayerEdited lastVLE = (VectorialLayerEdited)ile;
