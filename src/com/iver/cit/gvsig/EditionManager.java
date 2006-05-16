@@ -6,10 +6,15 @@ import java.util.logging.Logger;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.CancelationException;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.LayerCollectionEvent;
+import com.iver.cit.gvsig.fmap.layers.LayerCollectionListener;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerListener;
+import com.iver.cit.gvsig.fmap.layers.LayerPositionEvent;
+import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.layers.FactoryLayerEdited;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
@@ -37,7 +42,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * para permitir tener varias vistas con temas en edición
  *
  */
-public class EditionManager implements LayerListener {
+public class EditionManager implements LayerListener,LayerCollectionListener {
 	private ArrayList editedLayers = new ArrayList();
 	private ArrayList editedTables = new ArrayList();
 	//private ArrayList activeLayerEdited = new ArrayList();
@@ -66,8 +71,16 @@ public class EditionManager implements LayerListener {
 	}
 
 	public void activationChanged(LayerEvent e) {
-		if (e.getSource().isActive())
+		if (e.getSource().isActive()){
 			ile=getLayerEdited(e.getSource());
+			View view=(View)PluginServices.getMDIManager().getActiveView();
+			if (e.getSource().isEditing()){
+				view.showConsole();
+			}else{
+				view.hideConsole();
+			}
+
+		}
 		if (ile==null || ile.getLayer().equals(e.getSource())){
 
 			if (ile!=null && !ile.getLayer().isActive()) {
@@ -171,7 +184,55 @@ public class EditionManager implements LayerListener {
 		{
 			this.mapCtrl = mapCtrl;
 			mapCtrl.getMapContext().getLayers().addLayerListener(this);
+			mapCtrl.getMapContext().getLayers().addLayerCollectionListener(this);
 		}
+	}
+
+	public void layerAdded(LayerCollectionEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void layerMoved(LayerPositionEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void layerRemoved(LayerCollectionEvent e) {
+		VectorialLayerEdited vle=(VectorialLayerEdited)getActiveLayerEdited();
+		FLyrVect lv=(FLyrVect)vle.getLayer();
+		if (e.getAffectedLayer().equals(lv)){
+			View view=(View)PluginServices.getMDIManager().getActiveView();
+			view.hideConsole();
+			view.validate();
+			view.repaint();
+		}
+
+	}
+
+	public void layerAdding(LayerCollectionEvent e) throws CancelationException {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void layerMoving(LayerPositionEvent e) throws CancelationException {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void layerRemoving(LayerCollectionEvent e) throws CancelationException {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void activationChanged(LayerCollectionEvent e) throws CancelationException {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void visibilityChanged(LayerCollectionEvent e) throws CancelationException {
+		// TODO Auto-generated method stub
+
 	}
 
 

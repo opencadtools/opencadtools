@@ -30,9 +30,13 @@ import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.LayerCollectionEvent;
+import com.iver.cit.gvsig.fmap.layers.LayerCollectionListener;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawingListener;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
+import com.iver.cit.gvsig.fmap.layers.LayerPositionEvent;
+import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
@@ -413,23 +417,8 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 	public void activationGained(LayerEvent e) {
 		if (ViewCommandStackExtension.csd!=null){
-//			com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
-//					.getActiveView();
-
-//			View vista = (View) f;
-//			ProjectView model = vista.getModel();
-//			FMap mapa = model.getMapContext();
-//			FLayers layers = mapa.getLayers();
-//			for (int i = 0; i < layers.getLayersCount(); i++) {
-//				if (layers.getLayer(i) instanceof FLyrVect) {
-//					FLyrVect lyrVect = (FLyrVect) layers.getLayer(i);
-//					if (lyrVect.isEditing() && lyrVect.isActive() && lyrVect.getSource() instanceof IEditableSource) {
-						ViewCommandStackExtension.csd.setModel(((IEditableSource) ((FLyrVect)getLayer()).getSource())
-								.getCommandRecord());
-
-//					}
-//				}
-//			}
+			ViewCommandStackExtension.csd.setModel(((IEditableSource) ((FLyrVect)getLayer()).getSource())
+							.getCommandRecord());
 		}
 
 		if (cadtool!=null){
@@ -437,6 +426,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			PluginServices.getMainFrame().setSelectedTool(cadtool.toString());
 			StartEditing.startCommandsApplicable(null,(FLyrVect)getLayer());
 		}
+
 	}
 
 	public void activationLost(LayerEvent e) {
