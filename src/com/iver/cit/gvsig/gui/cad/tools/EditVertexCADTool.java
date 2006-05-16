@@ -365,6 +365,7 @@ public class EditVertexCADTool extends DefaultCADTool {
     	IGeometry geometryCloned=geome.cloneGeometry();
     	IGeometry geom1=null;
     	GeneralPathX gpxAux;
+    	boolean finish=false;
     	//FGeometry geom2=null;
 
     	//if (geometryCloned.getGeometryType() == FShape.POLYGON){
@@ -395,8 +396,9 @@ public class EditVertexCADTool extends DefaultCADTool {
                     	gpxAux.lineTo(pLast.getX(),pLast.getY());
                     	geom1=ShapeFactory.createPolyline2D(gpxAux);
                     	if (geom1.intersects(rect)){
-                    		newGp.moveTo(p.getX(), p.getY());
-                    		newGp.lineTo(pLast.getX(),pLast.getY());
+                    		finish=true;
+                    		newGp.moveTo(pLast.getX(), pLast.getY());
+                    		//newGp.lineTo(pLast.getX(),pLast.getY());
                     	}else{
                     		newGp.moveTo(pLast.getX(), pLast.getY());
                     	}
@@ -436,7 +438,7 @@ public class EditVertexCADTool extends DefaultCADTool {
                         	gpxAux.moveTo(pAnt.getX(),pAnt.getY());
                         	gpxAux.lineTo(firstPoint.getX(),firstPoint.getY());
                         	geom1=ShapeFactory.createPolyline2D(gpxAux);
-                        	if (geom1.intersects(rect)){
+                        	if (geom1.intersects(rect)|| finish){
                         		newGp.lineTo(p.getX(), p.getY());
                         		newGp.lineTo(pLast.getX(),pLast.getY());
                         	}else{
