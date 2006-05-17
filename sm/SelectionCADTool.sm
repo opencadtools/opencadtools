@@ -29,12 +29,6 @@ FirstPoint
     }
 
   {
-    addOption(s:String)
-      FirstPoint{
-        setQuestion(PluginServices.getText(this,"insert_point_selection"));
-        setDescription(new String[]{"cancel"});
-        addOption(s);
-        }
 
     addPoint( pointX:double,pointY:double,event:InputEvent)
       [ctxt.getType().equals(PluginServices.getText(this,"simple")) && ctxt.selectFeatures(pointX,pointY, event) && ctxt.getNextState().equals("Selection.SecondPoint")]

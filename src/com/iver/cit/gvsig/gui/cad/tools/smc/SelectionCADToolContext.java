@@ -216,26 +216,6 @@ public final class SelectionCADToolContext
                 return;
             }
 
-            protected void addOption(SelectionCADToolContext context, String s)
-            {
-                SelectionCADTool ctxt = context.getOwner();
-
-                SelectionCADToolState endState = context.getState();
-
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
-                    ctxt.setDescription(new String[]{"cancel"});
-                    ctxt.addOption(s);
-                }
-                finally
-                {
-                    context.setState(endState);
-                }
-                return;
-            }
-
             protected void addPoint(SelectionCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 SelectionCADTool ctxt = context.getOwner();
