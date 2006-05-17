@@ -110,7 +110,7 @@ public void execute(String actionCommand) {
 			wizard.getWizardComponents().getFinishButton().setEnabled(false);
 			wizard.getViewInfo().setWidth(540);
 			wizard.getViewInfo().setHeight(350);
-			wizard.getViewInfo().setTitle(PluginServices.getText(this,"new_theme"));
+			wizard.getViewInfo().setTitle(PluginServices.getText(this,"new_layer"));
 			// Utilities.centerComponentOnScreen(wizard);
 			// wizardFrame.show();
 			PluginServices.getMDIManager().addView(wizard);

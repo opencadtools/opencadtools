@@ -8,38 +8,38 @@
 		<extension class-name="com.iver.cit.gvsig.StartEditing"
 			description="Extensión encargada de comenzar la edición sobre la capa activa."
 			active="true">
-			<menu text="tema/start_edition" action-command="STARTEDITING"/>
+			<menu text="capa/start_edition" action-command="STARTEDITING"/>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.NewTheme"
-			description="Crear un nuevo tema."
+			description="Crear una nueva capa."
 			active="true">
-			<menu text="vista/new_theme/new_shp" action-command="SHP"/>
-			<menu text="vista/new_theme/new_dxf" action-command="DXF"/>
-			<menu text="vista/new_theme/new_postgis" action-command="POSTGIS"/>
+			<menu text="vista/new_layer/new_shp" action-command="SHP"/>
+			<menu text="vista/new_layer/new_dxf" action-command="DXF"/>
+			<menu text="vista/new_layer/new_postgis" action-command="POSTGIS"/>
 		</extension>
 
 		<extension class-name="com.iver.cit.gvsig.StopEditing"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma."
 			active="true">
-			<menu text="tema/stop_edition" action-command="STOPEDITING"/>
+			<menu text="capa/stop_edition" action-command="STOPEDITING"/>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.SaveAs"
 			description="Salvar como."
 			active="true">
-			<menu text="tema/save_as/shp" action-command="SHP"/>
-			<menu text="tema/save_as/dxf" action-command="DXF"/>
-			<menu text="tema/save_as/postgis" action-command="POSTGIS"/>
+			<menu text="capa/save_as/shp" action-command="SHP"/>
+			<menu text="capa/save_as/dxf" action-command="DXF"/>
+			<menu text="capa/save_as/postgis" action-command="POSTGIS"/>
 		</extension>
 
 		<!-- <extension class-name="com.iver.cit.gvsig.StopEditingToGT2Shp"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma si es un shapefile."
 			active="true">
-			<menu text="tema/stop_edition/GT2shp" action-command="STOPEDITING"/>
+			<menu text="capa/stop_edition/GT2shp" action-command="STOPEDITING"/>
 		</extension> -->
 		<extension class-name="com.iver.cit.gvsig.RedoViewExtension"
 			description="Extensión encargada de rehacer la edición sobre la capa activa."
 			active="true">
-			<menu text="tema/redo" action-command="REDO" icon="images/Redo.png"/>
+			<menu text="capa/redo" action-command="REDO" icon="images/Redo.png"/>
 		<tool-bar name="modificar">
 				<action-tool name="redo" icon="images/Redo.png" action-command="REDO" tooltip="redo" group="vista"/>
 		</tool-bar>
@@ -47,7 +47,7 @@
 		<extension class-name="com.iver.cit.gvsig.UndoViewExtension"
 			description="Extensión encargada de dehacer la edición sobre la capa activa."
 			active="true">
-			<menu text="tema/undo" action-command="UNDO" icon="images/Undo.png"/>
+			<menu text="capa/undo" action-command="UNDO" icon="images/Undo.png"/>
 		<tool-bar name="modificar">
 				<action-tool name="deshacer" icon="images/Undo.png" action-command="UNDO" tooltip="undo" group="vista"/>
 		</tool-bar>
@@ -71,11 +71,11 @@
 		<extension class-name="com.iver.cit.gvsig.EditingExtension"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla en un shapefile."
 			active="true">
-			<menu text="tema/cancel_edition" action-command="CANCELEDITING"/>
-			<menu text="tema/show_grid" action-command="SHOWGRID"/>
-			<menu text="tema/hide_grid" action-command="HIDEGRID"/>
-			<menu text="tema/adjust_grid" action-command="SETADJUSTGRID"/>
-			<menu text="tema/no_adjust_grid" action-command="NOTADJUSTGRID"/>
+			<menu text="capa/cancel_edition" action-command="CANCELEDITING"/>
+			<menu text="capa/show_grid" action-command="SHOWGRID"/>
+			<menu text="capa/hide_grid" action-command="HIDEGRID"/>
+			<menu text="capa/adjust_grid" action-command="SETADJUSTGRID"/>
+			<menu text="capa/no_adjust_grid" action-command="NOTADJUSTGRID"/>
 		</extension>
 
 		<extension class-name="com.iver.cit.gvsig.CADExtension"
@@ -129,7 +129,7 @@
 		</extension>
 
 		<extension class-name="com.iver.cit.gvsig.InsertPointExtension"
-			description="Extensión encargada de insertar puntos en un tema en edición."
+			description="Extensión encargada de insertar puntos en una capa en edición."
 			active="true">
 			<menu text="geometry/insert/point" action-command="_point" icon="images/Point.png"/>
 			<tool-bar name="insert">
@@ -137,7 +137,7 @@
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertLineExtension"
-			description="Extensión encargada de insertar líneas en un tema en edición."
+			description="Extensión encargada de insertar líneas en una capa en edición."
 			active="true">
 			<menu text="geometry/insert/line" action-command="_line" icon="images/Rect.png"/>
 			<menu text="geometry/insert/arc" action-command="_arc" icon="images/Arc.png"/>
@@ -148,7 +148,7 @@
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertPolyLineExtension"
-			description="Extensión encargada de insertar polilíneas en un tema en edición."
+			description="Extensión encargada de insertar polilíneas en una capa en edición."
 			active="true">
 			<menu text="geometry/insert/polyline" action-command="_polyline" icon="images/Line.png"/>
 			<tool-bar name="insert">
@@ -156,7 +156,7 @@
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertPolygonExtension"
-			description="Extensión encargada de insertar poligonos en un tema en edición."
+			description="Extensión encargada de insertar poligonos en una capa en edición."
 			active="true">
 			<menu text="geometry/insert/polygon" action-command="_polygon" icon="images/Poligon.png"/>
 			<menu text="geometry/insert/rectangle" action-command="_rectangle" icon="images/Rectangle.png"/>
