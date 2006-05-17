@@ -17,26 +17,31 @@ public class SnappingVisitor implements ItemVisitor {
 	ISnapper snapper;
 	Point2D snapPoint = null;
 	Point2D queryPoint = null;
+	Point2D lastPointEntered = null;
+	
 	double minDist = Double.MAX_VALUE;
 	double distActual;
 	double tolerance;
 	
-	public SnappingVisitor(ISnapper snapper, Point2D queryPoint, double tolerance)
+	public SnappingVisitor(ISnapper snapper, Point2D queryPoint, double tolerance, Point2D lastPointEntered)
 	{
 		this.snapper = snapper;
 		this.tolerance = tolerance;
 		this.queryPoint = queryPoint;
+		this.lastPointEntered = lastPointEntered;
 		distActual = tolerance;
+		snapper.setSnapPoint(null);
 	}
 	
 	public void visitItem(Object item) {
 		IGeometry geom = (IGeometry) item;
-		Point2D aux  = snapper.getSnapPoint(queryPoint, geom, distActual);
+		Point2D aux  = snapper.getSnapPoint(queryPoint, geom, distActual, lastPointEntered);
 		if (aux != null)
 		{
 			snapPoint = aux;
 			minDist = snapPoint.distance(queryPoint);
 			distActual = minDist;
+			snapper.setSnapPoint(snapPoint);
 		}
 		
 	}

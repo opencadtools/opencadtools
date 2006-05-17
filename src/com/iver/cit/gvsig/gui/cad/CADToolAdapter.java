@@ -13,22 +13,17 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.MemoryImageSource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Stack;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.EditionManager;
-import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.ViewPort;
-import com.iver.cit.gvsig.fmap.core.Handler;
-import com.iver.cit.gvsig.fmap.core.IFeature;
-import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
-import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
@@ -38,6 +33,7 @@ import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
 import com.iver.cit.gvsig.gui.cad.snapping.NearestPointSnapper;
 import com.iver.cit.gvsig.gui.cad.snapping.SnappingVisitor;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
@@ -70,6 +66,8 @@ public class CADToolAdapter extends Behavior {
 	private FSymbol symbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT, Color.RED);
 
 	private Point2D mapAdjustedPoint;
+	
+	private ISnapper usedSnap = null;
 
 	private boolean questionAsked = false;
 
@@ -163,6 +161,8 @@ public class CADToolAdapter extends Behavior {
 			return Double.MAX_VALUE;
 		VectorialLayerEdited vle = (VectorialLayerEdited) aux;		
 		FLyrVect lyrVect = (FLyrVect) vle.getLayer();
+		ArrayList snappers = vle.getSnappers();
+				
 		SpatialCache cache = lyrVect.getSpatialCache();
 		ViewPort vp = getMapControl().getViewPort();
 		if (cache == null)
@@ -175,20 +175,39 @@ public class CADToolAdapter extends Behavior {
 
 		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
 		
-		// TODO: Poner en VectorialLayerEdited los ISnappers que queremos
-		// usar e iterar por ellos para obtener el mejor punto.
+		// TODO: PROVISIONAL. PONER ALGO COMO ESTO EN UN CUADRO DE DIALOGO
+		// DE CONFIGURACIÓN DEL SNAPPING
 		NearestPointSnapper defaultSnap = new NearestPointSnapper();
-		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
-		SnappingVisitor snapVisitor = new SnappingVisitor(defaultSnap, point, mapTolerance);
-		// System.out.println("Cache size = " + cache.size());
-		cache.query(e, snapVisitor);
+		snappers.clear();
+		snappers.add(defaultSnap);
 		
-
-		if (snapVisitor.getSnapPoint() != null) {
-			mapHandlerAdjustedPoint.setLocation(snapVisitor.getSnapPoint());
-			return snapVisitor.getMinDist();
+		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
+		double minDist = mapTolerance;
+		usedSnap = null;
+		Point2D lastPoint = null;
+		if (previousPoint != null)
+		{
+			lastPoint = new Point2D.Double(previousPoint[0], previousPoint[1]);
 		}
+		for (int i = 0; i < snappers.size(); i++)
+		{
+			ISnapper theSnapper = (ISnapper) snappers.get(i);	
+			
+			SnappingVisitor snapVisitor = new SnappingVisitor(theSnapper, point, mapTolerance, lastPoint);
+			System.out.println("Cache size = " + cache.size());
+			cache.query(e, snapVisitor);		
 
+			if (snapVisitor.getSnapPoint() != null) {
+				if (minDist > snapVisitor.getMinDist())
+				{
+					minDist = snapVisitor.getMinDist();
+					usedSnap = theSnapper;
+					mapHandlerAdjustedPoint.setLocation(snapVisitor.getSnapPoint());
+				}
+			}
+		}
+		if (usedSnap != null)
+			return minDist;
 		return Double.MAX_VALUE;
 
 	}
@@ -256,16 +275,22 @@ public class CADToolAdapter extends Behavior {
 		g.drawLine((int) (p.getX()), (int) (p.getY() - size1),
 				(int) (p.getX()), (int) (p.getY() + size1));
 
+		getMapControl().setToolTipText("");
 		if (adjustedPoint != null) {
 			if (adjustSnapping) {
-				g.setColor(Color.ORANGE);
+				/* g.setColor(Color.ORANGE);
 				g.drawRect((int) (adjustedPoint.getX() - 6),
 						(int) (adjustedPoint.getY() - 6), 12, 12);
 				g.drawRect((int) (adjustedPoint.getX() - 3),
 						(int) (adjustedPoint.getY() - 3), 6, 6);
 				g.setColor(Color.MAGENTA);
 				g.drawRect((int) (adjustedPoint.getX() - 4),
-						(int) (adjustedPoint.getY() - 4), 8, 8);
+						(int) (adjustedPoint.getY() - 4), 8, 8); */
+				if (usedSnap != null)
+				{					
+					usedSnap.draw(g, adjustedPoint);
+					getMapControl().setToolTipText(usedSnap.getToolTipText());
+				}
 
 				adjustSnapping = false;
 			} else {
@@ -708,7 +733,6 @@ public class CADToolAdapter extends Behavior {
 			return;
 		VectorialLayerEdited vle = (VectorialLayerEdited) aux;		
 		VectorialEditableAdapter vea = vle.getVEA();
-		FLyrVect lyrVect = (FLyrVect) vle.getLayer();
 
 		vea.startComplexRow();
 		FBitSet selection = vea.getSelection();

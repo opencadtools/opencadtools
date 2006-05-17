@@ -39,6 +39,7 @@ import com.iver.cit.gvsig.fmap.layers.LayerPositionEvent;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
+import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -48,6 +49,8 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	private Point2D lastPoint;
 	private Point2D firstPoint;
 	private CADTool cadtool=null;
+	
+	private ArrayList snappers = new ArrayList();
 
 	public VectorialLayerEdited(FLayer lyr)
 	{
@@ -438,5 +441,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			cadtool.init();
 		}
 
+	}
+
+	public ArrayList getSnappers() {
+		return snappers;
 	}
 }
