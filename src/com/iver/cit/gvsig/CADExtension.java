@@ -49,6 +49,7 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
+import javax.swing.FocusManager;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.text.JTextComponent;
@@ -241,12 +242,11 @@ public class CADExtension extends Extension {
 					// TODO: REVISAR ESTO CUANDO VIENE UN INTRO DESDE UN
 					// JTEXTAREA
 					// QUE NO ES EL DE CONSOLA
-					view.focusConsole("");
+					//view.focusConsole("");
 				}
 
 				else {
-					if ((e.getID() == KeyEvent.KEY_RELEASED)
-							&& (!e.isActionKey())) {
+					if ((!e.isActionKey())) {
 						//if (Character.isLetterOrDigit(e.getKeyChar())) {
 							Character keyChar = new Character(e.getKeyChar());
 							if (e.getComponent().getName() != null) {
@@ -346,6 +346,9 @@ public class CADExtension extends Extension {
 			mapControl.addMapTool("cadtooladapter",  new Behavior[]{adapter,new MouseMovementBehavior(sbl)});
 		}
 		view.getMapControl().setTool("cadtooladapter");
+		view.getConsolePanel().getTxt().requestFocusInWindow();
+
+
 		view.addConsoleListener("cad", new ResponseListener() {
 			public void acceptResponse(String response) {
 				adapter.textEntered(response);

@@ -425,6 +425,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			CADExtension.getCADToolAdapter().setCadTool(cadtool);
 			PluginServices.getMainFrame().setSelectedTool(cadtool.toString());
 			StartEditing.startCommandsApplicable(null,(FLyrVect)getLayer());
+			CADExtension.initFocus();
 		}
 
 	}
