@@ -8,6 +8,7 @@ import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.CancelationException;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerCollectionEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerCollectionListener;
@@ -200,12 +201,19 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 
 	public void layerRemoved(LayerCollectionEvent e) {
 		VectorialLayerEdited vle=(VectorialLayerEdited)getActiveLayerEdited();
-		FLyrVect lv=(FLyrVect)vle.getLayer();
-		if (e.getAffectedLayer().equals(lv)){
-			View view=(View)PluginServices.getMDIManager().getActiveView();
-			view.hideConsole();
-			view.validate();
-			view.repaint();
+		if (vle!=null){
+			FLayers layers=getMapControl().getMapContext().getLayers();
+			if (layers.getLayersCount()>0)
+				layers.getLayer(0).setActive(true);
+			vle.clearSelection();
+			FLyrVect lv=(FLyrVect)vle.getLayer();
+			if (e.getAffectedLayer().equals(lv)){
+				View view=(View)PluginServices.getMDIManager().getActiveView();
+				view.hideConsole();
+				view.validate();
+				view.repaint();
+			}
+			PluginServices.getMainFrame().enableControls();
 		}
 
 	}
