@@ -17,7 +17,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  *
  * @author Vicente Caballero Navarro
  */
-public class EditingExtension extends Extension {
+public class GridExtension extends Extension {
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
@@ -32,43 +32,7 @@ public class EditingExtension extends Extension {
 				.getActiveView();
 
 		View vista = (View) f;
-		if (s.equals("CANCELEDITING")) {
-			EditionManager editionManager = CADExtension.getEditionManager();
-			VectorialLayerEdited vle = (VectorialLayerEdited) editionManager
-					.getActiveLayerEdited();
-			FLyrVect lv = (FLyrVect) vle.getLayer();
-			com.iver.andami.ui.mdiManager.View[] views = PluginServices
-				.getMDIManager().getAllViews();
-			for (int j = 0; j < views.length; j++) {
-				if (views[j] instanceof Table) {
-					Table table = (Table) views[j];
-					if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(lv)) {
-						try {
-							table.cancelEditing();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}else if(views[j] instanceof View){
-					View view=(View)views[j];
-					FLyrVect layer=(FLyrVect)view.getMapControl().getMapContext().getLayers().getActives()[0];
-					if (layer.equals(lv)){
-						view.hideConsole();
-					}
-				}
-			}
-			vle.clearSelection();
-			try {
-				lv.setEditing(false);
-			} catch (EditionException e) {
-				e.printStackTrace();
-				NotificationManager.addError(e);
-			}
-
-			vista.getMapControl().setTool("zoomIn");
-
-
-		} else if (s.equals("SHOWGRID")) {
+		if (s.equals("SHOWGRID")) {
 			CADExtension.getCADToolAdapter().setMapControl(
 					vista.getMapControl());
 			CADExtension.getCADToolAdapter().setGrid(true);

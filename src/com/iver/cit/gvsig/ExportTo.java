@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.ProgressMonitor;
 
 import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.gdbms.engine.values.Value;
@@ -17,6 +18,7 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
@@ -37,13 +39,16 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
+import com.iver.cit.gvsig.fmap.operations.CancellableMonitorable;
+import com.iver.cit.gvsig.fmap.operations.DefaultCancellableMonitorable;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.layout.Attributes;
 import com.iver.cit.gvsig.jdbc_spatial.DlgConnection;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 import com.iver.cit.gvsig.project.ProjectView;
 import com.iver.utiles.SimpleFileFilter;
 
-public class SaveAs extends Extension {
+public class ExportTo extends Extension {
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
@@ -69,9 +74,18 @@ public class SaveAs extends Extension {
 				for (int i = 0; i < actives.length; i++) {
 					if (actives[i] instanceof FLyrVect) {
 						FLyrVect lv = (FLyrVect) actives[i];
-
+						int numSelec = lv.getRecordset().getSelection()
+								.cardinality();
+						if (numSelec > 0) {
+							int resp = JOptionPane.showConfirmDialog(null,
+									"se_van_a_guardar_" + numSelec
+											+ " features_desea_continuar",
+									"Export", JOptionPane.YES_NO_OPTION);
+							if (resp == JOptionPane.NO_OPTION) {
+								continue;
+							}
+						} // if numSelec > 0
 						if (actionCommand.equals("SHP")) {
-
 							saveToShp(lv);
 						}
 						if (actionCommand.equals("DXF")) {
@@ -80,9 +94,15 @@ public class SaveAs extends Extension {
 						if (actionCommand.equals("POSTGIS")) {
 							saveToPostGIS(lv);
 						}
+						JOptionPane.showMessageDialog(null, PluginServices
+								.getText(this, "capa_exportada"), "Export",
+								JOptionPane.INFORMATION_MESSAGE);
 					} // actives[i]
 				} // for
 			} catch (EditionException e) {
+				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(), e);
+			} catch (DriverException e) {
 				e.printStackTrace();
 				NotificationManager.addError(e.getMessage(), e);
 			}
@@ -204,8 +224,7 @@ public class SaveAs extends Extension {
 			SimpleFileFilter filterShp = new SimpleFileFilter("dxf",
 					PluginServices.getText(this, "dxf_files"));
 			jfc.setFileFilter(filterShp);
-			if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION)
-			{
+			if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
 				File newFile = jfc.getSelectedFile();
 				String path = newFile.getAbsolutePath();
 				if (!(path.toLowerCase().endsWith(".dxf"))) {
@@ -265,14 +284,51 @@ public class SaveAs extends Extension {
 				SelectableDataSource sds = layer.getRecordset();
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 				lyrDef.setFieldsDesc(fieldsDescrip);
-				lyrDef.setFile(newFile);
-				lyrDef.setName(newFile.getName());
-				lyrDef.setShapeType(layer.getShapeType());
-				writer.setFile(newFile);
-				writer.initialize(lyrDef);
+				if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
+															// ficheros
+				{
+					// puntos
+					String aux = path.replaceFirst(".shp", "_points.shp");
+					File filePoints = new File(aux);
+					lyrDef.setFile(filePoints);
+					lyrDef.setName(filePoints.getName());
+					lyrDef.setShapeType(FShape.POINT);
+					writer.setFile(filePoints);
+					lyrDef.setFile(filePoints);
+					writer.initialize(lyrDef);
+					writeFeatures(layer, writer);
 
-				writeFeatures(layer, writer);
+					// Lineas
+					aux = path.replaceFirst(".shp", "_line.shp");
+					File fileLines = new File(aux);
+					lyrDef.setFile(fileLines);
+					lyrDef.setName(fileLines.getName());
+					lyrDef.setShapeType(FShape.LINE);
+					writer.setFile(fileLines);
+					lyrDef.setFile(fileLines);
+					writer.initialize(lyrDef);
+					writeFeatures(layer, writer);
 
+					// Polígonos
+					aux = path.replaceFirst(".shp", "_polygons.shp");
+					File filePolygons = new File(aux);
+					lyrDef.setFile(filePolygons);
+					lyrDef.setName(filePolygons.getName());
+					lyrDef.setShapeType(FShape.POLYGON);
+					writer.setFile(filePolygons);
+					lyrDef.setFile(filePolygons);
+					writer.initialize(lyrDef);
+					writeFeatures(layer, writer);
+				} else {
+					lyrDef.setFile(newFile);
+					lyrDef.setName(newFile.getName());
+					lyrDef.setShapeType(layer.getShapeType());
+					writer.setFile(newFile);
+					writer.initialize(lyrDef);
+
+					writeFeatures(layer, writer);
+
+				}
 			}
 		} catch (DriverIOException e) {
 			e.printStackTrace();
@@ -317,4 +373,13 @@ public class SaveAs extends Extension {
 		}
 
 	}
+
+	private CancellableMonitorable createCancelMonitor(int numSteps) {
+		DefaultCancellableMonitorable monitor = new DefaultCancellableMonitorable();
+		monitor.setInitialStep(0);
+		monitor.setDeterminatedProcess(true);
+		monitor.setFinalStep(numSteps);
+		return monitor;
+	}
+
 }
