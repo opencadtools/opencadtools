@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
@@ -39,16 +40,100 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
-import com.iver.cit.gvsig.fmap.operations.CancellableMonitorable;
-import com.iver.cit.gvsig.fmap.operations.DefaultCancellableMonitorable;
 import com.iver.cit.gvsig.gui.View;
-import com.iver.cit.gvsig.gui.layout.Attributes;
 import com.iver.cit.gvsig.jdbc_spatial.DlgConnection;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 import com.iver.cit.gvsig.project.ProjectView;
 import com.iver.utiles.SimpleFileFilter;
 
 public class ExportTo extends Extension {
+
+	private class WriterTask extends AbstractMonitorableTask
+	{
+		FLyrVect lyrVect;
+		IWriter writer;
+		int rowCount;
+		ReadableVectorial va;
+		SelectableDataSource sds;
+		FBitSet bitSet;
+		public WriterTask(FLyrVect lyr, IWriter writer) throws DriverException, DriverIOException
+		{
+			this.lyrVect = lyr;
+			this.writer = writer;
+			
+			setInitialStep(0);
+			setDeterminatedProcess(true);
+			setStatusMessage(PluginServices.getText(this, "exportando_features"));
+			
+			va = lyrVect.getSource();
+			sds = lyrVect.getRecordset();
+
+			bitSet = sds.getSelection();
+
+			if (bitSet.cardinality() == 0)
+				rowCount = va.getShapeCount();
+			else
+				rowCount = bitSet.cardinality();
+
+			setFinalStep(rowCount);
+			
+		}
+		public void run() throws Exception {
+
+			// Creamos la tabla.
+			writer.preProcess();
+
+			if (bitSet.cardinality() == 0) {
+				rowCount = va.getShapeCount();
+				for (int i = 0; i < rowCount; i++) {
+					IGeometry geom = va.getShape(i);
+
+					reportStep();
+					setNote(PluginServices.getText(this, "exporting_") + i);
+					if (isCanceled())
+						break;
+
+					if (geom != null) {
+						Value[] values = sds.getRow(i);
+						IFeature feat = new DefaultFeature(geom, values, "" + i);
+						DefaultRowEdited edRow = new DefaultRowEdited(feat,
+								DefaultRowEdited.STATUS_ADDED, i);
+						writer.process(edRow);
+					}
+				}
+			} else {
+				int counter = 0;
+				for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
+						.nextSetBit(i + 1)) {
+					IGeometry geom = va.getShape(i);
+
+					reportStep();
+					setNote(PluginServices.getText(this, "exporting_") + counter);
+					if (isCanceled())
+						break;
+
+					if (geom != null) {
+						Value[] values = sds.getRow(i);
+						IFeature feat = new DefaultFeature(geom, values, "" + i);
+						DefaultRowEdited edRow = new DefaultRowEdited(feat,
+								DefaultRowEdited.STATUS_ADDED, i);
+
+						writer.process(edRow);
+					}
+				}
+
+			}
+
+			writer.postProcess();
+						
+			JOptionPane.showMessageDialog(
+					(JComponent) PluginServices.getMDIManager().getActiveView()
+					, PluginServices.getText(this, "capa_exportada"), "Export",
+					JOptionPane.INFORMATION_MESSAGE);
+
+		}
+		
+	}
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
@@ -77,7 +162,8 @@ public class ExportTo extends Extension {
 						int numSelec = lv.getRecordset().getSelection()
 								.cardinality();
 						if (numSelec > 0) {
-							int resp = JOptionPane.showConfirmDialog(null,
+							int resp = JOptionPane.showConfirmDialog(
+									(JComponent) PluginServices.getMDIManager().getActiveView(),
 									"se_van_a_guardar_" + numSelec
 											+ " features_desea_continuar",
 									"Export", JOptionPane.YES_NO_OPTION);
@@ -94,9 +180,6 @@ public class ExportTo extends Extension {
 						if (actionCommand.equals("POSTGIS")) {
 							saveToPostGIS(lv);
 						}
-						JOptionPane.showMessageDialog(null, PluginServices
-								.getText(this, "capa_exportada"), "Export",
-								JOptionPane.INFORMATION_MESSAGE);
 					} // actives[i]
 				} // for
 			} catch (EditionException e) {
@@ -105,12 +188,15 @@ public class ExportTo extends Extension {
 			} catch (DriverException e) {
 				e.printStackTrace();
 				NotificationManager.addError(e.getMessage(), e);
+			} catch (DriverIOException e) {
+				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(), e);
 			}
 
 		}
 	}
 
-	public void saveToPostGIS(FLyrVect layer) throws EditionException {
+	public void saveToPostGIS(FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			String tableName = JOptionPane.showInputDialog(PluginServices
 					.getText(this, "intro_tablename"));
@@ -154,13 +240,16 @@ public class ExportTo extends Extension {
 			throw new EditionException(e);
 		} catch (SQLException e) {
 			throw new EditionException(e);
-		} catch (DriverIOException e) {
-			throw new EditionException(e);
 		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
 			e.printStackTrace();
 			throw new EditionException(e);
 		}
 
+	}
+	
+	private void writeFeatures(FLyrVect layer, IWriter writer) throws DriverException, DriverIOException
+	{
+		PluginServices.cancelableBackgroundExecution(new WriterTask(layer, writer));
 	}
 
 	/**
@@ -174,7 +263,7 @@ public class ExportTo extends Extension {
 	 * @throws DriverIOException
 	 * @throws com.hardcode.gdbms.engine.data.driver.DriverException
 	 */
-	public void writeFeatures(FLyrVect layer, IWriter writer)
+	public void writeFeaturesNoThread(FLyrVect layer, IWriter writer)
 			throws EditionException, DriverException, DriverIOException,
 			com.hardcode.gdbms.engine.data.driver.DriverException {
 		ReadableVectorial va = layer.getSource();
@@ -185,10 +274,29 @@ public class ExportTo extends Extension {
 
 		int rowCount;
 		FBitSet bitSet = layer.getRecordset().getSelection();
+
+		if (bitSet.cardinality() == 0)
+			rowCount = va.getShapeCount();
+		else
+			rowCount = bitSet.cardinality();
+
+		ProgressMonitor progress = new ProgressMonitor(
+				(JComponent) PluginServices.getMDIManager().getActiveView(),
+				PluginServices.getText(this, "exportando_features"),
+				PluginServices.getText(this, "exportando_features"), 0,
+				rowCount);
+
+		progress.setMillisToDecideToPopup(200);
+		progress.setMillisToPopup(500);
+
 		if (bitSet.cardinality() == 0) {
 			rowCount = va.getShapeCount();
 			for (int i = 0; i < rowCount; i++) {
 				IGeometry geom = va.getShape(i);
+
+				progress.setProgress(i);
+				if (progress.isCanceled())
+					break;
 
 				if (geom != null) {
 					Value[] values = sds.getRow(i);
@@ -199,9 +307,14 @@ public class ExportTo extends Extension {
 				}
 			}
 		} else {
+			int counter = 0;
 			for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
 					.nextSetBit(i + 1)) {
 				IGeometry geom = va.getShape(i);
+
+				progress.setProgress(counter++);
+				if (progress.isCanceled())
+					break;
 
 				if (geom != null) {
 					Value[] values = sds.getRow(i);
@@ -216,9 +329,10 @@ public class ExportTo extends Extension {
 		}
 
 		writer.postProcess();
+		progress.close();
 	}
 
-	public void saveToDxf(FLyrVect layer) throws EditionException {
+	public void saveToDxf(FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			JFileChooser jfc = new JFileChooser();
 			SimpleFileFilter filterShp = new SimpleFileFilter("dxf",
@@ -251,9 +365,6 @@ public class ExportTo extends Extension {
 				writeFeatures(layer, writer);
 			}
 
-		} catch (DriverIOException e) {
-			e.printStackTrace();
-			throw new EditionException(e);
 		} catch (DriverException e) {
 			e.printStackTrace();
 			throw new EditionException(e);
@@ -264,7 +375,7 @@ public class ExportTo extends Extension {
 
 	}
 
-	public void saveToShp(FLyrVect layer) throws EditionException {
+	public void saveToShp(FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			JFileChooser jfc = new JFileChooser();
 			SimpleFileFilter filterShp = new SimpleFileFilter("shp",
@@ -285,7 +396,7 @@ public class ExportTo extends Extension {
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 				lyrDef.setFieldsDesc(fieldsDescrip);
 				if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
-															// ficheros
+				// ficheros
 				{
 					// puntos
 					String aux = path.replaceFirst(".shp", "_points.shp");
@@ -330,9 +441,6 @@ public class ExportTo extends Extension {
 
 				}
 			}
-		} catch (DriverIOException e) {
-			e.printStackTrace();
-			throw new EditionException(e);
 		} catch (DriverException e) {
 			e.printStackTrace();
 			throw new EditionException(e);
@@ -372,14 +480,6 @@ public class ExportTo extends Extension {
 			return false;
 		}
 
-	}
-
-	private CancellableMonitorable createCancelMonitor(int numSteps) {
-		DefaultCancellableMonitorable monitor = new DefaultCancellableMonitorable();
-		monitor.setInitialStep(0);
-		monitor.setDeterminatedProcess(true);
-		monitor.setFinalStep(numSteps);
-		return monitor;
 	}
 
 }
