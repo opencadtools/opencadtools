@@ -46,37 +46,25 @@ import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
-import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.InternalPolygonCADTool;
 
 /**
- * Extensión que gestiona la inserción de poligonos en edición.
+ * Extensión que gestiona la inserción de polígonos internos en edición.
  *
  * @author Vicente Caballero Navarro
  */
-public class InsertPolygonExtension extends Extension {
+public class InternalPolygonExtension extends Extension {
 	private View view;
 
 	private MapControl mapControl;
-	private PolygonCADTool polygon;
+	private InternalPolygonCADTool internalpolygon;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		polygon = new PolygonCADTool();
-		CircleCADTool circle=new CircleCADTool();
-        RectangleCADTool rectangle=new RectangleCADTool();
-        EllipseCADTool ellipse=new EllipseCADTool();
-        EditVertexCADTool editvertex=new EditVertexCADTool();
-		CADExtension.addCADTool("_polygon", polygon);
-		CADExtension.addCADTool("_circle",circle);
-	    CADExtension.addCADTool("_rectangle", rectangle);
-	    CADExtension.addCADTool("_ellipse", ellipse);
-	    CADExtension.addCADTool("_editvertex",editvertex);
+		internalpolygon=new InternalPolygonCADTool();
+       CADExtension.addCADTool("_internalpolygon",internalpolygon);
 	}
 
 	/**
@@ -84,11 +72,7 @@ public class InsertPolygonExtension extends Extension {
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
-		if (s.equals("_polygon")||
-				s.equals("_circle")||
-				s.equals("_ellipse")||
-				s.equals("_rectangle")||
-				s.equals("_editvertex")) {
+		if (s.equals("_internalpolygon")) {
         	CADExtension.setCADTool(s,true);
         }
 		CADExtension.getEditionManager().setMapControl(mapControl);
@@ -105,7 +89,7 @@ public class InsertPolygonExtension extends Extension {
 				view = (View) PluginServices.getMDIManager().getActiveView();
 				mapControl = (MapControl) view.getMapControl();
 				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-				if (polygon.isApplicable(lv.getShapeType())){
+				if (internalpolygon.isApplicable(lv.getShapeType())){
 					return true;
 				}
 			}

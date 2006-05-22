@@ -47,12 +47,14 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommadException;
@@ -92,6 +94,18 @@ public class PolylineCADTool extends DefaultCADTool {
     public void endGeometry() {
         IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
         FGeometryCollection fgc = new FGeometryCollection(geoms);
+        try {
+			if (((FLyrVect)getVLE().getLayer()).getShapeType()==FShape.POLYGON){
+				GeneralPathX gpx=new GeneralPathX();
+				gpx.moveTo(antPoint.getX(),antPoint.getY());
+				gpx.lineTo(firstPoint.getX(),firstPoint.getY());
+				IGeometry line=ShapeFactory.createPolyline2D(gpx);
+				fgc.addGeometry(line);
+			}
+		} catch (DriverException e) {
+			e.printStackTrace();
+		}
+
         // No queremos guardar FGeometryCollections:
         GeneralPathX gp = new GeneralPathX();
         gp.append(fgc.getPathIterator(null), true);
