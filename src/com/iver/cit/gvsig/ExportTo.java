@@ -45,6 +45,7 @@ import com.iver.cit.gvsig.jdbc_spatial.DlgConnection;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 import com.iver.cit.gvsig.project.ProjectView;
 import com.iver.utiles.SimpleFileFilter;
+import com.iver.utiles.swing.threads.AbstractMonitorableTask;
 
 public class ExportTo extends Extension {
 
