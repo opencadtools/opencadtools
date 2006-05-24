@@ -8,8 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
@@ -101,7 +99,7 @@ public class FileBasedPanel extends JWizardPanel {
 			jButtonSelectPath.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 		            JFileChooser jfc = new JFileChooser();
-		            SimpleFileFilter filterShp = new SimpleFileFilter(fileExt, PluginServices.getText(this,"shp_files"));
+		            SimpleFileFilter filterShp = new SimpleFileFilter(fileExt, PluginServices.getText(this,"file")+" "+fileExt);
 		            jfc.setFileFilter(filterShp);
 		            if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
 		        		    File newFile = jfc.getSelectedFile();
