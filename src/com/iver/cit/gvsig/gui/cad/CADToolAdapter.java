@@ -66,7 +66,7 @@ public class CADToolAdapter extends Behavior {
 	private FSymbol symbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT, Color.RED);
 
 	private Point2D mapAdjustedPoint;
-	
+
 	private ISnapper usedSnap = null;
 
 	private boolean questionAsked = false;
@@ -83,7 +83,7 @@ public class CADToolAdapter extends Behavior {
 	 * Pinta de alguna manera especial las geometrias seleccionadas para la
 	 * edición. En caso de que el snapping esté activado, pintará el efecto del
 	 * mismo.
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#paintComponent(java.awt.Graphics)
 	 */
 	public void paintComponent(Graphics g) {
@@ -144,43 +144,43 @@ public class CADToolAdapter extends Behavior {
 	/**
 	 * Ajusta un punto de la imagen que se pasa como parámetro al grid si éste
 	 * está activo y devuelve la distancia de un punto al punto ajustado
-	 * 
+	 *
 	 * @param point
 	 * @param mapHandlerAdjustedPoint
 	 *            DOCUMENT ME!
-	 * 
+	 *
 	 * @return Distancia del punto que se pasa como
-	 *  parámetro al punto ajustado. Si no hay ajuste, 
+	 *  parámetro al punto ajustado. Si no hay ajuste,
 	 *  devuelve Double.MAX_VALUE
 	 */
 	private double adjustToHandler(Point2D point,
 			Point2D mapHandlerAdjustedPoint) {
 
 		ILayerEdited aux = CADExtension.getEditionManager().getActiveLayerEdited();
-		if (!(aux instanceof VectorialLayerEdited)) 
+		if (!(aux instanceof VectorialLayerEdited))
 			return Double.MAX_VALUE;
-		VectorialLayerEdited vle = (VectorialLayerEdited) aux;		
+		VectorialLayerEdited vle = (VectorialLayerEdited) aux;
 		FLyrVect lyrVect = (FLyrVect) vle.getLayer();
 		ArrayList snappers = vle.getSnappers();
-				
+
 		SpatialCache cache = lyrVect.getSpatialCache();
 		ViewPort vp = getMapControl().getViewPort();
 		if (cache == null)
 			return Double.MAX_VALUE;
-		
+
 		double rw = getMapControl().getViewPort().toMapDistance(5);
 		Point2D mapPoint = point;
 		Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - rw / 2,
 				mapPoint.getY() - rw / 2, rw, rw);
 
 		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
-		
+
 		// TODO: PROVISIONAL. PONER ALGO COMO ESTO EN UN CUADRO DE DIALOGO
 		// DE CONFIGURACIÓN DEL SNAPPING
 		NearestPointSnapper defaultSnap = new NearestPointSnapper();
 		snappers.clear();
 		snappers.add(defaultSnap);
-		
+
 		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
 		double minDist = mapTolerance;
 		usedSnap = null;
@@ -191,11 +191,11 @@ public class CADToolAdapter extends Behavior {
 		}
 		for (int i = 0; i < snappers.size(); i++)
 		{
-			ISnapper theSnapper = (ISnapper) snappers.get(i);	
-			
+			ISnapper theSnapper = (ISnapper) snappers.get(i);
+
 			SnappingVisitor snapVisitor = new SnappingVisitor(theSnapper, point, mapTolerance, lastPoint);
 			System.out.println("Cache size = " + cache.size());
-			cache.query(e, snapVisitor);		
+			cache.query(e, snapVisitor);
 
 			if (snapVisitor.getSnapPoint() != null) {
 				if (minDist > snapVisitor.getMinDist())
@@ -254,7 +254,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param g
 	 *            DOCUMENT ME!
 	 */
@@ -275,7 +275,7 @@ public class CADToolAdapter extends Behavior {
 		g.drawLine((int) (p.getX()), (int) (p.getY() - size1),
 				(int) (p.getX()), (int) (p.getY() + size1));
 
-		getMapControl().setToolTipText("");
+		getMapControl().setToolTipText(null);
 		if (adjustedPoint != null) {
 			if (adjustSnapping) {
 				/* g.setColor(Color.ORANGE);
@@ -287,7 +287,7 @@ public class CADToolAdapter extends Behavior {
 				g.drawRect((int) (adjustedPoint.getX() - 4),
 						(int) (adjustedPoint.getY() - 4), 8, 8); */
 				if (usedSnap != null)
-				{					
+				{
 					usedSnap.draw(g, adjustedPoint);
 					getMapControl().setToolTipText(usedSnap.getToolTipText());
 				}
@@ -302,7 +302,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param point
 	 */
 	private void calculateSnapPoint(Point point) {
@@ -396,7 +396,7 @@ public class CADToolAdapter extends Behavior {
 	/**
 	 * Método que realiza las transiciones en las herramientas en función de un
 	 * texto introducido en la consola
-	 * 
+	 *
 	 * @param text
 	 *            DOCUMENT ME!
 	 */
@@ -484,7 +484,7 @@ public class CADToolAdapter extends Behavior {
 	 * con el que se generó (si fue de ratón será MouseEvent, el que viene en el
 	 * pressed) y si es de teclado, será un KeyEvent. Del evento se puede sacar
 	 * información acerca de si estaba pulsada la tecla CTRL, o Alt, etc.
-	 * 
+	 *
 	 * @param values
 	 * @param event
 	 */
@@ -564,7 +564,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param text
 	 *            DOCUMENT ME!
 	 * @param source
@@ -606,7 +606,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param value
 	 *            DOCUMENT ME!
 	 */
@@ -618,7 +618,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param activated
 	 *            DOCUMENT ME!
 	 */
@@ -649,7 +649,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @return DOCUMENT ME!
 	 */
 	public CADTool getCadTool() {
@@ -658,7 +658,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param cadTool
 	 *            DOCUMENT ME!
 	 */
@@ -670,17 +670,17 @@ public class CADToolAdapter extends Behavior {
 		/*
 		 * int ret = cadTool.transition(null, editableFeatureSource, selection,
 		 * new double[0]);
-		 * 
+		 *
 		 * if ((ret & Automaton.AUTOMATON_FINISHED) ==
 		 * Automaton.AUTOMATON_FINISHED) { popCadTool();
-		 * 
+		 *
 		 * if (cadToolStack.isEmpty()) { pushCadTool(new
 		 * com.iver.cit.gvsig.gui.cad.smc.gen.CADTool());//new
 		 * SelectionCadTool());
 		 * PluginServices.getMainFrame().setSelectedTool("selection"); }
-		 * 
+		 *
 		 * askQuestion();
-		 * 
+		 *
 		 * getMapControl().drawMap(false); }
 		 */
 	}
@@ -713,7 +713,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param cadTool
 	 *            DOCUMENT ME!
 	 */
@@ -729,9 +729,9 @@ public class CADToolAdapter extends Behavior {
 	 */
 	private void delete() {
 		ILayerEdited aux = CADExtension.getEditionManager().getActiveLayerEdited();
-		if (!(aux instanceof VectorialLayerEdited)) 
+		if (!(aux instanceof VectorialLayerEdited))
 			return;
-		VectorialLayerEdited vle = (VectorialLayerEdited) aux;		
+		VectorialLayerEdited vle = (VectorialLayerEdited) aux;
 		VectorialEditableAdapter vea = vle.getVEA();
 
 		vea.startComplexRow();
@@ -748,7 +748,7 @@ public class CADToolAdapter extends Behavior {
 			 * VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
 			 * .getEditionManager().getActiveLayerEdited(); ArrayList
 			 * selectedRow = vle.getSelectedRow();
-			 * 
+			 *
 			 * int[] indexesToDel = new int[selectedRow.size()]; for (int i = 0;
 			 * i < selectedRow.size(); i++) { IRowEdited edRow = (IRowEdited)
 			 * selectedRow.get(i); indexesToDel[i] = edRow.getIndex(); }
@@ -782,7 +782,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param b
 	 */
 	public void setAdjustGrid(boolean b) {
@@ -791,7 +791,7 @@ public class CADToolAdapter extends Behavior {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param actionCommand
 	 */
 	public void keyPressed(String actionCommand) {
