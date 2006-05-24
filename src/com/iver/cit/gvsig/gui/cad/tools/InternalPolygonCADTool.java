@@ -94,7 +94,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
     public void transition(double x, double y, InputEvent event) {
-        addPoint(x, y, event);
+        _fsm.addPoint(x, y, event);
     }
 
     /* (non-Javadoc)
@@ -151,18 +151,26 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
     	Point2D[] ps=(Point2D[])points.toArray(new Point2D[0]);
     	GeneralPathX gpx=new GeneralPathX();
+    	GeneralPathX gpx1=new GeneralPathX();
+
     	if (ps.length>0){
     	for (int i=0;i<ps.length;i++){
-    		if (i==0)
+    		if (i==0){
     			gpx.moveTo(ps[i].getX(),ps[i].getY());
-    		else
+    			gpx1.moveTo(ps[i].getX(),ps[i].getY());
+    		}else{
     			gpx.lineTo(ps[i].getX(),ps[i].getY());
+    			gpx1.lineTo(ps[i].getX(),ps[i].getY());
+    		}
+
     	}
     	gpx.lineTo(x,y);
     	gpx.closePath();
-
+    	gpx1.closePath();
     	IGeometry geom=ShapeFactory.createPolygon2D(gpx);
-    	geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.drawingSymbol);
+    	IGeometry geom1=ShapeFactory.createPolygon2D(gpx1);
+    	geom1.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.drawingSymbol);
+    	geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.modifySymbol);
     	}
     }
 
@@ -176,7 +184,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     	ArrayList selectedRows=vle.getSelectedRow();
     	VectorialEditableAdapter vea = vle.getVEA();
     	IRowEdited row=null;
-    	if (s.equals(PluginServices.getText(this,"end"))){
+    	if (s.equals(PluginServices.getText(this,"end")) || s.equals("e")|| s.equals("E")){
     		if (points.size()>0){
     			row =  (DefaultRowEdited) selectedRows.get(0);
     			IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
@@ -198,7 +206,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     		points.clear();
 
 
-    	}else if (s.equals(PluginServices.getText(this,"cancel"))){
+    	}else if (s.equals(PluginServices.getText(this,"cancel"))|| s.equals("c")|| s.equals("C")){
     		points.clear();
     	}
     }
@@ -262,10 +270,12 @@ public class InternalPolygonCADTool extends DefaultCADTool {
 
 	public boolean isApplicable(int shapeType) {
 		switch (shapeType) {
-		case FShape.POLYGON:
-			return true;
+		case FShape.POINT:
+		case FShape.LINE:
+		case FShape.MULTIPOINT:
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 
