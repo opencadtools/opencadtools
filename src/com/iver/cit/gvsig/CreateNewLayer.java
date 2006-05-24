@@ -23,7 +23,7 @@ import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
  * 
  * @author Vicente Caballero Navarro
  */
-public class NewTheme extends Extension {
+public class CreateNewLayer extends Extension {
 	static ImageIcon LOGO;
 
 	/**

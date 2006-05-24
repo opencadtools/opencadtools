@@ -5,7 +5,7 @@
 	<depends plugin-name="com.iver.cit.gvsig.jdbc_spatial" />
 	<resourceBundle name="text"/>
 	<extensions>
-		<extension class-name="com.iver.cit.gvsig.NewTheme"
+		<extension class-name="com.iver.cit.gvsig.CreateNewLayer"
 			description="Crear una nueva capa."
 			active="true" position="1">
 			<menu text="vista/new_layer/new_shp" action-command="SHP"/>

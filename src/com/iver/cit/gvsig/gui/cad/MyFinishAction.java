@@ -220,6 +220,7 @@ public class MyFinishAction extends FinishAction
 			e.printStackTrace();
 		}
         lyr.setVisible(true);
+        
 		mapCtrl.getMapContext().getLayers().addLayer(lyr);
 		
 		mapCtrl.getMapContext().endAtomicEvent();
