@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.iver.cit.gvsig.writers;
 
@@ -38,7 +38,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author fjp
- * 
+ *
  * Example of using a Geotools featureStore to write features
  * Example of use: Inside the extension, open a dataStore and
  * get the featureStore. Then create this class with it.
@@ -82,7 +82,7 @@ public class WriterGT2 extends AbstractWriter {
     }
 
 	public static FeatureType getFeatureType(FLyrVect layer, String geomField, String featName) throws DriverException, com.iver.cit.gvsig.fmap.DriverException, FactoryConfigurationError, SchemaException {
-		
+
 		Class geomType = findBestGeometryClass(layer.getShapeType());
 		// geomType = Geometry.class;
 		AttributeType geom = AttributeTypeFactory.newAttributeType(geomField, geomType);
@@ -93,17 +93,17 @@ public class WriterGT2 extends AbstractWriter {
 		{
 			att[i] = AttributeTypeFactory.newAttributeType(
 					layer.getRecordset().getFieldName(i-1),
-					getClassBySqlTYPE(layer.getRecordset().getFieldType(i-1))); 
+					getClassBySqlTYPE(layer.getRecordset().getFieldType(i-1)));
 		}
 		FeatureType featType = FeatureTypeBuilder.newFeatureType(att,featName);
 		return featType;
 	}
-	
+
 	  public static final Class findBestGeometryClass(int layerType) {
 		    Class best = Geometry.class;
 		    switch (layerType)
 		    {
-		    case FShape.LINE:		    	
+		    case FShape.LINE:
 		      best = MultiLineString.class;
 		      break;
 		    case FShape.MULTIPOINT:
@@ -117,20 +117,20 @@ public class WriterGT2 extends AbstractWriter {
 		      break;
 		    case FShape.MULTI:
 			      best = Geometry.class;
-			      break;		      
+			      break;
 		    default:
 		      throw new RuntimeException("Unknown gvSigShapeType->GeometryClass : " + layerType);
 		    }
 		    return best;
 		  }
-	
-	
+
+
 	public WriterGT2(FeatureStore featureStore, boolean writeAllFeatures) throws IOException
 	{
 		this.featStore = featureStore;
 		this.bWriteAll = writeAllFeatures;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.edition.IWriter#preProcess()
 	 */
@@ -139,10 +139,10 @@ public class WriterGT2 extends AbstractWriter {
 			types = featStore.getSchema().getAttributeTypes();
 			t = new DefaultTransaction("handle");
 			featStore.setTransaction(t);
-    	  
+
 			t.addAuthorization("handle");  // provide authoriztion
-			
-			
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EditionException(e);
@@ -155,7 +155,7 @@ public class WriterGT2 extends AbstractWriter {
 	 * @see com.iver.cit.gvsig.fmap.edition.IWriter#process(com.iver.cit.gvsig.fmap.edition.IRowEdited)
 	 */
 	public void process(IRowEdited row) throws EditionException {
-		
+
 		IFeature feat = (IFeature) row.getLinkedRow();
 		// FeatureType featType = featStore.getSchema();
 		// TODO: OJO CON EL ORDEN DE LOS CAMPOS, QUE NO ES EL MISMO
@@ -164,19 +164,19 @@ public class WriterGT2 extends AbstractWriter {
 		for (int i=1; i < types.length; i++)
 			values[i] = feat.getAttribute(i-1);
 
-		Filter theFilter = filterFactory.createFidFilter(feat.getID()); 
+		Filter theFilter = filterFactory.createFidFilter(feat.getID());
         try {
         	// System.out.println("Escribiendo numReg=" + numReg + " con STATUS=" + row.getStatus());
         	switch (row.getStatus())
         	{
-        		case IRowEdited.STATUS_ADDED:        			
+        		case IRowEdited.STATUS_ADDED:
         			Feature featGT2 = featStore.getSchema().create(values);
         			FeatureReader reader = DataUtilities.reader(
         					new Feature[] {featGT2});
         			featStore.addFeatures(reader);
         			break;
         		case IRowEdited.STATUS_MODIFIED:
-        			featStore.modifyFeatures(types, values, theFilter);	
+        			featStore.modifyFeatures(types, values, theFilter);
         			break;
         		case IRowEdited.STATUS_ORIGINAL:
         			if (bWriteAll)
@@ -185,13 +185,13 @@ public class WriterGT2 extends AbstractWriter {
             			reader = DataUtilities.reader(
             					new Feature[] {featGT2});
             			featStore.addFeatures(reader);
-        			}        				
+        			}
         			break;
         		case IRowEdited.STATUS_DELETED:
-            		featStore.removeFeatures(theFilter);        			
+            		featStore.removeFeatures(theFilter);
         			break;
         	}
-        		
+
 
 			numReg++;
 		} catch (IOException e) {
@@ -201,9 +201,9 @@ public class WriterGT2 extends AbstractWriter {
 			e.printStackTrace();
 			throw new EditionException(e);
 		}
-			
-		
-			
+
+
+
 
 	}
 
@@ -250,11 +250,11 @@ public class WriterGT2 extends AbstractWriter {
 		case FShape.ARC:
 			return false;
 		case FShape.ELLIPSE:
-			return false;			
+			return false;
 		case FShape.MULTIPOINT:
-			return true;			
+			return true;
 		case FShape.TEXT:
-			return false;						
+			return false;
 		}
 		return false;
 	}
@@ -263,7 +263,7 @@ public class WriterGT2 extends AbstractWriter {
 		switch (sqlType)
 		{
 		case Types.DOUBLE:
-		case Types.FLOAT: 
+		case Types.FLOAT:
 		case Types.INTEGER:
 		case Types.BIGINT:
 			return true;
@@ -271,15 +271,20 @@ public class WriterGT2 extends AbstractWriter {
 			return true;
 		case Types.BIT:
 		case Types.BOOLEAN:
-			return true;			
+			return true;
 		case Types.VARCHAR:
-		case Types.CHAR: 
+		case Types.CHAR:
 		case Types.LONGVARCHAR:
 			return true; // TODO: Revisar esto, porque no creo que admita campos muy grandes
 
 		}
-		
+
 		return false;
 	}
-	
+
+	public void setFlatness(double flatness) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
