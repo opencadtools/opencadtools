@@ -98,6 +98,16 @@ public class CADExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
+		
+		// Fijamos que los símbolos de dibujo tengan outline
+		// TODO: Esto se debe configurar en el cuadro de diálogo de preferencias
+		CADTool.drawingSymbol.setOutlined(true);
+		CADTool.drawingSymbol.setOutlineColor(CADTool.drawingSymbol.getColor().darker());
+		CADTool.modifySymbol.setOutlined(true);
+		CADTool.modifySymbol.setOutlineColor(CADTool.modifySymbol.getColor().darker());
+		CADTool.selectSymbol.setOutlined(true);
+		CADTool.selectSymbol.setOutlineColor(CADTool.selectSymbol.getColor().darker());
+		
 
 		CopyCADTool copy = new CopyCADTool();
 
