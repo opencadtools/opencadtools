@@ -194,7 +194,7 @@ public class CADToolAdapter extends Behavior {
 			ISnapper theSnapper = (ISnapper) snappers.get(i);
 
 			SnappingVisitor snapVisitor = new SnappingVisitor(theSnapper, point, mapTolerance, lastPoint);
-			System.out.println("Cache size = " + cache.size());
+			// System.out.println("Cache size = " + cache.size());
 			cache.query(e, snapVisitor);
 
 			if (snapVisitor.getSnapPoint() != null) {
