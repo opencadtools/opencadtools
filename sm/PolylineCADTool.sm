@@ -30,7 +30,7 @@ FirstPoint
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			NextPointOrArcOrClose{
 				setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-				setDescription(new String[]{"inter_arc","close","cancel"});
+				setDescription(new String[]{"inter_arc","close_polyline","terminate","cancel"});
 				addPoint( pointX,pointY,event);
 				}
 	}
@@ -40,21 +40,28 @@ NextPointOrArcOrClose{
 		[s.equals("A") ||  s.equals("a") || s.equals(PluginServices.getText(this,"inter_arc"))]
 		NextPointOrLineOrClose {
 			setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
-			setDescription(new String[]{"inter_line","close","cancel"});
+			setDescription(new String[]{"inter_line","close_polyline","terminate","cancel"});
 			addOption(s);
 			}
 	addOption(s:String)
-		[s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close"))]
+		[s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close_polyline"))]
 		FirstPoint {
 			addOption(s);
 			closeGeometry();
 			endGeometry();
 			end();
 			}
+	addOption(s:String)
+		[s.equals("T") ||  s.equals("t") || s.equals(PluginServices.getText(this,"terminate"))]
+		FirstPoint {
+			addOption(s);
+			endGeometry();
+			end();
+			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrArcOrClose {
 			setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-			setDescription(new String[]{"inter_arc","close","cancel"});
+			setDescription(new String[]{"inter_arc","close_polyline","terminate","cancel"});
 			addPoint( pointX,pointY,event);
 			}
 }
@@ -62,24 +69,32 @@ NextPointOrLineOrClose{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrLineOrClose {
 			setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
-			setDescription(new String[]{"inter_line","close","cancel"});
+			setDescription(new String[]{"inter_line","close_polyline","terminate","cancel"});
 			addPoint( pointX,pointY,event);
 			}
 	addOption(s:String)
 		[s.equals("N") ||  s.equals("n") || s.equals(PluginServices.getText(this,"inter_line"))]
 		NextPointOrArcOrClose {
 			setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-			setDescription(new String[]{"inter_arc","close","cancel"});
+			setDescription(new String[]{"inter_arc","close_polyline","terminate","cancel"});
 			addOption(s);
 			}
 	addOption(s:String)
-		[s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close"))]
+		[s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close_polyline"))]
 		FirstPoint {
 			addOption(s);
 			closeGeometry();
 			endGeometry();
 			end();
 			}
+	addOption(s:String)
+		[s.equals("T") ||  s.equals("t") || s.equals(PluginServices.getText(this,"terminate"))]
+		FirstPoint {
+			addOption(s);
+			endGeometry();
+			end();
+			}
+
 }
 
 Default

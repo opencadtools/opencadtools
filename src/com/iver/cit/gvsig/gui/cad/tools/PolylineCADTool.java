@@ -423,7 +423,7 @@ public class PolylineCADTool extends DefaultCADTool {
      * @param s Diferent option.
      */
     public void addOption(String s) {
-        PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
+    	/*       PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
         if (status.equals("Polyline.NextPointOrArcOrClose")) {
@@ -447,6 +447,7 @@ public class PolylineCADTool extends DefaultCADTool {
                 //closeGeometry();
             }
         }
+  */
     }
 
     /* (non-Javadoc)
@@ -456,7 +457,7 @@ public class PolylineCADTool extends DefaultCADTool {
     }
 
     public void cancel(){
-        endGeometry();
+        //endGeometry();
         list.clear();
         antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
