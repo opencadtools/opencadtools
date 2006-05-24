@@ -5,14 +5,14 @@
 // Vicente Caballero Navarro
 %}
 
-%start AddInternalPolygon::AddNextPoint
+%start InternalPolygon::AddNextPoint
 %class InternalPolygonCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.InternalPolygonCADTool
 %import java.awt.event.InputEvent
 %import com.iver.andami.PluginServices
 
-%map AddInternalPolygon
+%map InternalPolygon
 %%
 // A task begins life in suspended animation.
 
@@ -20,7 +20,7 @@ AddNextPoint
 	Entry {
 		selection();
 		setQuestion(
-		PluginServices.getText(this,"next_point_cancel_or_end"));
+		PluginServices.getText(this,"next_point_or_end"));
 		setDescription(new String[]{"end","cancel"});
 
 		}
@@ -30,13 +30,13 @@ AddNextPoint
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			AddNextPoint {
-				setQuestion(PluginServices.getText(this,"next_point_cancel_or_end"));
+				setQuestion(PluginServices.getText(this,"next_point_or_end"));
 				setDescription(new String[]{"end","cancel"});
 				addPoint( pointX,pointY,event);
 				}
 		addOption(s:String)
 			AddNextPoint {
-				setQuestion(PluginServices.getText(this,"next_point_cancel_or_end"));
+				setQuestion(PluginServices.getText(this,"next_point_or_end"));
 				setDescription(new String[]{"end","cancel"});
 				addOption(s);
 				}

@@ -21,8 +21,8 @@ public final class InternalPolygonCADToolContext
         super();
 
         _owner = owner;
-        setState(AddInternalPolygon.AddNextPoint);
-        AddInternalPolygon.AddNextPoint.Entry(this);
+        setState(InternalPolygon.AddNextPoint);
+        InternalPolygon.AddNextPoint.Entry(this);
     }
 
     public void addOption(String s)
@@ -108,7 +108,7 @@ public final class InternalPolygonCADToolContext
     //
     }
 
-    /* package */ static abstract class AddInternalPolygon
+    /* package */ static abstract class InternalPolygon
     {
     //-----------------------------------------------------------
     // Member methods.
@@ -121,25 +121,25 @@ public final class InternalPolygonCADToolContext
         //-------------------------------------------------------
         // Statics.
         //
-        /* package */ static AddInternalPolygon_Default.AddInternalPolygon_AddNextPoint AddNextPoint;
-        private static AddInternalPolygon_Default Default;
+        /* package */ static InternalPolygon_Default.InternalPolygon_AddNextPoint AddNextPoint;
+        private static InternalPolygon_Default Default;
 
         static
         {
-            AddNextPoint = new AddInternalPolygon_Default.AddInternalPolygon_AddNextPoint("AddInternalPolygon.AddNextPoint", 0);
-            Default = new AddInternalPolygon_Default("AddInternalPolygon.Default", -1);
+            AddNextPoint = new InternalPolygon_Default.InternalPolygon_AddNextPoint("InternalPolygon.AddNextPoint", 0);
+            Default = new InternalPolygon_Default("InternalPolygon.Default", -1);
         }
 
     }
 
-    protected static class AddInternalPolygon_Default
+    protected static class InternalPolygon_Default
         extends InternalPolygonCADToolState
     {
     //-----------------------------------------------------------
     // Member methods.
     //
 
-        protected AddInternalPolygon_Default(String name, int id)
+        protected InternalPolygon_Default(String name, int id)
         {
             super (name, id);
         }
@@ -152,7 +152,7 @@ public final class InternalPolygonCADToolContext
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
-                        AddInternalPolygon.AddNextPoint.getName());
+                        InternalPolygon.AddNextPoint.getName());
 
                 if (loopbackFlag == false)
                 {
@@ -166,7 +166,7 @@ public final class InternalPolygonCADToolContext
                 }
                 finally
                 {
-                    context.setState(AddInternalPolygon.AddNextPoint);
+                    context.setState(InternalPolygon.AddNextPoint);
 
                     if (loopbackFlag == false)
                     {
@@ -188,14 +188,14 @@ public final class InternalPolygonCADToolContext
     //
 
 
-        private static final class AddInternalPolygon_AddNextPoint
-            extends AddInternalPolygon_Default
+        private static final class InternalPolygon_AddNextPoint
+            extends InternalPolygon_Default
         {
         //-------------------------------------------------------
         // Member methods.
         //
 
-            private AddInternalPolygon_AddNextPoint(String name, int id)
+            private InternalPolygon_AddNextPoint(String name, int id)
             {
                 super (name, id);
             }
@@ -205,7 +205,7 @@ public final class InternalPolygonCADToolContext
                 InternalPolygonCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion(PluginServices.getText(this,"next_point_cancel_or_end"));
+                ctxt.setQuestion(PluginServices.getText(this,"next_point_or_end"));
                 ctxt.setDescription(new String[]{"end", "cancel"});
                 return;
             }
@@ -219,7 +219,7 @@ public final class InternalPolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"next_point_cancel_or_end"));
+                    ctxt.setQuestion(PluginServices.getText(this,"next_point_or_end"));
                     ctxt.setDescription(new String[]{"end", "cancel"});
                     ctxt.addOption(s);
                 }
@@ -239,7 +239,7 @@ public final class InternalPolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"next_point_cancel_or_end"));
+                    ctxt.setQuestion(PluginServices.getText(this,"next_point_or_end"));
                     ctxt.setDescription(new String[]{"end", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
