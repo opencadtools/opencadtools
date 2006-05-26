@@ -71,6 +71,7 @@ import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
 import com.iver.utiles.console.ResponseListener;
+import com.iver.utiles.console.jedit.JEditTextArea;
 
 /**
  * Extensión dedicada a controlar las diferentes operaciones sobre el editado de
@@ -98,7 +99,7 @@ public class CADExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		
+
 		// Fijamos que los símbolos de dibujo tengan outline
 		// TODO: Esto se debe configurar en el cuadro de diálogo de preferencias
 		CADTool.drawingSymbol.setOutlined(true);
@@ -107,7 +108,7 @@ public class CADExtension extends Extension {
 		CADTool.modifySymbol.setOutlineColor(CADTool.modifySymbol.getColor().darker());
 		CADTool.selectSymbol.setOutlined(true);
 		CADTool.selectSymbol.setOutlineColor(CADTool.selectSymbol.getColor().darker());
-		
+
 
 		CopyCADTool copy = new CopyCADTool();
 
@@ -170,6 +171,7 @@ public class CADExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
+		initFocus();
 		return true;
 	}
 
@@ -256,7 +258,7 @@ public class CADExtension extends Extension {
 				}
 
 				else {
-					if ((!e.isActionKey())) {
+				/*	if ((!e.isActionKey())) {
 						//if (Character.isLetterOrDigit(e.getKeyChar())) {
 							Character keyChar = new Character(e.getKeyChar());
 							if (e.getComponent().getName() != null) {
@@ -273,7 +275,7 @@ public class CADExtension extends Extension {
 								}
 							}
 						//}
-					}
+					}*/
 				}
 			}
 			return false;
@@ -356,8 +358,9 @@ public class CADExtension extends Extension {
 			mapControl.addMapTool("cadtooladapter",  new Behavior[]{adapter,new MouseMovementBehavior(sbl)});
 		}
 		view.getMapControl().setTool("cadtooladapter");
-		view.getConsolePanel().getTxt().requestFocusInWindow();
-
+		JEditTextArea jeta=view.getConsolePanel().getTxt();
+		jeta.requestFocusInWindow();
+		jeta.setCaretPosition(jeta.getText().length());
 
 		view.addConsoleListener("cad", new ResponseListener() {
 			public void acceptResponse(String response) {
