@@ -22,7 +22,7 @@ import com.iver.cit.gvsig.project.ProjectView;
 
 /**
  * @author Francisco José
- * 
+ *
  * Cuando un tema se pone en edición, puede que su driver implemente
  * ISpatialWriter. En ese caso, es capaz de guardarse sobre sí mismo. Si no lo
  * implementa, esta opción estará deshabilitada y la única posibilidad de
@@ -67,7 +67,7 @@ public class StopEditing extends Extension {
 				}
 			}
 			vista.getMapControl().setTool("zoomIn");
-			vista.hideConsole();			
+			vista.hideConsole();
 		}
 		PluginServices.getMainFrame().enableControls();
 	}
@@ -119,16 +119,14 @@ public class StopEditing extends Extension {
 				}
 			} else { // GUARDAMOS EL TEMA
 				writer.initialize(layer);
-				vea.stopEdition(writer, EditionEvent.GRAPHIC);				
+				vea.stopEdition(writer, EditionEvent.GRAPHIC);
 			}
 			vea.getCommandRecord().removeCommandListener(mapControl);
 			layer.setEditing(false);
 		} catch (EditionException e) {
-			e.printStackTrace();
 			NotificationManager.addError(e);
 
 		} catch (IOException e) {
-			e.printStackTrace();
 			NotificationManager.addError(e);
 		}
 
