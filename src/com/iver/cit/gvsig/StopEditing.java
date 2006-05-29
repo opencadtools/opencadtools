@@ -81,6 +81,8 @@ public class StopEditing extends Extension {
 			return false;
 		FLyrVect lyrVect = (FLyrVect) lyrs[0];
 		if (lyrVect.getSource() instanceof VectorialEditableAdapter) {
+			if (!lyrVect.getSource().getDriver().isWritable())
+				return false;
 			VectorialEditableAdapter vea = (VectorialEditableAdapter) lyrVect
 					.getSource();
 			if (vea.getDriver() instanceof ISpatialWriter)

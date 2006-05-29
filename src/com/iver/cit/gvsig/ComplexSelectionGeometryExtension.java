@@ -81,6 +81,8 @@ public class ComplexSelectionGeometryExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
+		if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
+			return false;
 		FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
 		try {
 			return selection.isApplicable(lv.getShapeType());
