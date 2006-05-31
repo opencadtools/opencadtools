@@ -456,12 +456,14 @@ public class ExportTo extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		View f = (View) PluginServices.getMDIManager().getActiveView();
-
-		if (f == null) {
-			return false;
-		} else
+		int status = EditionUtilities.getEditionStatus(); 
+		if (( status == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE)
+				|| (status == EditionUtilities.EDITION_STATUS_MULTIPLE_VECTORIAL_LAYER_ACTIVE))
+		{
 			return true;
+		}
+		else
+			return false;
 	}
 
 	/**
