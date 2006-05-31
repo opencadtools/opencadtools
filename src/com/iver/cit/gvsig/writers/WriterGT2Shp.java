@@ -18,6 +18,7 @@ import org.geotools.filter.FilterFactory;
 
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
+import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
@@ -203,6 +204,11 @@ public class WriterGT2Shp extends AbstractWriter {
 	public void setFlatness(double flatness) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void initialize(ITableDefinition tableDefinition) throws EditionException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

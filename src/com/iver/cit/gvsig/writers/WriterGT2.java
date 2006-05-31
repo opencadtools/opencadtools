@@ -26,6 +26,7 @@ import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.hardcode.gdbms.engine.values.NullValue;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
+import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.writers.AbstractWriter;
@@ -285,6 +286,11 @@ public class WriterGT2 extends AbstractWriter {
 	public void setFlatness(double flatness) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void initialize(ITableDefinition tableDefinition) throws EditionException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

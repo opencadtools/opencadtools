@@ -7,8 +7,10 @@ import javax.swing.JOptionPane;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
@@ -16,6 +18,7 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.project.ProjectView;
@@ -120,7 +123,8 @@ public class StopEditing extends Extension {
 					}
 				}
 			} else { // GUARDAMOS EL TEMA
-				writer.initialize(layer);
+				ILayerDefinition lyrDef = EditionUtilities.createLayerDefinition(layer);
+				writer.initialize( lyrDef);
 				vea.stopEdition(writer, EditionEvent.GRAPHIC);
 			}
 			vea.getCommandRecord().removeCommandListener(mapControl);
@@ -129,6 +133,8 @@ public class StopEditing extends Extension {
 			NotificationManager.addError(e);
 
 		} catch (IOException e) {
+			NotificationManager.addError(e);
+		} catch (DriverException e) {
 			NotificationManager.addError(e);
 		}
 
