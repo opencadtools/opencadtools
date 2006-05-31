@@ -41,6 +41,8 @@
 package com.iver.cit.gvsig.gui.cad.snapping.panels;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
@@ -50,13 +52,11 @@ import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
 import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
-import com.iver.utiles.DefaultListModel;
 ;
 
-public class SnapConfig extends JPanel {
+public class SnapConfig2 extends JPanel {
 
 	private JCheckBox jChkBoxRefentActive = null;
-	private JList jListSnappers = null;
 	private JPanel jPanel = null;
 	private JScrollPane jScrollPane = null;
 	
@@ -105,7 +105,7 @@ public class SnapConfig extends JPanel {
 	 * This method initializes 
 	 * 
 	 */
-	public SnapConfig() {
+	public SnapConfig2() {
 		super();
 		initialize();
 	}
@@ -138,19 +138,6 @@ public class SnapConfig extends JPanel {
 	}
 
 	/**
-	 * This method initializes jListSnappers	
-	 * 	
-	 * @return javax.swing.JList	
-	 */
-	private JList getJListSnappers() {
-		if (jListSnappers == null) {
-			jListSnappers = new JList();
-			jListSnappers.setCellRenderer(new MyCellRenderer());
-		}
-		return jListSnappers;
-	}
-
-	/**
 	 * This method initializes jPanel	
 	 * 	
 	 * @return javax.swing.JPanel	
@@ -174,7 +161,9 @@ public class SnapConfig extends JPanel {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
 			jScrollPane.setBounds(new java.awt.Rectangle(9,9,402,163));
-			jScrollPane.setViewportView(getJListSnappers());
+			jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			
 		}
 		return jScrollPane;
 	}
@@ -185,8 +174,19 @@ public class SnapConfig extends JPanel {
 
 	public void setSnappers(ArrayList snappers) {
 		this.snappers = snappers;
-		DefaultListModel listModel = new DefaultListModel(snappers);
-		getJListSnappers().setModel(listModel);
+		JPanel newPanel = new JPanel();
+		GridLayout layout = new GridLayout(snappers.size()/2, 2);
+		newPanel.setLayout(layout);
+		newPanel.setSize(getJScrollPane().getSize());
+		for (int i=0; i < snappers.size(); i++)
+		{
+			ISnapper s = (ISnapper) snappers.get(i); 
+			JCheckBox snapperComponent = new JCheckBox(s.getToolTipText());
+			// snapperComponent.setPreferredSize(new Dimension(200, 30));
+			newPanel.add(snapperComponent);
+		}
+		getJScrollPane().setViewportView(newPanel);
+
 	}
 	
 	

@@ -40,8 +40,18 @@
  */
 package com.iver.cit.gvsig.gui.cad.snapping.panels;
 
+import java.awt.JobAttributes;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 
+import javax.print.attribute.HashAttributeSet;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.standard.MediaSize;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 
 import com.iver.cit.gvsig.gui.cad.snapping.NearestPointSnapper;
@@ -51,10 +61,31 @@ public class testDialog {
 		JDialog dlg = new JDialog();
 
 		ArrayList list = new ArrayList();
-		list.add(new NearestPointSnapper());
-		SnapConfig panel = new SnapConfig();
+		for (int i=0; i < 20; i++)
+			list.add(new NearestPointSnapper());
+		SnapConfig2 panel = new SnapConfig2();
 		panel.setSnappers(list);
+		Action act = new AbstractAction(){
+			public void actionPerformed(java.awt.event.ActionEvent arg0) {
+				System.out.println("HOla");
+				HashPrintRequestAttributeSet att = new HashPrintRequestAttributeSet();
+				
+				PrinterJob job = PrinterJob.getPrinterJob();
+				PageFormat defaulFormat = job.defaultPage();
+				// PageFormat selectedFormat = job.pageDialog(defaulFormat);
+				Paper paper = new Paper();
+				paper.setSize(MediaSize.ISO.A5.getX(MediaSize.INCH),MediaSize.ISO.A5.getY(MediaSize.INCH));
+				defaulFormat.setPaper(paper);
+				job.defaultPage(defaulFormat);
+				if (job.printDialog()) {
+					// System.out.println(job.)
+				}				
+			};
+		};
+		JButton btnPrint = new JButton(act);
+		
 		dlg.getContentPane().add(panel);
+		// dlg.getContentPane().add(btnPrint);
 		// dlg.getContentPane().setSize(panel.getSize());
 		dlg.pack();
 		dlg.show(true);
