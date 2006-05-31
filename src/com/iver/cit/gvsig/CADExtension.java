@@ -171,7 +171,7 @@ public class CADExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		initFocus();
+		// initFocus();
 		return true;
 	}
 
@@ -357,7 +357,7 @@ public class CADExtension extends Extension {
 			StatusBarListener sbl=new StatusBarListener(view.getMapControl());
 			mapControl.addMapTool("cadtooladapter",  new Behavior[]{adapter,new MouseMovementBehavior(sbl)});
 		}
-		view.getMapControl().setTool("cadtooladapter");
+		// view.getMapControl().setTool("cadtooladapter");
 		JEditTextArea jeta=view.getConsolePanel().getTxt();
 		jeta.requestFocusInWindow();
 		jeta.setCaretPosition(jeta.getText().length());
