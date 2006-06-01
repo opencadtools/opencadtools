@@ -123,6 +123,18 @@ public class StopEditing extends Extension {
 					}
 				}
 			} else { // GUARDAMOS EL TEMA
+				com.iver.andami.ui.mdiManager.View[] views = PluginServices
+				.getMDIManager().getAllViews();
+				for (int j = 0; j < views.length; j++) {
+					if (views[j] instanceof Table) {
+						Table table = (Table) views[j];
+						if (table.getModel().getAssociatedTable() != null
+								&& table.getModel().getAssociatedTable()
+								.equals(layer)) {
+							table.stopEditingCell();
+						}
+					}
+				}
 				ILayerDefinition lyrDef = EditionUtilities.createLayerDefinition(layer);
 				writer.initialize( lyrDef);
 				vea.stopEdition(writer, EditionEvent.GRAPHIC);
