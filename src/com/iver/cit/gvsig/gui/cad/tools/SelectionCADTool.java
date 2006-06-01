@@ -295,6 +295,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		SelectionCADToolState actualState = _fsm.getState();
 		String status = actualState.getName();
 		VectorialLayerEdited vle = getVLE();
+		if (vle == null) return;
 		ArrayList selectedHandler = vle.getSelectedHandler();
 		ViewPort vp=vle.getLayer().getFMap().getViewPort();
 		if (status.equals("Selection.SecondPoint")) {

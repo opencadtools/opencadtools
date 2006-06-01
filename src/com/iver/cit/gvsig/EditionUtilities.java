@@ -8,6 +8,7 @@ import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.LayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.VectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -107,15 +108,24 @@ public class EditionUtilities {
 	}
 
 	public static ILayerDefinition createLayerDefinition(FLyrVect layer) throws DriverException {
-		LayerDefinition lyrDef = new LayerDefinition();
-		lyrDef.setShapeType(layer.getShapeType());
-		lyrDef.setProjection(layer.getProjection());
-		lyrDef.setName(layer.getName());
-		try {
-			lyrDef.setFieldsDesc(layer.getRecordset().getFieldsDescription());
-		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
-			e.printStackTrace();
-			throw new DriverException(e);
+		LayerDefinition lyrDef;
+		if (layer.getSource().getDriver() instanceof VectorialDatabaseDriver)
+		{
+			VectorialDatabaseDriver dbDriver = (VectorialDatabaseDriver) layer.getSource().getDriver();
+			return dbDriver.getLyrDef(); 
+		}
+		else
+		{
+			lyrDef = new LayerDefinition();
+			lyrDef.setShapeType(layer.getShapeType());
+			lyrDef.setProjection(layer.getProjection());
+			lyrDef.setName(layer.getName());
+			try {
+				lyrDef.setFieldsDesc(layer.getRecordset().getFieldsDescription());
+			} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
+				e.printStackTrace();
+				throw new DriverException(e);
+			}		
 		}
 		return lyrDef;
 	}

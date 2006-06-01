@@ -14,6 +14,8 @@ import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
+import com.iver.cit.gvsig.fmap.edition.IWriteable;
+import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -88,8 +90,12 @@ public class StopEditing extends Extension {
 				return false;
 			VectorialEditableAdapter vea = (VectorialEditableAdapter) lyrVect
 					.getSource();
-			if (vea.getDriver() instanceof ISpatialWriter)
-				return true;
+			IWriter writer = vea.getWriter();
+			if (writer != null)
+			{
+				if (writer instanceof ISpatialWriter)
+					return true;
+			}
 		}
 		return false;
 	}
@@ -101,7 +107,7 @@ public class StopEditing extends Extension {
 		VectorialEditableAdapter vea = (VectorialEditableAdapter) layer
 				.getSource();
 
-		ISpatialWriter writer = (ISpatialWriter) vea.getDriver();
+		ISpatialWriter writer = (ISpatialWriter) vea.getWriter();
 
 		int resp = JOptionPane
 				.showConfirmDialog(null, PluginServices.getText(this,
@@ -136,7 +142,7 @@ public class StopEditing extends Extension {
 					}
 				}
 				ILayerDefinition lyrDef = EditionUtilities.createLayerDefinition(layer);
-				writer.initialize( lyrDef);
+				writer.initialize( lyrDef); 
 				vea.stopEdition(writer, EditionEvent.GRAPHIC);
 			}
 			vea.getCommandRecord().removeCommandListener(mapControl);
@@ -147,7 +153,7 @@ public class StopEditing extends Extension {
 		} catch (IOException e) {
 			NotificationManager.addError(e);
 		} catch (DriverException e) {
-			NotificationManager.addError(e);
+			NotificationManager.addError(e); 
 		}
 
 	}
