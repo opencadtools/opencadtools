@@ -41,7 +41,7 @@
   	<jar jarfile="${dist}/${jarName}" basedir="${build}"/>
     <copy file="config/config.xml" todir="${dist}"/>
     <copy todir="${dist}">
-    	<fileset dir="." includes="text*.properties"/>
+    	<fileset dir="config" includes="text*.properties"/>
     </copy>
     <copy todir="${dist}/images">
     	<fileset dir="images/" includes="*"/>
@@ -77,7 +77,7 @@
 		<target name="copy-data-files">
 		    <copy file="config/config.xml" todir="${dist}/config"/>
 			<copy todir="${dist}">
-				<fileset dir="." includes="text*.properties"/>
+				<fileset dir="config" includes="text*.properties"/>
 			</copy>
 			<copy todir="${dist}/images">
 				<fileset dir="images/" includes="*"/>
