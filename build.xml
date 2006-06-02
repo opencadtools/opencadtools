@@ -7,8 +7,21 @@
   <property name="build" location="bin"/>
   <property name="dist"  location="dist"/>
   <property name="plugin" value="com.iver.cit.gvsig.cad"/>
-  <property name="extensionDir" location="../_fwAndami/gvSIG/extensiones"/>
-<property name="mainplugin" value="com.iver.cit.gvsig"/>
+  <property name="mainplugin" value="com.iver.cit.gvsig"/>
+
+	<property name="lib" value="lib"/>
+	<property name="andami" value="../_fwAndami"/>
+	<property name="jarName" value="${plugin}.jar"/>
+	<property name="extensionsDir" location="${andami}/gvSIG/extensiones"/>
+	<property name="andamiJar" location="${andami}/andami.jar"/>
+	<property name="gvsigJar" location="${extensionsDir}/com.iver.cit.gvsig/lib/com.iver.cit.gvsig.jar"/>
+	<property name="andamiLibs" location="${andami}/lib"/>
+	<property name="fmapLibs" location="../libFMap/lib" />
+	<property name="fmap-compile-classpath" value="${fmapLibs}/batik-awt-util.jar:${andamiLibs}/castor-0.9.5.3-xml.jar:${fmapLibs}/cms.jar:${fmapLibs}/driver-manager-1.1.jar:${fmapLibs}/gdbms-0.8-SNAPSHOT.jar:${fmapLibs}/geoapi-2.0.jar:${fmapLibs}/gt2-legacy.jar:${fmapLibs}/gt2-main.jar:${fmapLibs}/gt2-postgis.jar:${fmapLibs}/gt2-wfs.jar:${fmapLibs}/gt2-wms.jar:${fmapLibs}/gt2sidx.jar:${fmapLibs}/hsqldb.jar:${andamiLibs}/iver-utiles.jar:${fmapLibs}/jts-1.7.jar:${fmapLibs}/jecw.jar:${andamiLibs}/log4j-1.2.8.jar:${fmapLibs}/wmsclient.jar:${fmapLibs}/mysql-connector-java-3.1.7-bin.jar:${fmapLibs}/postgis-jdbc-driver.jar:${fmapLibs}/postgresql-74.213.jar:${fmapLibs}/spatialindex.jar:${fmapLibs}/units-0.01.jar:${fmapLibs}/vecmath-1.3.jar" />
+	<property name="compile-classpath" value="${andamiJar}:${andamiLibs}/beans.jar:${fmapLibs}/cms.jar:${fmapLibs}/driver-manager-1.1.jar:${fmapLibs}/gdbms-0.8-SNAPSHOT.jar:${fmapLibs}/gt2-main.jar:${lib}/gt2-postgis.jar:${lib}/gt2-shapefile.jar:${gvsigJar}:${andamiLibs}/iver-utiles.jar:${lib}/jdom-1.0b10.jar:${fmapLibs}/jts.jar:${lib}/JWizardComponent.jar:${lib}/Smc.jar:${fmap-compile-classpath}"/>
+	<property name="compile-sourcepath" value="../libFMap/src:../appgvSIG/src:../extJDBC/src"/>
+	
+	
   <target name="init">
     <!-- Create the time stamp -->
     <tstamp/>
@@ -18,18 +31,14 @@
   </target>
 
 
-  <target name="compile" depends="init"
-        description="compile the source " >
-  </target>
-
-  <target name="dist" depends="compile"
+  <target name="dist"
         description="generate the distribution" >
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}"/>
-    <copy todir="${extensionDir}/${mainplugin}/lib">
+    <copy todir="${extensionsDir}/${mainplugin}/lib">
     	<fileset dir="./lib" includes="*.jar,*.zip"/>
     </copy>
-  	<jar jarfile="${dist}/${plugin}.jar" basedir="${build}"/>
+  	<jar jarfile="${dist}/${jarName}" basedir="${build}"/>
     <copy file="config/config.xml" todir="${dist}"/>
     <copy todir="${dist}">
     	<fileset dir="." includes="text*.properties"/>
@@ -38,11 +47,51 @@
     	<fileset dir="images/" includes="*"/>
     </copy>
 
-    <move todir="${extensionDir}/${plugin}/">
+    <move todir="${extensionsDir}/${plugin}/">
     	<fileset dir="${dist}" includes="**/**"/>
     </move>
   </target>
+	
+		<target name="batch-build"
+				description="compile the sources, create the jar file"
+				depends="compile,create-jar,copy-data-files,move-to-andami">
+		</target>
 
+		<target name="compile" description="compile the source" >
+			<!-- Compile the Java code from ${src} to ${build} -->
+			<mkdir dir="${build}" />
+			<javac  srcdir="${src}"
+				destdir="${build}"
+				source="1.4"
+				target="1.4"
+				classpath="${compile-classpath}"
+				sourcepath="${compile-sourcepath}"/>
+		</target>
+		
+		<target name="create-jar"
+				description="Creates the plugin jar">
+			<mkdir dir="${dist}"/>
+		    <jar jarfile="${dist}/${jarName}.jar" basedir="${build}"/>
+		</target>
+	
+		<target name="copy-data-files">
+		    <copy file="config/config.xml" todir="${dist}/config"/>
+			<copy todir="${dist}">
+				<fileset dir="." includes="text*.properties"/>
+			</copy>
+			<copy todir="${dist}/images">
+				<fileset dir="images/" includes="*"/>
+			</copy>
+		</target>
+		
+		<target name="move-to-andami">
+		    <move todir="${extensionsDir}/${plugin}/">
+		    	<fileset dir="${dist}" includes="**/**"/>
+	    	</move>
+		    <copy todir="${extensionsDir}/${mainplugin}/lib">
+		    	<fileset dir="./lib" includes="*.jar,*.zip"/>
+		    </copy>
+		</target>
 
   <target name="clean"
         description="clean up" >
