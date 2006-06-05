@@ -61,11 +61,11 @@ public class ExportTo extends Extension {
 		{
 			this.lyrVect = lyr;
 			this.writer = writer;
-			
+
 			setInitialStep(0);
 			setDeterminatedProcess(true);
 			setStatusMessage(PluginServices.getText(this, "exportando_features"));
-			
+
 			va = lyrVect.getSource();
 			sds = lyrVect.getRecordset();
 
@@ -77,7 +77,7 @@ public class ExportTo extends Extension {
 				rowCount = bitSet.cardinality();
 
 			setFinalStep(rowCount);
-			
+
 		}
 		public void run() throws Exception {
 
@@ -126,14 +126,14 @@ public class ExportTo extends Extension {
 			}
 
 			writer.postProcess();
-						
+
 			JOptionPane.showMessageDialog(
 					(JComponent) PluginServices.getMDIManager().getActiveView()
 					, PluginServices.getText(this, "capa_exportada"), "Export",
 					JOptionPane.INFORMATION_MESSAGE);
 
 		}
-		
+
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class ExportTo extends Extension {
 		}
 
 	}
-	
+
 	private void writeFeatures(FLyrVect layer, IWriter writer) throws DriverException, DriverIOException
 	{
 		PluginServices.cancelableBackgroundExecution(new WriterTask(layer, writer));
@@ -456,9 +456,9 @@ public class ExportTo extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		int status = EditionUtilities.getEditionStatus(); 
-		if (( status == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE)
-				|| (status == EditionUtilities.EDITION_STATUS_MULTIPLE_VECTORIAL_LAYER_ACTIVE))
+		int status = EditionUtilities.getEditionStatus();
+		if (( status == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE || status == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+				|| (status == EditionUtilities.EDITION_STATUS_MULTIPLE_VECTORIAL_LAYER_ACTIVE)|| (status == EditionUtilities.EDITION_STATUS_MULTIPLE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE))
 		{
 			return true;
 		}
