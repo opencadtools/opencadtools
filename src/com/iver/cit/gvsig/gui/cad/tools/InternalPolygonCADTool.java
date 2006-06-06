@@ -257,7 +257,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
      for (int i=ps.length-1;i>=0;i--){
     	 newGp.lineTo(ps[i].getX(),ps[i].getY());
      }
-     newGp.closePath();
+     newGp.lineTo(ps[ps.length-1].getX(),ps[ps.length-1].getY());
      return ShapeFactory.createPolygon2D(newGp);
     }
     public String getName() {
