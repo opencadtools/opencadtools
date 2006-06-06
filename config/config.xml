@@ -167,7 +167,7 @@
 			<menu text="geometry/insert/rectangle" action-command="_rectangle" icon="images/Rectangle.png"/>
 			<menu text="geometry/insert/circle" action-command="_circle" icon="images/Circle.png"/>
 			<menu text="geometry/insert/ellipse" action-command="_ellipse" icon="images/Ellipse.png"/>
-			<menu text="geometry/modify/edit_vertex" action-command="_ellipse" icon="images/EditVertex.png"/>
+			<menu text="geometry/modify/edit_vertex" action-command="_editvertex" icon="images/EditVertex.png"/>
 			<tool-bar name="insert">
 				<selectable-tool icon="images/Poligon.png" action-command="_polygon" tooltip="polygon" group="vista"/>
 				<selectable-tool icon="images/Rectangle.png" action-command="_rectangle" tooltip="rectangle" group="vista"/>
