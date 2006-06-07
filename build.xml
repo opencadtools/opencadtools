@@ -75,7 +75,7 @@
 		</target>
 	
 		<target name="copy-data-files">
-		    <copy file="config/config.xml" todir="${dist}/config"/>
+		    <copy file="config/config.xml" todir="${dist}"/>
 			<copy todir="${dist}">
 				<fileset dir="config" includes="text*.properties"/>
 			</copy>
