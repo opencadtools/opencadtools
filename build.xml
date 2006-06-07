@@ -71,7 +71,7 @@
 		<target name="create-jar"
 				description="Creates the plugin jar">
 			<mkdir dir="${dist}"/>
-		    <jar jarfile="${dist}/${jarName}.jar" basedir="${build}"/>
+		    <jar jarfile="${dist}/${jarName}" basedir="${build}"/>
 		</target>
 	
 		<target name="copy-data-files">
