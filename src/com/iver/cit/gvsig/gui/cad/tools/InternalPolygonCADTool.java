@@ -191,7 +191,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
 
     			IGeometry geometry=feat.getGeometry();
     			geometry=createNewPolygon(geometry,(Point2D[])points.toArray(new Point2D[0]));
-    			DefaultFeature df=new DefaultFeature(geometry,feat.getAttributes());
+    			DefaultFeature df=new DefaultFeature(geometry,feat.getAttributes(), feat.getID());
     			DefaultRowEdited dre=new DefaultRowEdited(df,DefaultRowEdited.STATUS_MODIFIED,row.getIndex());
     			try {
 					vea.modifyRow(dre.getIndex(),dre.getLinkedRow(),getName(),EditionEvent.GRAPHIC);
