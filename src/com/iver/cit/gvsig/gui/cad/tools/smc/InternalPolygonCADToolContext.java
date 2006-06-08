@@ -41,6 +41,14 @@ public final class InternalPolygonCADToolContext
         return;
     }
 
+    public void addValue(double d)
+    {
+        _transition = "addValue";
+        getState().addValue(this, d);
+        _transition = "";
+        return;
+    }
+
     public InternalPolygonCADToolState getState()
         throws statemap.StateUndefinedException
     {
@@ -89,6 +97,11 @@ public final class InternalPolygonCADToolContext
         }
 
         protected void addPoint(InternalPolygonCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            Default(context);
+        }
+
+        protected void addValue(InternalPolygonCADToolContext context, double d)
         {
             Default(context);
         }
@@ -177,9 +190,94 @@ public final class InternalPolygonCADToolContext
             }
             else
             {
-                super.addOption(context, s);
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        InternalPolygon.AddNextPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+                }
+                finally
+                {
+                    context.setState(InternalPolygon.AddNextPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
             }
 
+            return;
+        }
+
+        protected void addValue(InternalPolygonCADToolContext context, double d)
+        {
+            InternalPolygonCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    InternalPolygon.AddNextPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
+            }
+            finally
+            {
+                context.setState(InternalPolygon.AddNextPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
+            return;
+        }
+
+        protected void addPoint(InternalPolygonCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            InternalPolygonCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    InternalPolygon.AddNextPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
+            }
+            finally
+            {
+                context.setState(InternalPolygon.AddNextPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
             return;
         }
 

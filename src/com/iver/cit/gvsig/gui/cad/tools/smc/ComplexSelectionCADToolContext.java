@@ -42,6 +42,14 @@ public final class ComplexSelectionCADToolContext
         return;
     }
 
+    public void addValue(double d)
+    {
+        _transition = "addValue";
+        getState().addValue(this, d);
+        _transition = "";
+        return;
+    }
+
     public ComplexSelectionCADToolState getState()
         throws statemap.StateUndefinedException
     {
@@ -90,6 +98,11 @@ public final class ComplexSelectionCADToolContext
         }
 
         protected void addPoint(ComplexSelectionCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            Default(context);
+        }
+
+        protected void addValue(ComplexSelectionCADToolContext context, double d)
         {
             Default(context);
         }
@@ -190,9 +203,94 @@ public final class ComplexSelectionCADToolContext
             }
             else
             {
-                super.addOption(context, s);
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Selection.FirstPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+                }
+                finally
+                {
+                    context.setState(Selection.FirstPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
             }
 
+            return;
+        }
+
+        protected void addValue(ComplexSelectionCADToolContext context, double d)
+        {
+            ComplexSelectionCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Selection.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
+            }
+            finally
+            {
+                context.setState(Selection.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
+            return;
+        }
+
+        protected void addPoint(ComplexSelectionCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            ComplexSelectionCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Selection.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
+            }
+            finally
+            {
+                context.setState(Selection.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
             return;
         }
 

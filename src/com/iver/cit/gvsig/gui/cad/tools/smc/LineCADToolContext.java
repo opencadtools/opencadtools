@@ -218,11 +218,97 @@ public final class LineCADToolContext
                     }
 
                 }
-            }            else
+            }
+            else
             {
-                super.addOption(context, s);
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Line.FirstPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+                }
+                finally
+                {
+                    context.setState(Line.FirstPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
             }
 
+            return;
+        }
+
+        protected void addValue(LineCADToolContext context, double d)
+        {
+            LineCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Line.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
+            }
+            finally
+            {
+                context.setState(Line.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
+            return;
+        }
+
+        protected void addPoint(LineCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            LineCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Line.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
+            }
+            finally
+            {
+                context.setState(Line.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
             return;
         }
 

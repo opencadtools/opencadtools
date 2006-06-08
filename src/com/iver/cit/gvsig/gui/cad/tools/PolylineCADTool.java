@@ -57,7 +57,7 @@ import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
-import com.iver.cit.gvsig.gui.cad.exception.CommadException;
+import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADToolState;
 
@@ -137,13 +137,13 @@ public class PolylineCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
      */
     public void transition(double d) {
-        //_fsm.addValue(sel,d);
+        _fsm.addValue(d);
     }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s) throws CommadException {
+    public void transition(String s) throws CommandException {
         if (!super.changeCommand(s)){
             _fsm.addOption(s);
         }

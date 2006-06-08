@@ -198,9 +198,94 @@ public final class CircleCADToolContext
             }
             else
             {
-                super.addOption(context, s);
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Circle.CenterPointOr3p.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+                }
+                finally
+                {
+                    context.setState(Circle.CenterPointOr3p);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
             }
 
+            return;
+        }
+
+        protected void addValue(CircleCADToolContext context, double d)
+        {
+            CircleCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Circle.CenterPointOr3p.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
+            }
+            finally
+            {
+                context.setState(Circle.CenterPointOr3p);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
+            return;
+        }
+
+        protected void addPoint(CircleCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            CircleCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Circle.CenterPointOr3p.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
+            }
+            finally
+            {
+                context.setState(Circle.CenterPointOr3p);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
             return;
         }
 

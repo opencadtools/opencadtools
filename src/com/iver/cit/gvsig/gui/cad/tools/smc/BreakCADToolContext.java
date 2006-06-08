@@ -41,6 +41,14 @@ public final class BreakCADToolContext
         return;
     }
 
+    public void addValue(double d)
+    {
+        _transition = "addValue";
+        getState().addValue(this, d);
+        _transition = "";
+        return;
+    }
+
     public BreakCADToolState getState()
         throws statemap.StateUndefinedException
     {
@@ -89,6 +97,11 @@ public final class BreakCADToolContext
         }
 
         protected void addPoint(BreakCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            Default(context);
+        }
+
+        protected void addValue(BreakCADToolContext context, double d)
         {
             Default(context);
         }
@@ -179,9 +192,94 @@ public final class BreakCADToolContext
             }
             else
             {
-                super.addOption(context, s);
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Break.FirstPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+                }
+                finally
+                {
+                    context.setState(Break.FirstPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
             }
 
+            return;
+        }
+
+        protected void addValue(BreakCADToolContext context, double d)
+        {
+            BreakCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Break.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
+            }
+            finally
+            {
+                context.setState(Break.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
+            return;
+        }
+
+        protected void addPoint(BreakCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            BreakCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Break.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
+            }
+            finally
+            {
+                context.setState(Break.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
             return;
         }
 

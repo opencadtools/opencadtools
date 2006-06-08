@@ -50,7 +50,7 @@ import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
-import com.iver.cit.gvsig.gui.cad.exception.CommadException;
+import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext.EllipseCADToolState;
 
@@ -97,7 +97,7 @@ public class EllipseCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s) throws CommadException {
+    public void transition(String s) throws CommandException {
     	if (!super.changeCommand(s)){
     		_fsm.addOption(s);
     	}

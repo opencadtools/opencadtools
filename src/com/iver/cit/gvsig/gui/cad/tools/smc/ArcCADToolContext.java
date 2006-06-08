@@ -41,6 +41,14 @@ public final class ArcCADToolContext
         return;
     }
 
+    public void addValue(double d)
+    {
+        _transition = "addValue";
+        getState().addValue(this, d);
+        _transition = "";
+        return;
+    }
+
     public ArcCADToolState getState()
         throws statemap.StateUndefinedException
     {
@@ -89,6 +97,11 @@ public final class ArcCADToolContext
         }
 
         protected void addPoint(ArcCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            Default(context);
+        }
+
+        protected void addValue(ArcCADToolContext context, double d)
         {
             Default(context);
         }
@@ -181,9 +194,94 @@ public final class ArcCADToolContext
             }
             else
             {
-                super.addOption(context, s);
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Arc.FirstPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+                }
+                finally
+                {
+                    context.setState(Arc.FirstPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
             }
 
+            return;
+        }
+
+        protected void addValue(ArcCADToolContext context, double d)
+        {
+            ArcCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Arc.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
+            }
+            finally
+            {
+                context.setState(Arc.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
+            return;
+        }
+
+        protected void addPoint(ArcCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            ArcCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Arc.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
+            }
+            finally
+            {
+                context.setState(Arc.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
             return;
         }
 

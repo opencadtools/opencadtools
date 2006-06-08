@@ -41,6 +41,14 @@ public final class PointCADToolContext
         return;
     }
 
+    public void addValue(double d)
+    {
+        _transition = "addValue";
+        getState().addValue(this, d);
+        _transition = "";
+        return;
+    }
+
     public PointCADToolState getState()
         throws statemap.StateUndefinedException
     {
@@ -89,6 +97,11 @@ public final class PointCADToolContext
         }
 
         protected void addPoint(PointCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            Default(context);
+        }
+
+        protected void addValue(PointCADToolContext context, double d)
         {
             Default(context);
         }
@@ -177,9 +190,94 @@ public final class PointCADToolContext
             }
             else
             {
-                super.addOption(context, s);
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Point.FirstPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+                }
+                finally
+                {
+                    context.setState(Point.FirstPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
             }
 
+            return;
+        }
+
+        protected void addValue(PointCADToolContext context, double d)
+        {
+            PointCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Point.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
+            }
+            finally
+            {
+                context.setState(Point.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
+            return;
+        }
+
+        protected void addPoint(PointCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            PointCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Point.FirstPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
+            }
+            finally
+            {
+                context.setState(Point.FirstPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
             return;
         }
 

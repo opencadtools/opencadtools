@@ -196,9 +196,94 @@ public final class PolygonCADToolContext
             }
             else
             {
-                super.addOption(context, s);
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Polygon.NumberOrCenterPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+                }
+                finally
+                {
+                    context.setState(Polygon.NumberOrCenterPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
             }
 
+            return;
+        }
+
+        protected void addValue(PolygonCADToolContext context, double d)
+        {
+            PolygonCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Polygon.NumberOrCenterPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
+            }
+            finally
+            {
+                context.setState(Polygon.NumberOrCenterPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
+            return;
+        }
+
+        protected void addPoint(PolygonCADToolContext context, double pointX, double pointY, InputEvent event)
+        {
+            PolygonCADTool ctxt = context.getOwner();
+
+            boolean loopbackFlag =
+                context.getState().getName().equals(
+                    Polygon.NumberOrCenterPoint.getName());
+
+            if (loopbackFlag == false)
+            {
+                (context.getState()).Exit(context);
+            }
+
+            context.clearState();
+            try
+            {
+                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
+            }
+            finally
+            {
+                context.setState(Polygon.NumberOrCenterPoint);
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Entry(context);
+                }
+
+            }
             return;
         }
 
@@ -253,20 +338,41 @@ public final class PolygonCADToolContext
             {
                 PolygonCADTool ctxt = context.getOwner();
 
+                if (d<3)
+                {
+                    PolygonCADToolState endState = context.getState();
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_central_point_polygon"));
-                    ctxt.setDescription(new String[]{"cancel"});
-                    ctxt.addValue(d);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.throwValueException(PluginServices.getText(this,"num_lados_insuficiente"), d);
+                    }
+                    finally
+                    {
+                        context.setState(endState);
+                    }
                 }
-                finally
+                else if (d>2)
                 {
-                    context.setState(Polygon.CenterPoint);
-                    (context.getState()).Entry(context);
+
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_central_point_polygon"));
+                        ctxt.setDescription(new String[]{"cancel"});
+                        ctxt.addValue(d);
+                    }
+                    finally
+                    {
+                        context.setState(Polygon.CenterPoint);
+                        (context.getState()).Entry(context);
+                    }
+                }                else
+                {
+                    super.addValue(context, d);
                 }
+
                 return;
             }
 

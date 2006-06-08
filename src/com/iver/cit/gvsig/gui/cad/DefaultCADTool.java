@@ -55,7 +55,6 @@ import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.InsertPointExtension;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -69,14 +68,12 @@ import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
-import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
-import com.iver.cit.gvsig.gui.cad.exception.CommadException;
-import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
+import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.utiles.console.JConsole;
 
@@ -334,7 +331,7 @@ public abstract class DefaultCADTool implements CADTool {
 	public void setNextTool(String tool) {
 		this.tool = tool;
 	}
-	public boolean changeCommand(String name)throws CommadException{
+	public boolean changeCommand(String name)throws CommandException{
 		CADTool[] cadtools=CADExtension.getCADTools();
 		for (int i=0;i<cadtools.length;i++){
 			CADTool ct=cadtools[i];
@@ -354,7 +351,7 @@ public abstract class DefaultCADTool implements CADTool {
 							JConsole.COMMAND);
 					return true;
 				}else{
-					throw new CommadException(name);
+					throw new CommandException(name);
 				}
 			}
 		}
@@ -364,4 +361,21 @@ public abstract class DefaultCADTool implements CADTool {
 		return true;
 	}
 	public abstract String toString();
+
+	public void throwValueException(String s,double d) {
+		View vista = (View) PluginServices.getMDIManager()
+			.getActiveView();
+		vista.getConsolePanel().addText(s+ " : " + d, JConsole.ERROR);
+	}
+	public void throwOptionException(String s,String o) {
+		View vista = (View) PluginServices.getMDIManager()
+			.getActiveView();
+		vista.getConsolePanel().addText(s+ " : " + o, JConsole.ERROR);
+	}
+	public void throwPointException(String s,double x,double y) {
+		View vista = (View) PluginServices.getMDIManager()
+			.getActiveView();
+		vista.getConsolePanel().addText(s+ " : " + " X = "+x+ ", Y = "+y, JConsole.ERROR);
+	}
+
 }

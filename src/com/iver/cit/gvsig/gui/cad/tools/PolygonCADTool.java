@@ -54,7 +54,8 @@ import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
-import com.iver.cit.gvsig.gui.cad.exception.CommadException;
+import com.iver.cit.gvsig.gui.cad.exception.CommandException;
+import com.iver.cit.gvsig.gui.cad.exception.ValueException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolygonCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolygonCADToolContext.PolygonCADToolState;
 
@@ -102,7 +103,7 @@ public class PolygonCADTool extends DefaultCADTool {
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
      */
-    public void transition(String s) throws CommadException {
+    public void transition(String s) throws CommandException {
     	if (!super.changeCommand(s)){
     		_fsm.addOption(s);
     	}
@@ -198,7 +199,7 @@ public class PolygonCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status.equals("Polygon.NumberOrCenterPoint")) {
-            numLines = (int) d;
+        	numLines = (int) d;
         } else if (status.equals("Polygon.OptionOrRadiusOrPoint") ||
                 status.equals("Polygon.RadiusOrPoint")) {
             double radio = d;
@@ -271,15 +272,17 @@ public class PolygonCADTool extends DefaultCADTool {
      * @param radio Radio
      *
      * @return GeometryCollection con las geometrías del polígono.
+     * @throws ValueException
      */
-    private IGeometry getIPolygon(Point2D point, double radio) {
-        Point2D p1 = UtilFunctions.getPoint(center, point, radio);
+    private IGeometry getIPolygon(Point2D point, double radio){
+    	Point2D p1 = UtilFunctions.getPoint(center, point, radio);
         double initangle = UtilFunctions.getAngle(center, point);
         Point2D antPoint = p1;
         //Point2D firstPoint= null;
         double an = (Math.PI * 2) / numLines;
         GeneralPathX elShape = new GeneralPathX();
         boolean firstTime=true;
+
         for (int i = numLines-1; i >= 0; i--) {
             Point2D p2 = UtilFunctions.getPoint(center, (an * i) + initangle,
                     radio);

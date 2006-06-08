@@ -63,7 +63,7 @@ import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.gui.cad.CADTool;
-import com.iver.cit.gvsig.gui.cad.exception.CommadException;
+import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ComplexSelectionCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ComplexSelectionCADToolContext.ComplexSelectionCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
@@ -523,7 +523,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet,
 	 *      java.lang.String)
 	 */
-	public void transition(String s) throws CommadException {
+	public void transition(String s) throws CommandException {
 		if (!super.changeCommand(s)){
 
 			_fsm.addOption(s);
@@ -537,7 +537,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	 *      double)
 	 */
 	public void transition(double d) {
-		// _fsm.addValue(sel,d);
+		_fsm.addValue(d);
 	}
 
 	public String toString() {
