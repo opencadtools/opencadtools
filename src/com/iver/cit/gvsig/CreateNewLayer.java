@@ -9,6 +9,7 @@ import com.hardcode.driverManager.DriverManager;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
+import com.iver.cit.gvsig.fmap.edition.IWriteable;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
@@ -98,8 +99,8 @@ public void execute(String actionCommand) {
 			{
 				wizard.getWizardComponents().addWizardPanel(panelChoose);
 				wizard.getWizardComponents().addWizardPanel(panelFields);
-				
-				panelChoose.setDriver((ISpatialWriter) writerManager.getDriver("PostGIS JDBC Driver"));
+				Driver driver = writerManager.getDriver("PostGIS JDBC Driver");
+				panelChoose.setDriver(driver);
 				wizard.getWizardComponents().addWizardPanel(
 					new PostGISpanel(wizard.getWizardComponents()));
 				

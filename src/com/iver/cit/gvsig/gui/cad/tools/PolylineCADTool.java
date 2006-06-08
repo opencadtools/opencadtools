@@ -46,20 +46,24 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+import org.cresques.cts.GeoCalc;
+
 import com.iver.andami.PluginServices;
-import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADToolState;
+import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
@@ -68,6 +72,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADTo
  * @author Vicente Caballero Navarro
  */
 public class PolylineCADTool extends DefaultCADTool {
+	private static Logger logger = Logger.getLogger(PolylineCADTool.class.getName());
     private PolylineCADToolContext _fsm;
     private Point2D firstPoint;
     private Point2D antPoint;
@@ -94,22 +99,46 @@ public class PolylineCADTool extends DefaultCADTool {
     public void endGeometry() {
         IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
         FGeometryCollection fgc = new FGeometryCollection(geoms);
-        try {
-			if (((FLyrVect)getVLE().getLayer()).getShapeType()==FShape.POLYGON){
+        /* try {
+			if (getVLE().getVEA().getShapeType()==FShape.POLYGON){
 				GeneralPathX gpx=new GeneralPathX();
 				gpx.moveTo(antPoint.getX(),antPoint.getY());
 				gpx.lineTo(firstPoint.getX(),firstPoint.getY());
 				IGeometry line=ShapeFactory.createPolyline2D(gpx);
 				fgc.addGeometry(line);
 			}
-		} catch (DriverException e) {
+		} catch (DriverIOException e) {
 			e.printStackTrace();
-		}
+		} */
 
         // No queremos guardar FGeometryCollections:
         GeneralPathX gp = new GeneralPathX();
         gp.append(fgc.getPathIterator(null), true);
         IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
+        if (gp.isClosed())
+        {
+        	gp.ensureOrientation(false); // Poligono exterior.
+        	// Voy a testear que se puede convertir a JTS:
+        	IGeometry gAux = ShapeFactory.createPolygon2D(gp);
+        	Geometry jtsG = gAux.toJTSGeometry();
+        	logger.debug("A punto de escribir " + jtsG.toText());
+        	try {
+        		int shapeType = getVLE().getVEA().getShapeType(); 
+				if ((shapeType ==FShape.POLYGON) || (shapeType == FShape.MULTI)) {
+//					GeneralPathX gpx=new GeneralPathX();
+//					gpx.moveTo(antPoint.getX(),antPoint.getY());
+//					gpx.lineTo(firstPoint.getX(),firstPoint.getY());
+//					IGeometry line=ShapeFactory.createPolyline2D(gpx);
+//					fgc.addGeometry(line);
+					newGeom = gAux;
+				}
+			} catch (DriverIOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}
+        	
+        }
 
         addGeometry(newGeom);
         _fsm = new PolylineCADToolContext(this);
@@ -123,6 +152,8 @@ public class PolylineCADTool extends DefaultCADTool {
         elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 
         list.add(ShapeFactory.createPolyline2D(elShape));
+        
+
         // list.add(ShapeFactory.createPolyline2D(elShape));
 
     }

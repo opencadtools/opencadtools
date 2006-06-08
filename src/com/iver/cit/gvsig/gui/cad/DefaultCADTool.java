@@ -57,6 +57,7 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.FPolygon2D;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
@@ -153,13 +154,6 @@ public abstract class DefaultCADTool implements CADTool {
 	public void addGeometry(IGeometry geometry) {
 		VectorialEditableAdapter vea = getVLE().getVEA();
 		try {
-			if (vea.getShapeType() == FShape.POLYGON) {
-				GeneralPathX gp = new GeneralPathX();
-				gp.append(geometry.getPathIterator(null), true);
-				FConverter.getExteriorPolygon(gp);
-
-				geometry = ShapeFactory.createPolygon2D(gp);
-			}
 			int numAttr = vea.getRecordset().getFieldCount();
 			Value[] values = new Value[numAttr];
 			for (int i = 0; i < numAttr; i++) {

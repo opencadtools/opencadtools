@@ -18,5 +18,6 @@
 	<classpathentry sourcepath="/JWizardComponent" kind="lib" path="lib/JWizardComponent.jar"/>
 	<classpathentry kind="lib" path="/_fwAndami/lib/beans.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extJDBC"/>
+	<classpathentry kind="lib" path="/_fwAndami/lib/log4j-1.2.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

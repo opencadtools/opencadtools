@@ -11,9 +11,11 @@ import javax.swing.event.CaretListener;
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
 
+import com.hardcode.driverManager.Driver;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
+import com.iver.cit.gvsig.fmap.edition.IWriteable;
 
 /**
  * @author fjp
@@ -180,12 +182,14 @@ public class ChooseGeometryType extends JWizardPanel {
 	 * multi_type
 	 * @param writer
 	 */
-	public void setDriver(ISpatialWriter writer) {
+	public void setDriver(Driver driver) {
 		// En función de qué tipo de driver sea, habilitamos o deshabilitamos
 		// las opciones. Por ejemplo, si es de tipo shp, deshabilitamos
 		// multi_type
+		IWriteable aux = (IWriteable) driver;
+		ISpatialWriter writer = (ISpatialWriter) aux.getWriter(); 
 		System.out.println("Writer seleccionado:" + writer.getName());
-		driverName = writer.getName();
+		driverName = driver.getName();
 		getJRadioButtonPoint().setEnabled(writer.canWriteGeometry(FShape.POINT));
 		getJRadioButtonMultiPoint().setEnabled(writer.canWriteGeometry(FShape.MULTIPOINT));
 		getJRadioButtonLine().setEnabled(writer.canWriteGeometry(FShape.LINE));
