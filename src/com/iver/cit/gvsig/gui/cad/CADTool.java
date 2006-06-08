@@ -46,7 +46,7 @@ import java.util.ArrayList;
 
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
-import com.iver.cit.gvsig.gui.cad.exception.CommadException;
+import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
@@ -68,7 +68,7 @@ public interface CADTool {
 	public void end();
 	public void transition(double x, double y, InputEvent event);
 	public void transition(double d);
-	public void transition(String s) throws CommadException;
+	public void transition(String s) throws CommandException;
 	public void addPoint(double x,double y,InputEvent event);
 	public void addValue(double d);
 	public void addOption(String s);
