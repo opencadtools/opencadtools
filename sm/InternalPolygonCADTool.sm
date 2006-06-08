@@ -50,5 +50,17 @@ Default
 		AddNextPoint{
 			end();
 			}
+	addOption(s:String)
+		AddNextPoint{
+			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+			}
+	addValue(d:double)
+		AddNextPoint{
+			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+			}
+	addPoint(pointX:double,pointY:double,event:InputEvent)
+		AddNextPoint{
+			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+			}
 }
 %%

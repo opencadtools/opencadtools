@@ -52,5 +52,17 @@ Default
 		FirstPointToMove{
 			end();
 			}
+	addOption(s:String)
+		FirstPointToMove{
+			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+			}
+	addValue(d:double)
+		FirstPointToMove{
+			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+			}
+	addPoint(pointX:double,pointY:double,event:InputEvent)
+		FirstPointToMove{
+			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+			}
 }
 %%

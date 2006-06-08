@@ -28,6 +28,12 @@ NumberOrCenterPoint
 
 	{
 		addValue(d:double)
+			[d<3]
+			NumberOrCenterPoint{
+				throwValueException(PluginServices.getText(this,"num_lados_insuficiente"),d);
+			}
+		addValue(d:double)
+			[d>2]
 			CenterPoint {
 				setQuestion(PluginServices.getText(this,"insert_central_point_polygon"));
 				setDescription(new String[]{"cancel"});
@@ -86,6 +92,18 @@ Default
 		[s.equals(PluginServices.getText(this,"cancel"))]
 		NumberOrCenterPoint{
 			end();
+			}
+	addOption(s:String)
+		NumberOrCenterPoint{
+			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+			}
+	addValue(d:double)
+		NumberOrCenterPoint{
+			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+			}
+	addPoint(pointX:double,pointY:double,event:InputEvent)
+		NumberOrCenterPoint{
+			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
 			}
 }
 %%

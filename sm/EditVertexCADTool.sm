@@ -50,5 +50,17 @@ Default
 		SelectVertexOrDelete{
 			end();
 			}
+	addOption(s:String)
+		SelectVertexOrDelete{
+			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+			}
+	addValue(d:double)
+		SelectVertexOrDelete{
+			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+			}
+	addPoint(pointX:double,pointY:double,event:InputEvent)
+		SelectVertexOrDelete{
+			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+			}
 }
 %%

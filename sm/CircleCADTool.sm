@@ -85,5 +85,17 @@ Default
 		CenterPointOr3p{
 			end();
 			}
+	addOption(s:String)
+		CenterPointOr3p{
+			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+			}
+	addValue(d:double)
+		CenterPointOr3p{
+			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+			}
+	addPoint(pointX:double,pointY:double,event:InputEvent)
+		CenterPointOr3p{
+			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+			}
 }
 %%
