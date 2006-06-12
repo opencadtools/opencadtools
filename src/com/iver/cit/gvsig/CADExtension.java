@@ -49,7 +49,6 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
-import javax.swing.FocusManager;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.text.JTextComponent;
@@ -59,7 +58,6 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
-import com.iver.cit.gvsig.fmap.tools.CompoundBehavior;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Behavior.MouseMovementBehavior;
 import com.iver.cit.gvsig.gui.View;
@@ -68,6 +66,8 @@ import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
+import com.iver.cit.gvsig.gui.popupmenu.PopupEdition;
+import com.iver.cit.gvsig.gui.toc.FPopupMenu;
 import com.iver.cit.gvsig.gui.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
 import com.iver.utiles.console.ResponseListener;
@@ -100,6 +100,13 @@ public class CADExtension extends Extension {
 	 */
 	public void initialize() {
 
+		// Registramos los Popup menus:
+		
+    	// Adds an entry to the TOC's floating menu
+        FPopupMenu.addEntry(new PopupEdition());
+
+		
+		
 		// Fijamos que los símbolos de dibujo tengan outline
 		// TODO: Esto se debe configurar en el cuadro de diálogo de preferencias
 		CADTool.drawingSymbol.setOutlined(true);
