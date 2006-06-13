@@ -41,6 +41,8 @@
 package com.iver.cit.gvsig.gui.preferences;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -51,75 +53,75 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.preferences.AbstractPreferencePage;
+import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.EditionManager;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.CardLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import javax.swing.BoxLayout;
+import com.iver.cit.gvsig.fmap.layers.SingleLayerIterator;
+import com.iver.cit.gvsig.layers.ILayerEdited;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 public class EditionPreferencePage extends AbstractPreferencePage {
 	private JLabel jLabel = null;
+
 	private JTextField jTxtTolerance = null;
+
 	private JLabel jLabel1 = null;
+
 	private JSeparator jSeparator = null;
+
 	private JScrollPane jScrollPane = null;
+
 	private JTable jTableSnapping = null;
+
 	private JLabel jLabelCache = null;
+
 	private JPanel jPanelNord = null;
+
 	private JPanel jPanelCache = null;
+
 	private FLayers layers;
-	private class MyRecord
-	{
+
+	private class MyRecord {
 		public Boolean bSelec = new Boolean(false);
+
 		public String layerName;
+
 		public Integer maxFeat = new Integer(1000);
 	}
-	
-	private class MyTableModel extends AbstractTableModel
-	{
+
+	private class MyTableModel extends AbstractTableModel {
 		private ArrayList records = new ArrayList();
-		
-		public MyTableModel(FLayers layers)
-		{
+
+		public MyTableModel(FLayers layers) {
 			addLayer(layers);
 		}
 
-		private void addLayer(FLayer lyr)
-		{
-			if (lyr instanceof FLayers)
-			{
+		private void addLayer(FLayer lyr) {
+			if (lyr instanceof FLayers) {
 				FLayers lyrGroup = (FLayers) lyr;
-				for (int i=0; i < lyrGroup.getLayersCount(); i++)
-				{
-					FLayer lyr2 = lyrGroup.getLayer(i); 
+				for (int i = 0; i < lyrGroup.getLayersCount(); i++) {
+					FLayer lyr2 = lyrGroup.getLayer(i);
 					addLayer(lyr2);
 				}
-			}
-			else
-			{
-				if (lyr instanceof FLyrVect)
-				{
+			} else {
+				if (lyr instanceof FLyrVect) {
+					FLyrVect aux = (FLyrVect) lyr;
 					MyRecord rec = new MyRecord();
 					rec.layerName = lyr.getName();
-					records.add(rec);	
+					rec.bSelec = new Boolean(aux.isSpatialCacheEnabled());
+					rec.maxFeat = new Integer(aux.getSpatialCache()
+							.getMaxFeatures());
+					records.add(rec);
 				}
 			}
-				
-			
-
 		}
+
 		public int getColumnCount() {
 			return 3;
 		}
@@ -137,7 +139,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			if (columnIndex == 2)
 				return rec.maxFeat;
 			return null;
-			
+
 		}
 
 		public Class getColumnClass(int c) {
@@ -145,21 +147,20 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 				return Boolean.class;
 			if (c == 2)
 				return Integer.class;
-			return String.class; 
+			return String.class;
 		}
 
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			MyRecord rec = (MyRecord) records.get(rowIndex);
 			if (columnIndex == 0)
 				rec.bSelec = (Boolean) aValue;
-			if (columnIndex == 2)
-			{
+			if (columnIndex == 2) {
 				if (aValue != null)
 					rec.maxFeat = (Integer) aValue;
 				else
 					rec.maxFeat = new Integer(0);
 			}
-			
+
 			super.setValueAt(aValue, rowIndex, columnIndex);
 		}
 
@@ -182,17 +183,24 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			return "You shouldn't reach this point";
 
 		}
-		
+
 	}
 
 	/**
-	 * This method initializes 
+	 * This method initializes
 	 * 
 	 */
 	public EditionPreferencePage() {
 		super();
 		initialize();
 	}
+
+	/*
+	 * private void addLayer(FLayer lyr) { if (lyr instanceof FLayers) { FLayers
+	 * lyrGroup = (FLayers) lyr; for (int i=0; i < lyrGroup.getLayersCount();
+	 * i++) { FLayer lyr2 = lyrGroup.getLayer(i); addLayer(lyr2); } } else { if
+	 * (lyr instanceof FLyrVect) { layers.add(lyr); } } }
+	 */
 
 	/**
 	 * This method initializes this
@@ -201,36 +209,36 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	private void initialize() {
 		BorderLayout layout = new BorderLayout();
 		layout.setHgap(20);
-		
-        this.setLayout(layout);
-        
-        jLabelCache = new JLabel();
-        jLabelCache.setText(PluginServices.getText(this,"capas_edition_cache"));
-        jLabelCache.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        jLabelCache.setPreferredSize(new java.awt.Dimension(303,15));
-        jLabelCache.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1 = new JLabel();
-        jLabel1.setText("pixels");
-        jLabel1.setBounds(new java.awt.Rectangle(195,8,207,15));
-        jLabel1.setPreferredSize(new java.awt.Dimension(28,20));
-        jLabel1.setName("jLabel1");
-        jLabel = new JLabel();
-        jLabel.setText("Snap Tolerance:");
-        jLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel.setName("jLabel");
-        jLabel.setBounds(new java.awt.Rectangle(15,8,122,15));
-        jLabel.setPreferredSize(new java.awt.Dimension(28,20));
-        jLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        
-        this.setSize(new java.awt.Dimension(426,239));
-        this.setPreferredSize(this.getSize());
-        this.add(getJPanelNord(), BorderLayout.NORTH);
-        
-        this.add(getJSeparator(), BorderLayout.CENTER);
-        
 
-        this.add(getJPanelCache(), BorderLayout.CENTER);
-			
+		this.setLayout(layout);
+
+		jLabelCache = new JLabel();
+		jLabelCache
+				.setText(PluginServices.getText(this, "capas_edition_cache"));
+		jLabelCache.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+		jLabelCache.setPreferredSize(new java.awt.Dimension(303, 15));
+		jLabelCache.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+		jLabel1 = new JLabel();
+		jLabel1.setText("pixels");
+		jLabel1.setBounds(new java.awt.Rectangle(195, 8, 207, 15));
+		jLabel1.setPreferredSize(new java.awt.Dimension(28, 20));
+		jLabel1.setName("jLabel1");
+		jLabel = new JLabel();
+		jLabel.setText("Snap Tolerance:");
+		jLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+		jLabel.setName("jLabel");
+		jLabel.setBounds(new java.awt.Rectangle(15, 8, 122, 15));
+		jLabel.setPreferredSize(new java.awt.Dimension(28, 20));
+		jLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+		this.setSize(new java.awt.Dimension(426, 239));
+		this.setPreferredSize(this.getSize());
+		this.add(getJPanelNord(), BorderLayout.NORTH);
+
+		this.add(getJSeparator(), BorderLayout.CENTER);
+
+		this.add(getJPanelCache(), BorderLayout.CENTER);
+
 	}
 
 	public String getID() {
@@ -238,103 +246,173 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	}
 
 	public String getTitle() {
-		return PluginServices.getText(this,"Edition");
+		return PluginServices.getText(this, "Edition");
 	}
 
 	public JPanel getPanel() {
 		return this;
 	}
 
-	public String getParentID() {
-		return null;
-	}
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.iver.cit.gvsig.gui.preferences.IPreference#initializeValues()
 	 */
 	public void initializeValues() {
-		/* Vamos a usar esto por ahora así:
-		 * Al abrir el dialogo, miramos las capas que hay
-		 * en edición y las capas activas.
-		 * Las capas en edición nos las guardamos para
-		 * fijarles las propiedades, y las que están activas
-		 * las metemos en la tabla de configuración de
-		 * snapping.
-		 */
-		TableModel tm = getJTableSnapping().getModel();
-		for (int i=0; i < tm.getRowCount(); i++)
-		{
-			String layerName = (String) tm.getValueAt(i, 1);
-			FLyrVect lyr = (FLyrVect) layers.getLayer(layerName);
-			Boolean bUseCache = (Boolean) tm.getValueAt(i,0);
-			Integer maxFeat = (Integer) tm.getValueAt(i,2);
-			lyr.setSpatialCacheEnabled(bUseCache.booleanValue());
-			lyr.setMaxFeaturesInEditionCache(maxFeat.intValue());
-		}
+		// /* Vamos a usar esto por ahora así:
+		// * Al abrir el dialogo, miramos las capas que hay
+		// * en edición y las capas activas.
+		// * Las capas en edición nos las guardamos para
+		// * fijarles las propiedades, y las que están activas
+		// * las metemos en la tabla de configuración de
+		// * snapping.
+		// */
+		// FLyrVect firstLyrVect = null;
+		// for (int i=0; i<layers.getLayersCount(); i++)
+		// {
+		// FLayer aux = layers.getLayer(i);
+		// if (aux.isActive())
+		// if (aux instanceof FLyrVect)
+		// {
+		// firstLyrVect = (FLyrVect) aux;
+		// }
+		// }
+		//		
+		// TableModel tm = getJTableSnapping().getModel();
+		// for (int i=0; i < tm.getRowCount(); i++)
+		// {
+		// String layerName = (String) tm.getValueAt(i, 1);
+		// FLayer layer = layers.getLayer(layerName);
+		// FLyrVect lyr = (FLyrVect) layers.getLayer(layerName);
+		// Boolean bUseCache = (Boolean) tm.getValueAt(i,0);
+		// Integer maxFeat = (Integer) tm.getValueAt(i,2);
+		// lyr.setSpatialCacheEnabled(bUseCache.booleanValue());
+		// lyr.setMaxFeaturesInEditionCache(maxFeat.intValue());
+		// }
+		//
 
-		
 	}
 
 	public boolean storeValues() {
 		TableModel tm = getJTableSnapping().getModel();
-		for (int i=0; i < tm.getRowCount(); i++)
-		{
+		ArrayList layersToSnap = new ArrayList();
+		for (int i = 0; i < tm.getRowCount(); i++) {
 			String layerName = (String) tm.getValueAt(i, 1);
 			FLyrVect lyr = (FLyrVect) layers.getLayer(layerName);
-			Boolean bUseCache = (Boolean) tm.getValueAt(i,0);
-			Integer maxFeat = (Integer) tm.getValueAt(i,2);
-			lyr.setSpatialCacheEnabled(bUseCache.booleanValue());
+			Boolean bUseCache = (Boolean) tm.getValueAt(i, 0);
+			Integer maxFeat = (Integer) tm.getValueAt(i, 2);
+
+			// Decidimos si vamos a habilitar el spatialCache DESPUES, justo
+			// antes de renderizar.
+			// Necesitamos un método que explore las capas en edición y mire las
+			// capas sobre las
+			// que se necestia el cache. Aquí lo que hacemos es añadir las
+			// seleccionadas a la
+			// lista de capas asociadas al snapping de los temas activos en
+			// edición.
+			// Lo del máximo de features en caché, tiene que ser para cada capa
+			// distinto. Pero no
+			// puedes "chafar" el que ya hay, porque puedes fastidiar a otra
+			// capa en edición.
+			// Como máximo, lo que podemos hacer es que si es mayor al que hay,
+			// lo subimos. Si
+			// se solicita uno menor, lo dejamos como está.
+			// Otra opción sería no hacer caso de esto para cada capa, y ponerlo
+			// de forma global.
+			// lyr.setSpatialCacheEnabled(bUseCache.booleanValue());
 			lyr.setMaxFeaturesInEditionCache(maxFeat.intValue());
+			if (bUseCache.booleanValue())
+				layersToSnap.add(lyr);
 		}
+		SingleLayerIterator it = new SingleLayerIterator(layers);
+		EditionManager edManager = CADExtension.getEditionManager();
+
+		while (it.hasNext()) {
+			FLayer aux = it.next();
+			if (aux instanceof FLyrVect)
+			{
+				FLyrVect lyrVect = (FLyrVect) aux;
+				// Inicializamos todas
+				lyrVect.setSpatialCacheEnabled(false);
+				if (aux.isActive())
+					if (aux.isEditing()) {
+						// Sobre la capa en edición siempre se puede hacer snapping
+						lyrVect.setSpatialCacheEnabled(true); 
+						VectorialLayerEdited lyrEd = (VectorialLayerEdited) edManager
+								.getLayerEdited(aux);
+						lyrEd.setLayersToSnap(layersToSnap);
+
+					}
+			}
+		} // while
+		it.rewind();
+		/*
+		 * Iteramos por las capas en edición y marcamos aquellas capas que
+		 * necesitan trabajar con el cache habilitado
+		 */
+		while (it.hasNext()) {
+			FLayer aux = it.next();
+			if (aux.isEditing())
+				if (aux instanceof FLyrVect) {
+						VectorialLayerEdited lyrEd = (VectorialLayerEdited) edManager
+								.getLayerEdited(aux);
+						for (int i=0; i<lyrEd.getLayersToSnap().size(); i++)
+						{
+							FLyrVect lyrVect = (FLyrVect) lyrEd.getLayersToSnap().get(i);
+							lyrVect.setSpatialCacheEnabled(true);
+						}
+
+				}
+
+		} // while
 
 		return true;
 	}
 
 	public void initializeDefaults() {
 		TableModel tm = getJTableSnapping().getModel();
-		for (int i=0; i < tm.getRowCount(); i++)
-		{
+		for (int i = 0; i < tm.getRowCount(); i++) {
 			String layerName = (String) tm.getValueAt(i, 1);
 			FLyrVect lyr = (FLyrVect) layers.getLayer(layerName);
-			Boolean bUseCache = (Boolean) tm.getValueAt(i,0);
-			Integer maxFeat = (Integer) tm.getValueAt(i,2);
+			Boolean bUseCache = (Boolean) tm.getValueAt(i, 0);
+			Integer maxFeat = (Integer) tm.getValueAt(i, 2);
 			lyr.setSpatialCacheEnabled(bUseCache.booleanValue());
 			lyr.setMaxFeaturesInEditionCache(maxFeat.intValue());
 		}
-		
+
 	}
 
 	public ImageIcon getIcon() {
 		return null;
 	}
-	
-	public void setLayers(FLayers layers)
-	{
+
+	public void setLayers(FLayers layers) {
+		// addLayer(layers);
 		this.layers = layers;
 		MyTableModel tm = new MyTableModel(layers);
 		getJTableSnapping().setModel(tm);
 	}
 
 	/**
-	 * This method initializes jTxtTolerance	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes jTxtTolerance
+	 * 
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTxtTolerance() {
 		if (jTxtTolerance == null) {
 			jTxtTolerance = new JTextField();
-			jTxtTolerance.setPreferredSize(new java.awt.Dimension(28,20));
+			jTxtTolerance.setPreferredSize(new java.awt.Dimension(28, 20));
 			jTxtTolerance.setName("jTxtTolerance");
-			jTxtTolerance.setBounds(new java.awt.Rectangle(142,8,39,15));
+			jTxtTolerance.setBounds(new java.awt.Rectangle(142, 8, 39, 15));
 			jTxtTolerance.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 		}
 		return jTxtTolerance;
 	}
 
 	/**
-	 * This method initializes jSeparator	
-	 * 	
-	 * @return javax.swing.JSeparator	
+	 * This method initializes jSeparator
+	 * 
+	 * @return javax.swing.JSeparator
 	 */
 	private JSeparator getJSeparator() {
 		if (jSeparator == null) {
@@ -344,9 +422,9 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	}
 
 	/**
-	 * This method initializes jScrollPane	
-	 * 	
-	 * @return javax.swing.JScrollPane	
+	 * This method initializes jScrollPane
+	 * 
+	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
@@ -357,58 +435,58 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	}
 
 	/**
-	 * This method initializes jTableSnapping	
-	 * 	
-	 * @return javax.swing.JTable	
+	 * This method initializes jTableSnapping
+	 * 
+	 * @return javax.swing.JTable
 	 */
 	private JTable getJTableSnapping() {
 		if (jTableSnapping == null) {
 			jTableSnapping = new JTable();
-//			TableColumnModel cm = new DefaultTableColumnModel();
-//			TableColumn checkCol = new TableColumn(0, 50);
-//			cm.addColumn(checkCol);
-//			
-//			TableColumn layerCol = new TableColumn(1, 250);
-//			cm.addColumn(layerCol);
-//			
-//			TableColumn maxFeatCol = new TableColumn(2, 50);
-//			cm.addColumn(maxFeatCol);
-//
-//			JTableHeader head = new JTableHeader(cm);
-//			head.setVisible(true);
-//			
-//			
-//			TableModel tm = new DefaultTableModel(4,3);
-//			jTableSnapping.setModel(tm);
-//			jTableSnapping.setTableHeader(head);
+			// TableColumnModel cm = new DefaultTableColumnModel();
+			// TableColumn checkCol = new TableColumn(0, 50);
+			// cm.addColumn(checkCol);
+			//			
+			// TableColumn layerCol = new TableColumn(1, 250);
+			// cm.addColumn(layerCol);
+			//			
+			// TableColumn maxFeatCol = new TableColumn(2, 50);
+			// cm.addColumn(maxFeatCol);
+			//
+			// JTableHeader head = new JTableHeader(cm);
+			// head.setVisible(true);
+			//			
+			//			
+			// TableModel tm = new DefaultTableModel(4,3);
+			// jTableSnapping.setModel(tm);
+			// jTableSnapping.setTableHeader(head);
 		}
 		return jTableSnapping;
 	}
 
 	/**
-	 * This method initializes jPanelNord	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jPanelNord
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelNord() {
 		if (jPanelNord == null) {
 			jPanelNord = new JPanel();
 			jPanelNord.setLayout(null);
-			jPanelNord.setComponentOrientation(java.awt.ComponentOrientation.UNKNOWN);
-			jPanelNord.setPreferredSize(new java.awt.Dimension(30,30));
+			jPanelNord
+					.setComponentOrientation(java.awt.ComponentOrientation.UNKNOWN);
+			jPanelNord.setPreferredSize(new java.awt.Dimension(30, 30));
 			jPanelNord.add(jLabel, null);
 			jPanelNord.add(getJTxtTolerance(), null);
 			jPanelNord.add(jLabel1, null);
-			        
 
 		}
 		return jPanelNord;
 	}
 
 	/**
-	 * This method initializes jPanelCache	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jPanelCache
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelCache() {
 		if (jPanelCache == null) {
@@ -418,9 +496,9 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			gridBagConstraints1.weighty = 1.0;
 			gridBagConstraints1.gridy = 1;
 			gridBagConstraints1.weightx = 1.0;
-			gridBagConstraints1.insets = new java.awt.Insets(5,10,5,10);
+			gridBagConstraints1.insets = new java.awt.Insets(5, 10, 5, 10);
 			GridBagConstraints gridBagConstraints = new GridBagConstraints();
-			gridBagConstraints.insets = new java.awt.Insets(5,10,2,75);
+			gridBagConstraints.insets = new java.awt.Insets(5, 10, 2, 75);
 			gridBagConstraints.gridy = 0;
 			gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
 			gridBagConstraints.ipadx = 14;
@@ -435,6 +513,5 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		return jPanelCache;
 	}
 
-}  //  @jve:decl-index=0:visual-constraint="10,10"
-
+} // @jve:decl-index=0:visual-constraint="10,10"
 

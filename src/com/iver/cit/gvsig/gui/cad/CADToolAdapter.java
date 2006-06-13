@@ -160,13 +160,12 @@ public class CADToolAdapter extends Behavior {
 		if (!(aux instanceof VectorialLayerEdited))
 			return Double.MAX_VALUE;
 		VectorialLayerEdited vle = (VectorialLayerEdited) aux;
-		FLyrVect lyrVect = (FLyrVect) vle.getLayer();
+		
 		ArrayList snappers = vle.getSnappers();
+		ArrayList layersToSnap = vle.getLayersToSnap();
 
-		SpatialCache cache = lyrVect.getSpatialCache();
+
 		ViewPort vp = getMapControl().getViewPort();
-		if (cache == null)
-			return Double.MAX_VALUE;
 
 		double rw = getMapControl().getViewPort().toMapDistance(5);
 		Point2D mapPoint = point;
@@ -189,22 +188,30 @@ public class CADToolAdapter extends Behavior {
 		{
 			lastPoint = new Point2D.Double(previousPoint[0], previousPoint[1]);
 		}
-		for (int i = 0; i < snappers.size(); i++)
+		for (int j = 0; j < layersToSnap.size(); j++)
 		{
-			ISnapper theSnapper = (ISnapper) snappers.get(i);
-
-			SnappingVisitor snapVisitor = new SnappingVisitor(theSnapper, point, mapTolerance, lastPoint);
-			// System.out.println("Cache size = " + cache.size());
-			cache.query(e, snapVisitor);
-
-			if (snapVisitor.getSnapPoint() != null) {
-				if (minDist > snapVisitor.getMinDist())
+			FLyrVect lyrVect = (FLyrVect) layersToSnap.get(j);
+			SpatialCache cache = lyrVect.getSpatialCache();
+			if (lyrVect.isVisible())
+			{
+				for (int i = 0; i < snappers.size(); i++)
 				{
-					minDist = snapVisitor.getMinDist();
-					usedSnap = theSnapper;
-					mapHandlerAdjustedPoint.setLocation(snapVisitor.getSnapPoint());
+					ISnapper theSnapper = (ISnapper) snappers.get(i);
+		
+					SnappingVisitor snapVisitor = new SnappingVisitor(theSnapper, point, mapTolerance, lastPoint);
+					// System.out.println("Cache size = " + cache.size());
+					cache.query(e, snapVisitor);
+		
+					if (snapVisitor.getSnapPoint() != null) {
+						if (minDist > snapVisitor.getMinDist())
+						{
+							minDist = snapVisitor.getMinDist();
+							usedSnap = theSnapper;
+							mapHandlerAdjustedPoint.setLocation(snapVisitor.getSnapPoint());
+						}
+					}
 				}
-			}
+			} // visible
 		}
 		if (usedSnap != null)
 			return minDist;

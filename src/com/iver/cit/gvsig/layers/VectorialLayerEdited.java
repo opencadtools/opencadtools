@@ -51,11 +51,14 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	private CADTool cadtool=null;
 	
 	private ArrayList snappers = new ArrayList();
+	private ArrayList layersToSnap = new ArrayList();
 
 	public VectorialLayerEdited(FLayer lyr)
 	{
 		super(lyr);
 		lyr.getFMap().addLayerDrawingListener(this);
+		// Por defecto, siempre hacemos snapping sobre la capa en edición.
+		layersToSnap.add(lyr);
 	}
 
 	public ArrayList getSelectedHandler() {
@@ -446,4 +449,14 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public ArrayList getSnappers() {
 		return snappers;
 	}
+	
+	public ArrayList getLayersToSnap() {
+		return layersToSnap;
+	}
+
+	public void setLayersToSnap(ArrayList layersToSnap) {
+		this.layersToSnap = layersToSnap;
+		
+	}
+
 }

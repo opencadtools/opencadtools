@@ -40,6 +40,7 @@
  */
 package com.iver.cit.gvsig.gui.popupmenu;
 
+import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
@@ -47,12 +48,13 @@ import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.preferences.GenericDlgPreferences;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.gui.preferences.EditionPreferencePage;
 import com.iver.cit.gvsig.gui.toc.FPopupMenu;
 import com.iver.cit.gvsig.gui.toc.TocMenuEntry;
 
-public class PopupEdition extends TocMenuEntry {
+public class PopupEditionProperties extends TocMenuEntry {
 	private JMenuItem propsMenuItem;
 
 	FLayer lyr = null;
@@ -76,14 +78,23 @@ public class PopupEdition extends TocMenuEntry {
 	public void actionPerformed(ActionEvent e) {
 		lyr = getNodeLayer();
 		EditionPreferencePage pref = new EditionPreferencePage();
-		JDialog dlg = new JDialog((Frame) PluginServices.getMainFrame(),
-				PluginServices.getText(this, "Edition_Preferences"));
 		pref.setLayers(getMapContext().getLayers());
-		dlg.getContentPane().add(pref);
-		dlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		dlg.pack();
-		dlg.setModal(true);
-		dlg.setVisible(true);
+		
+//		JDialog dlg = new JDialog((Frame) PluginServices.getMainFrame(),
+//				PluginServices.getText(this, "Edition_Properties"));
+//		dlg.getContentPane().setLayout(new BorderLayout());
+//		dlg.getContentPane().add(pref, BorderLayout.CENTER);
+//		dlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//		dlg.pack();
+//		dlg.setModal(true);
+//		dlg.setVisible(true);
+
+		
+		GenericDlgPreferences dlg = new GenericDlgPreferences();
+		dlg.getViewInfo().setTitle(PluginServices.getText(this, "Edition_Properties"));
+		dlg.addPreferencePage(pref);
+		dlg.setActivePage(pref);
+		PluginServices.getMDIManager().addView(dlg);
 		
 	}
 

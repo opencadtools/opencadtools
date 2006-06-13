@@ -46,22 +46,23 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import com.iver.andami.preferences.AbstractPreferencePage;
+import com.iver.andami.preferences.DlgPreferences;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.preferences.general.GeneralPage;
 
 public class DialogEditionPreferences  {
-	public class TestPref extends AbstractPreference
+	public class TestPref extends AbstractPreferencePage
 	{
-
+		String id;
 		public TestPref(String title)
 		{
 			super();
-			setID(title);
+			id = title;
 			setTitle(title);
 		}
 		public JPanel getPanel() {
-			return new GeneralPage();
+			return this;
 		}
 		public void initializeValues() {
 			// TODO Auto-generated method stub
@@ -75,6 +76,14 @@ public class DialogEditionPreferences  {
 			
 		}
 		public ImageIcon getIcon() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		public String getID() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		public String getTitle() {
 			// TODO Auto-generated method stub
 			return null;
 		}

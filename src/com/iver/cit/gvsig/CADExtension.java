@@ -66,7 +66,7 @@ import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
-import com.iver.cit.gvsig.gui.popupmenu.PopupEdition;
+import com.iver.cit.gvsig.gui.popupmenu.PopupEditionProperties;
 import com.iver.cit.gvsig.gui.toc.FPopupMenu;
 import com.iver.cit.gvsig.gui.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
@@ -103,7 +103,7 @@ public class CADExtension extends Extension {
 		// Registramos los Popup menus:
 		
     	// Adds an entry to the TOC's floating menu
-        FPopupMenu.addEntry(new PopupEdition());
+        FPopupMenu.addEntry(new PopupEditionProperties());
 
 		
 		
