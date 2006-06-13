@@ -129,7 +129,7 @@ public class ExportTo extends Extension {
 
 			JOptionPane.showMessageDialog(
 					(JComponent) PluginServices.getMDIManager().getActiveView()
-					, PluginServices.getText(this, "capa_exportada"), "Export",
+					, PluginServices.getText(this, "capa_exportada"), PluginServices.getText(this,"export_to"),
 					JOptionPane.INFORMATION_MESSAGE);
 
 		}
@@ -164,11 +164,11 @@ public class ExportTo extends Extension {
 								.cardinality();
 						if (numSelec > 0) {
 							int resp = JOptionPane.showConfirmDialog(
-									(JComponent) PluginServices.getMDIManager().getActiveView(),
-									"se_van_a_guardar_" + numSelec
-											+ " features_desea_continuar",
-									"Export", JOptionPane.YES_NO_OPTION);
-							if (resp == JOptionPane.NO_OPTION) {
+									(Component) PluginServices.getMainFrame(),
+									PluginServices.getText(this,"se_van_a_guardar_") + numSelec
+											+ PluginServices.getText(this,"features_desea_continuar"),
+									PluginServices.getText(this,"export_to"), JOptionPane.YES_NO_OPTION);
+							if (resp != JOptionPane.YES_OPTION) {
 								continue;
 							}
 						} // if numSelec > 0
@@ -385,6 +385,14 @@ public class ExportTo extends Extension {
 			if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
 				File newFile = jfc.getSelectedFile();
 				String path = newFile.getAbsolutePath();
+				if( newFile.exists()){
+					int resp = JOptionPane.showConfirmDialog(
+							(Component) PluginServices.getMainFrame(),PluginServices.getText(this,"fichero_ya_existe_seguro_desea_guardarlo"),
+							PluginServices.getText(this,"guardar"), JOptionPane.YES_NO_OPTION);
+					if (resp != JOptionPane.YES_OPTION) {
+						return;
+					}
+				}
 				if (!(path.toLowerCase().endsWith(".shp"))) {
 					path = path + ".shp";
 				}
