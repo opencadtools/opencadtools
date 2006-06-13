@@ -83,7 +83,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * @author Vicente Caballero Navarro
  */
 public class SelectionCADTool extends DefaultCADTool {
-	public final static int tolerance = 4;
+	public static int tolerance = 4;
 
 	private SelectionCADToolContext _fsm;
 

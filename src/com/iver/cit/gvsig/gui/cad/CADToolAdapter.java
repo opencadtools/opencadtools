@@ -167,13 +167,6 @@ public class CADToolAdapter extends Behavior {
 
 		ViewPort vp = getMapControl().getViewPort();
 
-		double rw = getMapControl().getViewPort().toMapDistance(5);
-		Point2D mapPoint = point;
-		Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - rw / 2,
-				mapPoint.getY() - rw / 2, rw, rw);
-
-		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
-
 		// TODO: PROVISIONAL. PONER ALGO COMO ESTO EN UN CUADRO DE DIALOGO
 		// DE CONFIGURACIÓN DEL SNAPPING
 		NearestPointSnapper defaultSnap = new NearestPointSnapper();
@@ -182,6 +175,13 @@ public class CADToolAdapter extends Behavior {
 
 		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
 		double minDist = mapTolerance;
+//		double rw = getMapControl().getViewPort().toMapDistance(5);
+		Point2D mapPoint = point;
+		Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - mapTolerance / 2,
+				mapPoint.getY() - mapTolerance / 2, mapTolerance, mapTolerance);
+
+		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
+		
 		usedSnap = null;
 		Point2D lastPoint = null;
 		if (previousPoint != null)
@@ -296,7 +296,8 @@ public class CADToolAdapter extends Behavior {
 				if (usedSnap != null)
 				{
 					usedSnap.draw(g, adjustedPoint);
-					getMapControl().setToolTipText(usedSnap.getToolTipText());
+					g.drawString(usedSnap.getToolTipText(), (int)p.getX()+9, (int)p.getY()- 7);
+					// getMapControl().setToolTipText(usedSnap.getToolTipText());
 				}
 
 				adjustSnapping = false;

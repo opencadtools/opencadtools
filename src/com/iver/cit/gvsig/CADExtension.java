@@ -49,11 +49,14 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.config.generate.Plugin;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -126,6 +129,15 @@ public class CADExtension extends Extension {
 
 		addCADTool("_rotate", rotate);
 		addCADTool("_scale", scale);
+		
+		// Registramos las teclas de acceso rápido
+		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0);
+		
+		PluginServices.registerKeyStroke(key, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.err.println("Has pulsado F10");
+			}
+		});
 
 		KeyboardFocusManager kfm = KeyboardFocusManager
 				.getCurrentKeyboardFocusManager();

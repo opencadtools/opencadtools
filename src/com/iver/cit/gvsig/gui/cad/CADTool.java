@@ -62,6 +62,7 @@ public interface CADTool {
 			new Color(100, 100, 100, 100));
 	public static FSymbol selectSymbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT,
 			Color.ORANGE);
+	
 	public static int TOPGEOMETRY = 2000;
 
 	public void init();

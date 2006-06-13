@@ -96,6 +96,8 @@ public class PopupEditionProperties extends TocMenuEntry {
 		dlg.setActivePage(pref);
 		PluginServices.getMDIManager().addView(dlg);
 		
+		
+		
 	}
 
 }

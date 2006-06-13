@@ -63,6 +63,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SingleLayerIterator;
+import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
@@ -365,6 +366,8 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 				}
 
 		} // while
+		
+		SelectionCADTool.tolerance = Integer.parseInt(getJTxtTolerance().getText());
 
 		return true;
 	}
@@ -391,6 +394,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		this.layers = layers;
 		MyTableModel tm = new MyTableModel(layers);
 		getJTableSnapping().setModel(tm);
+		getJTxtTolerance().setText(String.valueOf(SelectionCADTool.tolerance));
 	}
 
 	/**
@@ -403,8 +407,9 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			jTxtTolerance = new JTextField();
 			jTxtTolerance.setPreferredSize(new java.awt.Dimension(28, 20));
 			jTxtTolerance.setName("jTxtTolerance");
+			jTxtTolerance.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+			jTxtTolerance.setText("4");
 			jTxtTolerance.setBounds(new java.awt.Rectangle(142, 8, 39, 15));
-			jTxtTolerance.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 		}
 		return jTxtTolerance;
 	}
@@ -417,6 +422,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	private JSeparator getJSeparator() {
 		if (jSeparator == null) {
 			jSeparator = new JSeparator();
+			jSeparator.setPreferredSize(new java.awt.Dimension(200,2));
 		}
 		return jSeparator;
 	}
