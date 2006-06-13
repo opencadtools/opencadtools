@@ -1,5 +1,6 @@
 package com.iver.cit.gvsig;
 
+import java.awt.Component;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -50,7 +51,7 @@ public class StopEditing extends Extension {
 				.getActiveView();
 
 		vista = (View) f;
-
+		boolean isStop=false;
 		ProjectView model = vista.getModel();
 		FMap mapa = model.getMapContext();
 		FLayers layers = mapa.getLayers();
@@ -66,13 +67,15 @@ public class StopEditing extends Extension {
 					// VectorialLayerEdited lyrEd = (VectorialLayerEdited)
 					// edMan.getActiveLayerEdited();
 					// lyrEd.clearSelection();
-					stopEditing(lv, mapControl);
+					isStop=stopEditing(lv, mapControl);
 
 					// return;
 				}
 			}
-			vista.getMapControl().setTool("zoomIn");
-			vista.hideConsole();
+			if (isStop) {
+				vista.getMapControl().setTool("zoomIn");
+				vista.hideConsole();
+			}
 		}
 		PluginServices.getMainFrame().enableControls();
 	}
@@ -86,78 +89,113 @@ public class StopEditing extends Extension {
 			return false;
 		FLyrVect lyrVect = (FLyrVect) lyrs[0];
 		if (lyrVect.getSource() instanceof VectorialEditableAdapter) {
-			if (!lyrVect.getSource().getDriver().isWritable())
-				return false;
-			VectorialEditableAdapter vea = (VectorialEditableAdapter) lyrVect
-					.getSource();
-			IWriter writer = vea.getWriter();
-			if (writer != null)
-			{
-				if (writer instanceof ISpatialWriter)
-					return true;
-			}
+			return true;
 		}
 		return false;
 	}
-
+	private boolean isWritable(FLyrVect lyrVect) {
+		if (!lyrVect.getSource().getDriver().isWritable())
+			return false;
+		VectorialEditableAdapter vea = (VectorialEditableAdapter) lyrVect
+				.getSource();
+		IWriter writer = vea.getWriter();
+		if (writer != null)
+		{
+			if (writer instanceof ISpatialWriter)
+				return true;
+		}
+		return false;
+	}
 	/**
 	 * DOCUMENT ME!
 	 */
-	public void stopEditing(FLyrVect layer, MapControl mapControl) {
+	public boolean stopEditing(FLyrVect layer, MapControl mapControl) {
+		VectorialEditableAdapter vea = (VectorialEditableAdapter) layer
+				.getSource();
+		int resp = JOptionPane.NO_OPTION;
+
+		try {
+			if (isWritable(layer)) {
+				resp = JOptionPane.showConfirmDialog((Component) PluginServices
+						.getMainFrame(), PluginServices.getText(this,
+						"realmente_desea_guardar_la_capa")
+						+ " : " + layer.getName(), PluginServices.getText(this,
+						"guardar"), JOptionPane.YES_NO_OPTION);
+				if (resp != JOptionPane.YES_OPTION) { // CANCEL EDITING
+					cancelEdition(layer);
+				} else { // GUARDAMOS EL TEMA
+					saveLayer(layer);
+				}
+
+				vea.getCommandRecord().removeCommandListener(mapControl);
+				layer.setEditing(false);
+				return true;
+			} else {// Si no existe writer para la capa que tenemos en edición
+				resp = JOptionPane
+						.showConfirmDialog(
+								(Component) PluginServices.getMainFrame(),
+								PluginServices
+										.getText(
+												this,
+												"no_existe_writer_para_este_formato_de_capa_puede_exportar_o_cancelar_desea_cancelar_la_edicion")
+										+ " : " + layer.getName(),
+								PluginServices.getText(this, "cancelar"),
+								JOptionPane.YES_NO_OPTION);
+				if (resp == JOptionPane.YES_OPTION) { // CANCEL EDITING
+					cancelEdition(layer);
+					vea.getCommandRecord().removeCommandListener(mapControl);
+					layer.setEditing(false);
+					return true;
+				}
+			}
+		} catch (EditionException e) {
+			NotificationManager.addError(e);
+		} catch (IOException e) {
+			NotificationManager.addError(e);
+		} catch (DriverException e) {
+			NotificationManager.addError(e);
+		}
+		return false;
+
+	}
+
+
+	private void saveLayer(FLyrVect layer) throws DriverException,
+			EditionException {
 		VectorialEditableAdapter vea = (VectorialEditableAdapter) layer
 				.getSource();
 
 		ISpatialWriter writer = (ISpatialWriter) vea.getWriter();
-
-		int resp = JOptionPane
-				.showConfirmDialog(null, PluginServices.getText(this,
-						"realmente_desea_guardar_features_de_capa") + layer.getName(),
-						PluginServices.getText(this,"Guardar"),
-						JOptionPane.YES_NO_OPTION);
-		try {
-			if (resp == JOptionPane.NO_OPTION) { // CANCEL EDITING
-				com.iver.andami.ui.mdiManager.View[] views = PluginServices
-						.getMDIManager().getAllViews();
-				for (int j = 0; j < views.length; j++) {
-					if (views[j] instanceof Table) {
-						Table table = (Table) views[j];
-						if (table.getModel().getAssociatedTable() != null
-								&& table.getModel().getAssociatedTable()
-										.equals(layer)) {
-							table.cancelEditing();
-						}
-					}
-				}
-			} else { // GUARDAMOS EL TEMA
-				com.iver.andami.ui.mdiManager.View[] views = PluginServices
+		com.iver.andami.ui.mdiManager.View[] views = PluginServices
 				.getMDIManager().getAllViews();
-				for (int j = 0; j < views.length; j++) {
-					if (views[j] instanceof Table) {
-						Table table = (Table) views[j];
-						if (table.getModel().getAssociatedTable() != null
-								&& table.getModel().getAssociatedTable()
-								.equals(layer)) {
-							table.stopEditingCell();
-						}
-					}
+		for (int j = 0; j < views.length; j++) {
+			if (views[j] instanceof Table) {
+				Table table = (Table) views[j];
+				if (table.getModel().getAssociatedTable() != null
+						&& table.getModel().getAssociatedTable().equals(layer)) {
+					table.stopEditingCell();
 				}
-				ILayerDefinition lyrDef = EditionUtilities.createLayerDefinition(layer);
-				writer.initialize( lyrDef); 
-				vea.stopEdition(writer, EditionEvent.GRAPHIC);
 			}
-			vea.getCommandRecord().removeCommandListener(mapControl);
-			layer.setEditing(false);
-		} catch (EditionException e) {
-			NotificationManager.addError(e);
-
-		} catch (IOException e) {
-			NotificationManager.addError(e);
-		} catch (DriverException e) {
-			NotificationManager.addError(e); 
 		}
+		ILayerDefinition lyrDef = EditionUtilities.createLayerDefinition(layer);
+		writer.initialize(lyrDef);
+		vea.stopEdition(writer, EditionEvent.GRAPHIC);
 
 	}
 
+	private void cancelEdition(FLyrVect layer) throws IOException {
+		com.iver.andami.ui.mdiManager.View[] views = PluginServices
+				.getMDIManager().getAllViews();
+		for (int j = 0; j < views.length; j++) {
+			if (views[j] instanceof Table) {
+				Table table = (Table) views[j];
+				if (table.getModel().getAssociatedTable() != null
+						&& table.getModel().getAssociatedTable().equals(layer)) {
+					table.cancelEditing();
+				}
+			}
+		}
+	}
 	/**
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
