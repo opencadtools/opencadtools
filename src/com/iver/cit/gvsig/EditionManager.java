@@ -49,7 +49,11 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 	//private ArrayList activeLayerEdited = new ArrayList();
 	private MapControl mapCtrl = null;
 	private ILayerEdited ile=null;
+	private boolean bRefentMode;
 	//private int idActiveLayer=0;
+	private boolean bOrtoMode;
+	private boolean bForceCursorMode;
+	private boolean bGridMode;
 
 
 	/**
@@ -246,5 +250,37 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 
 	}
 
+	public boolean getRefentMode() {
+		return bRefentMode;
+	}
+
+	public void setRefentMode(boolean b) {
+		bRefentMode = b;
+		
+	}
+
+	public boolean getOrtoMode() {
+		return bOrtoMode;
+	}
+
+	public void setOrtoMode(boolean b) {
+		this.bOrtoMode = b;
+	}
+
+	public boolean getForceCursorMode() {
+		return bForceCursorMode;
+	}
+
+	public void setForceCursorMode(boolean b) {
+		this.bForceCursorMode = b;
+	}
+
+	public boolean getGridMode() {
+		return bGridMode;
+	}
+
+	public void setGridMode(boolean b) {
+		this.bGridMode = b;
+	}
 
 }

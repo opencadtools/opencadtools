@@ -40,7 +40,6 @@
  */
 package com.iver.cit.gvsig;
 
-import java.awt.KeyEventDispatcher;
 import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -50,14 +49,12 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 
 import com.iver.andami.PluginServices;
-import com.iver.andami.config.generate.Plugin;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -65,6 +62,10 @@ import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Behavior.MouseMovementBehavior;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.gui.accelerators.ForceCursorAccelerator;
+import com.iver.cit.gvsig.gui.accelerators.GridAccelerator;
+import com.iver.cit.gvsig.gui.accelerators.OrtoAccelerator;
+import com.iver.cit.gvsig.gui.accelerators.RefentAccelerator;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
@@ -131,16 +132,25 @@ public class CADExtension extends Extension {
 		addCADTool("_rotate", rotate);
 		addCADTool("_scale", scale);
 		
-		// Registramos las teclas de acceso rápido
-		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0);
+		// Registramos las teclas de acceso rápido que vamos a usar.
 		
-		PluginServices.registerKeyStroke(key, new KeyEventDispatcher() {
-			public boolean dispatchKeyEvent(KeyEvent e) {
-				System.err.println("Has pulsado F10 desde " + e.getSource());
-				return true; // consumido
-			}
-		});
+		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0);
+		RefentAccelerator accRef = new RefentAccelerator();		
+		PluginServices.registerKeyStroke(key, accRef);
 
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0);
+		OrtoAccelerator accOrto = new OrtoAccelerator();		
+		PluginServices.registerKeyStroke(key, accOrto);
+
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0);
+		GridAccelerator accGrid = new GridAccelerator();		
+		PluginServices.registerKeyStroke(key, accGrid);
+
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0);
+		ForceCursorAccelerator accForce = new ForceCursorAccelerator();		
+		PluginServices.registerKeyStroke(key, accForce);
+		
+		
 		KeyboardFocusManager kfm = KeyboardFocusManager
 				.getCurrentKeyboardFocusManager();
 		kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());

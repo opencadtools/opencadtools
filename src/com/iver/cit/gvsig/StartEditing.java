@@ -1,12 +1,20 @@
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.engine.data.driver.DriverException;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -16,7 +24,6 @@ import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
-import com.iver.cit.gvsig.project.ProjectFactory;
 import com.iver.cit.gvsig.project.ProjectTable;
 import com.iver.cit.gvsig.project.ProjectView;
 import com.iver.utiles.console.jedit.KeywordMap;
@@ -28,6 +35,17 @@ import com.iver.utiles.console.jedit.Token;
  * @author Vicente Caballero Navarro
  */
 public class StartEditing extends Extension {
+	
+	private class MyAction extends AbstractAction
+	{
+
+		public void actionPerformed(ActionEvent e) {
+			System.err.println("F3");
+		}
+		
+	}
+	
+	View vista;
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
@@ -43,7 +61,7 @@ public class StartEditing extends Extension {
 				.getActiveView();
 
 		if (f instanceof View) {
-			View vista = (View) f;
+			vista = (View) f;
 
 			vista.showConsole();
 			MapControl mapControl = (MapControl) vista.getMapControl();
@@ -53,6 +71,8 @@ public class StartEditing extends Extension {
 			ProjectView model = vista.getModel();
 			FMap mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
+			
+//			registerKeyStrokes()
 			for (int i = 0; i < layers.getLayersCount(); i++) {
 				if (layers.getLayer(i) instanceof FLyrVect
 						&& layers.getLayer(i).isActive()) {
@@ -83,7 +103,7 @@ public class StartEditing extends Extension {
 						changeModelTable(pt);
 					}
 					startCommandsApplicable(vista,lv);
-					return;
+//					return;
 				}
 			}
 
@@ -106,7 +126,26 @@ public class StartEditing extends Extension {
 			// vista.getMapControl().drawMap(false);
 		}
 	}
-	 public static void startCommandsApplicable(View vista,FLyrVect lv) {
+//	 private void registerKeyStrokes() {
+//		 JComponent theComponent = vista.getConsolePanel().getTxt();
+//		 
+//		 // The actions
+//		 Action F3Action = new AbstractAction("REFENT") {
+//			public void actionPerformed(ActionEvent evt) {
+//				System.err.println("SOY F3");
+//			}
+//		};
+//
+//		 InputMap inputMap = theComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+//		 inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), F3Action.getValue(Action.NAME));
+//
+//		 ActionMap actionMap = theComponent.getActionMap();
+//		 // actionMap.put("REFENT", new MyAction()); 
+//		 actionMap.put(F3Action.getValue(Action.NAME), F3Action);
+//		
+//	}
+
+	public static void startCommandsApplicable(View vista,FLyrVect lv) {
 		if (vista==null)
 			vista=(View)PluginServices.getMDIManager().getActiveView();
 		CADTool[] cadtools = CADExtension.getCADTools();
