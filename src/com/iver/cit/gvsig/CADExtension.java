@@ -40,6 +40,7 @@
  */
 package com.iver.cit.gvsig;
 
+import java.awt.KeyEventDispatcher;
 import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -133,9 +134,10 @@ public class CADExtension extends Extension {
 		// Registramos las teclas de acceso rápido
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0);
 		
-		PluginServices.registerKeyStroke(key, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.err.println("Has pulsado F10");
+		PluginServices.registerKeyStroke(key, new KeyEventDispatcher() {
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				System.err.println("Has pulsado F10 desde " + e.getSource());
+				return true; // consumido
 			}
 		});
 
