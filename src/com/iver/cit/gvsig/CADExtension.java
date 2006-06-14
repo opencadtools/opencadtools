@@ -275,11 +275,9 @@ public class CADExtension extends Extension {
 					// TODO: REVISAR ESTO CUANDO VIENE UN INTRO DESDE UN
 					// JTEXTAREA
 					// QUE NO ES EL DE CONSOLA
-					//view.focusConsole("");
+					view.focusConsole("");
 				}
-
-				else {
-				/*	if ((!e.isActionKey())) {
+				else if ((!e.isActionKey())) {
 						//if (Character.isLetterOrDigit(e.getKeyChar())) {
 							Character keyChar = new Character(e.getKeyChar());
 							if (e.getComponent().getName() != null) {
@@ -296,9 +294,8 @@ public class CADExtension extends Extension {
 								}
 							}
 						//}
-					}*/
+					}
 				}
-			}
 			return false;
 		}
 
