@@ -8,39 +8,39 @@
 		<extension class-name="com.iver.cit.gvsig.CreateNewLayer"
 			description="Crear una nueva capa."
 			active="true" >
-			<menu text="vista/new_layer/new_shp" action-command="SHP"/>
-			<menu text="vista/new_layer/new_dxf" action-command="DXF"/>
-			<menu text="vista/new_layer/new_postgis" action-command="POSTGIS"/>
+			<menu text="Vista/new_layer/new_shp" action-command="SHP"/>
+			<menu text="Vista/new_layer/new_dxf" action-command="DXF"/>
+			<menu text="Vista/new_layer/new_postgis" action-command="POSTGIS"/>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.StartEditing"
 			description="Extensión encargada de comenzar la edición sobre la capa activa."
 			active="true">
-			<menu text="capa/start_edition" action-command="STARTEDITING"/>
+			<menu text="Capa/start_edition" action-command="STARTEDITING"/>
 		</extension>
 
 
 		<extension class-name="com.iver.cit.gvsig.StopEditing"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma."
 			active="true">
-			<menu text="capa/stop_edition" action-command="STOPEDITING"/>
+			<menu text="Capa/stop_edition" action-command="STOPEDITING"/>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.ExportTo"
 			description="Exportar a diversos formatos"
 			active="true">
-			<menu text="capa/export_to/shp" action-command="SHP"/>
-			<menu text="capa/export_to/dxf" action-command="DXF"/>
-			<menu text="capa/export_to/postgis" action-command="POSTGIS"/>
+			<menu text="Capa/export_to/shp" action-command="SHP"/>
+			<menu text="Capa/export_to/dxf" action-command="DXF"/>
+			<menu text="Capa/export_to/postgis" action-command="POSTGIS"/>
 		</extension>
 
 		<!-- <extension class-name="com.iver.cit.gvsig.StopEditingToGT2Shp"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma si es un shapefile."
 			active="true">
-			<menu text="capa/stop_edition/GT2shp" action-command="STOPEDITING"/>
+			<menu text="Capa/stop_edition/GT2shp" action-command="STOPEDITING"/>
 		</extension> -->
 		<extension class-name="com.iver.cit.gvsig.RedoViewExtension"
 			description="Extensión encargada de rehacer la edición sobre la capa activa."
 			active="true">
-			<menu text="capa/redo" action-command="REDO" icon="images/Redo.png"/>
+			<menu text="Capa/redo" action-command="REDO" icon="images/Redo.png"/>
 		<tool-bar name="modificar">
 				<action-tool name="redo" icon="images/Redo.png" action-command="REDO" tooltip="redo" group="vista" position="2"/>
 		</tool-bar>
@@ -48,7 +48,7 @@
 		<extension class-name="com.iver.cit.gvsig.UndoViewExtension"
 			description="Extensión encargada de dehacer la edición sobre la capa activa."
 			active="true" >
-			<menu text="capa/undo" action-command="UNDO" icon="images/Undo.png"/>
+			<menu text="Capa/undo" action-command="UNDO" icon="images/Undo.png"/>
 		<tool-bar name="modificar">
 				<action-tool name="deshacer" icon="images/Undo.png" action-command="UNDO" tooltip="undo" group="vista" position="1"/>
 		</tool-bar>
@@ -56,7 +56,7 @@
 		<extension class-name="com.iver.cit.gvsig.AdjustLayerExtension"
 			description="Extensión encargada de abrir el diálogo de opciones de la capa edición sobre la capa activa."
 			active="true">
-			<menu text="capa/options" action-command="OPTIONS"/>
+			<menu text="Capa/options" action-command="OPTIONS"/>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.ViewCommandStackExtension"
 			description="Extensión encargada de administrar la pila de comados de edición sobre una vista."
@@ -77,10 +77,10 @@
 		<extension class-name="com.iver.cit.gvsig.GridExtension"
 			description="Extensión encargada de gestionar el GRID."
 			active="true">
-			<menu text="capa/show_grid" action-command="SHOWGRID"/>
-			<menu text="capa/hide_grid" action-command="HIDEGRID"/>
-			<menu text="capa/adjust_grid" action-command="SETADJUSTGRID"/>
-			<menu text="capa/no_adjust_grid" action-command="NOTADJUSTGRID"/>
+			<menu text="Capa/show_grid" action-command="SHOWGRID"/>
+			<menu text="Capa/hide_grid" action-command="HIDEGRID"/>
+			<menu text="Capa/adjust_grid" action-command="SETADJUSTGRID"/>
+			<menu text="Capa/no_adjust_grid" action-command="NOTADJUSTGRID"/>
 		</extension>
 
 		<extension class-name="com.iver.cit.gvsig.CADExtension"
