@@ -53,6 +53,7 @@ import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
@@ -136,7 +137,7 @@ public class MoveCADTool extends DefaultCADTool {
         VectorialLayerEdited vle=getVLE();
         VectorialEditableAdapter vea = vle.getVEA();
         ArrayList selectedRow=getSelectedRows();
-
+        ArrayList selectedRowAux=new ArrayList();
     	if (status.equals("Move.FirstPointToMove")) {
             firstPoint = new Point2D.Double(x, y);
         } else if (status.equals("Move.SecondPointToMove")) {
@@ -145,7 +146,6 @@ public class MoveCADTool extends DefaultCADTool {
             vea.startComplexRow();
 
             try {
-            	///ArrayList selectedRowAux=new ArrayList();
               for (int i = 0; i < selectedRow.size(); i++) {
         			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
         			IFeature feat = (IFeature) edRow.getLinkedRow().cloneRow();
@@ -156,12 +156,12 @@ public class MoveCADTool extends DefaultCADTool {
                     UtilFunctions.moveGeom(ig, lastPoint.getX() -
                             firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
 
-                    vea.modifyRow(edRow.getIndex(),feat,getName(),EditionEvent.GRAPHIC);
-                   /// selectedRowAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,index));
+                    int index=vea.modifyRow(edRow.getIndex(),feat,getName(),EditionEvent.GRAPHIC);
+                    selectedRowAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,index));
               }
                 vea.endComplexRow();
                 clearSelection();
-              	///selectedRow=selectedRowAux;
+              	selectedRow.addAll(selectedRowAux);
 
             } catch (DriverIOException e) {
                 e.printStackTrace();

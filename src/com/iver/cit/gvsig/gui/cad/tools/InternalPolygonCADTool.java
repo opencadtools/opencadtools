@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IFeature;
@@ -190,7 +191,12 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     			IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
 
     			IGeometry geometry=feat.getGeometry();
-    			geometry=createNewPolygon(geometry,(Point2D[])points.toArray(new Point2D[0]));
+    			if (geometry instanceof FGeometryCollection) {
+    				FGeometryCollection gc=(FGeometryCollection)geometry;
+    				geometry=createNewPolygonGC(gc,(Point2D[])points.toArray(new Point2D[0]));
+    			}else {
+    				geometry=createNewPolygon(geometry,(Point2D[])points.toArray(new Point2D[0]));
+    			}
     			DefaultFeature df=new DefaultFeature(geometry,feat.getAttributes(), feat.getID());
     			DefaultRowEdited dre=new DefaultRowEdited(df,DefaultRowEdited.STATUS_MODIFIED,row.getIndex());
     			try {
@@ -259,6 +265,26 @@ public class InternalPolygonCADTool extends DefaultCADTool {
      }
      newGp.lineTo(ps[ps.length-1].getX(),ps[ps.length-1].getY());
      return ShapeFactory.createPolygon2D(newGp);
+    }
+    private IGeometry createNewPolygonGC(FGeometryCollection gp,Point2D[] ps) {
+    	ArrayList geoms=new ArrayList();
+    	IGeometry[] geometries=gp.getGeometries();
+    	for (int i = 0;i<geometries.length;i++) {
+    		geoms.add(geometries[i]);
+    	}
+    	GeneralPathX gpx=new GeneralPathX();
+		gpx.moveTo(ps[ps.length-1].getX(),ps[ps.length-1].getY());
+    	for (int i=ps.length-2;i>=0;i--){
+    		gpx.lineTo(ps[i].getX(),ps[i].getY());
+    		geoms.add(ShapeFactory.createPolyline2D(gpx));
+    		gpx=new GeneralPathX();
+    		gpx.moveTo(ps[i].getX(),ps[i].getY());
+    	}
+    	gpx.lineTo(ps[ps.length-1].getX(),ps[ps.length-1].getY());
+    	geoms.add(ShapeFactory.createPolyline2D(gpx));
+    	FGeometryCollection gc=new FGeometryCollection((IGeometry[])geoms.toArray(new IGeometry[0]));
+//    	gc.setGeometryType(FShape.POLYGON);
+    	return gc;
     }
     public String getName() {
 		return PluginServices.getText(this,"internal_polygon_");

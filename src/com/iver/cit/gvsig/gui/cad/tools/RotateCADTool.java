@@ -56,6 +56,7 @@ import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
@@ -135,6 +136,7 @@ public class RotateCADTool extends DefaultCADTool {
         RotateCADToolState actualState = (RotateCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
         ArrayList selectedRow=getSelectedRows();
+        ArrayList selectedRowAux=new ArrayList();
         VectorialLayerEdited vle=getVLE();
         VectorialEditableAdapter vea = vle.getVEA();
         if (status.equals("Rotate.PointMain")) {
@@ -150,8 +152,7 @@ public class RotateCADTool extends DefaultCADTool {
 
     			try {
     				vea.startComplexRow();
-    				///ArrayList selectedRowAux=new ArrayList();
-				for (int i = 0; i < selectedRow.size(); i++) {
+    			for (int i = 0; i < selectedRow.size(); i++) {
 					DefaultRowEdited row=(DefaultRowEdited) selectedRow.get(i);
 					DefaultFeature fea = (DefaultFeature) row.getLinkedRow().cloneRow();
 					// Rotamos la geometry
@@ -160,14 +161,14 @@ public class RotateCADTool extends DefaultCADTool {
 							+ (Math.PI / 2), firstPoint.getX(), firstPoint
 							.getY());
 
-					vea.modifyRow(row.getIndex(), fea,
+					int index=vea.modifyRow(row.getIndex(), fea,
 							getName(),EditionEvent.GRAPHIC);
-					///selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
+					selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
 				}
 
 				vea.endComplexRow();
 				clearSelection();
-				///selectedRow=selectedRowAux;
+				selectedRow.addAll(selectedRowAux);
 			} catch (DriverIOException e) {
 				e.printStackTrace();
 			} catch (IOException e1) {
