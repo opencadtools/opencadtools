@@ -13,7 +13,7 @@ public interface ISnapper {
 	
 	Point2D getSnapPoint(Point2D queryPoint, IGeometry geomToSnap, double tolerance, Point2D lastPointEntered);
 
-	void setSnapPoint(Point2D snapPoint);
+	// void setSnapPoint(Point2D snapPoint);
 	
 	void draw(Graphics g, Point2D pPixels);
 

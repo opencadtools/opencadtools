@@ -382,8 +382,9 @@ public class CADExtension extends Extension {
 		view = (View) PluginServices.getMDIManager().getActiveView();
 		MapControl mapControl = (MapControl) view.getMapControl();
 		if (!mapControl.getNamesMapTools().containsKey("cadtooladapter")){
-			StatusBarListener sbl=new StatusBarListener(view.getMapControl());
-			mapControl.addMapTool("cadtooladapter",  new Behavior[]{adapter,new MouseMovementBehavior(sbl)});
+			// StatusBarListener sbl=new StatusBarListener(view.getMapControl());
+			// mapControl.addMapTool("cadtooladapter",  new Behavior[]{adapter,new MouseMovementBehavior(sbl)});
+			mapControl.addMapTool("cadtooladapter", adapter);
 		}
 		// view.getMapControl().setTool("cadtooladapter");
 		JEditTextArea jeta=view.getConsolePanel().getTxt();

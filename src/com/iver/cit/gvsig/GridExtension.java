@@ -35,10 +35,10 @@ public class GridExtension extends Extension {
 		if (s.equals("SHOWGRID")) {
 			CADExtension.getCADToolAdapter().setMapControl(
 					vista.getMapControl());
-			CADExtension.getCADToolAdapter().setGrid(true);
+			CADExtension.getCADToolAdapter().setGridVisibility(true);
 		} else if (s.equals("HIDEGRID")) {
 			CADExtension.getCADToolAdapter().setMapControl(vista.getMapControl());
-			CADExtension.getCADToolAdapter().setGrid(false);
+			CADExtension.getCADToolAdapter().setGridVisibility(false);
 		} else if (s.equals("SETADJUSTGRID")) {
 			CADExtension.getCADToolAdapter().setMapControl(vista.getMapControl());
 			CADExtension.getCADToolAdapter().setAdjustGrid(true);

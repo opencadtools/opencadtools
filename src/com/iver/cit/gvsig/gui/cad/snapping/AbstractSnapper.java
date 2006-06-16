@@ -6,32 +6,29 @@ import java.awt.geom.Point2D;
 
 public abstract class AbstractSnapper implements ISnapper {
 
-	protected Point2D snapPoint = null; 
-	public void setSnapPoint(Point2D snapPoint) {
-		this.snapPoint = snapPoint;
+	// private Point2D snapPoint = null;
+	private int sizePixels = 12;
+	private Color color = Color.MAGENTA;
+//	public void setSnapPoint(Point2D snapPoint) {
+//		this.snapPoint = snapPoint;
+//
+//	}
 
+
+	public int getSizePixels() {
+		return sizePixels;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#draw(java.awt.Graphics, java.awt.geom.Point2D)
-	 */
-	public void draw(Graphics g, Point2D pPixels) {
-		g.setColor(Color.ORANGE);
-		g.drawRect((int) (pPixels.getX() - 6),
-				(int) (pPixels.getY() - 6), 12, 12);
-		g.drawRect((int) (pPixels.getX() - 3),
-				(int) (pPixels.getY() - 3), 6, 6);
-		g.setColor(Color.MAGENTA);
-		g.drawRect((int) (pPixels.getX() - 4),
-				(int) (pPixels.getY() - 4), 8, 8);
+	public void setSizePixels(int sizePixels) {
+		this.sizePixels = sizePixels;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getPriority()
-	 */
-	public int getPriority()
-	{
-		return 0;
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 }

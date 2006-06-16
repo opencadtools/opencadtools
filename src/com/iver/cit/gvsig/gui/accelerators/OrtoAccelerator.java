@@ -47,6 +47,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.View;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
+import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
 /**
  * @author fjp
@@ -62,10 +63,10 @@ public class OrtoAccelerator implements KeyEventDispatcher {
 		if (!(v instanceof com.iver.cit.gvsig.gui.View))
 			return false;
 		
-		EditionManager edMan = CADExtension.getEditionManager();
-		edMan.setOrtoMode(!edMan.getOrtoMode());
+		CADToolAdapter adapTool = CADExtension.getCADToolAdapter();
+		adapTool.setOrtoMode(!adapTool.isOrtoMode());
 		
-		System.err.println("Ponemos ORTO a " + edMan.getOrtoMode());
+		System.err.println("Ponemos ORTO a " + adapTool.isOrtoMode());
 		
 		return false;
 	}

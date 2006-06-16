@@ -30,7 +30,7 @@ public class SnappingVisitor implements ItemVisitor {
 		this.queryPoint = queryPoint;
 		this.lastPointEntered = lastPointEntered;
 		distActual = tolerance;
-		snapper.setSnapPoint(null);
+		// snapper.setSnapPoint(null);
 	}
 	
 	public void visitItem(Object item) {
@@ -41,7 +41,7 @@ public class SnappingVisitor implements ItemVisitor {
 			snapPoint = aux;
 			minDist = snapPoint.distance(queryPoint);
 			distActual = minDist;
-			snapper.setSnapPoint(snapPoint);
+			// snapper.setSnapPoint(snapPoint);
 		}
 		
 	}

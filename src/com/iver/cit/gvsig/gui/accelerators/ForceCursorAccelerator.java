@@ -46,7 +46,7 @@ import java.awt.event.KeyEvent;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.View;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.EditionManager;
+import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
 /**
  * @author fjp
@@ -62,10 +62,10 @@ public class ForceCursorAccelerator implements KeyEventDispatcher {
 		if (!(v instanceof com.iver.cit.gvsig.gui.View))
 			return false;
 		
-		EditionManager edMan = CADExtension.getEditionManager();
-		edMan.setForceCursorMode(!edMan.getForceCursorMode());
+		CADToolAdapter toolAdap = CADExtension.getCADToolAdapter();
+		toolAdap.setAdjustGrid(!toolAdap.getGrid().getAdjustGrig());
 		
-		System.err.println("Ponemos ForceCursor a " + edMan.getForceCursorMode());
+		System.err.println("Ponemos ForceCursor a " + toolAdap.getGrid().getAdjustGrig());
 		
 		return false;
 	}

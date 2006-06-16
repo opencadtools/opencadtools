@@ -46,7 +46,7 @@ import java.awt.event.KeyEvent;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.View;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.EditionManager;
+import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
 /**
  * @author fjp
@@ -62,10 +62,10 @@ public class GridAccelerator implements KeyEventDispatcher {
 		if (!(v instanceof com.iver.cit.gvsig.gui.View))
 			return false;
 		
-		EditionManager edMan = CADExtension.getEditionManager();
-		edMan.setGridMode(!edMan.getGridMode());
+		CADToolAdapter toolAdap = CADExtension.getCADToolAdapter();
+		toolAdap.setGridVisibility(!toolAdap.getGrid().getUseGrid());
 		
-		System.err.println("Ponemos GRID a " + edMan.getGridMode());
+		System.err.println("Ponemos GRID a " + toolAdap.getGrid().getUseGrid());
 		
 		return false;
 	}

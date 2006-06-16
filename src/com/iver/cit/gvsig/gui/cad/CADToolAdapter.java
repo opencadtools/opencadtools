@@ -2,7 +2,9 @@ package com.iver.cit.gvsig.gui.cad;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -13,11 +15,17 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.MemoryImageSource;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import org.cresques.cts.IProjection;
+
 import com.iver.andami.PluginServices;
+import com.iver.andami.ui.mdiFrame.MainFrame;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
@@ -34,6 +42,7 @@ import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
+import com.iver.cit.gvsig.gui.cad.snapping.FinalPointSnapper;
 import com.iver.cit.gvsig.gui.cad.snapping.NearestPointSnapper;
 import com.iver.cit.gvsig.gui.cad.snapping.SnappingVisitor;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
@@ -73,11 +82,15 @@ public class CADToolAdapter extends Behavior {
 
 	private Point2D adjustedPoint;
 
-	private boolean snapping = false;
+	private boolean bRefent = true;
 
-	private boolean adjustSnapping = false;
+	private boolean bForceCoord = false;
 
 	private CADGrid cadgrid = new CADGrid();
+
+	private boolean bOrtoMode;
+
+	private Color theTipColor = new Color(255, 255, 155);
 
 	/**
 	 * Pinta de alguna manera especial las geometrias seleccionadas para la
@@ -155,6 +168,9 @@ public class CADToolAdapter extends Behavior {
 	 */
 	private double adjustToHandler(Point2D point,
 			Point2D mapHandlerAdjustedPoint) {
+		
+		if (!isRefentEnabled())
+			return Double.MAX_VALUE;
 
 		ILayerEdited aux = CADExtension.getEditionManager().getActiveLayerEdited();
 		if (!(aux instanceof VectorialLayerEdited))
@@ -169,9 +185,11 @@ public class CADToolAdapter extends Behavior {
 
 		// TODO: PROVISIONAL. PONER ALGO COMO ESTO EN UN CUADRO DE DIALOGO
 		// DE CONFIGURACIÓN DEL SNAPPING
-		NearestPointSnapper defaultSnap = new NearestPointSnapper();
+		FinalPointSnapper defaultSnap = new FinalPointSnapper();
+		NearestPointSnapper nearestSnap = new NearestPointSnapper();
 		snappers.clear();
 		snappers.add(defaultSnap);
+		snappers.add(nearestSnap);
 
 		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
 		double minDist = mapTolerance;
@@ -194,9 +212,18 @@ public class CADToolAdapter extends Behavior {
 			SpatialCache cache = lyrVect.getSpatialCache();
 			if (lyrVect.isVisible())
 			{
+				// La lista de snappers está siempre ordenada por prioridad. Los de mayor
+				// prioridad están primero.
 				for (int i = 0; i < snappers.size(); i++)
 				{
 					ISnapper theSnapper = (ISnapper) snappers.get(i);
+					
+					if (usedSnap != null)
+					{
+						// Si ya tenemos un snap y es de alta prioridad, cogemos ese. (A no ser que en otra capa encontremos un snapper mejor)
+						if (theSnapper.getPriority() < usedSnap.getPriority())
+							break; 
+					}
 		
 					SnappingVisitor snapVisitor = new SnappingVisitor(theSnapper, point, mapTolerance, lastPoint);
 					// System.out.println("Cache size = " + cache.size());
@@ -245,8 +272,55 @@ public class CADToolAdapter extends Behavior {
 		lastY = e.getY();
 
 		calculateSnapPoint(e.getPoint());
-
+		
+		/* int difX =(int) (adjustedPoint.getX() - e.getX());
+		int difY =(int) (adjustedPoint.getY() - e.getY()); 
+		
+		e.translatePoint(difX, difY); */
+		showCoords(e.getPoint());
+		
 		getMapControl().repaint();
+	}
+
+	private void showCoords(Point2D pPix)
+	{
+		String[] axisText = new String[2];
+		NumberFormat nf = NumberFormat.getInstance();
+		MapControl mapControl = getMapControl();
+		ViewPort vp = mapControl.getMapContext().getViewPort();
+		IProjection iProj = vp.getProjection();
+		if (iProj.getAbrev().equals("EPSG:4326") || iProj.getAbrev().equals("EPSG:4230")) {
+			axisText[0] = "Lon = ";
+			axisText[1] = "Lat = ";
+			nf.setMaximumFractionDigits(8);
+		} else {
+			axisText[0] = "X = ";
+			axisText[1] = "Y = ";
+			nf.setMaximumFractionDigits(2);
+		}
+		Point2D p;
+		if (mapAdjustedPoint == null)
+		{
+			p = vp.toMapPoint(pPix);
+		}
+		else
+		{
+			p = mapAdjustedPoint;
+		}
+		MainFrame mF = PluginServices.getMainFrame();
+
+		if (mF != null)
+		{			
+            mF.getStatusBar().setMessage("1",
+                    FConstant.NAMES[vp.getDistanceUnits()]);
+            mF.getStatusBar().setMessage("6", "1:"+mapControl.getMapContext().getScaleView());
+            mF.getStatusBar().setMessage("7", iProj.getAbrev());
+
+			mF.getStatusBar().setMessage("2",
+					axisText[0] + String.valueOf(nf.format(p.getX()/FMap.CHANGEM[vp.getDistanceUnits()])));
+			mF.getStatusBar().setMessage("3",
+					axisText[1] + String.valueOf(nf.format(p.getY()/FMap.CHANGEM[vp.getDistanceUnits()])));
+		}
 	}
 
 	private void clearMouseImage() {
@@ -282,9 +356,9 @@ public class CADToolAdapter extends Behavior {
 		g.drawLine((int) (p.getX()), (int) (p.getY() - size1),
 				(int) (p.getX()), (int) (p.getY() + size1));
 
-		getMapControl().setToolTipText(null);
+		// getMapControl().setToolTipText(null);
 		if (adjustedPoint != null) {
-			if (adjustSnapping) {
+			if (bForceCoord) {
 				/* g.setColor(Color.ORANGE);
 				g.drawRect((int) (adjustedPoint.getX() - 6),
 						(int) (adjustedPoint.getY() - 6), 12, 12);
@@ -296,11 +370,25 @@ public class CADToolAdapter extends Behavior {
 				if (usedSnap != null)
 				{
 					usedSnap.draw(g, adjustedPoint);
-					g.drawString(usedSnap.getToolTipText(), (int)p.getX()+9, (int)p.getY()- 7);
+					
+					Graphics2D g2 = (Graphics2D) g;
+			        FontMetrics metrics = g2.getFontMetrics();
+			        int w = metrics.stringWidth(usedSnap.getToolTipText()) + 5;
+			        int h = metrics.getMaxAscent() + 5;
+			        int x = (int)p.getX()+9;
+			        int y = (int)p.getY()- 7;
+			        
+			        g2.setColor(theTipColor );
+			        g2.fillRect(x, y-h, w, h);
+			        g2.setColor(Color.BLACK);
+			        g2.drawRect(x, y-h, w, h);
+					g2.drawString(usedSnap.getToolTipText(), x+3, y-3);
+					
+
 					// getMapControl().setToolTipText(usedSnap.getToolTipText());
 				}
 
-				adjustSnapping = false;
+				bForceCoord = false;
 			} else {
 				g.drawRect((int) (p.getX() - size2), (int) (p.getY() - size2),
 						(int) (size2 * 2), (int) (size2 * 2));
@@ -350,7 +438,7 @@ public class CADToolAdapter extends Behavior {
 		double distance = adjustToHandler(handlerAdjustedPoint, mapPoint);
 
 		if (distance < minDistance) {
-			adjustSnapping = true;
+			bForceCoord = true;
 			adjustedPoint = getMapControl().getViewPort().fromMapPoint(mapPoint);
 			mapAdjustedPoint = mapPoint;
 			minDistance = distance;
@@ -368,37 +456,6 @@ public class CADToolAdapter extends Behavior {
 	 * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
 	 */
 	public void mouseWheelMoved(MouseWheelEvent e) throws BehaviorException {
-		getMapControl().cancelDrawing();
-		ViewPort vp = getMapControl().getViewPort();
-		// Point2D pReal = vp.toMapPoint(e.getPoint());
-
-		Point2D pReal = new Point2D.Double(vp.getAdjustedExtent().getCenterX(),
-				vp.getAdjustedExtent().getCenterY());
-		int amount = e.getWheelRotation();
-		double nuevoX;
-		double nuevoY;
-		double factor;
-
-		if (amount > 0) // nos acercamos
-		{
-			factor = 0.9;
-		} else // nos alejamos
-		{
-			factor = 1.2;
-		}
-		Rectangle2D.Double r = new Rectangle2D.Double();
-		if (vp.getExtent() != null) {
-			nuevoX = pReal.getX()
-					- ((vp.getExtent().getWidth() * factor) / 2.0);
-			nuevoY = pReal.getY()
-					- ((vp.getExtent().getHeight() * factor) / 2.0);
-			r.x = nuevoX;
-			r.y = nuevoY;
-			r.width = vp.getExtent().getWidth() * factor;
-			r.height = vp.getExtent().getHeight() * factor;
-
-			vp.setExtent(r);
-		}
 	}
 
 	/**
@@ -618,20 +675,19 @@ public class CADToolAdapter extends Behavior {
 	 * @param value
 	 *            DOCUMENT ME!
 	 */
-	public void setGrid(boolean value) {
+	public void setGridVisibility(boolean value) {
 		getGrid().setUseGrid(value);
 		getGrid().setViewPort(getMapControl().getViewPort());
-		getMapControl().drawMap(false);
+		getMapControl().repaint();
 	}
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param activated
-	 *            DOCUMENT ME!
-	 */
-	public void setSnapping(boolean activated) {
-		snapping = activated;
+	public void setRefentEnabled(boolean activated) {
+		bRefent = activated;
+	}
+	
+	public boolean isRefentEnabled()
+	{
+		return bRefent;
 	}
 
 	/**
@@ -832,6 +888,14 @@ public class CADToolAdapter extends Behavior {
 
 	public CADGrid getGrid() {
 		return cadgrid;
+	}
+
+	public boolean isOrtoMode() {
+		return bOrtoMode;
+	}
+
+	public void setOrtoMode(boolean b) {
+		bOrtoMode = b;
 	}
 
 

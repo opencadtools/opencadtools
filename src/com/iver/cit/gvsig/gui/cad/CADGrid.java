@@ -56,7 +56,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class CADGrid {
 	private boolean grid = false;
-	private double gridSize = 0;
+	private double gridSize = 1000;
 	private ViewPort viewport;
 	private boolean adjustGrid;
 
@@ -68,10 +68,9 @@ public class CADGrid {
 	public void setViewPort(ViewPort vp) {
 		viewport = vp;
 
-		if (gridSize == 0) {
-			gridSize = viewport.toMapDistance(25);
-			//if (gridSize<1)gridSize=1;
-		}
+//		if (gridSize == 0) {
+//			gridSize = viewport.toMapDistance(25);
+//		}
 	}
 
 	/**
@@ -174,5 +173,13 @@ public class CADGrid {
 	 */
 	public boolean getAdjustGrig() {
 		return adjustGrid;
+	}
+
+	public double getGridSize() {
+		return gridSize;
+	}
+
+	public void setGridSize(double gridSize) {
+		this.gridSize = gridSize;
 	}
 }

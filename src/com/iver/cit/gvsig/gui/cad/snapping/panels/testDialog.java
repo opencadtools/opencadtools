@@ -54,7 +54,7 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
-import com.iver.cit.gvsig.gui.cad.snapping.NearestPointSnapper;
+import com.iver.cit.gvsig.gui.cad.snapping.FinalPointSnapper;
 
 public class testDialog {
 	public static void main(String[] args) {
@@ -62,7 +62,7 @@ public class testDialog {
 
 		ArrayList list = new ArrayList();
 		for (int i=0; i < 20; i++)
-			list.add(new NearestPointSnapper());
+			list.add(new FinalPointSnapper());
 		SnapConfig2 panel = new SnapConfig2();
 		panel.setSnappers(list);
 		Action act = new AbstractAction(){
