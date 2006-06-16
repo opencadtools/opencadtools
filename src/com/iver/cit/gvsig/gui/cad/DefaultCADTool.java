@@ -57,12 +57,14 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.FPolygon2D;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
@@ -157,8 +159,7 @@ public abstract class DefaultCADTool implements CADTool {
 			for (int i = 0; i < numAttr; i++) {
 				values[i] = ValueFactory.createNullValue();
 			}
-			int num=vea.getRowCount();
-			DefaultFeature df = new DefaultFeature(geometry, values,String.valueOf(num));
+			DefaultFeature df = new DefaultFeature(geometry, values);
 			int index = vea.addRow(df, getName(),EditionEvent.GRAPHIC);
 
 
@@ -215,21 +216,7 @@ public abstract class DefaultCADTool implements CADTool {
 	 * @param values
 	 *            DOCUMENT ME!
 	 */
-	public int addGeometry(IGeometry geometry, Value[] values) {
-		int index =0;
-		VectorialEditableAdapter vea = getVLE().getVEA();
-		try {
-			int num=vea.getRowCount();
-			DefaultFeature df = new DefaultFeature(geometry, values,String.valueOf(num));
-			index = vea.addRow(df, getName(),EditionEvent.GRAPHIC);
-		} catch (DriverIOException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (DriverLoadException e) {
-			e.printStackTrace();
-		}
-		return index;
+	public void addGeometry(IGeometry geometry, Value[] values) {
 	}
 
 	/**

@@ -91,13 +91,14 @@
 
 			<!--menu text="geometry/modify/equidistance" action-command="_equidistance" icon="images/Equidistance.png"/-->
 			<!--menu text="geometry/modify/matriz" action-command="_matriz" icon="images/Matriz.png"/-->
-			<menu text="geometry/modify/symmetry" action-command="_symmetry" icon="images/Symmetry.png"/>
+			<!--menu text="geometry/modify/symmetry" action-command="_symmetry" icon="images/Symmetry.png"/-->
 			<menu text="geometry/modify/rotate" action-command="_rotate" icon="images/Rotation.png"/>
 			<!--menu text="geometry/modify/stretch" action-command="_stretch" icon="images/Stretching.png"/-->
 			<menu text="geometry/modify/scale" action-command="_scale" icon="images/Scale.png"/>
 			<!--menu text="geometry/modify/extend" action-command="_extend" icon="images/Extend.png"/-->
 			<!--menu text="geometry/modify/trim" action-command="_trim" icon="images/Trim.png"/-->
 			<!--menu text="geometry/modify/unite_separate" action-command="_unit" icon="images/Unit.png"/-->
+			<!--menu text="geometry/modify/exploit" action-command="_exploit" icon="images/Exploit.png"/-->
 			<!--menu text="geometry/modify/chaflan" action-command="_chaflan" icon="images/Chaflan.png"/-->
 			<!--menu text="geometry/modify/join" action-command="_join" icon="images/Join.png"/-->
 
@@ -108,23 +109,18 @@
 				<selectable-tool icon="images/Copy.png" action-command="_copy" tooltip="copy" group="vista"/>
 				<!--selectable-tool icon="images/Equidistance.png" action-command="_equidistance" tooltip="equidistance" group="vista"/-->
 				<!--selectable-tool icon="images/Matriz.png" action-command="_matriz" tooltip="matriz" group="vista"/-->
-				<selectable-tool icon="images/Symmetry.png" action-command="_symmetry" tooltip="symmetry" group="vista"/>
+				<!--selectable-tool icon="images/Symmetry.png" action-command="_symmetry" tooltip="symmetry" group="vista"/-->
 				<selectable-tool icon="images/Rotation.png" action-command="_rotate" tooltip="rotation" group="vista"/>
 				<!--selectable-tool icon="images/Stretching.png" action-command="_stretch" tooltip="stretch" group="vista"/-->
 				<selectable-tool icon="images/Scale.png" action-command="_scale" tooltip="scale" group="vista"/>
 				<!--selectable-tool icon="images/Extend.png" action-command="_extend" tooltip="extend" group="vista"/-->
 				<!--selectable-tool icon="images/Trim.png" action-command="_trim" tooltip="trim" group="vista"/-->
 				<!--selectable-tool icon="images/Unit.png" action-command="_unit" tooltip="unite_separate" group="vista"/-->
+				<!--selectable-tool icon="images/Exploit.png" action-command="_exploit" tooltip="exploit" group="vista"/-->
 				<!--selectable-tool icon="images/Chaflan.png" action-command="_chaflan" tooltip="chaflan" group="vista"/-->
 				<!--selectable-tool icon="images/Join.png" action-command="_join" tooltip="join" group="vista"/-->
-			</tool-bar>
-		</extension>
-		<extension class-name="com.iver.cit.gvsig.ExploitExtension"
-			description="Extensión encargada de simplificar geometrías complejas."
-			active="true">
-			<menu text="geometry/modify/exploit" action-command="_exploit" icon="images/Exploit.png"/>
-			<tool-bar name="modificar">
-				<action-tool icon="images/Exploit.png" action-command="_exploit" tooltip="exploit" group="vista"/>
+
+
 			</tool-bar>
 		</extension>
 

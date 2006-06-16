@@ -327,12 +327,13 @@ public class ScaleCADTool extends DefaultCADTool {
     			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
     			DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
 				UtilFunctions.scaleGeom(fea.getGeometry(), scalePoint, scaleFactor, scaleFactor);
+    				// df.getGeometry().scale(scalePoint, scaleFactor, scaleFactor);
     			int index=	vea.modifyRow(edRow.getIndex(), fea,getName(),EditionEvent.GRAPHIC);
     			selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
     		}
     		vea.endComplexRow();
     		clearSelection();
-    		selectedRow.addAll(selectedRowAux);
+    		selectedRow=selectedRowAux;
     	}
 
 	public String getName() {

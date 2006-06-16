@@ -40,8 +40,6 @@
  */
 package com.iver.cit.gvsig;
 
-import java.util.ArrayList;
-
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
@@ -49,7 +47,6 @@ import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.InternalPolygonCADTool;
-import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 /**
  * Extensión que gestiona la inserción de polígonos internos en edición.
@@ -93,15 +90,7 @@ public class InternalPolygonExtension extends Extension {
 				mapControl = (MapControl) view.getMapControl();
 				if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
 					return false;
-				EditionManager em=CADExtension.getEditionManager();
-				if (em.getActiveLayerEdited()==null)
-					return false;
-				VectorialLayerEdited vle=(VectorialLayerEdited)em.getActiveLayerEdited();
-				FLyrVect lv=(FLyrVect)vle.getLayer();
-				ArrayList selectedRows=vle.getSelectedRow();
-				if (selectedRows.size()<1) {
-					return false;
-				}
+				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
 				if (internalpolygon.isApplicable(lv.getShapeType())){
 					return true;
 				}

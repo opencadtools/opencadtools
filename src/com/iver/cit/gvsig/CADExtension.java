@@ -71,7 +71,6 @@ import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.SymmetryCADTool;
 import com.iver.cit.gvsig.gui.popupmenu.PopupEditionProperties;
 import com.iver.cit.gvsig.gui.toc.FPopupMenu;
 import com.iver.cit.gvsig.gui.toolListeners.StatusBarListener;
@@ -107,12 +106,12 @@ public class CADExtension extends Extension {
 	public void initialize() {
 
 		// Registramos los Popup menus:
-
+		
     	// Adds an entry to the TOC's floating menu
         FPopupMenu.addEntry(new PopupEditionProperties());
 
-
-
+		
+		
 		// Fijamos que los símbolos de dibujo tengan outline
 		// TODO: Esto se debe configurar en el cuadro de diálogo de preferencias
 		CADTool.drawingSymbol.setOutlined(true);
@@ -124,14 +123,16 @@ public class CADExtension extends Extension {
 
 
 		CopyCADTool copy = new CopyCADTool();
+
 		RotateCADTool rotate = new RotateCADTool();
 		ScaleCADTool scale = new ScaleCADTool();
-		SymmetryCADTool symmetry=new SymmetryCADTool();
+
 		addCADTool("_copy", copy);
+
 		addCADTool("_rotate", rotate);
 		addCADTool("_scale", scale);
-		addCADTool("_symmetry", symmetry);
-	// Registramos las teclas de acceso rápido que vamos a usar.
+		
+		// Registramos las teclas de acceso rápido que vamos a usar.
 		
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0);
 		RefentAccelerator accRef = new RefentAccelerator();		
@@ -166,7 +167,7 @@ public class CADExtension extends Extension {
 				|| s.equals("_symmetry") || s.equals("_rotate")
 				|| s.equals("_stretch") || s.equals("_scale")
 				|| s.equals("_extend") || s.equals("_trim")
-				|| s.equals("_unit")
+				|| s.equals("_unit") || s.equals("_exploit")
 				|| s.equals("_chaflan") || s.equals("_join")) {
 			setCADTool(s, true);
 		}

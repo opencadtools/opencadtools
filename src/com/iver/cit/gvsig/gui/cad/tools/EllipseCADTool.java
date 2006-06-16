@@ -47,9 +47,7 @@ import java.awt.geom.Point2D;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
-import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
@@ -126,16 +124,7 @@ public class EllipseCADTool extends DefaultCADTool {
                     endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
             Point2D third = new Point2D.Double(x, y);
             double distance = middle.distance(third);
-            IGeometry geom=ShapeFactory.createEllipse(startAxis, endAxis, distance);
-//            try {
-//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
-//    				geom.setGeometryType(FShape.LINE);
-//    			else
-//    				geom.setGeometryType(FShape.POLYGON);
-//            } catch (DriverIOException e) {
-//    			e.printStackTrace();
-//    		}
-            addGeometry(geom);
+            addGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
         }
     }
 
@@ -163,18 +152,10 @@ public class EllipseCADTool extends DefaultCADTool {
 
             double distance = middle.distance(third);
 
-            IGeometry geom=ShapeFactory.createEllipse(startAxis, endAxis, distance);
-//            try {
-//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
-//    				geom.setGeometryType(FShape.LINE);
-//    			else
-//    				geom.setGeometryType(FShape.POLYGON);
-//            } catch (DriverIOException e) {
-//    			e.printStackTrace();
-//    		}
-            geom.drawInts((Graphics2D) g,
-                    getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.modifySymbol);
+            ShapeFactory.createEllipse(startAxis, endAxis, distance).draw((Graphics2D) g,
+                getCadToolAdapter().getMapControl().getViewPort(),
+                CADTool.modifySymbol);
+
             Point2D mediop = new Point2D.Double((startAxis.getX() +
                     endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
             drawLine((Graphics2D) g, mediop, third);
