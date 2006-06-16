@@ -50,9 +50,12 @@ import org.apache.log4j.Logger;
 import org.cresques.cts.GeoCalc;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.core.FArc2D;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
+import com.iver.cit.gvsig.fmap.core.FPolyline2D;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
@@ -80,6 +83,7 @@ public class PolylineCADTool extends DefaultCADTool {
     private Point2D antCenter;
     private Point2D antInter;
     private ArrayList list = new ArrayList();
+	private boolean isClosed=false;
 
     /**
      * Crea un nuevo PolylineCADTool.
@@ -99,48 +103,80 @@ public class PolylineCADTool extends DefaultCADTool {
     public void endGeometry() {
         IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
         FGeometryCollection fgc = new FGeometryCollection(geoms);
-        /* try {
-			if (getVLE().getVEA().getShapeType()==FShape.POLYGON){
-				GeneralPathX gpx=new GeneralPathX();
-				gpx.moveTo(antPoint.getX(),antPoint.getY());
-				gpx.lineTo(firstPoint.getX(),firstPoint.getY());
-				IGeometry line=ShapeFactory.createPolyline2D(gpx);
-				fgc.addGeometry(line);
-			}
-		} catch (DriverIOException e) {
-			e.printStackTrace();
-		} */
-
-        // No queremos guardar FGeometryCollections:
-        GeneralPathX gp = new GeneralPathX();
-        gp.append(fgc.getPathIterator(null), true);
-        IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
-        if (gp.isClosed())
-        {
-        	gp.ensureOrientation(false); // Poligono exterior.
-        	// Voy a testear que se puede convertir a JTS:
-        	IGeometry gAux = ShapeFactory.createPolygon2D(gp);
-        	Geometry jtsG = gAux.toJTSGeometry();
-        	logger.debug("A punto de escribir " + jtsG.toText());
-        	try {
-        		int shapeType = getVLE().getVEA().getShapeType(); 
-				if ((shapeType ==FShape.POLYGON) || (shapeType == FShape.MULTI)) {
-//					GeneralPathX gpx=new GeneralPathX();
-//					gpx.moveTo(antPoint.getX(),antPoint.getY());
-//					gpx.lineTo(firstPoint.getX(),firstPoint.getY());
-//					IGeometry line=ShapeFactory.createPolyline2D(gpx);
-//					fgc.addGeometry(line);
-					newGeom = gAux;
-				}
-			} catch (DriverIOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return;
-			}
-        	
+        if (isClosed) {
+        	GeneralPathX gpx=new GeneralPathX();
+            for (int i=0;i<geoms.length;i++) {
+            	 gpx.append(geoms[i].getPathIterator(null),true);
+            }
+            if (gpx.isCCW()) {
+            	ArrayList geomsAux=new ArrayList();
+            	for (int i=0;i<geoms.length;i++) {
+            		if (geoms[i].getInternalShape() instanceof FPolyline2D) {
+            			Handler[] handlers=((FPolyline2D)geoms[i]).getSelectHandlers();
+            			GeneralPathX gpxAux=new GeneralPathX();
+            			gpxAux.moveTo(handlers[1].getPoint().getX(),handlers[1].getPoint().getY());
+            			gpxAux.lineTo(handlers[0].getPoint().getX(),handlers[0].getPoint().getY());
+            			geomsAux.add(ShapeFactory.createPolyline2D(gpxAux));
+            		}else if (geoms[i].getInternalShape() instanceof FArc2D) {
+            			Handler[] handlers=((FArc2D)geoms[i]).getSelectHandlers();
+            			geomsAux.add(ShapeFactory.createArc(handlers[2].getPoint(),handlers[1].getPoint(),handlers[0].getPoint()));
+            		}
+            	}
+            	fgc = new FGeometryCollection((IGeometry[]) geomsAux.toArray(new IGeometry[0]));
+            }
+            fgc.setGeometryType(FShape.POLYGON);
+        }else {
+        	 fgc.setGeometryType(FShape.LINE);
         }
 
-        addGeometry(newGeom);
+
+//
+//        GeneralPathX gpx=new GeneralPathX();
+//        for (int i=0;i<geoms.length;i++) {
+//        	 gpx.append(geoms[0].getPathIterator(null),true);
+//        }
+//        /* try {
+//			if (getVLE().getVEA().getShapeType()==FShape.POLYGON){
+//				GeneralPathX gpx=new GeneralPathX();
+//				gpx.moveTo(antPoint.getX(),antPoint.getY());
+//				gpx.lineTo(firstPoint.getX(),firstPoint.getY());
+//				IGeometry line=ShapeFactory.createPolyline2D(gpx);
+//				fgc.addGeometry(line);
+//			}
+//		} catch (DriverIOException e) {
+//			e.printStackTrace();
+//		} */
+//
+//        ///IGeometry newGeom = ShapeFactory.createPolyline2D(gpx);
+//        if (gpx.isClosed())
+//        {
+//        	gpx.ensureOrientation(false); // Poligono exterior.
+//        	// Voy a testear que se puede convertir a JTS:
+//        	IGeometry gAux = ShapeFactory.createPolygon2D(gpx);
+//        	Geometry jtsG = gAux.toJTSGeometry();
+//        	logger.debug("A punto de escribir " + jtsG.toText());
+//        	try {
+//        		int shapeType = getVLE().getVEA().getShapeType();
+//				if ((shapeType ==FShape.POLYGON) || (shapeType == FShape.MULTI)) {
+////					GeneralPathX gpx=new GeneralPathX();
+////					gpx.moveTo(antPoint.getX(),antPoint.getY());
+////					gpx.lineTo(firstPoint.getX(),firstPoint.getY());
+////					IGeometry line=ShapeFactory.createPolyline2D(gpx);
+////					fgc.addGeometry(line);
+//					newGeom = gAux;
+//				}
+//			} catch (DriverIOException e) {
+//				e.printStackTrace();
+//				return;
+//			}
+//
+//
+//
+//
+//
+//        }
+
+        addGeometry(fgc);
         _fsm = new PolylineCADToolContext(this);
         list.clear();
         antantPoint=antCenter=antInter=antPoint=firstPoint=null;
@@ -152,10 +188,9 @@ public class PolylineCADTool extends DefaultCADTool {
         elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 
         list.add(ShapeFactory.createPolyline2D(elShape));
-        
+        isClosed=true;
 
         // list.add(ShapeFactory.createPolyline2D(elShape));
-
     }
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)

@@ -46,11 +46,13 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.core.FPolygon2D;
 import com.iver.cit.gvsig.fmap.core.FPolyline2D;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
@@ -261,7 +263,16 @@ public class PolygonCADTool extends DefaultCADTool {
         }
         //elShape.lineTo(firstPoint.getX(),firstPoint.getY());
         elShape.closePath();
-        return ShapeFactory.createGeometry(new FPolyline2D(elShape));
+        IGeometry geom=ShapeFactory.createPolygon2D(elShape);
+//        try {
+//			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//				geom.setGeometryType(FShape.LINE);
+//			else
+//				geom.setGeometryType(FShape.POLYGON);
+//        } catch (DriverIOException e) {
+//			e.printStackTrace();
+//		}
+        return geom;
     }
 
     /**
@@ -299,7 +310,16 @@ public class PolygonCADTool extends DefaultCADTool {
         }
         //elShape.lineTo(firstPoint.getX(),firstPoint.getY());
         elShape.closePath();
-        return ShapeFactory.createGeometry(new FPolyline2D(elShape));
+        IGeometry geom=ShapeFactory.createPolygon2D(elShape);
+//        try {
+//			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//				geom.setGeometryType(FShape.LINE);
+//			else
+//				geom.setGeometryType(FShape.POLYGON);
+//        } catch (DriverIOException e) {
+//			e.printStackTrace();
+//		}
+        return geom;
     }
     /**
      * Devuelve la geometría con el poligono regular circunscrito a la

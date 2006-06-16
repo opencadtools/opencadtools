@@ -234,10 +234,15 @@ public class EditVertexCADTool extends DefaultCADTool {
 
         	}else if(s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"del"))){
         		if (handlers!=null){
-        			IGeometry newGeometry=removeVertex(ig,handlers[numSelect]);
+        			IGeometry newGeometry=null;
+        			if (ig instanceof FGeometryCollection) {
+        				newGeometry=removeVertexGC((FGeometryCollection)ig,handlers[numSelect]);
+        			}else {
+        				newGeometry=removeVertex(ig,handlers[numSelect]);
+        			}
         			numSelect=0;
 
-        			IRow newRow=new DefaultFeature(newGeometry,row.getAttributes());
+        			IRow newRow=new DefaultFeature(newGeometry,row.getAttributes(),row.getID());
         			try {
 						vea.modifyRow(row.getIndex(),newRow,getName(),EditionEvent.GRAPHIC);
 					} catch (IOException e) {
@@ -360,6 +365,55 @@ public class EditVertexCADTool extends DefaultCADTool {
         }
         return ShapeFactory.createGeometry(shp);
     }
+
+    private IGeometry removeVertexGC(FGeometryCollection gc,Handler handler) {
+        IGeometry[] geoms=gc.getGeometries();
+    	ArrayList geomsAux=new ArrayList();
+        int pos=-1;
+    	for (int i=0;i<geoms.length;i++) {
+    		Handler[] handlers=geoms[i].getHandlers(IGeometry.SELECTHANDLER);
+    		for (int j=0;j<handlers.length;j++) {
+    			if (handlers[j].equalsPoint(handler)) {
+    				geomsAux.add(geoms[i]);
+    				if (pos==-1)
+    					pos=i;
+    			}
+    		}
+    	}
+    	int numGeomsAux=geomsAux.size();
+    	GeneralPathX gpx=new GeneralPathX();
+        for (int i=0;i<numGeomsAux;i++) {
+    		Handler[] handlers=((IGeometry)geomsAux.get(i)).getHandlers(IGeometry.SELECTHANDLER);
+    		if (numGeomsAux == 2) {
+				for (int j = 0; j < handlers.length; j++) {
+					if (handlers[j].equalsPoint(handler)) {
+						if (j == (handlers.length - 1)) {
+							Point2D ph = handlers[0].getPoint();
+							gpx.moveTo(ph.getX(), ph.getY());
+						} else {
+							Point2D ph = handlers[handlers.length - 1]
+									.getPoint();
+							gpx.lineTo(ph.getX(), ph.getY());
+						}
+					}
+				}
+			}
+
+    	}
+        ArrayList newGeoms=new ArrayList();
+        for (int i=0;i<pos;i++) {
+        	newGeoms.add(geoms[i]);
+        }
+        newGeoms.add(ShapeFactory.createPolyline2D(gpx));
+        for (int i=pos+numGeomsAux;i<geoms.length;i++) {
+        	newGeoms.add(geoms[i]);
+        }
+
+    	return new FGeometryCollection((IGeometry[])newGeoms.toArray(new IGeometry[0]));
+    }
+
+
+
     private IGeometry addVertex(IGeometry geome,Point2D p,Rectangle2D rect) {
     	IGeometry geometryCloned=geome.cloneGeometry();
     	IGeometry geom1=null;
@@ -538,6 +592,39 @@ public class EditVertexCADTool extends DefaultCADTool {
     	return geometryCloned;
 */
     }
+    private IGeometry addVertexGC(FGeometryCollection gc,Point2D p,Rectangle2D rect) {
+    	IGeometry[] geoms=gc.getGeometries();
+    	int pos=-1;
+    	for (int i=0;i<geoms.length;i++) {
+    		if (geoms[i].intersects(rect)) {
+    			pos=i;
+    		}
+    	}
+    	ArrayList newGeoms=new ArrayList();
+    	for (int i=0;i<pos;i++) {
+    		newGeoms.add(geoms[i]);
+    	}
+    	if (pos!=-1) {
+    	GeneralPathX gpx1=new GeneralPathX();
+    	GeneralPathX gpx2=new GeneralPathX();
+    	Handler[] handlers=geoms[pos].getHandlers(IGeometry.SELECTHANDLER);
+    	Point2D p1=handlers[0].getPoint();
+    	Point2D p2=p;
+    	Point2D p3=handlers[handlers.length-1].getPoint();
+    	gpx1.moveTo(p1.getX(),p1.getY());
+    	gpx1.lineTo(p2.getX(),p2.getY());
+    	gpx2.moveTo(p2.getX(),p2.getY());
+    	gpx2.lineTo(p3.getX(),p3.getY());
+    	newGeoms.add(ShapeFactory.createPolyline2D(gpx1));
+    	newGeoms.add(ShapeFactory.createPolyline2D(gpx2));
+    	for (int i=pos+1;i<geoms.length;i++) {
+    		newGeoms.add(geoms[i]);
+    	}
+    	return new FGeometryCollection((IGeometry[])newGeoms.toArray(new IGeometry[0]));
+    	}else {
+    		return null;
+    	}
+    }
 	public String getName() {
 		return PluginServices.getText(this,"edit_vertex_");
 	}
@@ -585,11 +672,17 @@ public class EditVertexCADTool extends DefaultCADTool {
 							row = (DefaultRowEdited) selectedRows.get(0);
 							fea = (DefaultFeature) row.getLinkedRow();
 							Point2D posVertex = new Point2D.Double(x, y);
-							IGeometry geom = addVertex(fea.getGeometry()
-									.cloneGeometry(), posVertex, rect);
+							IGeometry geom1=fea.getGeometry().cloneGeometry();
+							IGeometry geom=null;
+							if (geom1 instanceof FGeometryCollection) {
+								geom = addVertexGC((FGeometryCollection)geom1, posVertex, rect);
+							}else {
+								geom = addVertex(geom1, posVertex, rect);
+							}
+							if (geom!=null) {
 							DefaultFeature df = new DefaultFeature(geom, fea
-									.getAttributes());
-							vle.getVEA().modifyRow(row.getIndex(), df,
+									.getAttributes(),row.getID());
+							int index=vle.getVEA().modifyRow(row.getIndex(), df,
 									PluginServices.getText(this,"add_vertex"),EditionEvent.GRAPHIC);
 
 							Handler[] newHandlers = geom
@@ -602,8 +695,10 @@ public class EditVertexCADTool extends DefaultCADTool {
 								}
 							}
 
-							vle.refreshSelectionCache(firstPoint,
-									getCadToolAdapter());
+							clearSelection();
+							selectedRows.add(new DefaultRowEdited(df,
+									IRowEdited.STATUS_MODIFIED, index));
+							}
 						}
 					} catch (IOException e) {
 						e.printStackTrace();

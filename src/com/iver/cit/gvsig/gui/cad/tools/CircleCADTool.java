@@ -49,6 +49,7 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
@@ -120,16 +121,34 @@ public class CircleCADTool extends DefaultCADTool {
         if (status.equals("Circle.CenterPointOr3p")) {
             center = new Point2D.Double(x, y);
         } else if (status == "Circle.PointOrRadius") {
-            addGeometry(ShapeFactory.createCircle(center,
-                    new Point2D.Double(x, y)));
+            IGeometry geom=ShapeFactory.createCircle(center,
+                    new Point2D.Double(x, y));
+//            try {
+//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//    				geom.setGeometryType(FShape.LINE);
+//    			else
+//    				geom.setGeometryType(FShape.POLYGON);
+//            } catch (DriverIOException e) {
+//    			e.printStackTrace();
+//    		}
+            addGeometry(geom);
         } else if (status == "Circle.FirstPoint") {
             firstPoint = new Point2D.Double(x, y);
         } else if (status == "Circle.SecondPoint") {
             secondPoint = new Point2D.Double(x, y);
         } else if (status == "Circle.ThirdPoint") {
             thirdPoint = new Point2D.Double(x, y);
-            addGeometry(ShapeFactory.createCircle(firstPoint, secondPoint,
-                    thirdPoint));
+            IGeometry geom=ShapeFactory.createCircle(firstPoint, secondPoint,
+                    thirdPoint);
+//            try {
+//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//    				geom.setGeometryType(FShape.LINE);
+//    			else
+//    				geom.setGeometryType(FShape.POLYGON);
+//            } catch (DriverIOException e) {
+//    			e.printStackTrace();
+//    		}
+            addGeometry(geom);
         }
     }
 
@@ -156,18 +175,35 @@ public class CircleCADTool extends DefaultCADTool {
 
         if (status == "Circle.PointOrRadius") {
             Point2D currentPoint = new Point2D.Double(x, y);
-            ShapeFactory.createCircle(center, currentPoint).draw((Graphics2D) g,
-                getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.drawingSymbol);
+            IGeometry geom=ShapeFactory.createCircle(center, currentPoint);
+//            try {
+//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//    				geom.setGeometryType(FShape.LINE);
+//    			else
+//    				geom.setGeometryType(FShape.POLYGON);
+//            } catch (DriverIOException e) {
+//    			e.printStackTrace();
+//    		}
+            if (geom!=null)
+            	geom.drawInts((Graphics2D) g,
+                    getCadToolAdapter().getMapControl().getViewPort(),
+                    CADTool.drawingSymbol);
         } else if (status == "Circle.SecondPoint") {
             drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
         } else if (status == "Circle.ThirdPoint") {
             Point2D currentPoint = new Point2D.Double(x, y);
             IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint,
                     currentPoint);
-
+//            try {
+//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//    				geom.setGeometryType(FShape.LINE);
+//    			else
+//    				geom.setGeometryType(FShape.POLYGON);
+//            } catch (DriverIOException e) {
+//    			e.printStackTrace();
+//    		}
             if (geom != null) {
-                geom.draw((Graphics2D) g,
+                geom.drawInts((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
                     CADTool.drawingSymbol);
             }
@@ -199,7 +235,16 @@ public class CircleCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status == "Circle.PointOrRadius") {
-            addGeometry(ShapeFactory.createCircle(center, d));
+            IGeometry geom=ShapeFactory.createCircle(center, d);
+//            try {
+//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//    				geom.setGeometryType(FShape.LINE);
+//    			else
+//    				geom.setGeometryType(FShape.POLYGON);
+//            } catch (DriverIOException e) {
+//    			e.printStackTrace();
+//    		}
+            addGeometry(geom);
         }
     }
 

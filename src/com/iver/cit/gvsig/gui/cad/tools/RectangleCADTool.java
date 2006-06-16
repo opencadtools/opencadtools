@@ -48,7 +48,9 @@ import java.awt.geom.Point2D;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
@@ -129,7 +131,16 @@ public class RectangleCADTool extends DefaultCADTool {
             elShape.lineTo(firstPoint.getX(), lastPoint.getY());
             //elShape.lineTo(firstPoint.getX(), firstPoint.getY());
             elShape.closePath();
-            addGeometry(ShapeFactory.createPolyline2D(elShape));
+            IGeometry geom=ShapeFactory.createPolygon2D(elShape);
+//            try {
+//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//    				geom.setGeometryType(FShape.LINE);
+//    			else
+//    				geom.setGeometryType(FShape.POLYGON);
+//            } catch (DriverIOException e) {
+//    			e.printStackTrace();
+//    		}
+            addGeometry(geom);
             firstPoint = (Point2D) lastPoint.clone();
         } else if (status == "Rectangle.SecondPointSquare") {
             lastPoint = new Point2D.Double(x, y);
@@ -155,7 +166,16 @@ public class RectangleCADTool extends DefaultCADTool {
 
             //elShape.lineTo(firstPoint.getX(), firstPoint.getY());
             elShape.closePath();
-            addGeometry(ShapeFactory.createPolyline2D(elShape));
+            IGeometry geom=ShapeFactory.createPolygon2D(elShape);
+//            try {
+//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//    				geom.setGeometryType(FShape.LINE);
+//    			else
+//    				geom.setGeometryType(FShape.POLYGON);
+//            } catch (DriverIOException e) {
+//    			e.printStackTrace();
+//    		}
+            addGeometry(geom);
             firstPoint = (Point2D) lastPoint.clone();
         }
     }
@@ -182,9 +202,18 @@ public class RectangleCADTool extends DefaultCADTool {
             elShape.lineTo(x, y);
             elShape.lineTo(firstPoint.getX(), y);
             elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-            ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
-                getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.drawingSymbol);
+            IGeometry geom=ShapeFactory.createPolyline2D(elShape);
+//            try {
+//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//    				geom.setGeometryType(FShape.LINE);
+//    			else
+//    				geom.setGeometryType(FShape.POLYGON);
+//            } catch (DriverIOException e) {
+//    			e.printStackTrace();
+//    		}
+            geom.drawInts((Graphics2D) g,
+                    getCadToolAdapter().getMapControl().getViewPort(),
+                    CADTool.drawingSymbol);
         } else if (status == "Rectangle.SecondPointSquare") {
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
                     4);
@@ -204,9 +233,18 @@ public class RectangleCADTool extends DefaultCADTool {
                 elShape.lineTo(firstPoint.getX(), firstPoint.getY());
             }
 
-            ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
-                getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.drawingSymbol);
+            IGeometry geom=ShapeFactory.createPolyline2D(elShape);
+//            try {
+//    			if (getVLE().getVEA().getShapeType()==FShape.LINE)
+//    				geom.setGeometryType(FShape.LINE);
+//    			else
+//    				geom.setGeometryType(FShape.POLYGON);
+//            } catch (DriverIOException e) {
+//    			e.printStackTrace();
+//    		}
+            geom.drawInts((Graphics2D) g,
+                    getCadToolAdapter().getMapControl().getViewPort(),
+                    CADTool.drawingSymbol);
         }
     }
 
