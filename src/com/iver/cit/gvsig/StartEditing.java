@@ -1,22 +1,20 @@
 package com.iver.cit.gvsig;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.core.FShape;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.edition.rules.IRule;
+import com.iver.cit.gvsig.fmap.edition.rules.RulePolygon;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -72,7 +70,6 @@ public class StartEditing extends Extension {
 			FMap mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
 			
-//			registerKeyStrokes()
 			for (int i = 0; i < layers.getLayersCount(); i++) {
 				if (layers.getLayer(i) instanceof FLyrVect
 						&& layers.getLayer(i).isActive()) {
@@ -86,23 +83,33 @@ public class StartEditing extends Extension {
 					lv.addLayerListener(CADExtension.getEditionManager());
 					try {
 						lv.setEditing(true);
+						VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
+								.getSource();
+						vea.getRules().clear();
+						if (vea.getShapeType() == FShape.POLYGON)
+						{
+							IRule rulePol = new RulePolygon();
+							vea.getRules().add(rulePol);
+						}
+						vea.getCommandRecord().addCommandListener(mapControl);
+						// Si existe una tabla asociada a esta capa se cambia su
+						// modelo por el VectorialEditableAdapter.
+						ProjectExtension pe = (ProjectExtension) PluginServices
+								.getExtension(ProjectExtension.class);
+						ProjectTable pt = pe.getProject().getTable(lv);
+						if (pt != null){
+							pt.setModel(vea);
+							changeModelTable(pt);
+						}
+						startCommandsApplicable(vista,lv);
 					} catch (EditionException e) {
 						e.printStackTrace();
 						NotificationManager.addError(e);
+					} catch (DriverIOException e) {
+						e.printStackTrace();
+						NotificationManager.addError(e);
 					}
-					VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
-							.getSource();
-					vea.getCommandRecord().addCommandListener(mapControl);
-					// Si existe una tabla asociada a esta capa se cambia su
-					// modelo por el VectorialEditableAdapter.
-					ProjectExtension pe = (ProjectExtension) PluginServices
-							.getExtension(ProjectExtension.class);
-					ProjectTable pt = pe.getProject().getTable(lv);
-					if (pt != null){
-						pt.setModel(vea);
-						changeModelTable(pt);
-					}
-					startCommandsApplicable(vista,lv);
+						
 //					return;
 				}
 			}

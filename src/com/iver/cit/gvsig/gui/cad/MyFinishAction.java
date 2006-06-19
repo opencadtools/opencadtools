@@ -15,9 +15,11 @@ import com.hardcode.driverManager.Driver;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ICanReproject;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DXFLayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
@@ -26,6 +28,8 @@ import com.iver.cit.gvsig.fmap.drivers.VectorialJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.edition.rules.IRule;
+import com.iver.cit.gvsig.fmap.edition.rules.RulePolygon;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfFieldsMapping;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
@@ -228,16 +232,28 @@ public class MyFinishAction extends FinishAction
 		lyr.setActive(true);
 		try {
 			lyr.setEditing(true);
+	        VectorialEditableAdapter vea = (VectorialEditableAdapter) lyr.getSource();
+			vea.getRules().clear();
+			if (vea.getShapeType() == FShape.POLYGON)
+			{
+				IRule rulePol = new RulePolygon();
+				vea.getRules().add(rulePol);
+			}
+	
+	        vea.getCommandRecord().addCommandListener(mapCtrl);
+	        view.showConsole();
+			
+			// Para cerrar el cuadro de diálogo.
+			oldAction.performAction();
 		} catch (EditionException e) {
 			e.printStackTrace();
 			NotificationManager.addError(e);
+		} catch (DriverIOException e) {
+			e.printStackTrace();
+			NotificationManager.addError(e);
+
 		}
-        VectorialEditableAdapter vea = (VectorialEditableAdapter) lyr.getSource();
-        vea.getCommandRecord().addCommandListener(mapCtrl);
-        view.showConsole();
-		
-		// Para cerrar el cuadro de diálogo.
-		oldAction.performAction();
+
 		
 	}
 	  
