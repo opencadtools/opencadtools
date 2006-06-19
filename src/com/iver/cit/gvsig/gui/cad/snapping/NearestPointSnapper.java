@@ -19,7 +19,7 @@ public class NearestPointSnapper extends AbstractSnapper {
 		PathIterator theIterator = geom.getPathIterator(null, FConverter.flatness); //polyLine.getPathIterator(null, flatness);
 		double[] theData = new double[6];
 		double minDist = tolerance;
-		Coordinate from = null;
+		Coordinate from = null, first = null;
 		while (!theIterator.isDone()) {
 			//while not done
 			int theType = theIterator.currentSegment(theData);
@@ -27,6 +27,7 @@ public class NearestPointSnapper extends AbstractSnapper {
 			switch (theType) {
 				case PathIterator.SEG_MOVETO:
 					from = new Coordinate(theData[0], theData[1]);
+					first = from;
 					break;
 
 				case PathIterator.SEG_LINETO:
@@ -43,6 +44,18 @@ public class NearestPointSnapper extends AbstractSnapper {
 					
 					from = to;
 					break;
+				case PathIterator.SEG_CLOSE:
+					line = new LineSegment(from, first);
+					closestPoint = line.closestPoint(c);
+					dist = c.distance(closestPoint);
+					if ((dist < minDist)) {
+						resul = new Point2D.Double(closestPoint.x, closestPoint.y);
+						minDist = dist;
+					}
+					
+					from = first;
+					break;
+					
 
 			} //end switch
 
