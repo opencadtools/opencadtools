@@ -218,7 +218,7 @@ public class StartEditing extends Extension {
 			return false;
 		}
 
-		if (f instanceof lass) {
+		if (f instanceof View) {
 			return true;
 		} else {
 			return false;
