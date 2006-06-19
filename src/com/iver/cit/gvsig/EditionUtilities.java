@@ -39,7 +39,7 @@ public class EditionUtilities {
         if (f == null)
         	return status;
 
-        if (f.getClass() == View.class) {
+        if (f instanceof View) {
         	View vista = (View) f;
         	ProjectView model = vista.getModel();
         	FMap mapa = model.getMapContext();
@@ -78,7 +78,7 @@ public class EditionUtilities {
         if (f == null)
         	return null;
 
-        if (f.getClass() == View.class) {
+        if (f instanceof View) {
         	View vista = (View) f;
         	ProjectView model = vista.getModel();
         	FMap mapa = model.getMapContext();

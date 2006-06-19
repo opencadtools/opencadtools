@@ -1,5 +1,6 @@
 package com.iver.cit.gvsig;
 
+
 import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
@@ -81,7 +82,7 @@ public class AdjustLayerExtension extends Extension {
 			return false;
 		}
 
-		if (f.getClass() == View.class) {
+		if (f instanceof View) {
 			return true;
 		} else {
 			return false;

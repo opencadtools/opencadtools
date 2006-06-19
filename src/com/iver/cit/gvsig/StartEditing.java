@@ -218,7 +218,7 @@ public class StartEditing extends Extension {
 			return false;
 		}
 
-		if (f.getClass() == View.class) {
+		if (f instanceof lass) {
 			return true;
 		} else {
 			return false;

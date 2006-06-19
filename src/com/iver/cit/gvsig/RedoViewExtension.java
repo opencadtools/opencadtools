@@ -127,7 +127,7 @@ public class RedoViewExtension extends Extension {
 			return false;
 		}
 
-		if (f.getClass() == View.class) {
+		if (f instanceof View) {
 			return true;
 		} else {
 			return false;
