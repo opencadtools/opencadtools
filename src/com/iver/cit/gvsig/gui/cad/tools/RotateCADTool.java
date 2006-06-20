@@ -161,9 +161,9 @@ public class RotateCADTool extends DefaultCADTool {
 							+ (Math.PI / 2), firstPoint.getX(), firstPoint
 							.getY());
 
-					int index=vea.modifyRow(row.getIndex(), fea,
+					vea.modifyRow(row.getIndex(), fea,
 							getName(),EditionEvent.GRAPHIC);
-					selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
+					selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,row.getIndex()));
 				}
 
 				vea.endComplexRow();

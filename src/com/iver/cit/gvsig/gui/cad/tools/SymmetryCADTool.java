@@ -242,11 +242,11 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 
 					if (s.equals(PluginServices.getText(this, "cut"))
 							|| s.equals("s") || s.equals("S")) {
-						int index = vea.modifyRow(row.getIndex(), fea,
+						vea.modifyRow(row.getIndex(), fea,
 								getName(), EditionEvent.GRAPHIC);
 
 						selectedRowAux.add(new DefaultRowEdited(fea,
-								IRowEdited.STATUS_MODIFIED, index));
+								IRowEdited.STATUS_MODIFIED, row.getIndex()));
 					} else {
 						int index=addGeometry(geom,fea.getAttributes());
 						selectedRowAux.add(new DefaultRowEdited(fea,

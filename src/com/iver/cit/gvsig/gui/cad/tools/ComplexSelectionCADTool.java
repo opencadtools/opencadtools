@@ -393,7 +393,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 				|| (status.equals("Selection.WithSelectedFeatures"))) {
 			PluginServices.getMDIManager().setWaitCursor();
 			firstPoint = new Point2D.Double(x, y);
-			vle.selectWithPoint(x,y);
+			vle.selectWithPoint(x,y,multipleSelection);
 			PluginServices.getMDIManager().restoreCursor();
 		}
 		ArrayList selectedRow = vle.getSelectedRow();

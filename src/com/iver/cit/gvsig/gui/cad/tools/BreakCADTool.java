@@ -449,6 +449,30 @@ public class BreakCADTool extends DefaultCADTool {
 
 	            theIterator.next();
 	        } //end while loop
+	        GeneralPathX gpx=new GeneralPathX();
+	        gpx.append(geomAux.getInternalShape(),true);
+	        if (gpx.isClosed()) {
+	        	newGp2.append(newGp1.getPathIterator(null),true);
+	        	IGeometry geom1=ShapeFactory.createPolyline2D(newGp2);
+		        VectorialLayerEdited vle = getVLE();
+		        VectorialEditableAdapter vea = vle.getVEA();
+		        int num=vea.getRowCount();
+		        DefaultFeature df1 = new DefaultFeature(geom1, dre.getAttributes(),String.valueOf(num));
+
+		        vea.startComplexRow();
+		        vea.removeRow(dre.getIndex(),getName(),EditionEvent.GRAPHIC);
+		        int index1=vea.addRow(df1,PluginServices.getText(this,"parte1"),EditionEvent.GRAPHIC);
+		        vea.endComplexRow();
+		        ViewPort vp=CADExtension.getEditionManager().getMapControl().getViewPort();
+		        BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
+				Graphics2D gs = selectionImage.createGraphics();
+				clearSelection();
+				ArrayList selectedRow = vle.getSelectedRow();
+				selectedRow.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED, index1));
+				geom1.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
+				vle.drawHandlers(geom1.cloneGeometry(),gs,vp);
+				vea.setSelectionImage(selectionImage);
+	        }else {
 	        IGeometry geom1=ShapeFactory.createPolyline2D(newGp1);
 	        IGeometry geom2=ShapeFactory.createPolyline2D(newGp2);
 	        VectorialLayerEdited vle = getVLE();
@@ -474,6 +498,7 @@ public class BreakCADTool extends DefaultCADTool {
 			geom2.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 			vle.drawHandlers(geom2.cloneGeometry(),gs,vp);
 			vea.setSelectionImage(selectionImage);
+	        }
 	}
 
 	private Point2D getNearPoint(Point2D previous) {

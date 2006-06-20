@@ -98,6 +98,8 @@ public class SelectionCADTool extends DefaultCADTool {
 	protected ArrayList rowselectedHandlers=new ArrayList();
 	protected String type=PluginServices.getText(this,"simple");
 	protected ArrayList pointsPolygon=new ArrayList();
+
+	protected boolean multipleSelection=false;
 	/**
 	 * Crea un nuevo SelectionCADTool.
 	 */
@@ -409,7 +411,7 @@ public class SelectionCADTool extends DefaultCADTool {
 				|| (status.equals("Selection.WithSelectedFeatures"))) {
 			PluginServices.getMDIManager().setWaitCursor();
 			firstPoint = new Point2D.Double(x, y);
-			vle.selectWithPoint(x,y);
+			vle.selectWithPoint(x,y,multipleSelection);
 			PluginServices.getMDIManager().restoreCursor();
 		}
 		ArrayList selectedRow = vle.getSelectedRow();
@@ -488,6 +490,10 @@ public class SelectionCADTool extends DefaultCADTool {
 
 	public String toString() {
 		return "_selection";
+	}
+	public void multipleSelection(boolean b) {
+		multipleSelection=b;
+
 	}
 
 }

@@ -327,8 +327,8 @@ public class ScaleCADTool extends DefaultCADTool {
     			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
     			DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
 				UtilFunctions.scaleGeom(fea.getGeometry(), scalePoint, scaleFactor, scaleFactor);
-    			int index=	vea.modifyRow(edRow.getIndex(), fea,getName(),EditionEvent.GRAPHIC);
-    			selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
+    			vea.modifyRow(edRow.getIndex(), fea,getName(),EditionEvent.GRAPHIC);
+    			selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
     		}
     		vea.endComplexRow();
     		clearSelection();

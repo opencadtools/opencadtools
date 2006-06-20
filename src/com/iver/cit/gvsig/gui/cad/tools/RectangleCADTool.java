@@ -127,7 +127,7 @@ public class RectangleCADTool extends DefaultCADTool {
             elShape.lineTo(lastPoint.getX(), firstPoint.getY());
             elShape.lineTo(lastPoint.getX(), lastPoint.getY());
             elShape.lineTo(firstPoint.getX(), lastPoint.getY());
-            //elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+            elShape.lineTo(firstPoint.getX(), firstPoint.getY());
             elShape.closePath();
             addGeometry(ShapeFactory.createPolyline2D(elShape));
             firstPoint = (Point2D) lastPoint.clone();

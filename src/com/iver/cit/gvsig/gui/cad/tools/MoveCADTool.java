@@ -156,8 +156,8 @@ public class MoveCADTool extends DefaultCADTool {
                     UtilFunctions.moveGeom(ig, lastPoint.getX() -
                             firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
 
-                    int index=vea.modifyRow(edRow.getIndex(),feat,getName(),EditionEvent.GRAPHIC);
-                    selectedRowAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,index));
+                    vea.modifyRow(edRow.getIndex(),feat,getName(),EditionEvent.GRAPHIC);
+                    selectedRowAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
               }
                 vea.endComplexRow();
                 clearSelection();

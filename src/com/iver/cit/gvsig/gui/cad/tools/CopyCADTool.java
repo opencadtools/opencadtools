@@ -146,8 +146,8 @@ public class CopyCADTool extends DefaultCADTool {
 
             try {
             	for (int i = 0; i < selectedRow.size(); i++) {
-                    DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited)selectedRow.get(i))
-                                                             .getLinkedRow()
+            		DefaultRowEdited dre=(DefaultRowEdited)selectedRow.get(i);
+                    DefaultFeature fea = (DefaultFeature)dre.getLinkedRow()
                                                              .cloneRow();
                     // Movemos la geometría
                     UtilFunctions.moveGeom(fea.getGeometry(), lastPoint.getX() -
