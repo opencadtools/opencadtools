@@ -49,7 +49,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	private Point2D lastPoint;
 	private Point2D firstPoint;
 	private CADTool cadtool=null;
-	
+
 	private ArrayList snappers = new ArrayList();
 	private ArrayList layersToSnap = new ArrayList();
 
@@ -79,13 +79,13 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public IFeature[] getSelectedRowsCache() {
 		return (IFeature[]) selectedRow.toArray(new IFeature[0]);
 	}
-	public void selectWithPoint(double x, double y){
+	public void selectWithPoint(double x, double y,boolean multipleSelection){
 		firstPoint = new Point2D.Double(x, y);
 		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
-		selectedRow.clear();
-		selectedHandler.clear();
-
+		if (!multipleSelection) {
+			clearSelection();
+		}
 		// Se comprueba si se pincha en una gemometría
 		ViewPort vp=getLayer().getFMap().getViewPort();
 		double tam =vp.toMapDistance(SelectionCADTool.tolerance);
@@ -449,14 +449,14 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public ArrayList getSnappers() {
 		return snappers;
 	}
-	
+
 	public ArrayList getLayersToSnap() {
 		return layersToSnap;
 	}
 
 	public void setLayersToSnap(ArrayList layersToSnap) {
 		this.layersToSnap = layersToSnap;
-		
+
 	}
 
 }
