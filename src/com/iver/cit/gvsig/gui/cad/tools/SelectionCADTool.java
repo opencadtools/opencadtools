@@ -62,7 +62,10 @@ import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FLabel;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.AnnotationEditableAdapter;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
+import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
@@ -234,17 +237,30 @@ public class SelectionCADTool extends DefaultCADTool {
 		} else if (status.equals("Selection.WithFeatures")) {
 		} else if (status.equals("Selection.WithHandlers")) {
 			vea.startComplexRow();
+			ArrayList selectedRowsAux=new ArrayList();
 			for (int i = 0; i < selectedRow.size(); i++) {
 				IRowEdited row = (IRowEdited) selectedRow.get(i);
-				// Movemos los handlers que hemos seleccionado
-				// previamente dentro del método select()
-				for (int k = 0; k < selectedHandler.size(); k++) {
-					Handler h = (Handler) selectedHandler.get(k);
-					h.set(x, y);
-				}
+				IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
+				if (vea instanceof AnnotationEditableAdapter) {
 
-				modifyFeature(row.getIndex(), (IFeature) row.getLinkedRow().cloneRow());
+        			IGeometry ig = feat.getGeometry();
+					// Movemos la geometría
+                    UtilFunctions.moveGeom(ig, x -
+                            firstPoint.getX(), y - firstPoint.getY());
+				}else {
+					// Movemos los handlers que hemos seleccionado
+					// previamente dentro del método select()
+					for (int k = 0; k < selectedHandler.size(); k++) {
+						Handler h = (Handler) selectedHandler.get(k);
+						h.set(x, y);
+					}
+				}
+				modifyFeature(row.getIndex(), feat);
+				selectedRowsAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,row.getIndex()));
 			}
+			firstPoint=new Point2D.Double(x,y);
+			clearSelection();
+			selectedRow.addAll(selectedRowsAux);
 			try {
 				vea.endComplexRow();
 			} catch (IOException e) {
