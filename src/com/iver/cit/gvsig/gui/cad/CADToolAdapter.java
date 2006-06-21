@@ -273,10 +273,6 @@ public class CADToolAdapter extends Behavior {
 
 		calculateSnapPoint(e.getPoint());
 		
-		/* int difX =(int) (adjustedPoint.getX() - e.getX());
-		int difY =(int) (adjustedPoint.getY() - e.getY()); 
-		
-		e.translatePoint(difX, difY); */
 		showCoords(e.getPoint());
 		
 		getMapControl().repaint();
