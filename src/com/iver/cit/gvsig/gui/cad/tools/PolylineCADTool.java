@@ -123,7 +123,7 @@ public class PolylineCADTool extends DefaultCADTool {
         	Geometry jtsG = gAux.toJTSGeometry();
         	logger.debug("A punto de escribir " + jtsG.toText());
         	try {
-        		int shapeType = getVLE().getVEA().getShapeType(); 
+        		int shapeType = getVLE().getVEA().getShapeType();
 				if ((shapeType ==FShape.POLYGON) || (shapeType == FShape.MULTI)) {
 //					GeneralPathX gpx=new GeneralPathX();
 //					gpx.moveTo(antPoint.getX(),antPoint.getY());
@@ -137,7 +137,7 @@ public class PolylineCADTool extends DefaultCADTool {
 				e.printStackTrace();
 				return;
 			}
-        	
+
         }
 
         addGeometry(newGeom);
@@ -152,7 +152,7 @@ public class PolylineCADTool extends DefaultCADTool {
         elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 
         list.add(ShapeFactory.createPolyline2D(elShape));
-        
+
 
         // list.add(ShapeFactory.createPolyline2D(elShape));
 
@@ -192,14 +192,20 @@ public class PolylineCADTool extends DefaultCADTool {
         PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("Polyline.FirstPoint")) {
-            antPoint = new Point2D.Double(x, y);
-
-            if (firstPoint == null) {
-                firstPoint = (Point2D) antPoint.clone();
-            }
-        } else if (status.equals("Polyline.NextPointOrArcOrClose")) {
-            Point2D point = new Point2D.Double(x, y);
+//        if (status.equals("Polyline.FirstPoint")) {
+//            antPoint = new Point2D.Double(x, y);
+//
+//            if (firstPoint == null) {
+//                firstPoint = (Point2D) antPoint.clone();
+//            }
+//        } else
+        if (status.equals("Polyline.NextPointOrArcOrClose") || status.equals("Polyline.FirstPoint")) {
+           if (antPoint==null)
+        	   antPoint = new Point2D.Double(x, y);
+           if (firstPoint == null) {
+               firstPoint = (Point2D) antPoint.clone();
+           }
+        	Point2D point = new Point2D.Double(x, y);
 
             if (antPoint != null) {
                 GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
@@ -336,14 +342,15 @@ public class PolylineCADTool extends DefaultCADTool {
         PolylineCADToolState actualState = ((PolylineCADToolContext)_fsm).getState();
         String status = actualState.getName();
 
-        if (status.equals("Polyline.NextPointOrArcOrClose")) {
+        if (status.equals("Polyline.NextPointOrArcOrClose") || status.equals("Polyline.FirstPoint")) {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
                     CADTool.drawingSymbol);
             }
+            if (antPoint!=null)
+            	drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
 
-            drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
         } else if ((status.equals("Polyline.NextPointOrLineOrClose"))) {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
