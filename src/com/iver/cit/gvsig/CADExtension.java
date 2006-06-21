@@ -132,24 +132,24 @@ public class CADExtension extends Extension {
 		addCADTool("_scale", scale);
 		addCADTool("_symmetry", symmetry);
 	// Registramos las teclas de acceso rápido que vamos a usar.
-		
+
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0);
-		RefentAccelerator accRef = new RefentAccelerator();		
+		RefentAccelerator accRef = new RefentAccelerator();
 		PluginServices.registerKeyStroke(key, accRef);
 
 		key = KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0);
-		OrtoAccelerator accOrto = new OrtoAccelerator();		
+		OrtoAccelerator accOrto = new OrtoAccelerator();
 		PluginServices.registerKeyStroke(key, accOrto);
 
 		key = KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0);
-		GridAccelerator accGrid = new GridAccelerator();		
+		GridAccelerator accGrid = new GridAccelerator();
 		PluginServices.registerKeyStroke(key, accGrid);
 
 		key = KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0);
-		ForceCursorAccelerator accForce = new ForceCursorAccelerator();		
+		ForceCursorAccelerator accForce = new ForceCursorAccelerator();
 		PluginServices.registerKeyStroke(key, accForce);
-		
-		
+
+
 		KeyboardFocusManager kfm = KeyboardFocusManager
 				.getCurrentKeyboardFocusManager();
 		kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
@@ -184,10 +184,12 @@ public class CADExtension extends Extension {
 		adapter.setCadTool(ct);
 		ct.init();
 		if (showCommand) {
-			View vista = (View) PluginServices.getMDIManager().getActiveView();
-			vista.getConsolePanel().addText("\n" + ct.getName(),
+			if (PluginServices.getMDIManager().getActiveView() instanceof View) {
+				View vista = (View) PluginServices.getMDIManager().getActiveView();
+				vista.getConsolePanel().addText("\n" + ct.getName(),
 					JConsole.COMMAND);
-			adapter.askQuestion();
+				adapter.askQuestion();
+			}
 		}
 		// PluginServices.getMainFrame().setSelectedTool("SELECT");
 		// PluginServices.getMainFrame().enableControls();
