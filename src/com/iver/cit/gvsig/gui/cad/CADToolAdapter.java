@@ -766,12 +766,15 @@ public class CADToolAdapter extends Behavior {
 		 * PluginServices.getMainFrame().addTextToConsole("\n"
 		 * +cadtool.getName()); }
 		 */
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
-		vista.getConsolePanel().addText(
-				"\n" + "#" + cadtool.getQuestion() + " > ", JConsole.MESSAGE);
-		// ***PluginServices.getMainFrame().addTextToConsole("\n" +
-		// cadtool.getQuestion());
-		questionAsked = true;
+		if (PluginServices.getMDIManager().getActiveView() instanceof View)
+		{
+			View vista = (View) PluginServices.getMDIManager().getActiveView();
+			vista.getConsolePanel().addText(
+					"\n" + "#" + cadtool.getQuestion() + " > ", JConsole.MESSAGE);
+			// ***PluginServices.getMainFrame().addTextToConsole("\n" +
+			// cadtool.getQuestion());
+			questionAsked = true;
+		}
 
 	}
 
@@ -841,7 +844,7 @@ public class CADToolAdapter extends Behavior {
 		 * if (getCadTool() instanceof SelectionCADTool) { SelectionCADTool
 		 * selTool = (SelectionCADTool) getCadTool(); selTool.clearSelection(); }
 		 */
-		getMapControl().drawMap(false);
+		refreshEditedLayer();
 	}
 
 	/**
@@ -874,7 +877,10 @@ public class CADToolAdapter extends Behavior {
 
 				pushCadTool(selCad);
 				// getVectorialAdapter().getSelection().clear();
-				getMapControl().drawMap(false);
+				
+				refreshEditedLayer();
+				
+				
 				PluginServices.getMainFrame().setSelectedTool("_selection");
 				// askQuestion();
 			} else {
@@ -884,6 +890,23 @@ public class CADToolAdapter extends Behavior {
 
 		PluginServices.getMainFrame().enableControls();
 
+	}
+	
+	/**
+	 * Provoca un repintado "soft" de la capa activa en edición.
+	 * Las capas por debajo de ella no se dibujan de verdad, solo 
+	 * se dibuja la que está en edición y las que están por encima
+	 * de ella en el TOC.
+	 */
+	public void refreshEditedLayer()
+	{
+		ILayerEdited edLayer = CADExtension.getEditionManager().getActiveLayerEdited();
+		if (edLayer != null)
+		{
+			edLayer.getLayer().setDirty(true);
+			getMapControl().rePaintDirtyLayers();
+		}
+		
 	}
 
 	public CADGrid getGrid() {

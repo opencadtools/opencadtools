@@ -252,7 +252,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 					}
 
 					vle.refreshSelectionCache(new Point2D.Double(0,0),getCadToolAdapter());
-					getCadToolAdapter().getMapControl().drawMap(false);
+					refresh();
 
         		}
         	}else if(s.equals("i") || s.equals("I") || s.equals(PluginServices.getText(this,"add"))){

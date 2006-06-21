@@ -55,7 +55,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.4  2006-05-16 07:06:02  caballero
+ * Revision 1.5  2006-06-21 07:22:48  fjp
+ * Posibilidad de marcar capas como "dirty" y tener una que guarde lo que se ha dibujado antes que ella. Al hacer un MapControl.rePaintDirtyLayers(), eso se tiene en cuenta en el redibujado.
+ *
+ * Revision 1.4  2006/05/16 07:06:02  caballero
  * Saber si se realiza una operación desde la vista o desde la tabla.
  *
  * Revision 1.3  2006/05/10 06:26:24  caballero
@@ -119,12 +122,15 @@ public class EditionChangeManager implements IEditionListener{
 					table.refresh();
 			}else if (views[i] instanceof com.iver.cit.gvsig.gui.View){
 				com.iver.cit.gvsig.gui.View view=(com.iver.cit.gvsig.gui.View)views[i];
-				FLayers layers=view.getMapControl().getMapContext().getLayers();
+				
+				fLayer.setDirty(true);
+				view.getMapControl().rePaintDirtyLayers();
+				/* FLayers layers=view.getMapControl().getMapContext().getLayers();
 				for (int j=0;j<layers.getLayersCount();j++){
 					if (layers.getLayer(j).equals(fLayer)){
 						view.repaintMap();
 					}
-				}
+				} */
 			}
 		}
 

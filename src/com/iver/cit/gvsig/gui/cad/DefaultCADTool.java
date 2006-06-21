@@ -56,6 +56,7 @@ import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
@@ -84,11 +85,13 @@ import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * DOCUMENT ME!
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public abstract class DefaultCADTool implements CADTool {
-	private static Logger logger = Logger.getLogger(DefaultCADTool.class.getName());
+	private static Logger logger = Logger.getLogger(DefaultCADTool.class
+			.getName());
+
 	private CADToolAdapter cadToolAdapter;
 
 	private String question;
@@ -111,7 +114,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param cta
 	 *            DOCUMENT ME!
 	 */
@@ -121,19 +124,21 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @return DOCUMENT ME!
 	 */
 	public CADToolAdapter getCadToolAdapter() {
 		return cadToolAdapter;
 	}
-	public VectorialLayerEdited getVLE(){
-		return (VectorialLayerEdited) CADExtension.getEditionManager().getActiveLayerEdited();
+
+	public VectorialLayerEdited getVLE() {
+		return (VectorialLayerEdited) CADExtension.getEditionManager()
+				.getActiveLayerEdited();
 	}
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param g
 	 *            DOCUMENT ME!
 	 * @param firstPoint
@@ -152,7 +157,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 */
@@ -168,28 +173,36 @@ public abstract class DefaultCADTool implements CADTool {
 			for (int i = 0; i < numAttr; i++) {
 				values[i] = ValueFactory.createNullValue();
 			}
-			int num=vea.getRowCount();
-			DefaultFeature df = new DefaultFeature(geometry, values,String.valueOf(num));
-			int index = vea.addRow(df, getName(),EditionEvent.GRAPHIC);
+			int num;
+			try {
+				num = vea.getRowCount();
+				DefaultFeature df = new DefaultFeature(geometry, values, String
+						.valueOf(num));
+				int index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
+				VectorialLayerEdited vle = getVLE();
+				ArrayList selectedHandler = vle.getSelectedHandler();
+				ArrayList selectedRow = vle.getSelectedRow();
+				selectedHandler.clear();
+				selectedRow.clear();
 
+				ViewPort vp = vle.getLayer().getFMap().getViewPort();
+				BufferedImage selectionImage = new BufferedImage(vp
+						.getImageWidth(), vp.getImageHeight(),
+						BufferedImage.TYPE_INT_ARGB);
+				Graphics2D gs = selectionImage.createGraphics();
+				selectedRow.add(new DefaultRowEdited(df,
+						IRowEdited.STATUS_ADDED, index));
+				IGeometry geom = df.getGeometry();
+				geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
+				vle.drawHandlers(geom.cloneGeometry(), gs, vp);
+				vea.setSelectionImage(selectionImage);
+			} catch (IOException e) {
+				logger.debug(e);
+				NotificationManager.addError(e);
+				return;
+			}
 
-			VectorialLayerEdited vle = getVLE();
-			ArrayList selectedHandler = vle.getSelectedHandler();
-			ArrayList selectedRow = vle.getSelectedRow();
-			selectedHandler.clear();
-			selectedRow.clear();
-
-			ViewPort vp=vle.getLayer().getFMap().getViewPort();
-			BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D gs = selectionImage.createGraphics();
-			selectedRow.add(new DefaultRowEdited(df, IRowEdited.STATUS_ADDED, index));
-			IGeometry geom=df.getGeometry();
-			geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
-			vle.drawHandlers(geom.cloneGeometry(),gs,vp);
-			vea.setSelectionImage(selectionImage);
 		} catch (DriverIOException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (DriverException e) {
 			e.printStackTrace();
@@ -202,14 +215,14 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 */
 	public void modifyFeature(int index, IFeature row) {
 		try {
-			getVLE().getVEA().modifyRow(index, row,
-					getName(),EditionEvent.GRAPHIC);
+			getVLE().getVEA().modifyRow(index, row, getName(),
+					EditionEvent.GRAPHIC);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} catch (DriverIOException e1) {
@@ -220,19 +233,20 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 *
+	 * 
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 * @param values
 	 *            DOCUMENT ME!
 	 */
 	public int addGeometry(IGeometry geometry, Value[] values) {
-		int index =0;
+		int index = 0;
 		VectorialEditableAdapter vea = getVLE().getVEA();
 		try {
-			int num=vea.getRowCount();
-			DefaultFeature df = new DefaultFeature(geometry, values,String.valueOf(num));
-			index = vea.addRow(df, getName(),EditionEvent.GRAPHIC);
+			int num = vea.getRowCount();
+			DefaultFeature df = new DefaultFeature(geometry, values, String
+					.valueOf(num));
+			index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
 		} catch (DriverIOException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -245,7 +259,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * Devuelve la cadena que corresponde al estado en el que nos encontramos.
-	 *
+	 * 
 	 * @return Cadena para mostrar por consola.
 	 */
 	public String getQuestion() {
@@ -254,34 +268,36 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * Actualiza la cadena que corresponde al estado actual.
-	 *
+	 * 
 	 * @param s
 	 *            Cadena que aparecerá en consola.
 	 */
 	public void setQuestion(String s) {
 		question = s;
-		//ConsoleToken.addQuestion(s);
+		// ConsoleToken.addQuestion(s);
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * Provoca un repintado "soft" de la capa activa en edición. Las capas por
+	 * debajo de ella no se dibujan de verdad, solo se dibuja la que está en
+	 * edición y las que están por encima de ella en el TOC.
 	 */
 	public void refresh() {
-		getCadToolAdapter().getMapControl().drawMap(false);
+		// getCadToolAdapter().getMapControl().drawMap(false);
+		getVLE().getLayer().setDirty(true);
+
+		getCadToolAdapter().getMapControl().rePaintDirtyLayers();
 	}
 
-	/*public void drawHandlers(Graphics g, FBitSet sel, AffineTransform at)
-			throws DriverIOException {
-		for (int i = sel.nextSetBit(0); i >= 0; i = sel.nextSetBit(i + 1)) {
-			IGeometry ig = getCadToolAdapter().getVectorialAdapter()
-					.getShape(i).cloneGeometry();
-			if (ig == null)
-				continue;
-			Handler[] handlers = ig.getHandlers(IGeometry.SELECTHANDLER);
-			FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers);
-		}
-	}
-*/
+	/*
+	 * public void drawHandlers(Graphics g, FBitSet sel, AffineTransform at)
+	 * throws DriverIOException { for (int i = sel.nextSetBit(0); i >= 0; i =
+	 * sel.nextSetBit(i + 1)) { IGeometry ig =
+	 * getCadToolAdapter().getVectorialAdapter() .getShape(i).cloneGeometry();
+	 * if (ig == null) continue; Handler[] handlers =
+	 * ig.getHandlers(IGeometry.SELECTHANDLER);
+	 * FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers); } }
+	 */
 	public void drawHandlers(Graphics g, ArrayList selectedRows,
 			AffineTransform at) {
 		for (int i = 0; i < selectedRows.size(); i++) {
@@ -306,11 +322,11 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
 	 */
 	public void end() {
-		CADExtension.setCADTool("_selection",true);
+		CADExtension.setCADTool("_selection", true);
 		PluginServices.getMainFrame().setSelectedTool("_selection");
 	}
 
@@ -319,29 +335,33 @@ public abstract class DefaultCADTool implements CADTool {
 		CADTool.drawingSymbol.setOutlineColor(Color.GREEN);
 
 	}
-	protected ArrayList getSelectedRows(){
-		VectorialLayerEdited vle = getVLE();
-    	ArrayList selectedRow = vle.getSelectedRow();
-    	return selectedRow;
-	}
-	protected ArrayList getSelectedHandlers(){
-		VectorialLayerEdited vle = getVLE();
-    	ArrayList selectedHandlers = vle.getSelectedHandler();
-    	return selectedHandlers;
-	}
-	public void clearSelection(){
+
+	protected ArrayList getSelectedRows() {
 		VectorialLayerEdited vle = getVLE();
 		ArrayList selectedRow = vle.getSelectedRow();
-    	ArrayList selectedHandlers = vle.getSelectedHandler();
-    	selectedRow.clear();
-    	selectedHandlers.clear();
-    	VectorialEditableAdapter vea=vle.getVEA();
-    	FBitSet selection = vea.getSelection();
-    	selection.clear();
-    	vea.setSelectionImage(null);
-    	vea.setHandlersImage(null);
+		return selectedRow;
+	}
+
+	protected ArrayList getSelectedHandlers() {
+		VectorialLayerEdited vle = getVLE();
+		ArrayList selectedHandlers = vle.getSelectedHandler();
+		return selectedHandlers;
+	}
+
+	public void clearSelection() {
+		VectorialLayerEdited vle = getVLE();
+		ArrayList selectedRow = vle.getSelectedRow();
+		ArrayList selectedHandlers = vle.getSelectedHandler();
+		selectedRow.clear();
+		selectedHandlers.clear();
+		VectorialEditableAdapter vea = vle.getVEA();
+		FBitSet selection = vea.getSelection();
+		selection.clear();
+		vea.setSelectionImage(null);
+		vea.setHandlersImage(null);
 
 	}
+
 	public String getNextTool() {
 		return tool;
 	}
@@ -349,14 +369,16 @@ public abstract class DefaultCADTool implements CADTool {
 	public void setNextTool(String tool) {
 		this.tool = tool;
 	}
-	public boolean changeCommand(String name)throws CommandException{
-		CADTool[] cadtools=CADExtension.getCADTools();
-		for (int i=0;i<cadtools.length;i++){
-			CADTool ct=cadtools[i];
-			if (name.equalsIgnoreCase(ct.getName())|| name.equalsIgnoreCase(ct.toString())){
-				int type=FShape.POINT;
+
+	public boolean changeCommand(String name) throws CommandException {
+		CADTool[] cadtools = CADExtension.getCADTools();
+		for (int i = 0; i < cadtools.length; i++) {
+			CADTool ct = cadtools[i];
+			if (name.equalsIgnoreCase(ct.getName())
+					|| name.equalsIgnoreCase(ct.toString())) {
+				int type = FShape.POINT;
 				try {
-					type=((FLyrVect)getVLE().getLayer()).getShapeType();
+					type = ((FLyrVect) getVLE().getLayer()).getShapeType();
 				} catch (com.iver.cit.gvsig.fmap.DriverException e) {
 					e.printStackTrace();
 				}
@@ -368,32 +390,34 @@ public abstract class DefaultCADTool implements CADTool {
 					vista.getConsolePanel().addText("\n" + ct.getName(),
 							JConsole.COMMAND);
 					return true;
-				}else{
+				} else {
 					throw new CommandException(name);
 				}
 			}
 		}
 		return false;
 	}
+
 	public boolean isApplicable(int shapeType) {
 		return true;
 	}
+
 	public abstract String toString();
 
-	public void throwValueException(String s,double d) {
-		View vista = (View) PluginServices.getMDIManager()
-			.getActiveView();
-		vista.getConsolePanel().addText(s+ " : " + d, JConsole.ERROR);
+	public void throwValueException(String s, double d) {
+		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		vista.getConsolePanel().addText(s + " : " + d, JConsole.ERROR);
 	}
-	public void throwOptionException(String s,String o) {
-		View vista = (View) PluginServices.getMDIManager()
-			.getActiveView();
-		vista.getConsolePanel().addText(s+ " : " + o, JConsole.ERROR);
+
+	public void throwOptionException(String s, String o) {
+		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		vista.getConsolePanel().addText(s + " : " + o, JConsole.ERROR);
 	}
-	public void throwPointException(String s,double x,double y) {
-		View vista = (View) PluginServices.getMDIManager()
-			.getActiveView();
-		vista.getConsolePanel().addText(s+ " : " + " X = "+x+ ", Y = "+y, JConsole.ERROR);
+
+	public void throwPointException(String s, double x, double y) {
+		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		vista.getConsolePanel().addText(s + " : " + " X = " + x + ", Y = " + y,
+				JConsole.ERROR);
 	}
 
 }
