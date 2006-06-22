@@ -319,21 +319,23 @@ public class ScaleCADTool extends DefaultCADTool {
     	}
     }
     private void scale(double scaleFactor) throws DriverIOException, IOException {
-    		VectorialEditableAdapter vea=getVLE().getVEA();
-    		vea.startComplexRow();
-    		ArrayList selectedRow=getSelectedRows();
-    		ArrayList selectedRowAux=new ArrayList();
-    		for (int i = 0; i < selectedRow.size(); i++) {
-    			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
-    			DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
-				UtilFunctions.scaleGeom(fea.getGeometry(), scalePoint, scaleFactor, scaleFactor);
-    			vea.modifyRow(edRow.getIndex(), fea,getName(),EditionEvent.GRAPHIC);
-    			selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
-    		}
-    		vea.endComplexRow();
-    		clearSelection();
-    		selectedRow.addAll(selectedRowAux);
+    	VectorialLayerEdited vle=getVLE();
+    	VectorialEditableAdapter vea=vle.getVEA();
+    	vea.startComplexRow();
+    	ArrayList selectedRow=getSelectedRows();
+    	ArrayList selectedRowAux=new ArrayList();
+    	for (int i = 0; i < selectedRow.size(); i++) {
+    		IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+    		DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
+			UtilFunctions.scaleGeom(fea.getGeometry(), scalePoint, scaleFactor, scaleFactor);
+    		vea.modifyRow(edRow.getIndex(), fea,getName(),EditionEvent.GRAPHIC);
+    		selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
     	}
+    	vea.endComplexRow();
+    	vle.setSelectionCache(selectedRowAux);
+    	//clearSelection();
+    	//selectedRow.addAll(selectedRowAux);
+    }
 
 	public String getName() {
 		return PluginServices.getText(this,"scale_");

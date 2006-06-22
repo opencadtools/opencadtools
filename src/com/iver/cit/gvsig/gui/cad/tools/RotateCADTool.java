@@ -167,8 +167,9 @@ public class RotateCADTool extends DefaultCADTool {
 				}
 
 				vea.endComplexRow();
-				clearSelection();
-				selectedRow.addAll(selectedRowAux);
+				vle.setSelectionCache(selectedRowAux);
+				//clearSelection();
+				//selectedRow.addAll(selectedRowAux);
 			} catch (DriverIOException e) {
 				e.printStackTrace();
 			} catch (IOException e1) {

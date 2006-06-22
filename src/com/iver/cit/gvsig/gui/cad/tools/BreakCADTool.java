@@ -468,7 +468,7 @@ public class BreakCADTool extends DefaultCADTool {
 				Graphics2D gs = selectionImage.createGraphics();
 				clearSelection();
 				ArrayList selectedRow = vle.getSelectedRow();
-				selectedRow.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED, index1));
+				selectedRow.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED, vea.getInversedIndex(index1)));
 				geom1.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 				vle.drawHandlers(geom1.cloneGeometry(),gs,vp);
 				vea.setSelectionImage(selectionImage);
@@ -492,8 +492,8 @@ public class BreakCADTool extends DefaultCADTool {
 			Graphics2D gs = selectionImage.createGraphics();
 			clearSelection();
 			ArrayList selectedRow = vle.getSelectedRow();
-			selectedRow.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED, index1));
-			selectedRow.add(new DefaultRowEdited(df2, IRowEdited.STATUS_ADDED, index2));
+			selectedRow.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED, vea.getInversedIndex(index1)));
+			selectedRow.add(new DefaultRowEdited(df2, IRowEdited.STATUS_ADDED, vea.getInversedIndex(index2)));
 			geom1.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 			vle.drawHandlers(geom1.cloneGeometry(),gs,vp);
 			geom2.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);

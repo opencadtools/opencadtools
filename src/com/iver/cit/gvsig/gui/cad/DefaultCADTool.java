@@ -85,7 +85,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * DOCUMENT ME!
- * 
+ *
  * @author Vicente Caballero Navarro
  */
 public abstract class DefaultCADTool implements CADTool {
@@ -114,7 +114,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param cta
 	 *            DOCUMENT ME!
 	 */
@@ -124,7 +124,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @return DOCUMENT ME!
 	 */
 	public CADToolAdapter getCadToolAdapter() {
@@ -138,7 +138,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param g
 	 *            DOCUMENT ME!
 	 * @param firstPoint
@@ -157,7 +157,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 */
@@ -180,18 +180,19 @@ public abstract class DefaultCADTool implements CADTool {
 						.valueOf(num));
 				int index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
 				VectorialLayerEdited vle = getVLE();
-				ArrayList selectedHandler = vle.getSelectedHandler();
+				clearSelection();
 				ArrayList selectedRow = vle.getSelectedRow();
-				selectedHandler.clear();
-				selectedRow.clear();
+
 
 				ViewPort vp = vle.getLayer().getFMap().getViewPort();
 				BufferedImage selectionImage = new BufferedImage(vp
 						.getImageWidth(), vp.getImageHeight(),
 						BufferedImage.TYPE_INT_ARGB);
 				Graphics2D gs = selectionImage.createGraphics();
+				int inversedIndex=vea.getInversedIndex(index);
 				selectedRow.add(new DefaultRowEdited(df,
-						IRowEdited.STATUS_ADDED, index));
+						IRowEdited.STATUS_ADDED, inversedIndex ));
+				vea.getSelection().set(inversedIndex);
 				IGeometry geom = df.getGeometry();
 				geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 				vle.drawHandlers(geom.cloneGeometry(), gs, vp);
@@ -215,7 +216,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 */
@@ -233,7 +234,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * DOCUMENT ME!
-	 * 
+	 *
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 * @param values
@@ -254,12 +255,12 @@ public abstract class DefaultCADTool implements CADTool {
 		} catch (DriverLoadException e) {
 			e.printStackTrace();
 		}
-		return index;
+		return vea.getInversedIndex(index);
 	}
 
 	/**
 	 * Devuelve la cadena que corresponde al estado en el que nos encontramos.
-	 * 
+	 *
 	 * @return Cadena para mostrar por consola.
 	 */
 	public String getQuestion() {
@@ -268,7 +269,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/**
 	 * Actualiza la cadena que corresponde al estado actual.
-	 * 
+	 *
 	 * @param s
 	 *            Cadena que aparecerá en consola.
 	 */
@@ -322,7 +323,7 @@ public abstract class DefaultCADTool implements CADTool {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
 	 */
 	public void end() {

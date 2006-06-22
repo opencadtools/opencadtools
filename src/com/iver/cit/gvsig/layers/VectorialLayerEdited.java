@@ -72,6 +72,8 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void clearSelection() {
 		selectedHandler.clear();
 		selectedRow.clear();
+		FBitSet selection=getVEA().getSelection();
+		selection.clear();
 	}
 	/**
 	 * @return Returns the selectedRow.
@@ -457,6 +459,17 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void setLayersToSnap(ArrayList layersToSnap) {
 		this.layersToSnap = layersToSnap;
 
+	}
+
+	public void setSelectionCache(ArrayList selectedRowAux) {
+		clearSelection();
+		VectorialEditableAdapter vea=getVEA();
+		FBitSet selection=vea.getSelection();
+		selectedRow.addAll(selectedRowAux);
+		for (int i = 0;i < selectedRow.size(); i++) {
+			  IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+			  selection.set(edRow.getIndex());
+		}
 	}
 
 }

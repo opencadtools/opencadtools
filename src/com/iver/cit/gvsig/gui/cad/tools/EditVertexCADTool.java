@@ -631,6 +631,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 	private void selectHandler(double x, double y) {
 		Point2D firstPoint = new Point2D.Double(x, y);
 		VectorialLayerEdited vle = getVLE();
+		VectorialEditableAdapter vea=vle.getVEA();
 		ArrayList selectedRows = vle.getSelectedRow();
 		double tam = getCadToolAdapter().getMapControl().getViewPort()
 				.toMapDistance(SelectionCADTool.tolerance);
@@ -682,7 +683,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 							if (geom!=null) {
 							DefaultFeature df = new DefaultFeature(geom, fea
 									.getAttributes(),row.getID());
-							int index=vle.getVEA().modifyRow(row.getIndex(), df,
+							vea.modifyRow(row.getIndex(), df,
 									PluginServices.getText(this,"add_vertex"),EditionEvent.GRAPHIC);
 
 							Handler[] newHandlers = geom
@@ -697,7 +698,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 
 							clearSelection();
 							selectedRows.add(new DefaultRowEdited(df,
-									IRowEdited.STATUS_MODIFIED, index));
+									IRowEdited.STATUS_MODIFIED, row.getIndex()));
 							}
 						}
 					} catch (IOException e) {

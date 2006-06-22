@@ -32,6 +32,7 @@ import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
@@ -168,7 +169,7 @@ public class CADToolAdapter extends Behavior {
 	 */
 	private double adjustToHandler(Point2D point,
 			Point2D mapHandlerAdjustedPoint) {
-		
+
 		if (!isRefentEnabled())
 			return Double.MAX_VALUE;
 
@@ -176,7 +177,7 @@ public class CADToolAdapter extends Behavior {
 		if (!(aux instanceof VectorialLayerEdited))
 			return Double.MAX_VALUE;
 		VectorialLayerEdited vle = (VectorialLayerEdited) aux;
-		
+
 		ArrayList snappers = vle.getSnappers();
 		ArrayList layersToSnap = vle.getLayersToSnap();
 
@@ -199,7 +200,7 @@ public class CADToolAdapter extends Behavior {
 				mapPoint.getY() - mapTolerance / 2, mapTolerance, mapTolerance);
 
 		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
-		
+
 		usedSnap = null;
 		Point2D lastPoint = null;
 		if (previousPoint != null)
@@ -217,18 +218,18 @@ public class CADToolAdapter extends Behavior {
 				for (int i = 0; i < snappers.size(); i++)
 				{
 					ISnapper theSnapper = (ISnapper) snappers.get(i);
-					
+
 					if (usedSnap != null)
 					{
 						// Si ya tenemos un snap y es de alta prioridad, cogemos ese. (A no ser que en otra capa encontremos un snapper mejor)
 						if (theSnapper.getPriority() < usedSnap.getPriority())
-							break; 
+							break;
 					}
-		
+
 					SnappingVisitor snapVisitor = new SnappingVisitor(theSnapper, point, mapTolerance, lastPoint);
 					// System.out.println("Cache size = " + cache.size());
 					cache.query(e, snapVisitor);
-		
+
 					if (snapVisitor.getSnapPoint() != null) {
 						if (minDist > snapVisitor.getMinDist())
 						{
@@ -274,7 +275,7 @@ public class CADToolAdapter extends Behavior {
 		calculateSnapPoint(e.getPoint());
 		
 		showCoords(e.getPoint());
-		
+
 		getMapControl().repaint();
 	}
 
@@ -306,7 +307,7 @@ public class CADToolAdapter extends Behavior {
 		MainFrame mF = PluginServices.getMainFrame();
 
 		if (mF != null)
-		{			
+		{
             mF.getStatusBar().setMessage("1",
                     FConstant.NAMES[vp.getDistanceUnits()]);
             mF.getStatusBar().setMessage("6", "1:"+mapControl.getMapContext().getScaleView());
@@ -366,20 +367,20 @@ public class CADToolAdapter extends Behavior {
 				if (usedSnap != null)
 				{
 					usedSnap.draw(g, adjustedPoint);
-					
+
 					Graphics2D g2 = (Graphics2D) g;
 			        FontMetrics metrics = g2.getFontMetrics();
 			        int w = metrics.stringWidth(usedSnap.getToolTipText()) + 5;
 			        int h = metrics.getMaxAscent() + 5;
 			        int x = (int)p.getX()+9;
 			        int y = (int)p.getY()- 7;
-			        
+
 			        g2.setColor(theTipColor );
 			        g2.fillRect(x, y-h, w, h);
 			        g2.setColor(Color.BLACK);
 			        g2.drawRect(x, y-h, w, h);
 					g2.drawString(usedSnap.getToolTipText(), x+3, y-3);
-					
+
 
 					// getMapControl().setToolTipText(usedSnap.getToolTipText());
 				}
@@ -680,7 +681,7 @@ public class CADToolAdapter extends Behavior {
 	public void setRefentEnabled(boolean activated) {
 		bRefent = activated;
 	}
-	
+
 	public boolean isRefentEnabled()
 	{
 		return bRefent;
@@ -807,15 +808,15 @@ public class CADToolAdapter extends Behavior {
 				indexesToDel[j++] = i;
 				// /vea.removeRow(i);
 			}
-			/*
-			 * VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-			 * .getEditionManager().getActiveLayerEdited(); ArrayList
-			 * selectedRow = vle.getSelectedRow();
-			 *
-			 * int[] indexesToDel = new int[selectedRow.size()]; for (int i = 0;
-			 * i < selectedRow.size(); i++) { IRowEdited edRow = (IRowEdited)
-			 * selectedRow.get(i); indexesToDel[i] = edRow.getIndex(); }
-			 */
+
+//			  ArrayList selectedRow = vle.getSelectedRow();
+//
+//			  int[] indexesToDel = new int[selectedRow.size()];
+//			  for (int i = 0;i < selectedRow.size(); i++) {
+//				  IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+//				  indexesToDel[i] = vea.getInversedIndex(edRow.getIndex());
+//				  }
+//
 			for (int i = indexesToDel.length - 1; i >= 0; i--) {
 				vea.removeRow(indexesToDel[i], PluginServices.getText(this,
 						"deleted_feature"),EditionEvent.GRAPHIC);
@@ -873,10 +874,10 @@ public class CADToolAdapter extends Behavior {
 
 				pushCadTool(selCad);
 				// getVectorialAdapter().getSelection().clear();
-				
+
 				refreshEditedLayer();
-				
-				
+
+
 				PluginServices.getMainFrame().setSelectedTool("_selection");
 				// askQuestion();
 			} else {
@@ -887,10 +888,10 @@ public class CADToolAdapter extends Behavior {
 		PluginServices.getMainFrame().enableControls();
 
 	}
-	
+
 	/**
 	 * Provoca un repintado "soft" de la capa activa en edición.
-	 * Las capas por debajo de ella no se dibujan de verdad, solo 
+	 * Las capas por debajo de ella no se dibujan de verdad, solo
 	 * se dibuja la que está en edición y las que están por encima
 	 * de ella en el TOC.
 	 */
@@ -902,7 +903,7 @@ public class CADToolAdapter extends Behavior {
 			edLayer.getLayer().setDirty(true);
 			getMapControl().rePaintDirtyLayers();
 		}
-		
+
 	}
 
 	public CADGrid getGrid() {

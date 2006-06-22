@@ -259,8 +259,9 @@ public class SelectionCADTool extends DefaultCADTool {
 				selectedRowsAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,row.getIndex()));
 			}
 			firstPoint=new Point2D.Double(x,y);
-			clearSelection();
-			selectedRow.addAll(selectedRowsAux);
+			vle.setSelectionCache(selectedRowsAux);
+			//clearSelection();
+			//selectedRow.addAll(selectedRowsAux);
 			try {
 				vea.endComplexRow();
 			} catch (IOException e) {
