@@ -1,12 +1,14 @@
 package com.iver.cit.gvsig.gui.cad.panels;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.sql.Types;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -52,12 +54,33 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	 */
 	public void next() {
 		// TODO Auto-generated method stub
-		super.next();
+		DefaultTableModel tm=(DefaultTableModel) jTable.getModel();
+		boolean valid=true;
+		for (int i = 0;i<tm.getRowCount();i++) {
+			String s=(String)tm.getValueAt(0,i);
+			valid=validate(s);
+
+		}
+		if (valid)
+			super.next();
 		/* getWizardComponents().getFinishButton().setVisible(true);
 		if (!((FileBasedPanel)getWizardComponents().getWizardPanel(2)).getPath().equals(""))
 			getWizardComponents().getFinishButton().setEnabled(true);
 		else
 			getWizardComponents().getFinishButton().setEnabled(false); */
+	}
+
+
+	private boolean validate(String s) {
+		boolean valid=true;
+		if (s.indexOf(" ")!=-1) {
+			valid=false;
+			JOptionPane.showMessageDialog((Component)PluginServices.getMainFrame(),
+					PluginServices.getText(this,"no_puede_continuar")+"\n"+
+					PluginServices.getText(this,"field")+" : "+s+"\n"+
+					PluginServices.getText(this,"contiene_espacios_en_blanco"));
+		}
+		return valid;
 	}
 
 
@@ -172,7 +195,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 					// Add a new row
 					DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
 					Object[] newRow = new Object[tm.getColumnCount()];
-					newRow[0] = PluginServices.getText(this,"new_field");
+					newRow[0] = PluginServices.getText(this,"field");
 					newRow[1] = "String";
 					newRow[2] = "20";
 					tm.addRow(newRow);
