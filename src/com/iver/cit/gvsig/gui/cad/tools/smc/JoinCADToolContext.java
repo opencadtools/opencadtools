@@ -302,7 +302,7 @@ public final class JoinCADToolContext
             {
                 JoinCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
+                ctxt.setQuestion(PluginServices.getText(this,"select_geometry"));
                 ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
@@ -311,19 +311,28 @@ public final class JoinCADToolContext
             {
                 JoinCADTool ctxt = context.getOwner();
 
-                JoinCADToolState endState = context.getState();
+                if (s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"end")))
+                {
+                    JoinCADToolState endState = context.getState();
 
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                    ctxt.setDescription(new String[]{"cancel"});
-                    ctxt.addOption(s);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion(PluginServices.getText(this,"select_geometry"));
+                        ctxt.setDescription(new String[]{"cancel"});
+                        ctxt.addOption(s);
+                        ctxt.end();
+                    }
+                    finally
+                    {
+                        context.setState(endState);
+                    }
                 }
-                finally
+                else
                 {
-                    context.setState(endState);
+                    super.addOption(context, s);
                 }
+
                 return;
             }
 
@@ -336,8 +345,8 @@ public final class JoinCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_second_point"));
-                    ctxt.setDescription(new String[]{"cancel"});
+                    ctxt.setQuestion(PluginServices.getText(this,"select_other_geometry_or_end"));
+                    ctxt.setDescription(new String[]{"cancel", "end"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

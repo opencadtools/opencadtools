@@ -43,10 +43,7 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
-import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -59,10 +56,7 @@ import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.core.v02.FConstant;
-import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
@@ -73,9 +67,7 @@ import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.JoinCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.JoinCADToolContext.JoinCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
-import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
@@ -274,11 +266,11 @@ private Point2D[] startAndEndPoints(Handler[] handlers) {
 		}
 		int index1 = vea.addRow(df1, PluginServices.getText(this, "parte1"),
 				EditionEvent.GRAPHIC);
-		clearSelection();
-		ArrayList selectedRow = new ArrayList();
-		selectedRow.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED,
+		//clearSelection();
+		ArrayList selectedRowAux = new ArrayList();
+		selectedRowAux.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED,
 				vea.getInversedIndex(index1)));
-		vle.setSelectionCache(selectedRow);
+		vle.setSelectionCache(selectedRowAux);
 		vea.endComplexRow();
 
 	}
