@@ -102,6 +102,7 @@ public class StartEditing extends Extension {
 							changeModelTable(pt);
 						}
 						startCommandsApplicable(vista,lv);
+						CADExtension.getCADToolAdapter().refreshEditedLayer();
 					} catch (EditionException e) {
 						e.printStackTrace();
 						NotificationManager.addError(e);

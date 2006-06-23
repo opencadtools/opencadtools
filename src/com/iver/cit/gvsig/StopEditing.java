@@ -15,15 +15,14 @@ import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
-import com.iver.cit.gvsig.fmap.edition.IWriteable;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.ProjectView;
 
 /**
@@ -64,9 +63,8 @@ public class StopEditing extends Extension {
 				if (actives[i] instanceof FLyrVect && actives[i].isEditing()) {
 					FLyrVect lv = (FLyrVect) actives[i];
 					MapControl mapControl = (MapControl) vista.getMapControl();
-					// VectorialLayerEdited lyrEd = (VectorialLayerEdited)
-					// edMan.getActiveLayerEdited();
-					// lyrEd.clearSelection();
+					VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getActiveLayerEdited();
+					lyrEd.clearSelection();
 					isStop=stopEditing(lv, mapControl);
 
 					// return;
@@ -75,6 +73,7 @@ public class StopEditing extends Extension {
 			if (isStop) {
 				vista.getMapControl().setTool("zoomIn");
 				vista.hideConsole();
+				vista.repaintMap();
 			}
 		}
 		PluginServices.getMainFrame().enableControls();
