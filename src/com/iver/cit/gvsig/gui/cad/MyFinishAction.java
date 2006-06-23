@@ -235,11 +235,11 @@ public class MyFinishAction extends FinishAction
 	        VectorialEditableAdapter vea = (VectorialEditableAdapter) lyr.getSource();
 			vea.getRules().clear();
 			// TODO: ESTO ES PROVISIONAL, DESCOMENTAR LUEGO
-//			if (vea.getShapeType() == FShape.POLYGON)
-//			{
-//				IRule rulePol = new RulePolygon();
-//				vea.getRules().add(rulePol);
-//			}
+			if (vea.getShapeType() == FShape.POLYGON)
+			{
+				IRule rulePol = new RulePolygon();
+				vea.getRules().add(rulePol);
+			}
 	
 	        vea.getCommandRecord().addCommandListener(mapCtrl);
 	        view.showConsole();
@@ -249,9 +249,9 @@ public class MyFinishAction extends FinishAction
 		} catch (EditionException e) {
 			e.printStackTrace();
 			NotificationManager.addError(e);
-		/* } catch (DriverIOException e) {
+		} catch (DriverIOException e) {
 			e.printStackTrace();
-			NotificationManager.addError(e); */
+			NotificationManager.addError(e);
 
 		}
 
