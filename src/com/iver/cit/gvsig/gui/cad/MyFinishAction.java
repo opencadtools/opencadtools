@@ -14,6 +14,7 @@ import org.cresques.cts.ProjectionPool;
 import com.hardcode.driverManager.Driver;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.StartEditing;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ICanReproject;
@@ -49,7 +50,7 @@ public class MyFinishAction extends FinishAction
 	ITableDefinition lyrDef = null;
 	View view;
 	String actionComand;
-	public MyFinishAction(JWizardComponents wizardComponents, View view, String actionComand) {		
+	public MyFinishAction(JWizardComponents wizardComponents, View view, String actionComand) {
 		super(wizardComponents);
 		oldAction = wizardComponents.getFinishAction();
 		myWizardComponents = wizardComponents;
@@ -61,22 +62,22 @@ public class MyFinishAction extends FinishAction
 	public void performAction() {
 		FLyrVect lyr = null;
 		MapControl mapCtrl = view.getMapControl();
-		try {			
+		try {
 			// ChooseWriteDriver driverPanel = (ChooseWriteDriver) myWizardComponents.getWizardPanel(0);
 			mapCtrl.getMapContext().beginAtomicEvent();
 			if (actionComand.equals("SHP"))
 			{
 				ChooseGeometryType geometryTypePanel = (ChooseGeometryType) myWizardComponents.getWizardPanel(0);
 				JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(1);
-				
-				 
+
+
 				String layerName = geometryTypePanel.getLayerName();
 				String selectedDriver = geometryTypePanel.getSelectedDriver();
 				int geometryType = geometryTypePanel.getSelectedGeometryType();
 				FieldDescription[] fieldsDesc = fieldDefinitionPanel.getFieldsDescription();
-				
-				Driver drv = LayerFactory.getDM().getDriver(selectedDriver);    		
-				
+
+				Driver drv = LayerFactory.getDM().getDriver(selectedDriver);
+
 	    		FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(2);
     		    File newFile = new File(shpPanel.getPath());
     		    SHPLayerDefinition lyrDef = new SHPLayerDefinition();
@@ -89,11 +90,11 @@ public class MyFinishAction extends FinishAction
     			writer.initialize(lyrDef);
     			writer.preProcess();
     			writer.postProcess();
-	    		
-				
+
+
                 lyr = (FLyrVect) LayerFactory.createLayer(layerName,
                         (VectorialFileDriver) drv, newFile, mapCtrl.getProjection());
-                                
+
 			}
 			else if (actionComand.equals("DXF"))
 			{
@@ -119,24 +120,24 @@ public class MyFinishAction extends FinishAction
     			writer.preProcess();
     			writer.postProcess();
     			Driver drv = LayerFactory.getDM().getDriver("gvSIG DXF Memory Driver");
-				
+
                 lyr = (FLyrVect) LayerFactory.createLayer(layerName,
                         (VectorialFileDriver) drv, newFile, mapCtrl.getProjection());
-                                
-			}			
+
+			}
 			else if (actionComand.equals("POSTGIS"))
 			{
 				ChooseGeometryType geometryTypePanel = (ChooseGeometryType) myWizardComponents.getWizardPanel(0);
 				JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(1);
-				
-				 
+
+
 				String layerName = geometryTypePanel.getLayerName();
 				String selectedDriver = geometryTypePanel.getSelectedDriver();
 				int geometryType = geometryTypePanel.getSelectedGeometryType();
 				FieldDescription[] fieldsDesc = fieldDefinitionPanel.getFieldsDescription();
-				
-				Driver drv = LayerFactory.getDM().getDriver(selectedDriver);    		
-				
+
+				Driver drv = LayerFactory.getDM().getDriver(selectedDriver);
+
 				VectorialJDBCDriver dbDriver = (VectorialJDBCDriver) drv;
 	    		PostGISpanel postgisPanel = (PostGISpanel) myWizardComponents.getWizardPanel(2);
 				ConnectionSettings cs = postgisPanel.getConnSettings();
@@ -152,11 +153,11 @@ public class MyFinishAction extends FinishAction
 				dbLayerDef.setFieldsDesc(fieldsDesc);
 				dbLayerDef.setFieldGeometry("the_geom");
 				dbLayerDef.setFieldID("gid");
-				
+
 				dbLayerDef.setWhereClause("");
 				String strSRID = mapCtrl.getProjection().getAbrev()
 						.substring(5);
-				dbLayerDef.setSRID_EPSG(strSRID); 
+				dbLayerDef.setSRID_EPSG(strSRID);
 				dbLayerDef.setConnection(conex);
 
     			PostGISWriter writer= new PostGISWriter(); //(PostGISWriter)LayerFactory.getWM().getWriter("PostGIS Writer");
@@ -167,15 +168,15 @@ public class MyFinishAction extends FinishAction
     			// Creamos la tabla.
     			writer.preProcess();
     			writer.postProcess();
-	    		
+
     	        if (dbDriver instanceof ICanReproject)
-    	        {                    
+    	        {
     	            ((ICanReproject)dbDriver).setDestProjection(strSRID);
     	        }
-    	        
-    	        // Creamos el driver. OJO: Hay que añadir el campo ID a la 
+
+    	        // Creamos el driver. OJO: Hay que añadir el campo ID a la
     	        // definición de campos.
-    	        
+
     	        boolean bFound = false;
     	        for (int i=0; i < dbLayerDef.getFieldsDesc().length; i++)
     	        {
@@ -201,32 +202,32 @@ public class MyFinishAction extends FinishAction
     	            newFields[numFieldsAnt].setFieldLength(7);
     	            newFields[numFieldsAnt].setFieldName(dbLayerDef.getFieldID());
     	            dbLayerDef.setFieldsDesc(newFields);
-    	        	
+
     	        }
 
     	        dbDriver.setData(conex, dbLayerDef);
-    	        IProjection proj = null; 
+    	        IProjection proj = null;
     	        if (drv instanceof ICanReproject)
-    	        {                                        
-    	            proj = ProjectionPool.get("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection()); 
+    	        {
+    	            proj = ProjectionPool.get("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection());
     	        }
-				
+
     			lyr = (FLyrVect) LayerFactory.createDBLayer(dbDriver, layerName, proj);
-				
+
 			}
-			else // Si no es ni lo uno ni lo otro, 
+			else // Si no es ni lo uno ni lo otro,
 			{
-				
-				
+
+
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         lyr.setVisible(true);
-        
+
 		mapCtrl.getMapContext().getLayers().addLayer(lyr);
-		
+
 		mapCtrl.getMapContext().endAtomicEvent();
 		lyr.addLayerListener(CADExtension.getEditionManager());
 		lyr.setActive(true);
@@ -240,10 +241,10 @@ public class MyFinishAction extends FinishAction
 				IRule rulePol = new RulePolygon();
 				vea.getRules().add(rulePol);
 			}
-	
+			StartEditing.startCommandsApplicable(view,lyr);
 	        vea.getCommandRecord().addCommandListener(mapCtrl);
 	        view.showConsole();
-			
+
 			// Para cerrar el cuadro de diálogo.
 			oldAction.performAction();
 		} catch (EditionException e) {
@@ -255,8 +256,8 @@ public class MyFinishAction extends FinishAction
 
 		}
 
-		
+
 	}
-	  
+
 }
 
