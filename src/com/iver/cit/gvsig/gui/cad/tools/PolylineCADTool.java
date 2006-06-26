@@ -115,31 +115,26 @@ public class PolylineCADTool extends DefaultCADTool {
         GeneralPathX gp = new GeneralPathX();
         gp.append(fgc.getPathIterator(null), true);
         IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
-        if (gp.isClosed())
-        {
-        	gp.ensureOrientation(false); // Poligono exterior.
-        	// Voy a testear que se puede convertir a JTS:
-        	IGeometry gAux = ShapeFactory.createPolygon2D(gp);
-        	Geometry jtsG = gAux.toJTSGeometry();
-        	logger.debug("A punto de escribir " + jtsG.toText());
-        	try {
-        		int shapeType = getVLE().getVEA().getShapeType();
-				if ((shapeType ==FShape.POLYGON) || (shapeType == FShape.MULTI)) {
-//					GeneralPathX gpx=new GeneralPathX();
-//					gpx.moveTo(antPoint.getX(),antPoint.getY());
-//					gpx.lineTo(firstPoint.getX(),firstPoint.getY());
-//					IGeometry line=ShapeFactory.createPolyline2D(gpx);
-//					fgc.addGeometry(line);
-					newGeom = gAux;
-				}
-			} catch (DriverIOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return;
-			}
-
-        }
-
+//        if (gp.isClosed())
+//        {
+//        	gp.ensureOrientation(false); // Poligono exterior.
+//        	// Voy a testear que se puede convertir a JTS:
+//        	IGeometry gAux = ShapeFactory.createPolygon2D(gp);
+//        	Geometry jtsG = gAux.toJTSGeometry();
+//        	logger.debug("A punto de escribir " + jtsG.toText());
+//        	try {
+//        		int shapeType = getVLE().getVEA().getShapeType();
+//				if ((shapeType ==FShape.POLYGON) || (shapeType == FShape.MULTI)) {
+//					newGeom = gAux;
+//				}
+//			} catch (DriverIOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				return;
+//			}
+//
+//        }
+//
         addGeometry(newGeom);
         _fsm = new PolylineCADToolContext(this);
         list.clear();
