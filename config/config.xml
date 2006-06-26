@@ -214,6 +214,14 @@
 				<selectable-tool icon="images/InternalPolygon.png" action-command="_internalpolygon" tooltip="internal_polygon" group="vista"/>
 			</tool-bar>
 		</extension>
+		<extension class-name="com.iver.cit.gvsig.StretchExtension"
+			description="Extensión encargada de estirar geometrías en una capa en edición."
+			active="true">
+			<menu text="geometry/modify/stretch" action-command="_stretch" icon="images/Stretch.png"/>
+			<tool-bar name="modificar">
+				<selectable-tool icon="images/Stretch.png" action-command="_stretch" tooltip="stretch" group="vista"/>
+			</tool-bar>
+		</extension>
 		<extension class-name="com.iver.cit.gvsig.ComplexSelectionGeometryExtension"
 			description="Extensión encargada de la selección compleja de geometrías."
 			active="true">

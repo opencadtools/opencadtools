@@ -1,0 +1,83 @@
+// -*- tab-width: 4; -*-
+
+%{
+//
+// Vicente Caballero Navarro
+%}
+
+%start Stretch::SelFirstPoint
+%class StretchCADTool
+%package com.iver.cit.gvsig.gui.cad.tools.smc
+%import com.iver.cit.gvsig.gui.cad.tools.StretchCADTool
+%import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
+
+%map Stretch
+%%
+// A task begins life in suspended animation.
+
+SelFirstPoint
+	Entry {
+		selection();
+		setQuestion(
+		PluginServices.getText(this,"insert_selection_point"));
+		setDescription(new String[]{"cancel"});
+
+		}
+	Exit{
+		}
+
+	{
+		addPoint( pointX:double,pointY:double,event:InputEvent)
+			SelLastPoint {
+				setQuestion(PluginServices.getText(this,"insert_selection_last_point"));
+				setDescription(new String[]{"cancel"});
+				addPoint( pointX,pointY,event);
+				}
+	}
+SelLastPoint{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+		MoveFirstPoint {
+			setQuestion(PluginServices.getText(this,"insert_move_first_point"));
+			setDescription(new String[]{"cancel"});
+			addPoint( pointX,pointY,event);
+			}
+}
+MoveFirstPoint{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+		MoveLastPoint {
+			setQuestion(PluginServices.getText(this,"insert_move_last_point"));
+			setDescription(new String[]{"cancel"});
+			addPoint( pointX,pointY,event);
+			}
+}
+MoveLastPoint{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+		SelFirstPoint {
+			setQuestion(PluginServices.getText(this,"insert_selection_point"));
+			setDescription(new String[]{"cancel"});
+			addPoint( pointX,pointY,event);
+			end();
+			}
+}
+Default
+{
+	addOption(s:String)
+		[s.equals(PluginServices.getText(this,"cancel"))]
+		SelFirstPoint{
+			end();
+			}
+	addOption(s:String)
+		SelFirstPoint{
+			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+			}
+	addValue(d:double)
+		SelFirstPoint{
+			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+			}
+	addPoint(pointX:double,pointY:double,event:InputEvent)
+		SelFirstPoint{
+			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+			}
+}
+%%

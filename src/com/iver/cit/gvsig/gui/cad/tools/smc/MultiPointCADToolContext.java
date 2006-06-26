@@ -345,7 +345,7 @@ public final class MultiPointCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point"));
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_or_end"));
                     ctxt.setDescription(new String[]{"cancel", "end"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
