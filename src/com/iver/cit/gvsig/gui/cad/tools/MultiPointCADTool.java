@@ -43,7 +43,6 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;

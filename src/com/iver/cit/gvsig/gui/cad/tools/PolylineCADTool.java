@@ -47,7 +47,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-import org.cresques.cts.GeoCalc;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
@@ -57,7 +56,6 @@ import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
-import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
