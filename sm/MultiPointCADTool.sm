@@ -1,0 +1,68 @@
+// -*- tab-width: 4; -*-
+
+%{
+//
+// Vicente Caballero Navarro
+%}
+
+%start MultiPoint::InsertPoint
+%class MultiPointCADTool
+%package com.iver.cit.gvsig.gui.cad.tools.smc
+%import com.iver.cit.gvsig.gui.cad.tools.MultiPointCADTool
+%import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
+
+
+%map MultiPoint
+%%
+// A task begins life in suspended animation.
+
+InsertPoint
+
+	Entry {
+		setQuestion(
+		PluginServices.getText(this,"insert_point"));
+		setDescription(new String[]{"cancel",});
+		}
+	Exit {
+		}
+
+	{
+
+		addPoint( pointX:double,pointY:double,event:InputEvent)
+			InsertPoint {
+				setQuestion(PluginServices.getText(this,"insert_point_or_end"));
+				setDescription(new String[]{"cancel","end"});
+				addPoint( pointX,pointY,event);
+				}
+		addOption( s:String)
+			[s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"end"))]
+			InsertPoint {
+				setQuestion(PluginServices.getText(this,"insert_point"));
+				setDescription(new String[]{"cancel"});
+				addOption(s);
+				endGeometry();
+				}
+	}
+
+Default
+{
+	addOption(s:String)
+		[s.equals(PluginServices.getText(this,"cancel"))]
+		InsertPoint{
+			end();
+			}
+	addOption(s:String)
+		InsertPoint{
+			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+			}
+	addValue(d:double)
+		InsertPoint{
+			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+			}
+	addPoint(pointX:double,pointY:double,event:InputEvent)
+		InsertPoint{
+			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+			}
+}
+%%

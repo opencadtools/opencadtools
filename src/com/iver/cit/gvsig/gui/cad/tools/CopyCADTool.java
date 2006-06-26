@@ -153,8 +153,8 @@ public class CopyCADTool extends DefaultCADTool {
                     UtilFunctions.moveGeom(fea.getGeometry(), lastPoint.getX() -
                             firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
 
-                    vea.addRow(fea,getName(),EditionEvent.GRAPHIC);
-                    selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_ADDED,dre.getIndex()));
+                    int index=vea.addRow(fea,getName(),EditionEvent.GRAPHIC);
+                    selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_ADDED,vea.getInversedIndex(index)));
                 }
             	vea.endComplexRow();
                 //clearSelection();

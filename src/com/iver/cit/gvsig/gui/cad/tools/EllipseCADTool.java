@@ -195,6 +195,7 @@ public class EllipseCADTool extends DefaultCADTool {
 	public boolean isApplicable(int shapeType) {
 		switch (shapeType) {
 		case FShape.POINT:
+		case FShape.MULTIPOINT:
 			return false;
 		}
 		return true;

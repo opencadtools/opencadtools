@@ -215,6 +215,7 @@ public class LineCADTool extends DefaultCADTool {
 		switch (shapeType) {
 		case FShape.POINT:
 		case FShape.POLYGON:
+		case FShape.MULTIPOINT:
 			return false;
 		}
 		return true;

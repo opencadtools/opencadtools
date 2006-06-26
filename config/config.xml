@@ -145,6 +145,14 @@
 				<selectable-tool icon="images/Point.png" action-command="_point" tooltip="point" group="vista"/>
 			</tool-bar>
 		</extension>
+		<extension class-name="com.iver.cit.gvsig.InsertMultiPointExtension"
+			description="Extensión encargada de insertar multipuntos en una capa en edición."
+			active="true">
+			<menu text="geometry/insert/multipoint" action-command="_multipoint" icon="images/MultiPoint.png"/>
+			<tool-bar name="insert">
+				<selectable-tool icon="images/MultiPoint.png" action-command="_multipoint" tooltip="multipoint" group="vista"/>
+			</tool-bar>
+		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertLineExtension"
 			description="Extensión encargada de insertar líneas en una capa en edición."
 			active="true">

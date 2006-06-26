@@ -41,15 +41,19 @@
 package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
-import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolState;
+import com.iver.cit.gvsig.gui.cad.tools.smc.MultiPointCADToolContext;
+import com.iver.cit.gvsig.gui.cad.tools.smc.MultiPointCADToolContext.MultiPointCADToolState;
 
 
 /**
@@ -57,13 +61,13 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolStat
  *
  * @author Vicente Caballero Navarro
  */
-public class PointCADTool extends DefaultCADTool {
-    private PointCADToolContext _fsm;
-
+public class MultiPointCADTool extends DefaultCADTool {
+    private MultiPointCADToolContext _fsm;
+    private ArrayList points=new ArrayList();
     /**
      * Crea un nuevo PointCADTool.
      */
-    public PointCADTool() {
+    public MultiPointCADTool() {
 
     }
 
@@ -72,7 +76,7 @@ public class PointCADTool extends DefaultCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    	_fsm = new PointCADToolContext(this);
+    	_fsm = new MultiPointCADToolContext(this);
     }
 
     /**
@@ -110,11 +114,12 @@ public class PointCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(double x, double y,InputEvent event) {
-        PointCADToolState actualState = (PointCADToolState) _fsm.getPreviousState();
+        MultiPointCADToolState actualState = (MultiPointCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("Point.FirstPoint")) {
-            addGeometry(ShapeFactory.createPoint2D(x, y));
+        if (status.equals("MultiPoint.InsertPoint")) {
+            points.add(new double[] {x,y});
+        	//addGeometry(ShapeFactory.createPoint2D(x, y));
         }
     }
 
@@ -129,6 +134,20 @@ public class PointCADTool extends DefaultCADTool {
      */
     public void drawOperation(Graphics g, double x,
         double y) {
+    	int num=points.size();
+		double[] xs=new double[num];
+		double[] ys=new double[num];
+		for (int i=0;i<num;i++) {
+			double[] p=(double[])points.get(i);
+			xs[i]=p[0];
+			ys[i]=p[1];
+		}
+		ShapeFactory.createMultipoint2D(xs,ys).draw((Graphics2D) g,
+                getCadToolAdapter().getMapControl().getViewPort(),
+                CADTool.drawingSymbol);
+		ShapeFactory.createPoint2D(x,y).draw((Graphics2D) g,
+                getCadToolAdapter().getMapControl().getViewPort(),
+                CADTool.drawingSymbol);
     }
 
     /**
@@ -149,19 +168,31 @@ public class PointCADTool extends DefaultCADTool {
     }
 
 	public String getName() {
-		return PluginServices.getText(this,"point_");
+		return PluginServices.getText(this,"multipoint_");
 	}
 
 	public String toString() {
-		return "_point";
+		return "_multipoint";
 	}
 	public boolean isApplicable(int shapeType) {
 		switch (shapeType) {
-		case FShape.POLYGON:
-		case FShape.LINE:
 		case FShape.MULTIPOINT:
-			return false;
+			return true;
 		}
-		return true;
+		return false;
+	}
+
+	public void endGeometry() {
+		int num=points.size();
+		double[] xs=new double[num];
+		double[] ys=new double[num];
+		for (int i=0;i<num;i++) {
+			double[] p=(double[])points.get(i);
+			xs[i]=p[0];
+			ys[i]=p[1];
+		}
+		addGeometry(ShapeFactory.createMultipoint2D(xs,ys));
+		points.clear();
+		end();
 	}
 }
