@@ -222,6 +222,14 @@
 				<selectable-tool icon="images/Stretch.png" action-command="_stretch" tooltip="stretch" group="vista"/>
 			</tool-bar>
 		</extension>
+		<extension class-name="com.iver.cit.gvsig.ExtendExtension"
+			description="Extensión encargada de alargar geometrías en una capa en edición."
+			active="true">
+			<menu text="geometry/modify/extend" action-command="_extend" icon="images/Extend.png"/>
+			<tool-bar name="modificar">
+				<selectable-tool icon="images/Extend.png" action-command="_extend" tooltip="extend" group="vista"/>
+			</tool-bar>
+		</extension>
 		<extension class-name="com.iver.cit.gvsig.ComplexSelectionGeometryExtension"
 			description="Extensión encargada de la selección compleja de geometrías."
 			active="true">
