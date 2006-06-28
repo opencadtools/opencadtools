@@ -159,7 +159,7 @@ public class MoveCADTool extends DefaultCADTool {
                     vea.modifyRow(edRow.getIndex(),feat,getName(),EditionEvent.GRAPHIC);
                     selectedRowAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
               }
-                vea.endComplexRow();
+                vea.endComplexRow(getName());
                 vle.setSelectionCache(selectedRowAux);
                 //clearSelection();
               	//selectedRow.addAll(selectedRowAux);

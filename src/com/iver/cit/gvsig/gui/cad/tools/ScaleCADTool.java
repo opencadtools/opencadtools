@@ -331,7 +331,7 @@ public class ScaleCADTool extends DefaultCADTool {
     		vea.modifyRow(edRow.getIndex(), fea,getName(),EditionEvent.GRAPHIC);
     		selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
     	}
-    	vea.endComplexRow();
+    	vea.endComplexRow(getName());
     	vle.setSelectionCache(selectedRowAux);
     	//clearSelection();
     	//selectedRow.addAll(selectedRowAux);

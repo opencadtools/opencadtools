@@ -156,7 +156,7 @@ public class CopyCADTool extends DefaultCADTool {
                     int index=vea.addRow(fea,getName(),EditionEvent.GRAPHIC);
                     selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_ADDED,vea.getInversedIndex(index)));
                 }
-            	vea.endComplexRow();
+            	vea.endComplexRow(getName());
                 //clearSelection();
                 //selectedRow.addAll(selectedRowAux);
                 vle.setSelectionCache(selectedRowAux);

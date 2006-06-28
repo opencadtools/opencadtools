@@ -4,6 +4,8 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.edition.IEditableSource;
+import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.edition.commands.CommandListener;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
@@ -15,7 +17,7 @@ import com.iver.cit.gvsig.project.ProjectView;
  *
  * @author Vicente Caballero Navarro
  */
-public class ViewCommandStackExtension extends Extension {
+public class ViewCommandStackExtension extends Extension implements CommandListener{
 	public static CommandStackDialog csd=null;
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
@@ -39,9 +41,13 @@ public class ViewCommandStackExtension extends Extension {
 				if (layers.getLayer(i) instanceof FLyrVect){
 					FLyrVect lyrVect=(FLyrVect)layers.getLayer(i);
 					if (lyrVect.isEditing() && lyrVect.isActive()){
+						VectorialEditableAdapter vea = (VectorialEditableAdapter) lyrVect
+						.getSource();
+						vea.getCommandRecord().addCommandListener(this);
 						csd=new CommandStackDialog();
 						csd.setModel(((IEditableSource)lyrVect.getSource()).getCommandRecord());
 						PluginServices.getMDIManager().addView(csd);
+						return;
 					}
 				}
 			}
@@ -55,7 +61,7 @@ public class ViewCommandStackExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		
+
 		return true;
 	}
 
@@ -68,5 +74,14 @@ public class ViewCommandStackExtension extends Extension {
 		else
 			return false;
 
+	}
+
+	public void commandRepaint() {
+		CADExtension.getCADTool().clearSelection();
+
+	}
+
+	public void commandRefresh() {
+		CADExtension.getCADTool().clearSelection();
 	}
 }

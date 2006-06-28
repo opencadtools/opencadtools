@@ -263,7 +263,8 @@ public class SelectionCADTool extends DefaultCADTool {
 			//clearSelection();
 			//selectedRow.addAll(selectedRowsAux);
 			try {
-				vea.endComplexRow();
+				String description=PluginServices.getText(this,"move_handlers");
+				vea.endComplexRow(description);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (DriverIOException e) {

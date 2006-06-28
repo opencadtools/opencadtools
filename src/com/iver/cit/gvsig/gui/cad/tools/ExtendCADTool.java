@@ -172,7 +172,7 @@ public class ExtendCADTool extends DefaultCADTool {
 			newSelectedRow.add(new DefaultRowEdited(fea2,IRowEdited.STATUS_MODIFIED,edRow2.getIndex()));
 	    	}
 
-			vea.endComplexRow();
+			vea.endComplexRow(getName());
 			vle.setSelectionCache(newSelectedRow);
         } catch (IOException e) {
 			e.printStackTrace();

@@ -193,10 +193,9 @@ public class PolylineCADTool extends DefaultCADTool {
 //            }
 //        } else
         if (status.equals("Polyline.NextPointOrArcOrClose") || status.equals("Polyline.FirstPoint")) {
-           if (antPoint==null)
-        	   antPoint = new Point2D.Double(x, y);
+
            if (firstPoint == null) {
-               firstPoint = (Point2D) antPoint.clone();
+               firstPoint = new Point2D.Double(x, y);
            }
         	Point2D point = new Point2D.Double(x, y);
 
@@ -208,6 +207,8 @@ public class PolylineCADTool extends DefaultCADTool {
                 list.add(ShapeFactory.createPolyline2D(elShape));
 
             }
+            if (antPoint==null)
+         	   antPoint = (Point2D)firstPoint.clone();
 
             if (antPoint != null) {
                 antantPoint = antPoint;

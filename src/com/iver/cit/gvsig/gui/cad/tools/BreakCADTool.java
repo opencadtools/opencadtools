@@ -472,7 +472,7 @@ public class BreakCADTool extends DefaultCADTool {
                 vea.startComplexRow();
                 vea.removeRow(dre.getIndex(),getName(),EditionEvent.GRAPHIC);
                 int index1=vea.addRow(df1,PluginServices.getText(this,"parte1"),EditionEvent.GRAPHIC);
-                vea.endComplexRow();
+                vea.endComplexRow(getName());
                 ViewPort vp=CADExtension.getEditionManager().getMapControl().getViewPort();
                 BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
                 Graphics2D gs = selectionImage.createGraphics();
@@ -498,7 +498,7 @@ public class BreakCADTool extends DefaultCADTool {
             int index2=vea.addRow(df2,PluginServices.getText(this,"parte2"),EditionEvent.GRAPHIC);
             vea.removeRow(dre.getIndex(),getName(),EditionEvent.GRAPHIC);
 
-            vea.endComplexRow();
+            vea.endComplexRow(getName());
             ViewPort vp=CADExtension.getEditionManager().getMapControl().getViewPort();
             BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D gs = selectionImage.createGraphics();

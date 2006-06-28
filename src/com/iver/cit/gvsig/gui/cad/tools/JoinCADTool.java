@@ -271,7 +271,7 @@ private Point2D[] startAndEndPoints(Handler[] handlers) {
 		selectedRowAux.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED,
 				vea.getInversedIndex(index1)));
 		vle.setSelectionCache(selectedRowAux);
-		vea.endComplexRow();
+		vea.endComplexRow(getName());
 
 	}
 

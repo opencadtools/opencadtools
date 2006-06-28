@@ -255,7 +255,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 
 				}
 
-				vea.endComplexRow();
+				vea.endComplexRow(getName());
 				vle.setSelectionCache(selectedRowAux);
 				//clearSelection();
 				//selectedRow.addAll(selectedRowAux);

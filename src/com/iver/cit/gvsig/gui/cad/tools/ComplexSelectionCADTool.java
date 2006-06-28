@@ -152,7 +152,8 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 				modifyFeature(row.getIndex(), (IFeature) row.getLinkedRow().cloneRow());
 			}
 			try {
-				vea.endComplexRow();
+				String description=PluginServices.getText(this,"move_handlers");
+				vea.endComplexRow(description);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (DriverIOException e) {

@@ -166,7 +166,7 @@ public class RotateCADTool extends DefaultCADTool {
 					selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,row.getIndex()));
 				}
 
-				vea.endComplexRow();
+				vea.endComplexRow(getName());
 				vle.setSelectionCache(selectedRowAux);
 				//clearSelection();
 				//selectedRow.addAll(selectedRowAux);
@@ -288,7 +288,7 @@ public class RotateCADTool extends DefaultCADTool {
     					vea.modifyRow(row.getIndex(), fea,getName(),EditionEvent.GRAPHIC);
     					///selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,index));
 				}
-				vea.endComplexRow();
+				vea.endComplexRow(getName());
 				clearSelection();
 				///selectedRow=selectedRowAux;
 			} catch (DriverIOException e) {

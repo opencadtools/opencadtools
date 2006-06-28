@@ -273,7 +273,7 @@ public class CADToolAdapter extends Behavior {
 		lastY = e.getY();
 
 		calculateSnapPoint(e.getPoint());
-		
+
 		showCoords(e.getPoint());
 
 		getMapControl().repaint();
@@ -827,7 +827,8 @@ public class CADToolAdapter extends Behavior {
 			e.printStackTrace();
 		} finally {
 			try {
-				vea.endComplexRow();
+				String description=PluginServices.getText(this,"remove_geometry");
+				vea.endComplexRow(description);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			} catch (DriverIOException e1) {
