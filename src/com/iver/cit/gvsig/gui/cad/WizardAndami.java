@@ -12,7 +12,7 @@ import jwizardcomponent.FinishAction;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.View;
 import com.iver.andami.ui.mdiManager.ViewInfo;
-import com.iver.cit.gvsig.gui.Dialogs.CSSelectionDialog;
+import com.iver.cit.gvsig.gui.dialogs.CSSelectionDialog;
 
 public class WizardAndami extends JPanel implements View {
 	ViewInfo viewInfo = null;
