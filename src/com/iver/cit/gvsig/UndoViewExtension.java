@@ -114,7 +114,7 @@ public class UndoViewExtension extends Extension {
 			if (layers.getLayer(i) instanceof FLyrVect && ((FLyrVect)layers.getLayer(i)).getSource() instanceof VectorialEditableAdapter && layers.getLayer(i).isEditing() && layers.getLayer(i).isActive()){
 				VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
 				if (vea==null)return false;
-				return vea.moreUndoCommands();
+				return vea.getCommandRecord().moreUndoCommands();
 			}
 
 		}
