@@ -1,9 +1,12 @@
 package com.iver.cit.gvsig.gui.cad;
 
+import java.awt.Component;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Types;
+
+import javax.swing.JOptionPane;
 
 import jwizardcomponent.FinishAction;
 import jwizardcomponent.JWizardComponents;
@@ -12,6 +15,7 @@ import org.cresques.cts.IProjection;
 import org.cresques.cts.ProjectionPool;
 
 import com.hardcode.driverManager.Driver;
+import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.StartEditing;
@@ -67,6 +71,16 @@ public class MyFinishAction extends FinishAction
 			mapCtrl.getMapContext().beginAtomicEvent();
 			if (actionComand.equals("SHP"))
 			{
+				FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(2);
+				File newFile = new File(shpPanel.getPath());
+				if( newFile.exists()){
+					int resp = JOptionPane.showConfirmDialog(
+							(Component) PluginServices.getMainFrame(),PluginServices.getText(this,"fichero_ya_existe_seguro_desea_guardarlo"),
+							PluginServices.getText(this,"guardar"), JOptionPane.YES_NO_OPTION);
+					if (resp != JOptionPane.YES_OPTION) {
+						return;
+					}
+				}
 				ChooseGeometryType geometryTypePanel = (ChooseGeometryType) myWizardComponents.getWizardPanel(0);
 				JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(1);
 
@@ -78,8 +92,8 @@ public class MyFinishAction extends FinishAction
 
 				Driver drv = LayerFactory.getDM().getDriver(selectedDriver);
 
-	    		FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(2);
-    		    File newFile = new File(shpPanel.getPath());
+
+
     		    SHPLayerDefinition lyrDef = new SHPLayerDefinition();
     		    lyrDef.setFieldsDesc(fieldsDesc);
     		    lyrDef.setFile(newFile);
