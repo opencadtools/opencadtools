@@ -464,7 +464,7 @@ public class CADToolAdapter extends Behavior {
 	 */
 	public void textEntered(String text) {
 		if (text == null) {
-			transition("cancel");
+			transition(PluginServices.getText(this,"cancel"));
 		} else {
 			/*
 			 * if ("".equals(text)) { transition("aceptar"); } else {
