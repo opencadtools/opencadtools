@@ -63,11 +63,10 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		}
 		if (valid)
 			super.next();
-		/* getWizardComponents().getFinishButton().setVisible(true);
 		if (!((FileBasedPanel)getWizardComponents().getWizardPanel(2)).getPath().equals(""))
-			getWizardComponents().getFinishButton().setEnabled(true);
+			setFinishButtonEnabled(true);
 		else
-			getWizardComponents().getFinishButton().setEnabled(false); */
+			setFinishButtonEnabled(false);
 	}
 
 
