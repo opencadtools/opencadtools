@@ -78,6 +78,7 @@ public class PolylineCADTool extends DefaultCADTool {
     private Point2D antCenter;
     private Point2D antInter;
     private ArrayList list = new ArrayList();
+	private boolean close=false;
 
     /**
      * Crea un nuevo PolylineCADTool.
@@ -97,8 +98,8 @@ public class PolylineCADTool extends DefaultCADTool {
     public void endGeometry() {
         IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
         FGeometryCollection fgc = new FGeometryCollection(geoms);
-        /* try {
-			if (getVLE().getVEA().getShapeType()==FShape.POLYGON){
+        try {
+			if (getVLE().getVEA().getShapeType()==FShape.POLYGON && !close){
 				GeneralPathX gpx=new GeneralPathX();
 				gpx.moveTo(antPoint.getX(),antPoint.getY());
 				gpx.lineTo(firstPoint.getX(),firstPoint.getY());
@@ -107,7 +108,7 @@ public class PolylineCADTool extends DefaultCADTool {
 			}
 		} catch (DriverIOException e) {
 			e.printStackTrace();
-		} */
+		}
 
         // No queremos guardar FGeometryCollections:
         GeneralPathX gp = new GeneralPathX();
@@ -139,6 +140,7 @@ public class PolylineCADTool extends DefaultCADTool {
         antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
     public void closeGeometry(){
+    	close=true;
         GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
                 2);
         elShape.moveTo(antPoint.getX(), antPoint.getY());
