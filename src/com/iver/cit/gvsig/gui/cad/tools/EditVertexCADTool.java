@@ -105,7 +105,7 @@ public class EditVertexCADTool extends DefaultCADTool {
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
     public void transition(double x, double y, InputEvent event) {
-        addPoint(x, y, event);
+        _fsm.addPoint(x, y, event);
     }
 
     /* (non-Javadoc)
@@ -256,8 +256,8 @@ public class EditVertexCADTool extends DefaultCADTool {
 
         		}
         	}else if(s.equals("i") || s.equals("I") || s.equals(PluginServices.getText(this,"add"))){
-        		addVertex=true;
-        	}
+            		addVertex=true;
+            	}
         }
     }
     private void drawVertex(Graphics g,AffineTransform at) throws DriverIOException{

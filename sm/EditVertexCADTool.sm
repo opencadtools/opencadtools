@@ -35,6 +35,15 @@ SelectVertexOrDelete
 				addPoint( pointX,pointY,event);
 				}
 		addOption(s:String)
+		[s.equals("i") || s.equals("I") || s.equals(PluginServices.getText(this,"add"))]
+			AddVertex {
+				setQuestion(PluginServices.getText(this,"add_vertex"));
+				setDescription(new String[]{"cancel"});
+				addOption(s);
+				}
+		addOption(s:String)
+		[!s.equals("i") && !s.equals("I") && !s.equals(PluginServices.getText(this,"add"))]
+
 			SelectVertexOrDelete {
 				setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
 				setDescription(new String[]{"next","previous","add","del","cancel"});
@@ -42,6 +51,14 @@ SelectVertexOrDelete
 				}
 	}
 
+AddVertex{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+			SelectVertexOrDelete {
+				setQuestion(PluginServices.getText(this,"select_from_point"));
+				setDescription(new String[]{"next","previous","add","del","cancel"});
+				addPoint( pointX,pointY,event);
+			}
+}
 
 Default
 {
