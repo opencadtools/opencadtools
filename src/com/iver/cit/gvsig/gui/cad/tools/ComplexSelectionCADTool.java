@@ -322,6 +322,12 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 		}else if (status.equals("Selection.NextPointPolygon")){
 			if (s.equals(PluginServices.getText(this,"end_polygon")) || s.equals("E") || s.equals("e")) {
 			IGeometry polygon=getGeometryPolygon(null);
+			GeneralPathX gpx=new GeneralPathX();
+			gpx.append(polygon,true);
+			if (gpx.isCCW()) {
+				gpx.flip();
+				polygon=ShapeFactory.createPolygon2D(gpx);
+			}
 			selectWithPolygon(polygon);
 			pointsPolygon.clear();
 			setType(PluginServices.getText(this,"inside_circle"));

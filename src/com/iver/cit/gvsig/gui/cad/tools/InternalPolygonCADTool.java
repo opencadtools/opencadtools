@@ -259,11 +259,17 @@ public class InternalPolygonCADTool extends DefaultCADTool {
 
             theIterator.next();
         } //end while loop
-        newGp.moveTo(ps[ps.length-1].getX(),ps[ps.length-1].getY());
+     GeneralPathX gpxInternal=new GeneralPathX();
+     gpxInternal.moveTo(ps[ps.length-1].getX(),ps[ps.length-1].getY());
      for (int i=ps.length-1;i>=0;i--){
-    	 newGp.lineTo(ps[i].getX(),ps[i].getY());
+    	 gpxInternal.lineTo(ps[i].getX(),ps[i].getY());
      }
-     newGp.lineTo(ps[ps.length-1].getX(),ps[ps.length-1].getY());
+     gpxInternal.lineTo(ps[ps.length-1].getX(),ps[ps.length-1].getY());
+     if (!gpxInternal.isCCW()) {
+    	 gpxInternal.flip();
+     }
+     newGp.append(gpxInternal,false);
+
      return ShapeFactory.createPolygon2D(newGp);
     }
     private IGeometry createNewPolygonGC(FGeometryCollection gp,Point2D[] ps) {
