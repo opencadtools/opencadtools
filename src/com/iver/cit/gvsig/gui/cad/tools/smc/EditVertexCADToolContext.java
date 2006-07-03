@@ -135,11 +135,13 @@ public final class EditVertexCADToolContext
         // Statics.
         //
         /* package */ static EditVertex_Default.EditVertex_SelectVertexOrDelete SelectVertexOrDelete;
+        /* package */ static EditVertex_Default.EditVertex_AddVertex AddVertex;
         private static EditVertex_Default Default;
 
         static
         {
             SelectVertexOrDelete = new EditVertex_Default.EditVertex_SelectVertexOrDelete("EditVertex.SelectVertexOrDelete", 0);
+            AddVertex = new EditVertex_Default.EditVertex_AddVertex("EditVertex.AddVertex", 1);
             Default = new EditVertex_Default("EditVertex.Default", -1);
         }
 
@@ -312,19 +314,43 @@ public final class EditVertexCADToolContext
             {
                 EditVertexCADTool ctxt = context.getOwner();
 
-                EditVertexCADToolState endState = context.getState();
+                if (s.equals("i") || s.equals("I") || s.equals(PluginServices.getText(this,"add")))
+                {
 
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
-                    ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
-                    ctxt.addOption(s);
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion(PluginServices.getText(this,"add_vertex"));
+                        ctxt.setDescription(new String[]{"cancel"});
+                        ctxt.addOption(s);
+                    }
+                    finally
+                    {
+                        context.setState(EditVertex.AddVertex);
+                        (context.getState()).Entry(context);
+                    }
                 }
-                finally
+                else if (!s.equals("i") && !s.equals("I") && !s.equals(PluginServices.getText(this,"add")))
                 {
-                    context.setState(endState);
+                    EditVertexCADToolState endState = context.getState();
+
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
+                        ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
+                        ctxt.addOption(s);
+                    }
+                    finally
+                    {
+                        context.setState(endState);
+                    }
+                }                else
+                {
+                    super.addOption(context, s);
                 }
+
                 return;
             }
 
@@ -344,6 +370,44 @@ public final class EditVertexCADToolContext
                 finally
                 {
                     context.setState(endState);
+                }
+                return;
+            }
+
+        //-------------------------------------------------------
+        // Member data.
+        //
+        }
+
+        private static final class EditVertex_AddVertex
+            extends EditVertex_Default
+        {
+        //-------------------------------------------------------
+        // Member methods.
+        //
+
+            private EditVertex_AddVertex(String name, int id)
+            {
+                super (name, id);
+            }
+
+            protected void addPoint(EditVertexCADToolContext context, double pointX, double pointY, InputEvent event)
+            {
+                EditVertexCADTool ctxt = context.getOwner();
+
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.setQuestion(PluginServices.getText(this,"select_from_point"));
+                    ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
+                    ctxt.addPoint(pointX, pointY, event);
+                }
+                finally
+                {
+                    context.setState(EditVertex.SelectVertexOrDelete);
+                    (context.getState()).Entry(context);
                 }
                 return;
             }
