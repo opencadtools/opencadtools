@@ -53,7 +53,6 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	 * @see jwizardcomponent.JWizardPanel#next()
 	 */
 	public void next() {
-		// TODO Auto-generated method stub
 		DefaultTableModel tm=(DefaultTableModel) jTable.getModel();
 		boolean valid=true;
 		for (int i = 0;i<tm.getRowCount();i++) {

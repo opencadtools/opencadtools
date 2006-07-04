@@ -61,7 +61,6 @@ import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADToolState;
-import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
