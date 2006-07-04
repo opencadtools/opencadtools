@@ -206,8 +206,8 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 		VectorialLayerEdited vle=(VectorialLayerEdited)getActiveLayerEdited();
 		if (vle!=null){
 			FLayers layers=getMapControl().getMapContext().getLayers();
-			if (layers.getLayersCount()>0)
-				layers.getLayer(0).setActive(true);
+			//if (layers.getLayersCount()>0)
+			//	layers.getLayer(0).setActive(true);
 			vle.clearSelection();
 			FLyrVect lv=(FLyrVect)vle.getLayer();
 			if (e.getAffectedLayer().equals(lv)){
