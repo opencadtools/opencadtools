@@ -17,6 +17,7 @@ import java.awt.image.MemoryImageSource;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 import org.cresques.cts.IProjection;
@@ -24,6 +25,7 @@ import org.cresques.cts.IProjection;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiFrame.MainFrame;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.EditionManager;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -53,6 +55,9 @@ import com.iver.utiles.console.JConsole;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class CADToolAdapter extends Behavior {
+	private static HashMap namesCadTools = new HashMap();
+
+	private EditionManager editionManager = new EditionManager();
 
 	public static final int ABSOLUTE = 0;
 
@@ -102,6 +107,8 @@ public class CADToolAdapter extends Behavior {
 	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		if (CADExtension.getCADToolAdapter()!=this)
+			return;
 		drawCursor(g);
 		getGrid().drawGrid(g);
 		if (adjustedPoint != null) {
@@ -111,6 +118,7 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				p = getMapControl().getViewPort().toMapPoint(adjustedPoint);
 			}
+
 			((CADTool) cadToolStack.peek())
 					.drawOperation(g, p.getX(), p.getY());
 		}
@@ -917,6 +925,22 @@ public class CADToolAdapter extends Behavior {
 
 	public void setOrtoMode(boolean b) {
 		bOrtoMode = b;
+	}
+
+	public static void addCADTool(String name, CADTool c) {
+		namesCadTools.put(name, c);
+
+	}
+	public static CADTool[] getCADTools() {
+		return (CADTool[]) CADToolAdapter.namesCadTools.values().toArray(new CADTool[0]);
+	}
+	public CADTool getCADTool(String text) {
+		CADTool ct = (CADTool) namesCadTools.get(text);
+		return ct;
+	}
+
+	public EditionManager getEditionManager() {
+		return editionManager;
 	}
 
 

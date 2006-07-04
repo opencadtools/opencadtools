@@ -86,19 +86,23 @@ import com.iver.utiles.console.jedit.JEditTextArea;
  * @author Vicente Caballero Navarro
  */
 public class CADExtension extends Extension {
-	private static CADToolAdapter adapter = new CADToolAdapter();
+	private static HashMap adapters=new HashMap();
 
-	private static EditionManager editionManager = new EditionManager();
-
-	private static HashMap namesCadTools = new HashMap();
-
-	// /private MapControl mapControl;
 	private static View view;
 
 	private MapControl mapControl;
 
 	public static CADToolAdapter getCADToolAdapter() {
-		return adapter;
+		com.iver.andami.ui.mdiManager.View view=(com.iver.andami.ui.mdiManager.View)PluginServices.getMDIManager().getActiveView();
+		if (view instanceof View) {
+			View v=(View)view;
+			if (!adapters.containsKey(v)) {
+				adapters.put(v,new CADToolAdapter());
+			}
+			return (CADToolAdapter)adapters.get(v);
+		}
+		return null;
+
 	}
 
 	/**
@@ -170,25 +174,28 @@ public class CADExtension extends Extension {
 				|| s.equals("_chaflan") || s.equals("_join")) {
 			setCADTool(s, true);
 		}
-		adapter.configureMenu();
+		CADToolAdapter cta=getCADToolAdapter();
+		cta.configureMenu();
 	}
 
 	public static void addCADTool(String name, CADTool c) {
-		namesCadTools.put(name, c);
+		CADToolAdapter.addCADTool(name, c);
 	}
 
 	public static void setCADTool(String text, boolean showCommand) {
-		CADTool ct = (CADTool) namesCadTools.get(text);
+		CADToolAdapter cta=getCADToolAdapter();
+		CADTool ct=cta.getCADTool(text);
+
 		if (ct == null)
 			throw new RuntimeException("No such cad tool");
-		adapter.setCadTool(ct);
+		cta.setCadTool(ct);
 		ct.init();
 		if (showCommand) {
 			if (PluginServices.getMDIManager().getActiveView() instanceof View) {
 				View vista = (View) PluginServices.getMDIManager().getActiveView();
 				vista.getConsolePanel().addText("\n" + ct.getName(),
 					JConsole.COMMAND);
-				adapter.askQuestion();
+				cta.askQuestion();
 			}
 		}
 		// PluginServices.getMainFrame().setSelectedTool("SELECT");
@@ -196,7 +203,8 @@ public class CADExtension extends Extension {
 	}
 
 	public static CADTool getCADTool() {
-		return adapter.getCadTool();
+		CADToolAdapter cta=getCADToolAdapter();
+		return cta.getCadTool();
 	}
 
 	/**
@@ -224,7 +232,7 @@ public class CADExtension extends Extension {
 	}
 
 	public MapControl getMapControl() {
-		return editionManager.getMapControl();
+		return getEditionManager().getMapControl();
 	}
 
 	class KeyAction extends AbstractAction {
@@ -257,7 +265,8 @@ public class CADExtension extends Extension {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			adapter.keyPressed(actionCommand);
+			CADToolAdapter cta=getCADToolAdapter();
+			cta.keyPressed(actionCommand);
 		}
 
 	}
@@ -272,16 +281,17 @@ public class CADExtension extends Extension {
 
 		public boolean postProcessKeyEvent(KeyEvent e) {
 			// System.out.println("KeyEvent e = " + e);
-			if ((adapter == null) || (view == null))
+			CADToolAdapter cta=getCADToolAdapter();
+			if ((cta == null) || (view == null))
 				return false;
 
 			if (e.getID() != KeyEvent.KEY_RELEASED)
 				return false;
 			if (!(e.getComponent() instanceof JTextComponent)) {
 				if (e.getKeyCode() == KeyEvent.VK_DELETE)
-					adapter.keyPressed("eliminar");
+					cta.keyPressed("eliminar");
 				else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-					adapter.keyPressed("escape");
+					cta.keyPressed("escape");
 				else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					// TODO: REVISAR ESTO CUANDO VIENE UN INTRO DESDE UN
 					// JTEXTAREA
@@ -353,7 +363,8 @@ public class CADExtension extends Extension {
 		menu.setVisible(true);
 		menu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				adapter.transition(e.getActionCommand());
+				CADToolAdapter cta=getCADToolAdapter();
+				cta.transition(e.getActionCommand());
 			}
 		});
 
@@ -372,20 +383,22 @@ public class CADExtension extends Extension {
 	 * @return Returns the editionManager.
 	 */
 	public static EditionManager getEditionManager() {
-		return editionManager;
+		CADToolAdapter cta=getCADToolAdapter();
+		return cta.getEditionManager();
 	}
 
 	public static CADTool[] getCADTools() {
-		return (CADTool[]) namesCadTools.values().toArray(new CADTool[0]);
+		return CADToolAdapter.getCADTools();
 	}
 
 	public static void initFocus() {
 		view = (View) PluginServices.getMDIManager().getActiveView();
 		MapControl mapControl = (MapControl) view.getMapControl();
+		CADToolAdapter cta=getCADToolAdapter();
 		if (!mapControl.getNamesMapTools().containsKey("cadtooladapter")){
 			// StatusBarListener sbl=new StatusBarListener(view.getMapControl());
 			// mapControl.addMapTool("cadtooladapter",  new Behavior[]{adapter,new MouseMovementBehavior(sbl)});
-			mapControl.addMapTool("cadtooladapter", adapter);
+			mapControl.addMapTool("cadtooladapter", cta);
 		}
 		// view.getMapControl().setTool("cadtooladapter");
 		JEditTextArea jeta=view.getConsolePanel().getTxt();
@@ -394,7 +407,8 @@ public class CADExtension extends Extension {
 
 		view.addConsoleListener("cad", new ResponseListener() {
 			public void acceptResponse(String response) {
-				adapter.textEntered(response);
+				CADToolAdapter cta=getCADToolAdapter();
+				cta.textEntered(response);
 				// TODO:
 				// FocusManager fm=FocusManager.getCurrentManager();
 				// fm.focusPreviousComponent(mapControl);
@@ -404,7 +418,7 @@ public class CADExtension extends Extension {
 
 			}
 		});
-		editionManager.setMapControl(mapControl);
+		cta.getEditionManager().setMapControl(mapControl);
 		view.getMapControl().setTool("cadtooladapter");
 	}
 }
