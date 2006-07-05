@@ -59,8 +59,6 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
-import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
-import com.iver.cit.gvsig.fmap.tools.Behavior.MouseMovementBehavior;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.accelerators.ForceCursorAccelerator;
 import com.iver.cit.gvsig.gui.accelerators.GridAccelerator;
@@ -74,7 +72,6 @@ import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SymmetryCADTool;
 import com.iver.cit.gvsig.gui.popupmenu.PopupEditionProperties;
 import com.iver.cit.gvsig.gui.toc.FPopupMenu;
-import com.iver.cit.gvsig.gui.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
 import com.iver.utiles.console.ResponseListener;
 import com.iver.utiles.console.jedit.JEditTextArea;
@@ -91,6 +88,7 @@ public class CADExtension extends Extension {
 	private static View view;
 
 	private MapControl mapControl;
+	private static CADToolAdapter adapter=null;
 
 	public static CADToolAdapter getCADToolAdapter() {
 		com.iver.andami.ui.mdiManager.View view=(com.iver.andami.ui.mdiManager.View)PluginServices.getMDIManager().getActiveView();
@@ -99,9 +97,10 @@ public class CADExtension extends Extension {
 			if (!adapters.containsKey(v)) {
 				adapters.put(v,new CADToolAdapter());
 			}
-			return (CADToolAdapter)adapters.get(v);
+			adapter=(CADToolAdapter)adapters.get(v);
+			return adapter;
 		}
-		return null;
+		return adapter;
 
 	}
 
