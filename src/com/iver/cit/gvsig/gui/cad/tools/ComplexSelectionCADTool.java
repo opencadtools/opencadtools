@@ -54,6 +54,8 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
+import com.iver.cit.gvsig.fmap.core.FCircle2D;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
@@ -247,8 +249,12 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	        g.drawImage(img, 0, 0, null);
 	        return;
 		}if (status.equals("Selection.SecondPointCircle")) {
+			IGeometry circle=ShapeFactory.createCircle(firstPoint,new Point2D.Double(x,y));
+			GeneralPathX gpx=new GeneralPathX();
+			gpx.append(circle.getInternalShape(),true);
+			IGeometry circleSel=ShapeFactory.createPolyline2D(gpx);
 			// Dibuja el círculo de selección
-			ShapeFactory.createCircle(firstPoint,new Point2D.Double(x,y)).draw((Graphics2D) g,
+			circleSel.draw((Graphics2D) g,
 					vp,
 					CADTool.selectSymbol);
 			Image img = vle.getSelectionImage();
