@@ -64,6 +64,7 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
@@ -433,7 +434,7 @@ public class EditVertexCADTool extends DefaultCADTool {
             Point2D pLast=new Point2D.Double();
             Point2D pAnt = new Point2D.Double();
             Point2D firstPoint=null;
-            theIterator = geome.getPathIterator(null); //, flatness);
+            theIterator = geome.getPathIterator(null,FConverter.flatness); //, flatness);
             int numSegmentsAdded = 0;
             while (!theIterator.isDone()) {
                 theType = theIterator.currentSegment(theData);
@@ -518,6 +519,8 @@ public class EditVertexCADTool extends DefaultCADTool {
                     break;
                 case FShape.POLYGON:
                 case FShape.POLYGON + FShape.Z:
+                case FShape.CIRCLE:
+                case FShape.ELLIPSE:
                     shp = new FPolygon2D(newGp);
                     break;
             }
