@@ -64,6 +64,8 @@
 				destdir="${build}"
 				source="1.4"
 				target="1.4"
+				debug="${debug}"
+				debuglevel="${debuglevel}"
 				classpath="${compile-classpath}"
 				sourcepath="${compile-sourcepath}"/>
 		</target>
