@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import com.hardcode.gdbms.engine.instruction.FieldNotFoundException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
@@ -20,6 +21,7 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
 import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
@@ -143,6 +145,9 @@ public class StopEditing extends Extension {
 				if (resp == JOptionPane.YES_OPTION) { // CANCEL EDITING
 					cancelEdition(layer);
 					vea.getCommandRecord().removeCommandListener(mapControl);
+
+					VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(layer);
+					layer.setLegend((VectorialLegend)vle.getLegend());
 					layer.setEditing(false);
 					return true;
 				}
@@ -153,6 +158,8 @@ public class StopEditing extends Extension {
 			NotificationManager.addError(e);
 		} catch (DriverException e) {
 			NotificationManager.addError(e);
+		} catch (FieldNotFoundException e) {
+			e.printStackTrace();
 		}
 		return false;
 

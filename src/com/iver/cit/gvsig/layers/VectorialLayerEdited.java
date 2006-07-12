@@ -36,6 +36,7 @@ import com.iver.cit.gvsig.fmap.layers.LayerDrawEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawingListener;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerPositionEvent;
+import com.iver.cit.gvsig.fmap.rendering.Legend;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
@@ -52,6 +53,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 	private ArrayList snappers = new ArrayList();
 	private ArrayList layersToSnap = new ArrayList();
+	private Legend legend;
 
 	public VectorialLayerEdited(FLayer lyr)
 	{
@@ -472,4 +474,10 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		}
 	}
 
+	public void setLegend(Legend legend) {
+		this.legend=legend;
+	}
+	public Legend getLegend() {
+		return legend;
+	}
 }

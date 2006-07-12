@@ -11,6 +11,7 @@ import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.rules.IRule;
@@ -18,10 +19,13 @@ import com.iver.cit.gvsig.fmap.edition.rules.RulePolygon;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.XMLException;
+import com.iver.cit.gvsig.fmap.rendering.Legend;
 import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.ProjectTable;
 import com.iver.cit.gvsig.project.ProjectView;
 import com.iver.utiles.console.jedit.KeywordMap;
@@ -33,16 +37,16 @@ import com.iver.utiles.console.jedit.Token;
  * @author Vicente Caballero Navarro
  */
 public class StartEditing extends Extension {
-	
+
 	private class MyAction extends AbstractAction
 	{
 
 		public void actionPerformed(ActionEvent e) {
 			System.err.println("F3");
 		}
-		
+
 	}
-	
+
 	View vista;
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
@@ -69,7 +73,7 @@ public class StartEditing extends Extension {
 			ProjectView model = vista.getModel();
 			FMap mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
-			
+
 			for (int i = 0; i < layers.getLayersCount(); i++) {
 				if (layers.getLayer(i) instanceof FLyrVect
 						&& layers.getLayer(i).isActive()) {
@@ -80,8 +84,10 @@ public class StartEditing extends Extension {
 
 					FLyrVect lv = (FLyrVect) layers.getLayer(i);
 					// lv.setVisible(true);
-					lv.addLayerListener(CADExtension.getEditionManager());
+					lv.addLayerListener(editionManager);
 					try {
+						Legend legendOriginal=lv.getLegend().cloneLegend();
+
 						lv.setEditing(true);
 						VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
 								.getSource();
@@ -90,6 +96,11 @@ public class StartEditing extends Extension {
 						{
 							IRule rulePol = new RulePolygon();
 							vea.getRules().add(rulePol);
+						}
+
+						if (!(lv.getSource().getDriver() instanceof IndexedShpDriver)){
+							VectorialLayerEdited vle=(VectorialLayerEdited)editionManager.getLayerEdited(lv);
+							vle.setLegend(legendOriginal);
 						}
 						vea.getCommandRecord().addCommandListener(mapControl);
 						// Si existe una tabla asociada a esta capa se cambia su
@@ -102,15 +113,17 @@ public class StartEditing extends Extension {
 							changeModelTable(pt);
 						}
 						startCommandsApplicable(vista,lv);
-						vista.repaintMap(); 
+						vista.repaintMap();
 					} catch (EditionException e) {
 						e.printStackTrace();
 						NotificationManager.addError(e);
 					} catch (DriverIOException e) {
 						e.printStackTrace();
 						NotificationManager.addError(e);
+					} catch (XMLException e) {
+						e.printStackTrace();
 					}
-						
+
 //					return;
 				}
 			}
@@ -136,7 +149,7 @@ public class StartEditing extends Extension {
 	}
 //	 private void registerKeyStrokes() {
 //		 JComponent theComponent = vista.getConsolePanel().getTxt();
-//		 
+//
 //		 // The actions
 //		 Action F3Action = new AbstractAction("REFENT") {
 //			public void actionPerformed(ActionEvent evt) {
@@ -148,9 +161,9 @@ public class StartEditing extends Extension {
 //		 inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), F3Action.getValue(Action.NAME));
 //
 //		 ActionMap actionMap = theComponent.getActionMap();
-//		 // actionMap.put("REFENT", new MyAction()); 
+//		 // actionMap.put("REFENT", new MyAction());
 //		 actionMap.put(F3Action.getValue(Action.NAME), F3Action);
-//		
+//
 //	}
 
 	public static void startCommandsApplicable(View vista,FLyrVect lv) {
