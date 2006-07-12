@@ -2,6 +2,7 @@ package com.iver.cit.gvsig;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 
+import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.iver.andami.PluginServices;
@@ -26,7 +28,9 @@ import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
+import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
@@ -57,10 +61,15 @@ public class ExportTo extends Extension {
 		ReadableVectorial va;
 		SelectableDataSource sds;
 		FBitSet bitSet;
-		public WriterTask(FLyrVect lyr, IWriter writer) throws DriverException, DriverIOException
+		FMap mapContext;
+		VectorialDriver reader;
+		
+		public WriterTask(FMap mapContext, FLyrVect lyr, IWriter writer, Driver reader) throws DriverException, DriverIOException
 		{
+			this.mapContext = mapContext;
 			this.lyrVect = lyr;
 			this.writer = writer;
+			this.reader = (VectorialDriver) reader;
 
 			setInitialStep(0);
 			setDeterminatedProcess(true);
@@ -127,10 +136,19 @@ public class ExportTo extends Extension {
 
 			writer.postProcess();
 
-			JOptionPane.showMessageDialog(
+			int res = JOptionPane.showConfirmDialog(
 					(JComponent) PluginServices.getMDIManager().getActiveView()
 					, PluginServices.getText(this, "capa_exportada"), PluginServices.getText(this,"export_to"),
-					JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.YES_NO_OPTION);
+			if (reader != null)
+			{
+				if (res == JOptionPane.YES_OPTION)
+				{
+					FLayer newLayer = LayerFactory.createLayer(
+							writer.getTableDefinition().getName(), reader, mapContext.getProjection());
+					mapContext.getLayers().addLayer(newLayer);
+				}
+			}
 
 		}
 
@@ -173,13 +191,13 @@ public class ExportTo extends Extension {
 							}
 						} // if numSelec > 0
 						if (actionCommand.equals("SHP")) {
-							saveToShp(lv);
+							saveToShp(mapa, lv);
 						}
 						if (actionCommand.equals("DXF")) {
-							saveToDxf(lv);
+							saveToDxf(mapa, lv);
 						}
 						if (actionCommand.equals("POSTGIS")) {
-							saveToPostGIS(lv);
+							saveToPostGIS(mapa, lv);
 						}
 					} // actives[i]
 				} // for
@@ -197,7 +215,7 @@ public class ExportTo extends Extension {
 		}
 	}
 
-	public void saveToPostGIS(FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToPostGIS(FMap mapContext, FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			String tableName = JOptionPane.showInputDialog(PluginServices
 					.getText(this, "intro_tablename"));
@@ -232,7 +250,7 @@ public class ExportTo extends Extension {
 			writer.setWriteAll(true);
 			writer.setCreateTable(true);
 			writer.initialize(dbLayerDef);
-			writeFeatures(layer, writer);
+			writeFeatures(mapContext, layer, writer, null);
 
 		} catch (DriverException e) {
 			e.printStackTrace();
@@ -248,9 +266,9 @@ public class ExportTo extends Extension {
 
 	}
 
-	private void writeFeatures(FLyrVect layer, IWriter writer) throws DriverException, DriverIOException
+	private void writeFeatures(FMap mapContext, FLyrVect layer, IWriter writer, Driver reader) throws DriverException, DriverIOException
 	{
-		PluginServices.cancelableBackgroundExecution(new WriterTask(layer, writer));
+		PluginServices.cancelableBackgroundExecution(new WriterTask(mapContext, layer, writer, reader));
 	}
 
 	/**
@@ -333,7 +351,7 @@ public class ExportTo extends Extension {
 		progress.close();
 	}
 
-	public void saveToDxf(FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToDxf(FMap mapContext, FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			JFileChooser jfc = new JFileChooser();
 			SimpleFileFilter filterShp = new SimpleFileFilter("dxf",
@@ -363,7 +381,7 @@ public class ExportTo extends Extension {
 				// TODO: Recuperar aquí los campos del cuadro de diálogo.
 				writer.setFieldMapping(fieldsMapping);
 
-				writeFeatures(layer, writer);
+				writeFeatures(mapContext, layer, writer, null);
 			}
 
 		} catch (DriverException e) {
@@ -376,7 +394,7 @@ public class ExportTo extends Extension {
 
 	}
 
-	public void saveToShp(FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToShp(FMap mapContext, FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			JFileChooser jfc = new JFileChooser();
 			SimpleFileFilter filterShp = new SimpleFileFilter("shp",
@@ -416,7 +434,7 @@ public class ExportTo extends Extension {
 					writer.setFile(filePoints);
 					lyrDef.setFile(filePoints);
 					writer.initialize(lyrDef);
-					writeFeatures(layer, writer);
+					writeFeatures(mapContext, layer, writer, null);
 
 					// Lineas
 					aux = path.replaceFirst(".shp", "_line.shp");
@@ -427,7 +445,7 @@ public class ExportTo extends Extension {
 					writer.setFile(fileLines);
 					lyrDef.setFile(fileLines);
 					writer.initialize(lyrDef);
-					writeFeatures(layer, writer);
+					writeFeatures(mapContext, layer, writer, null);
 
 					// Polígonos
 					aux = path.replaceFirst(".shp", "_polygons.shp");
@@ -438,15 +456,18 @@ public class ExportTo extends Extension {
 					writer.setFile(filePolygons);
 					lyrDef.setFile(filePolygons);
 					writer.initialize(lyrDef);
-					writeFeatures(layer, writer);
+					writeFeatures(mapContext, layer, writer, null);
 				} else {
+					IndexedShpDriver drv = new IndexedShpDriver();
+					drv.open(newFile);
+					
 					lyrDef.setFile(newFile);
 					lyrDef.setName(newFile.getName());
 					lyrDef.setShapeType(layer.getShapeType());
 					writer.setFile(newFile);
 					writer.initialize(lyrDef);
 
-					writeFeatures(layer, writer);
+					writeFeatures(mapContext, layer, writer, drv);
 
 				}
 			}
@@ -454,6 +475,9 @@ public class ExportTo extends Extension {
 			e.printStackTrace();
 			throw new EditionException(e);
 		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
+			e.printStackTrace();
+			throw new EditionException(e);
+		} catch (IOException e) {			
 			e.printStackTrace();
 			throw new EditionException(e);
 		}

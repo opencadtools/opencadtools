@@ -207,7 +207,7 @@ public class WriterGT2Shp extends AbstractWriter {
 	}
 
 	public void initialize(ITableDefinition tableDefinition) throws EditionException {
-		// TODO Auto-generated method stub
+		super.initialize(tableDefinition);
 		
 	}
 
