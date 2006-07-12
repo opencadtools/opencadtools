@@ -94,7 +94,7 @@
 			<tool-bar name="modificar">
 				<selectable-tool icon="images/Copy.png" action-command="_copy" tooltip="copy" group="vista"/>
 				<selectable-tool icon="images/Symmetry.png" action-command="_symmetry" tooltip="symmetry" group="vista"/>
-				<selectable-tool icon="images/Rotation.png" action-command="_rotate" tooltip="rotation" group="vista"/>
+				<selectable-tool icon="images/Rotation.png" action-command="_rotate" tooltip="rotate" group="vista"/>
 				<selectable-tool icon="images/Scale.png" action-command="_scale" tooltip="scale" group="vista"/>
 			</tool-bar>
 		</extension>
