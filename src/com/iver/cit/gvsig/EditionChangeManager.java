@@ -3,7 +3,9 @@ package com.iver.cit.gvsig;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.View;
 import com.iver.cit.gvsig.fmap.core.IRow;
+import com.iver.cit.gvsig.fmap.edition.AfterFieldEditEvent;
 import com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent;
+import com.iver.cit.gvsig.fmap.edition.BeforeFieldEditEvent;
 import com.iver.cit.gvsig.fmap.edition.BeforeRowEditEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IEditionListener;
@@ -55,7 +57,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.5  2006-06-21 07:22:48  fjp
+ * Revision 1.6  2006-07-13 12:36:01  fjp
+ * Revisar bien lo de añadir campos y gestionar un campo gris
+ *
+ * Revision 1.5  2006/06/21 07:22:48  fjp
  * Posibilidad de marcar capas como "dirty" y tener una que guarde lo que se ha dibujado antes que ella. Al hacer un MapControl.rePaintDirtyLayers(), eso se tiene en cuenta en el redibujado.
  *
  * Revision 1.4  2006/05/16 07:06:02  caballero
@@ -134,6 +139,14 @@ public class EditionChangeManager implements IEditionListener{
 			}
 		}
 
+	}
+	public void beforeFieldEditEvent(BeforeFieldEditEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void afterFieldEditEvent(AfterFieldEditEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
