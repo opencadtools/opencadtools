@@ -40,11 +40,8 @@
  */
 package com.iver.cit.gvsig.gui.popupmenu;
 
-import java.awt.BorderLayout;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 
 import com.iver.andami.PluginServices;
@@ -53,6 +50,8 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.gui.preferences.EditionPreferencePage;
 import com.iver.cit.gvsig.gui.toc.FPopupMenu;
 import com.iver.cit.gvsig.gui.toc.TocMenuEntry;
+import com.iver.utiles.extensionPoints.ExtensionPoints;
+import com.iver.utiles.extensionPoints.ExtensionPointsSingleton;
 
 public class PopupEditionProperties extends TocMenuEntry {
 	private JMenuItem propsMenuItem;
@@ -89,10 +88,13 @@ public class PopupEditionProperties extends TocMenuEntry {
 //		dlg.setModal(true);
 //		dlg.setVisible(true);
 
-		
+		ExtensionPoints extensionPoints = 
+			ExtensionPointsSingleton.getInstance();
+		extensionPoints.add("AplicationPreferences",pref.getID(), pref);
 		GenericDlgPreferences dlg = new GenericDlgPreferences();
 		dlg.getViewInfo().setTitle(PluginServices.getText(this, "Edition_Properties"));
-		dlg.addPreferencePage(pref);
+		
+		//dlg.addPreferencePage(pref);
 		dlg.setActivePage(pref);
 		PluginServices.getMDIManager().addView(dlg);
 		

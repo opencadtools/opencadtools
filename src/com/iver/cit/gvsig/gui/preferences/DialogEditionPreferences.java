@@ -141,7 +141,7 @@ public class DialogEditionPreferences  {
 			Random rnd = new Random();
 			if (i> 5)
 				newPref.setParentID("Titulo " + rnd.nextInt(i));
-			panel.addPreferencePage(newPref);
+			//panel.addPreferencePage(newPref);
 			
 		}
 		
@@ -151,7 +151,7 @@ public class DialogEditionPreferences  {
 		layers.addLayer(lyrVect);
 		
 		EditionPreferencePage edPref = new EditionPreferencePage();
-		panel.addPreferencePage(edPref);
+		//panel.addPreferencePage(edPref);
 		edPref.setLayers(layers);
 
 		dlg.getContentPane().add(panel);
