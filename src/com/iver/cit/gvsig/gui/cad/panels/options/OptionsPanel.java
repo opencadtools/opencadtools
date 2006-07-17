@@ -1,5 +1,7 @@
 package com.iver.cit.gvsig.gui.cad.panels.options;
 
+import java.awt.event.ActionListener;
+
 import javax.swing.JPanel;
 
 import com.iver.andami.PluginServices;
@@ -9,14 +11,19 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
+import org.gvsig.gui.beans.AcceptCancelPanel;
+import javax.swing.JTextArea;
 
 public class OptionsPanel extends JPanel implements View{
 
 	private JPanel jPanel = null;
 	private JTextField jTextField = null;
-	private JButton bOk = null;
-	private JButton bCancel = null;
 	private VectorialEditableAdapter vea;
+	private JLabel jLabel = null;
+	private AcceptCancelPanel jPanel1;
+	private JTextArea jTextArea = null;
 	/**
 	 * This is the default constructor
 	 */
@@ -33,10 +40,10 @@ public class OptionsPanel extends JPanel implements View{
 	 */
 	private void initialize() {
 		this.setLayout(null);
-		this.setSize(330, 112);
+		this.setSize(389, 164);
 		this.add(getJPanel(), null);
-		this.add(getBOk(), null);
-		this.add(getBCancel(), null);
+		this.add(getJPanel1(), null);
+		this.add(getJTextArea(), null);
 	}
 
 	public ViewInfo getViewInfo() {
@@ -54,11 +61,15 @@ public class OptionsPanel extends JPanel implements View{
 	 */
 	private JPanel getJPanel() {
 		if (jPanel == null) {
+			jLabel = new JLabel();
+			jLabel.setBounds(new java.awt.Rectangle(12,11,119,22));
+			jLabel.setText(PluginServices.getText(this,"densityfication"));
 			jPanel = new JPanel();
 			jPanel.setLayout(null);
-			jPanel.setBounds(new java.awt.Rectangle(15,22,145,67));
-			jPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null,PluginServices.getText(this, "densityfication"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, null));
+			jPanel.setBounds(new java.awt.Rectangle(15,73,284,39));
+			jPanel.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.gray,1));
 			jPanel.add(getJTextField(), null);
+			jPanel.add(jLabel, null);
 		}
 		return jPanel;
 	}
@@ -71,49 +82,55 @@ public class OptionsPanel extends JPanel implements View{
 	private JTextField getJTextField() {
 		if (jTextField == null) {
 			jTextField = new JTextField();
-			jTextField.setBounds(new java.awt.Rectangle(7,20,126,20));
+			jTextField.setBounds(new java.awt.Rectangle(147,12,126,20));
 			jTextField.setText(String.valueOf(vea.getFlatness()));
 		}
 		return jTextField;
 	}
 
 	/**
-	 * This method initializes bOk
+	 * This method initializes jPanel1
 	 *
-	 * @return javax.swing.JButton
+	 * @return javax.swing.JPanel
 	 */
-	private JButton getBOk() {
-		if (bOk == null) {
-			bOk = new JButton();
-			bOk.setBounds(new java.awt.Rectangle(178,22,116,29));
-			bOk.setText(PluginServices.getText(this,"ok"));
-			bOk.addActionListener(new java.awt.event.ActionListener() {
+	private AcceptCancelPanel getJPanel1() {
+		if (jPanel1 == null) {
+			ActionListener okAction, cancelAction;
+			okAction = new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					vea.setFlatness(Double.parseDouble(getJTextField().getText()));
 					PluginServices.getMDIManager().closeView(OptionsPanel.this);
 				}
-			});
-		}
-		return bOk;
-	}
-
-	/**
-	 * This method initializes bCancel
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBCancel() {
-		if (bCancel == null) {
-			bCancel = new JButton();
-			bCancel.setBounds(new java.awt.Rectangle(178,59,116,29));
-			bCancel.setText(PluginServices.getText(this,"cancel"));
-			bCancel.addActionListener(new java.awt.event.ActionListener() {
+			};
+			cancelAction = new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					PluginServices.getMDIManager().closeView(OptionsPanel.this);
 				}
-			});
+			};
+			jPanel1 = new AcceptCancelPanel(okAction, cancelAction);
+			jPanel1.setBounds(new java.awt.Rectangle(15,120,284,39));
 		}
-		return bCancel;
+		return jPanel1;
+	}
+
+	/**
+	 * This method initializes jTextArea
+	 *
+	 * @return javax.swing.JTextArea
+	 */
+	private JTextArea getJTextArea() {
+		if (jTextArea == null) {
+			jTextArea = new JTextArea();
+			jTextArea.setBounds(new java.awt.Rectangle(13,7,285,57));
+			jTextArea.setForeground(java.awt.Color.black);
+			jTextArea.setBackground(java.awt.SystemColor.control);
+			jTextArea.setRows(3);
+			jTextArea.setWrapStyleWord(true);
+			jTextArea.setLineWrap(true);
+			jTextArea.setEditable(false);
+			jTextArea.setText(PluginServices.getText(this,"specifies_the_minimum_size_of_the_lines_that_will_form_the_curves"));
+		}
+		return jTextArea;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,12"
