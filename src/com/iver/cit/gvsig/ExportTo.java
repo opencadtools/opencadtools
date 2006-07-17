@@ -1,11 +1,14 @@
 package com.iver.cit.gvsig;
 
 import java.awt.Component;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -24,6 +27,8 @@ import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
+import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.v02.FLabel;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
@@ -40,6 +45,7 @@ import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
+import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
@@ -63,7 +69,7 @@ public class ExportTo extends Extension {
 		FBitSet bitSet;
 		FMap mapContext;
 		VectorialDriver reader;
-		
+
 		public WriterTask(FMap mapContext, FLyrVect lyr, IWriter writer, Driver reader) throws DriverException, DriverIOException
 		{
 			this.mapContext = mapContext;
@@ -90,6 +96,12 @@ public class ExportTo extends Extension {
 		}
 		public void run() throws Exception {
 
+			if (lyrVect instanceof FLyrAnnotation && lyrVect.getShapeType()!=FShape.POINT) {
+				SHPLayerDefinition lyrDef=(SHPLayerDefinition)writer.getTableDefinition();
+				lyrDef.setShapeType(FShape.POINT);
+				writer.initialize(lyrDef);
+			}
+
 			// Creamos la tabla.
 			writer.preProcess();
 
@@ -97,7 +109,10 @@ public class ExportTo extends Extension {
 				rowCount = va.getShapeCount();
 				for (int i = 0; i < rowCount; i++) {
 					IGeometry geom = va.getShape(i);
-
+					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
+						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
+						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
+					}
 					reportStep();
 					setNote(PluginServices.getText(this, "exporting_") + i);
 					if (isCanceled())
@@ -116,7 +131,10 @@ public class ExportTo extends Extension {
 				for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
 						.nextSetBit(i + 1)) {
 					IGeometry geom = va.getShape(i);
-
+					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
+						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
+						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
+					}
 					reportStep();
 					setNote(PluginServices.getText(this, "exporting_") + counter);
 					if (isCanceled())
@@ -153,7 +171,20 @@ public class ExportTo extends Extension {
 		}
 
 	}
+	private class MultiWriterTask extends AbstractMonitorableTask{
+		Vector tasks=new Vector();
+		public void addTask(WriterTask wt) {
+			tasks.add(wt);
+		}
+		public void run() throws Exception {
+			for (int i = 0; i < tasks.size(); i++) {
+				((WriterTask)tasks.get(i)).run();
+			}
+			tasks.clear();
+		}
 
+
+	}
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
@@ -270,7 +301,13 @@ public class ExportTo extends Extension {
 	{
 		PluginServices.cancelableBackgroundExecution(new WriterTask(mapContext, layer, writer, reader));
 	}
-
+	private void writeMultiFeatures(FMap mapContext, FLyrVect layers, IWriter[] writers, Driver reader) throws DriverException, DriverIOException{
+		MultiWriterTask mwt=new MultiWriterTask();
+		for (int i=0;i<writers.length;i++) {
+			mwt.addTask(new WriterTask(mapContext, layers, writers[i], reader));
+		}
+		PluginServices.cancelableBackgroundExecution(mwt);
+	}
 	/**
 	 * @param layer
 	 *            FLyrVect to obtain features. If selection, only selected
@@ -425,6 +462,7 @@ public class ExportTo extends Extension {
 				if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
 				// ficheros
 				{
+					ShpWriter[] writers=new ShpWriter[3];
 					// puntos
 					String aux = path.replaceFirst(".shp", "_points.shp");
 					File filePoints = new File(aux);
@@ -434,7 +472,8 @@ public class ExportTo extends Extension {
 					writer.setFile(filePoints);
 					lyrDef.setFile(filePoints);
 					writer.initialize(lyrDef);
-					writeFeatures(mapContext, layer, writer, null);
+					writers[0]=writer;
+					//writeFeatures(mapContext, layer, writer, null);
 
 					// Lineas
 					aux = path.replaceFirst(".shp", "_line.shp");
@@ -445,7 +484,9 @@ public class ExportTo extends Extension {
 					writer.setFile(fileLines);
 					lyrDef.setFile(fileLines);
 					writer.initialize(lyrDef);
-					writeFeatures(mapContext, layer, writer, null);
+					writers[1]=writer;
+
+					//writeFeatures(mapContext, layer, writer, null);
 
 					// Polígonos
 					aux = path.replaceFirst(".shp", "_polygons.shp");
@@ -456,18 +497,23 @@ public class ExportTo extends Extension {
 					writer.setFile(filePolygons);
 					lyrDef.setFile(filePolygons);
 					writer.initialize(lyrDef);
-					writeFeatures(mapContext, layer, writer, null);
+					writers[2]=writer;
+
+					//writeFeatures(mapContext, layer, writer, null);
+					writeMultiFeatures(mapContext,layer, writers, null);
 				} else {
-					IndexedShpDriver drv = new IndexedShpDriver();
-					drv.open(newFile);
-					
+// Esto cuando se quiere exportar a un fichero nuevo falla.
+//					IndexedShpDriver drv = new IndexedShpDriver();
+//					drv.open(newFile);
+
 					lyrDef.setFile(newFile);
 					lyrDef.setName(newFile.getName());
 					lyrDef.setShapeType(layer.getShapeType());
 					writer.setFile(newFile);
 					writer.initialize(lyrDef);
 
-					writeFeatures(mapContext, layer, writer, drv);
+//					writeFeatures(mapContext, layer, writer, drv);
+					writeFeatures(mapContext, layer, writer, null);
 
 				}
 			}
@@ -477,10 +523,11 @@ public class ExportTo extends Extension {
 		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
 			e.printStackTrace();
 			throw new EditionException(e);
-		} catch (IOException e) {			
-			e.printStackTrace();
-			throw new EditionException(e);
 		}
+//		catch (IOException e) {
+//			e.printStackTrace();
+//			throw new EditionException(e);
+//		}
 
 	}
 
