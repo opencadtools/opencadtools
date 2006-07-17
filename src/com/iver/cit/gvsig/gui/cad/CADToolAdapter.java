@@ -871,7 +871,7 @@ public class CADToolAdapter extends Behavior {
 		if (actionCommand.equals("eliminar")) {
 			delete();
 		} else if (actionCommand.equals("escape")) {
-			if (getMapControl().getTool().equals("cadtooladapter")) {
+			if (getMapControl().getCurrentTool().equals("cadtooladapter")) {
 				CADTool ct = (CADTool) cadToolStack.peek();
 				ct.end();
 				cadToolStack.clear();
