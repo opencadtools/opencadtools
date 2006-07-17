@@ -1,28 +1,13 @@
 package com.iver.cit.gvsig;
 
 
-import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.FMap;
-import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.core.FShape;
-import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.panels.options.OptionsPanel;
-import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
-import com.iver.cit.gvsig.project.ProjectFactory;
-import com.iver.cit.gvsig.project.ProjectTable;
-import com.iver.cit.gvsig.project.ProjectView;
-import com.iver.utiles.console.jedit.KeywordMap;
-import com.iver.utiles.console.jedit.Token;
 
 /**
  * DOCUMENT ME!
