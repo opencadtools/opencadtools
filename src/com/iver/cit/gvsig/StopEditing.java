@@ -138,7 +138,7 @@ public class StopEditing extends Extension {
 								PluginServices
 										.getText(
 												this,
-												"no_existe_writer_para_este_formato_de_capa_puede_exportar_o_cancelar_desea_cancelar_la_edicion")
+												"no_existe_writer_para_este_formato_de_capa_o_no_tiene_permisos_de_escritura_puede_exportar_o_cancelar_desea_cancelar_la_edicion")
 										+ " : " + layer.getName(),
 								PluginServices.getText(this, "cancelar"),
 								JOptionPane.YES_NO_OPTION);
