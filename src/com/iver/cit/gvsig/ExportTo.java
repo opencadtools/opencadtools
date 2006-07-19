@@ -41,6 +41,7 @@ import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfFieldsMapping;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfWriter;
+import com.iver.cit.gvsig.fmap.edition.writers.gml.GMLWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -229,6 +230,9 @@ public class ExportTo extends Extension {
 						}
 						if (actionCommand.equals("POSTGIS")) {
 							saveToPostGIS(mapa, lv);
+						}
+						if (actionCommand.equals("GML")) {
+							saveToGml(mapa, lv);
 						}
 					} // actives[i]
 				} // for
@@ -517,6 +521,57 @@ public class ExportTo extends Extension {
 
 				}
 			}
+		} catch (DriverException e) {
+			e.printStackTrace();
+			throw new EditionException(e);
+		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
+			e.printStackTrace();
+			throw new EditionException(e);
+		}
+//		catch (IOException e) {
+//			e.printStackTrace();
+//			throw new EditionException(e);
+//		}
+
+	}
+	
+	/**
+	 * This method saves a layer to GML
+	 * @param mapContext
+	 * @param layer
+	 * @throws EditionException
+	 * @throws DriverIOException
+	 */
+	public void saveToGml(FMap mapContext, FLyrVect layer) throws EditionException, DriverIOException {
+		try {
+			JFileChooser jfc = new JFileChooser();
+			SimpleFileFilter filterShp = new SimpleFileFilter("gml",
+					PluginServices.getText(this, "gml_files"));
+			jfc.setFileFilter(filterShp);
+			if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
+				File newFile = jfc.getSelectedFile();
+				String path = newFile.getAbsolutePath();
+				if (!(path.toLowerCase().endsWith(".gml"))) {
+					path = path + ".gml";
+				}
+				newFile = new File(path);
+				
+				GMLWriter writer = (GMLWriter)LayerFactory.getWM().getWriter("GML Writer");
+					
+				SHPLayerDefinition lyrDef = new SHPLayerDefinition();
+				SelectableDataSource sds = layer.getRecordset();
+				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
+				lyrDef.setFieldsDesc(fieldsDescrip);
+				lyrDef.setName(layer.getName());
+				lyrDef.setShapeType(layer.getShapeType());
+				
+				writer.setFile(newFile);
+				writer.setSchema(lyrDef);		
+				writer.setBoundedBy(layer.getFullExtent(),layer.getProjection());
+				
+				writeFeatures(mapContext, layer, writer, null);
+			}
+
 		} catch (DriverException e) {
 			e.printStackTrace();
 			throw new EditionException(e);
