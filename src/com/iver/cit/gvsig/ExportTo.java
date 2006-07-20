@@ -34,7 +34,9 @@ import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
+import com.iver.cit.gvsig.fmap.drivers.dxf.DXFMemoryDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
+import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGisDriver;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
@@ -154,13 +156,13 @@ public class ExportTo extends Extension {
 			}
 
 			writer.postProcess();
-
-			int res = JOptionPane.showConfirmDialog(
+			if (reader != null){
+				int res = JOptionPane.showConfirmDialog(
 					(JComponent) PluginServices.getMDIManager().getActiveView()
-					, PluginServices.getText(this, "capa_exportada"), PluginServices.getText(this,"export_to"),
+					, PluginServices.getText(this, "insertar_en_la_vista_la_capa_creada"),
+					PluginServices.getText(this,"insertar_capa"),
 					JOptionPane.YES_NO_OPTION);
-			if (reader != null)
-			{
+
 				if (res == JOptionPane.YES_OPTION)
 				{
 					FLayer newLayer = LayerFactory.createLayer(
@@ -285,7 +287,11 @@ public class ExportTo extends Extension {
 			writer.setWriteAll(true);
 			writer.setCreateTable(true);
 			writer.initialize(dbLayerDef);
-			writeFeatures(mapContext, layer, writer, null);
+			PostGisDriver postGISDriver=new PostGisDriver();
+			postGISDriver.setLyrDef(dbLayerDef);
+			postGISDriver.open();
+
+			writeFeatures(mapContext, layer, writer, postGISDriver);
 
 		} catch (DriverException e) {
 			e.printStackTrace();
@@ -305,10 +311,10 @@ public class ExportTo extends Extension {
 	{
 		PluginServices.cancelableBackgroundExecution(new WriterTask(mapContext, layer, writer, reader));
 	}
-	private void writeMultiFeatures(FMap mapContext, FLyrVect layers, IWriter[] writers, Driver reader) throws DriverException, DriverIOException{
+	private void writeMultiFeatures(FMap mapContext, FLyrVect layers, IWriter[] writers, Driver[] readers) throws DriverException, DriverIOException{
 		MultiWriterTask mwt=new MultiWriterTask();
 		for (int i=0;i<writers.length;i++) {
-			mwt.addTask(new WriterTask(mapContext, layers, writers[i], reader));
+			mwt.addTask(new WriterTask(mapContext, layers, writers[i], readers[i]));
 		}
 		PluginServices.cancelableBackgroundExecution(mwt);
 	}
@@ -421,8 +427,9 @@ public class ExportTo extends Extension {
 				DxfFieldsMapping fieldsMapping = new DxfFieldsMapping();
 				// TODO: Recuperar aquí los campos del cuadro de diálogo.
 				writer.setFieldMapping(fieldsMapping);
-
-				writeFeatures(mapContext, layer, writer, null);
+				DXFMemoryDriver dxfDriver=new DXFMemoryDriver();
+				dxfDriver.open(newFile);
+				writeFeatures(mapContext, layer, writer, dxfDriver);
 			}
 
 		} catch (DriverException e) {
@@ -431,6 +438,9 @@ public class ExportTo extends Extension {
 		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
 			e.printStackTrace();
 			throw new EditionException(e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -457,8 +467,7 @@ public class ExportTo extends Extension {
 				}
 				newFile = new File(path);
 
-				ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
-						"Shape Writer");
+
 				SHPLayerDefinition lyrDef = new SHPLayerDefinition();
 				SelectableDataSource sds = layer.getRecordset();
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
@@ -466,58 +475,67 @@ public class ExportTo extends Extension {
 				if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
 				// ficheros
 				{
+					ShpWriter writer1 = (ShpWriter) LayerFactory.getWM().getWriter(
+					"Shape Writer");
+					Driver[] drivers=new Driver[3];
 					ShpWriter[] writers=new ShpWriter[3];
+
 					// puntos
 					String aux = path.replaceFirst(".shp", "_points.shp");
+
 					File filePoints = new File(aux);
 					lyrDef.setFile(filePoints);
 					lyrDef.setName(filePoints.getName());
 					lyrDef.setShapeType(FShape.POINT);
-					writer.setFile(filePoints);
+					writer1.setFile(filePoints);
 					lyrDef.setFile(filePoints);
-					writer.initialize(lyrDef);
-					writers[0]=writer;
-					//writeFeatures(mapContext, layer, writer, null);
+					writer1.initialize(lyrDef);
+					writers[0]=writer1;
+					drivers[0]=getOpenShpDriver(filePoints);
+					//drivers[0]=null;
 
+					ShpWriter writer2 = (ShpWriter) LayerFactory.getWM().getWriter(
+					"Shape Writer");
 					// Lineas
 					aux = path.replaceFirst(".shp", "_line.shp");
 					File fileLines = new File(aux);
 					lyrDef.setFile(fileLines);
 					lyrDef.setName(fileLines.getName());
 					lyrDef.setShapeType(FShape.LINE);
-					writer.setFile(fileLines);
+					writer2.setFile(fileLines);
 					lyrDef.setFile(fileLines);
-					writer.initialize(lyrDef);
-					writers[1]=writer;
+					writer2.initialize(lyrDef);
+					writers[1]=writer2;
+					drivers[1]=getOpenShpDriver(fileLines);
+					//drivers[1]=null;
 
-					//writeFeatures(mapContext, layer, writer, null);
-
+					ShpWriter writer3 = (ShpWriter) LayerFactory.getWM().getWriter(
+					"Shape Writer");
 					// Polígonos
 					aux = path.replaceFirst(".shp", "_polygons.shp");
 					File filePolygons = new File(aux);
 					lyrDef.setFile(filePolygons);
 					lyrDef.setName(filePolygons.getName());
 					lyrDef.setShapeType(FShape.POLYGON);
-					writer.setFile(filePolygons);
+					writer3.setFile(filePolygons);
 					lyrDef.setFile(filePolygons);
-					writer.initialize(lyrDef);
-					writers[2]=writer;
+					writer3.initialize(lyrDef);
+					writers[2]=writer3;
+					drivers[2]=getOpenShpDriver(filePolygons);
+					//drivers[2]=null;
 
-					//writeFeatures(mapContext, layer, writer, null);
-					writeMultiFeatures(mapContext,layer, writers, null);
+					writeMultiFeatures(mapContext,layer, writers, drivers);
 				} else {
-// Esto cuando se quiere exportar a un fichero nuevo falla.
-//					IndexedShpDriver drv = new IndexedShpDriver();
-//					drv.open(newFile);
+					ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
+						"Shape Writer");
+					IndexedShpDriver drv = getOpenShpDriver(newFile);
 
 					lyrDef.setFile(newFile);
 					lyrDef.setName(newFile.getName());
 					lyrDef.setShapeType(layer.getShapeType());
 					writer.setFile(newFile);
 					writer.initialize(lyrDef);
-
-//					writeFeatures(mapContext, layer, writer, drv);
-					writeFeatures(mapContext, layer, writer, null);
+					writeFeatures(mapContext, layer, writer, drv);
 
 				}
 			}
@@ -532,9 +550,12 @@ public class ExportTo extends Extension {
 //			e.printStackTrace();
 //			throw new EditionException(e);
 //		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
-	
 	/**
 	 * This method saves a layer to GML
 	 * @param mapContext
@@ -585,7 +606,18 @@ public class ExportTo extends Extension {
 //		}
 
 	}
-
+	private IndexedShpDriver getOpenShpDriver(File fileShp) throws IOException {
+		IndexedShpDriver drv = new IndexedShpDriver();
+		if (!fileShp.exists()) {
+			fileShp.createNewFile();
+			File newFileSHX=new File(fileShp.getAbsolutePath().replaceAll(".shp",".shx"));
+			newFileSHX.createNewFile();
+			File newFileDBF=new File(fileShp.getAbsolutePath().replaceAll(".shp",".dbf"));
+			newFileDBF.createNewFile();
+		}
+		drv.open(fileShp);
+		return drv;
+	}
 	/**
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
