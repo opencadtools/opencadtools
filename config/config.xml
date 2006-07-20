@@ -188,9 +188,9 @@
 		<extension class-name="com.iver.cit.gvsig.InternalPolygonExtension"
 			description="Extensión encargada de insertar poligonos internos en una capa en edición."
 			active="true">
-			<menu text="geometry/modify/internal_polygon_" action-command="_internalpolygon" icon="images/InternalPolygon.png"/>
+			<menu text="geometry/modify/internal_polygon" action-command="_internalpolygon" icon="images/InternalPolygon.png"/>
 			<tool-bar name="modificar">
-				<selectable-tool icon="images/InternalPolygon.png" action-command="_internalpolygon" tooltip="internal_polygon_" group="vista"/>
+				<selectable-tool icon="images/InternalPolygon.png" action-command="_internalpolygon" tooltip="internal_polygon" group="vista"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.StretchExtension"
