@@ -13,6 +13,7 @@ import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
@@ -145,9 +146,10 @@ public class StopEditing extends Extension {
 				if (resp == JOptionPane.YES_OPTION) { // CANCEL EDITING
 					cancelEdition(layer);
 					vea.getCommandRecord().removeCommandListener(mapControl);
-
-					VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(layer);
-					layer.setLegend((VectorialLegend)vle.getLegend());
+					if (!(layer.getSource().getDriver() instanceof IndexedShpDriver)){
+						VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(layer);
+						layer.setLegend((VectorialLegend)vle.getLegend());
+					}
 					layer.setEditing(false);
 					return true;
 				}
