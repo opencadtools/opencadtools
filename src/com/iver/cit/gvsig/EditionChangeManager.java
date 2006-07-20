@@ -57,7 +57,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.6  2006-07-13 12:36:01  fjp
+ * Revision 1.7  2006-07-20 11:03:27  fjp
+ * *** empty log message ***
+ *
+ * Revision 1.6  2006/07/13 12:36:01  fjp
  * Revisar bien lo de añadir campos y gestionar un campo gris
  *
  * Revision 1.5  2006/06/21 07:22:48  fjp
@@ -127,7 +130,7 @@ public class EditionChangeManager implements IEditionListener{
 					table.refresh();
 			}else if (views[i] instanceof com.iver.cit.gvsig.gui.View){
 				com.iver.cit.gvsig.gui.View view=(com.iver.cit.gvsig.gui.View)views[i];
-				
+				 
 				fLayer.setDirty(true);
 				view.getMapControl().rePaintDirtyLayers();
 				/* FLayers layers=view.getMapControl().getMapContext().getLayers();
