@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import org.gvsig.gui.beans.wizard.WizardAndami;
+
 import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverManager;
 import com.iver.andami.PluginServices;
@@ -13,7 +15,6 @@ import com.iver.cit.gvsig.fmap.edition.IWriteable;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
-import com.iver.cit.gvsig.gui.cad.WizardAndami;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;

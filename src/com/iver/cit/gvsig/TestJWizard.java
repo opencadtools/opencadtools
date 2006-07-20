@@ -1,28 +1,15 @@
 package com.iver.cit.gvsig;
 
-import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import jwizardcomponent.FinishAction;
-import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.Utilities;
-import jwizardcomponent.example.SimpleDynamicWizardPanel;
-import jwizardcomponent.example.SimpleLabelWizardPanel;
 import jwizardcomponent.frame.SimpleLogoJWizardFrame;
 
-import com.hardcode.driverManager.Driver;
-import com.hardcode.driverManager.DriverManager;
-import com.hardcode.driverManager.WriterManager;
-import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
-import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
-import com.iver.cit.gvsig.gui.cad.panels.ChooseWriteDriver;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 
 /**

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/Smc.jar"/>
-	<classpathentry sourcepath="/libGDBMS" kind="lib" path="/libFMap/lib/gdbms-0.8-SNAPSHOT.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/libFMap"/>
-	<classpathentry kind="lib" path="lib/gt2-shapefile.jar"/>
-	<classpathentry kind="lib" path="lib/jdom-1.0b10.jar"/>
-	<classpathentry kind="lib" path="/libFMap/lib/gt2-main.jar"/>
-	<classpathentry kind="lib" path="/libFMap/lib/cms.jar"/>
-	<classpathentry kind="lib" path="/libFMap/lib/jts-1.7.jar"/>
-	<classpathentry sourcepath="/Utiles/src" kind="lib" path="/_fwAndami/lib/iver-utiles.jar"/>
-	<classpathentry sourcepath="/libDriverManager" kind="lib" path="/libFMap/lib/driver-manager-1.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/_fwAndami"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/appgvSIG"/>
-	<classpathentry kind="lib" path="lib/gt2-postgis.jar"/>
-	<classpathentry sourcepath="/JWizardComponent" kind="lib" path="lib/JWizardComponent.jar"/>
-	<classpathentry kind="lib" path="/_fwAndami/lib/beans.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/extJDBC"/>
-	<classpathentry kind="lib" path="/_fwAndami/lib/log4j-1.2.8.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry path="src" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+	<classpathentry path="lib/Smc.jar" kind="lib"/>
+	<classpathentry sourcepath="/libGDBMS" path="/libFMap/lib/gdbms-0.8-SNAPSHOT.jar" kind="lib"/>
+	<classpathentry path="/libFMap" combineaccessrules="false" kind="src"/>
+	<classpathentry path="lib/gt2-shapefile.jar" kind="lib"/>
+	<classpathentry path="lib/jdom-1.0b10.jar" kind="lib"/>
+	<classpathentry path="/libFMap/lib/gt2-main.jar" kind="lib"/>
+	<classpathentry path="/libFMap/lib/cms.jar" kind="lib"/>
+	<classpathentry path="/libFMap/lib/jts-1.7.jar" kind="lib"/>
+	<classpathentry sourcepath="/Utiles/src" path="/_fwAndami/lib/iver-utiles.jar" kind="lib"/>
+	<classpathentry sourcepath="/libDriverManager" path="/libFMap/lib/driver-manager-1.1.jar" kind="lib"/>
+	<classpathentry path="/_fwAndami" combineaccessrules="false" kind="src"/>
+	<classpathentry path="/appgvSIG" combineaccessrules="false" kind="src"/>
+	<classpathentry path="lib/gt2-postgis.jar" kind="lib"/>
+	<classpathentry path="/_fwAndami/lib/beans.jar" kind="lib"/>
+	<classpathentry path="/extJDBC" combineaccessrules="false" kind="src"/>
+	<classpathentry path="/_fwAndami/lib/log4j-1.2.8.jar" kind="lib"/>
+	<classpathentry path="/_fwAndami/lib/JWizardComponent.jar" kind="lib"/>
+	<classpathentry path="bin" kind="output"/>
 </classpath>
