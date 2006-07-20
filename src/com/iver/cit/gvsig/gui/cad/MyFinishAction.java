@@ -1,7 +1,9 @@
 package com.iver.cit.gvsig.gui.cad;
 
 import java.awt.Component;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Types;
@@ -112,8 +114,16 @@ public class MyFinishAction extends FinishAction
 			}
 			else if (actionComand.equals("DXF"))
 			{
-	    		FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(0);
-    		    File newFile = new File(shpPanel.getPath());
+	    		FileBasedPanel dxfPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(0);
+    		    File newFile = new File(dxfPanel.getPath());
+    		    if( newFile.exists()){
+					int resp = JOptionPane.showConfirmDialog(
+							(Component) PluginServices.getMainFrame(),PluginServices.getText(this,"fichero_ya_existe_seguro_desea_guardarlo"),
+							PluginServices.getText(this,"guardar"), JOptionPane.YES_NO_OPTION);
+					if (resp != JOptionPane.YES_OPTION) {
+						return;
+					}
+				}
     		    DXFLayerDefinition lyrDef = new DXFLayerDefinition();
     		    lyrDef.setFile(newFile);
     		    String layerName = newFile.getName();
@@ -245,6 +255,7 @@ public class MyFinishAction extends FinishAction
 		mapCtrl.getMapContext().endAtomicEvent();
 		lyr.addLayerListener(CADExtension.getEditionManager());
 		lyr.setActive(true);
+
 		try {
 			lyr.setEditing(true);
 	        VectorialEditableAdapter vea = (VectorialEditableAdapter) lyr.getSource();
