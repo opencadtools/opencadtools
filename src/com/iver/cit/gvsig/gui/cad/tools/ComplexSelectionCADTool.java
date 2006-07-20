@@ -54,16 +54,17 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
-import com.iver.cit.gvsig.fmap.core.FCircle2D;
-import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
+import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ComplexSelectionCADToolContext;
@@ -142,8 +143,10 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 		} else if (status.equals("Selection.WithFeatures")) {
 		} else if (status.equals("Selection.WithHandlers")) {
 			vea.startComplexRow();
+			ArrayList selectedRowsAux=new ArrayList();
 			for (int i = 0; i < selectedRow.size(); i++) {
 				IRowEdited row = (IRowEdited) selectedRow.get(i);
+				IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
 				// Movemos los handlers que hemos seleccionado
 				// previamente dentro del método select()
 				for (int k = 0; k < selectedHandler.size(); k++) {
@@ -151,8 +154,11 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 					h.set(x, y);
 				}
 
-				modifyFeature(row.getIndex(), (IFeature) row.getLinkedRow().cloneRow());
+				modifyFeature(row.getIndex(), feat);
+				selectedRowsAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,row.getIndex()));
 			}
+			firstPoint=new Point2D.Double(x,y);
+			vle.setSelectionCache(selectedRowsAux);
 			try {
 				String description=PluginServices.getText(this,"move_handlers");
 				vea.endComplexRow(description);
@@ -513,11 +519,16 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 		}
 		System.out.println("ESTADO ACTUAL: " + getStatus());
 
-		// ESTO LO QUITO POR AHORA, PERO PUEDE QUE LO NECESITEMOS VOLVER A PONER.
-		// Lo he quitado porque cuando seleccionas algo con CAD, molesta que
-		// te hagan un redibujado.
-		/* FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
-		lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents(); */
+		FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
+		com.iver.andami.ui.mdiManager.View[] views = (com.iver.andami.ui.mdiManager.View[]) PluginServices.getMDIManager().getAllViews();
+
+		for (int i=0 ; i<views.length ; i++){
+			if (views[i] instanceof Table){
+				Table table=(Table)views[i];
+				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(lv))
+					table.updateSelection();
+			}
+		}
 	}
 	public String getStatus() {
 		try {
