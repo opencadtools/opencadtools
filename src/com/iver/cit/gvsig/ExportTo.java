@@ -584,12 +584,13 @@ public class ExportTo extends Extension {
 				SelectableDataSource sds = layer.getRecordset();
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 				lyrDef.setFieldsDesc(fieldsDescrip);
-				lyrDef.setName(layer.getName());
+				lyrDef.setName(newFile.getName());
 				lyrDef.setShapeType(layer.getShapeType());
 
 				writer.setFile(newFile);
 				writer.setSchema(lyrDef);
 				writer.setBoundedBy(layer.getFullExtent(),layer.getProjection());
+				writer.initialize(lyrDef);
 				GMLDriver gmlDriver=new GMLDriver();
 				gmlDriver.open(newFile);
 				writeFeatures(mapContext, layer, writer, gmlDriver);
