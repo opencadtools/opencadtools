@@ -12,6 +12,7 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
@@ -185,7 +186,18 @@ public class StopEditing extends Extension {
 				}
 			}
 		}
+		vea.cleanSelectableDatasource();
+		layer.setRecordset(vea.getRecordset()); // Queremos que el recordset del layer 
+		// refleje los cambios en los campos.
 		ILayerDefinition lyrDef = EditionUtilities.createLayerDefinition(layer);
+		String aux="FIELDS:";
+		FieldDescription[] flds = lyrDef.getFieldsDesc(); 
+		for (int i=0; i < flds.length; i++)
+		{
+			aux = aux + ", " + flds[i].getFieldAlias(); 
+		}
+		System.err.println("Escribiendo la capa " + lyrDef.getName() + 
+				" con los campos " + aux);
 		writer.initialize(lyrDef);
 		vea.stopEdition(writer, EditionEvent.GRAPHIC);
 
