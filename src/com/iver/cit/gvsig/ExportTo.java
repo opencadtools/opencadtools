@@ -35,6 +35,7 @@ import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.dxf.DXFMemoryDriver;
+import com.iver.cit.gvsig.fmap.drivers.gml.GMLDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGisDriver;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
@@ -576,21 +577,22 @@ public class ExportTo extends Extension {
 					path = path + ".gml";
 				}
 				newFile = new File(path);
-				
+
 				GMLWriter writer = (GMLWriter)LayerFactory.getWM().getWriter("GML Writer");
-					
+
 				SHPLayerDefinition lyrDef = new SHPLayerDefinition();
 				SelectableDataSource sds = layer.getRecordset();
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 				lyrDef.setFieldsDesc(fieldsDescrip);
 				lyrDef.setName(layer.getName());
 				lyrDef.setShapeType(layer.getShapeType());
-				
+
 				writer.setFile(newFile);
-				writer.setSchema(lyrDef);		
+				writer.setSchema(lyrDef);
 				writer.setBoundedBy(layer.getFullExtent(),layer.getProjection());
-				
-				writeFeatures(mapContext, layer, writer, null);
+				GMLDriver gmlDriver=new GMLDriver();
+				gmlDriver.open(newFile);
+				writeFeatures(mapContext, layer, writer, gmlDriver);
 			}
 
 		} catch (DriverException e) {
@@ -604,6 +606,9 @@ public class ExportTo extends Extension {
 //			e.printStackTrace();
 //			throw new EditionException(e);
 //		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 	private IndexedShpDriver getOpenShpDriver(File fileShp) throws IOException {
