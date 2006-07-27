@@ -51,6 +51,7 @@ import java.util.HashMap;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 
@@ -295,7 +296,8 @@ public class CADExtension extends Extension {
 					// TODO: REVISAR ESTO CUANDO VIENE UN INTRO DESDE UN
 					// JTEXTAREA
 					// QUE NO ES EL DE CONSOLA
-					view.focusConsole("");
+					if (!(e.getSource() instanceof JTable))
+						view.focusConsole("");
 				}
 				else if ((!e.isActionKey())) {
 						//if (Character.isLetterOrDigit(e.getKeyChar())) {
