@@ -189,7 +189,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	/**
 	 * This method initializes
-	 * 
+	 *
 	 */
 	public EditionPreferencePage() {
 		super();
@@ -205,7 +205,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 */
 	private void initialize() {
 		BorderLayout layout = new BorderLayout();
@@ -256,7 +256,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.iver.cit.gvsig.gui.preferences.IPreference#initializeValues()
 	 */
 	public void initializeValues() {
@@ -278,7 +278,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		// firstLyrVect = (FLyrVect) aux;
 		// }
 		// }
-		//		
+		//
 		// TableModel tm = getJTableSnapping().getModel();
 		// for (int i=0; i < tm.getRowCount(); i++)
 		// {
@@ -338,7 +338,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 				if (aux.isActive())
 					if (aux.isEditing()) {
 						// Sobre la capa en edición siempre se puede hacer snapping
-						lyrVect.setSpatialCacheEnabled(true); 
+						lyrVect.setSpatialCacheEnabled(true);
 						VectorialLayerEdited lyrEd = (VectorialLayerEdited) edManager
 								.getLayerEdited(aux);
 						lyrEd.setLayersToSnap(layersToSnap);
@@ -366,7 +366,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 				}
 
 		} // while
-		
+
 		SelectionCADTool.tolerance = Integer.parseInt(getJTxtTolerance().getText());
 
 		return true;
@@ -399,7 +399,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	/**
 	 * This method initializes jTxtTolerance
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTxtTolerance() {
@@ -416,7 +416,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	/**
 	 * This method initializes jSeparator
-	 * 
+	 *
 	 * @return javax.swing.JSeparator
 	 */
 	private JSeparator getJSeparator() {
@@ -429,7 +429,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -442,7 +442,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	/**
 	 * This method initializes jTableSnapping
-	 * 
+	 *
 	 * @return javax.swing.JTable
 	 */
 	private JTable getJTableSnapping() {
@@ -451,17 +451,17 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			// TableColumnModel cm = new DefaultTableColumnModel();
 			// TableColumn checkCol = new TableColumn(0, 50);
 			// cm.addColumn(checkCol);
-			//			
+			//
 			// TableColumn layerCol = new TableColumn(1, 250);
 			// cm.addColumn(layerCol);
-			//			
+			//
 			// TableColumn maxFeatCol = new TableColumn(2, 50);
 			// cm.addColumn(maxFeatCol);
 			//
 			// JTableHeader head = new JTableHeader(cm);
 			// head.setVisible(true);
-			//			
-			//			
+			//
+			//
 			// TableModel tm = new DefaultTableModel(4,3);
 			// jTableSnapping.setModel(tm);
 			// jTableSnapping.setTableHeader(head);
@@ -471,7 +471,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	/**
 	 * This method initializes jPanelNord
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelNord() {
@@ -491,7 +491,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	/**
 	 * This method initializes jPanelCache
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelCache() {
@@ -517,6 +517,11 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			jPanelCache.add(getJScrollPane(), gridBagConstraints1);
 		}
 		return jPanelCache;
+	}
+
+	public void cancelAction() {
+		// TODO Auto-generated method stub
+
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

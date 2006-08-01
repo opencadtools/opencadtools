@@ -66,14 +66,14 @@ public class DialogEditionPreferences  {
 		}
 		public void initializeValues() {
 			// TODO Auto-generated method stub
-			
+
 		}
 		public boolean storeValues() {
 			return true;
 		}
 		public void initializeDefaults() {
 			// TODO Auto-generated method stub
-			
+
 		}
 		public ImageIcon getIcon() {
 			// TODO Auto-generated method stub
@@ -87,7 +87,11 @@ public class DialogEditionPreferences  {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+		public void cancelAction() {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 	public static void main(String[] args) {
 		try {
@@ -96,18 +100,18 @@ public class DialogEditionPreferences  {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		DialogEditionPreferences test = new DialogEditionPreferences();
 		// test.configureUI();
 		test.test();
-		
+
 	}
-	
+
 	   /**
-     * Configures the UI; tries to set the system look on Mac, 
+     * Configures the UI; tries to set the system look on Mac,
      * <code>WindowsLookAndFeel</code> on general Windows, and
      * <code>Plastic3DLookAndFeel</code> on Windows XP and all other OS.<p>
-     * 
+     *
      * The JGoodies Swing Suite's <code>ApplicationStarter</code>,
      * <code>ExtUIManager</code>, and <code>LookChoiceStrategies</code>
      * classes provide a much more fine grained algorithm to choose and
@@ -133,8 +137,8 @@ public class DialogEditionPreferences  {
 		dlg.setModal(true);
 		dlg.setTitle("Preferences");
 
-		DlgPreferences panel = DlgPreferences.getInstance();		
-		
+		DlgPreferences panel = DlgPreferences.getInstance();
+
 		for (int i=0; i< 20; i++)
 		{
 			TestPref newPref = new TestPref("Titulo " + i);
@@ -142,14 +146,14 @@ public class DialogEditionPreferences  {
 			if (i> 5)
 				newPref.setParentID("Titulo " + rnd.nextInt(i));
 			//panel.addPreferencePage(newPref);
-			
+
 		}
-		
+
 		FLayers layers = new FLayers(null, null);
 		FLyrVect lyrVect = new FLyrVect();
 		lyrVect.setName("Hola");
 		layers.addLayer(lyrVect);
-		
+
 		EditionPreferencePage edPref = new EditionPreferencePage();
 		//panel.addPreferencePage(edPref);
 		edPref.setLayers(layers);
@@ -160,7 +164,7 @@ public class DialogEditionPreferences  {
 
 		dlg.setVisible(true);
 
-		
+
 
 		System.exit(0);
 	}
