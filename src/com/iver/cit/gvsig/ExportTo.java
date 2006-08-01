@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JComponent;
@@ -634,8 +633,7 @@ public class ExportTo extends Extension {
 		{
 			return true;
 		}
-		else
-			return false;
+		return false;
 	}
 
 	/**
@@ -649,12 +647,9 @@ public class ExportTo extends Extension {
 			return false;
 		}
 
-		if (f instanceof View) {
+		if (f instanceof View)
 			return true;
-		} else {
-			return false;
-		}
-
+		return false;
 	}
 
 }

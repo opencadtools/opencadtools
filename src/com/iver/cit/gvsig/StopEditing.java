@@ -66,7 +66,7 @@ public class StopEditing extends Extension {
 			for (int i = 0; i < actives.length; i++) {
 				if (actives[i] instanceof FLyrVect && actives[i].isEditing()) {
 					FLyrVect lv = (FLyrVect) actives[i];
-					MapControl mapControl = (MapControl) vista.getMapControl();
+					MapControl mapControl = vista.getMapControl();
 					VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getActiveLayerEdited();
 					lyrEd.clearSelection();
 					isStop=stopEditing(lv, mapControl);
@@ -133,7 +133,8 @@ public class StopEditing extends Extension {
 				vea.getCommandRecord().removeCommandListener(mapControl);
 				layer.setEditing(false);
 				return true;
-			} else {// Si no existe writer para la capa que tenemos en edición
+			}
+			// Si no existe writer para la capa que tenemos en edición
 				resp = JOptionPane
 						.showConfirmDialog(
 								(Component) PluginServices.getMainFrame(),
@@ -154,7 +155,7 @@ public class StopEditing extends Extension {
 					layer.setEditing(false);
 					return true;
 				}
-			}
+
 		} catch (EditionException e) {
 			NotificationManager.addError(e);
 		} catch (IOException e) {
@@ -187,16 +188,16 @@ public class StopEditing extends Extension {
 			}
 		}
 		vea.cleanSelectableDatasource();
-		layer.setRecordset(vea.getRecordset()); // Queremos que el recordset del layer 
+		layer.setRecordset(vea.getRecordset()); // Queremos que el recordset del layer
 		// refleje los cambios en los campos.
 		ILayerDefinition lyrDef = EditionUtilities.createLayerDefinition(layer);
 		String aux="FIELDS:";
-		FieldDescription[] flds = lyrDef.getFieldsDesc(); 
+		FieldDescription[] flds = lyrDef.getFieldsDesc();
 		for (int i=0; i < flds.length; i++)
 		{
-			aux = aux + ", " + flds[i].getFieldAlias(); 
+			aux = aux + ", " + flds[i].getFieldAlias();
 		}
-		System.err.println("Escribiendo la capa " + lyrDef.getName() + 
+		System.err.println("Escribiendo la capa " + lyrDef.getName() +
 				" con los campos " + aux);
 		writer.initialize(lyrDef);
 		vea.stopEdition(writer, EditionEvent.GRAPHIC);
@@ -222,8 +223,7 @@ public class StopEditing extends Extension {
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
 			return true;
-		else
-			return false;
+		return false;
 
 	}
 }

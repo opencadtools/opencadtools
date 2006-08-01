@@ -59,7 +59,7 @@ public class StopEditingToShp extends Extension {
                         actives[i].isEditing())
             		{
             			FLyrVect lv = (FLyrVect) actives[i];
-            			MapControl mapControl = (MapControl) vista.getMapControl();
+            			MapControl mapControl = vista.getMapControl();
             			stopEditing(lv,mapControl);
             		}
             	}
@@ -102,7 +102,6 @@ public class StopEditingToShp extends Extension {
                     layer.setEditing(false);
                     vista.hideConsole();
                 }
-            //}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,8 +113,7 @@ public class StopEditingToShp extends Extension {
     public boolean isVisible() {
         if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
         	return true;
-        else
-        	return false;
+      	return false;
 
     }
 }

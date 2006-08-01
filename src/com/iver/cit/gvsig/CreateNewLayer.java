@@ -11,7 +11,6 @@ import com.hardcode.driverManager.DriverManager;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
-import com.iver.cit.gvsig.fmap.edition.IWriteable;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
@@ -22,7 +21,7 @@ import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
 
 /**
  * DOCUMENT ME!
- * 
+ *
  * @author Vicente Caballero Navarro
  */
 public class CreateNewLayer extends Extension {
@@ -56,7 +55,7 @@ public void execute(String actionCommand) {
 			wizardFrame.setTitle("Creación de un nuevo Tema"); */
 			WizardAndami wizard = new WizardAndami(LOGO);
 
-		    DriverManager writerManager = LayerFactory.getDM(); 
+		    DriverManager writerManager = LayerFactory.getDM();
 		    ArrayList spatialDrivers = new ArrayList();
 		    String[] writerNames = writerManager.getDriverNames();
 			for (int i=0; i<writerNames.length; i++)
@@ -67,31 +66,31 @@ public void execute(String actionCommand) {
 			}
 
 			ChooseGeometryType panelChoose = new ChooseGeometryType(wizard.getWizardComponents());
-			JPanelFieldDefinition panelFields = new JPanelFieldDefinition(wizard.getWizardComponents());			
+			JPanelFieldDefinition panelFields = new JPanelFieldDefinition(wizard.getWizardComponents());
 
 			if (actionCommand.equals("SHP"))
 			{
 				wizard.getWizardComponents().addWizardPanel(panelChoose);
 				wizard.getWizardComponents().addWizardPanel(panelFields);
 
-				panelChoose.setDriver((ISpatialWriter) writerManager.getDriver("gvSIG shp driver"));
+				panelChoose.setDriver(writerManager.getDriver("gvSIG shp driver"));
 				FileBasedPanel filePanel = new FileBasedPanel(wizard.getWizardComponents());
 				filePanel.setFileExtension("shp");
 				wizard.getWizardComponents().addWizardPanel(filePanel);
-				
+
 				wizard.getWizardComponents().setFinishAction(
 						new MyFinishAction(wizard.getWizardComponents(),
 								vista, actionCommand));
 			}
 			if (actionCommand.equals("DXF"))
 			{
-				panelChoose.setDriver((ISpatialWriter) writerManager.getDriver("gvSIG DXF Memory Driver"));
+				panelChoose.setDriver(writerManager.getDriver("gvSIG DXF Memory Driver"));
 				FileBasedPanel filePanel = new FileBasedPanel(wizard.getWizardComponents());
 				filePanel.setFileExtension("dxf");
 				wizard.getWizardComponents().addWizardPanel(filePanel);
 				wizard.getWizardComponents().getBackButton().setEnabled(false);
 				wizard.getWizardComponents().getNextButton().setEnabled(false);
-			
+
 				wizard.getWizardComponents().setFinishAction(
 					new MyFinishAction(wizard.getWizardComponents(),
 							vista, actionCommand));
@@ -104,11 +103,11 @@ public void execute(String actionCommand) {
 				panelChoose.setDriver(driver);
 				wizard.getWizardComponents().addWizardPanel(
 					new PostGISpanel(wizard.getWizardComponents()));
-				
+
 				wizard.getWizardComponents().setFinishAction(
 						new MyFinishAction(wizard.getWizardComponents(),
 								vista, actionCommand));
-			}			
+			}
 			wizard.getWizardComponents().getFinishButton().setEnabled(false);
 			wizard.getViewInfo().setWidth(540);
 			wizard.getViewInfo().setHeight(350);
@@ -125,10 +124,9 @@ public void execute(String actionCommand) {
 	public boolean isEnabled() {
 		View f = (View) PluginServices.getMDIManager().getActiveView();
 
-		if (f == null) {
+		if (f == null)
 			return false;
-		} else
-			return true;
+		return true;
 	}
 
 	/**
@@ -142,11 +140,8 @@ public void execute(String actionCommand) {
 			return false;
 		}
 
-		if (f instanceof View) {
+		if (f instanceof View)
 			return true;
-		} else {
-			return false;
-		}
-
+		return false;
 	}
 }

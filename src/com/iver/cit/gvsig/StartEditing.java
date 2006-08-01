@@ -1,9 +1,5 @@
 package com.iver.cit.gvsig;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
@@ -38,14 +34,14 @@ import com.iver.utiles.console.jedit.Token;
  */
 public class StartEditing extends Extension {
 
-	private class MyAction extends AbstractAction
-	{
-
-		public void actionPerformed(ActionEvent e) {
-			System.err.println("F3");
-		}
-
-	}
+//	private class MyAction extends AbstractAction
+//	{
+//
+//		public void actionPerformed(ActionEvent e) {
+//			System.err.println("F3");
+//		}
+//
+//	}
 
 	View vista;
 	/**
@@ -66,7 +62,7 @@ public class StartEditing extends Extension {
 			vista = (View) f;
 
 			vista.showConsole();
-			MapControl mapControl = (MapControl) vista.getMapControl();
+			MapControl mapControl = vista.getMapControl();
 			EditionManager editionManager=CADExtension.getEditionManager();
 			editionManager.setMapControl(mapControl);
 
@@ -188,7 +184,7 @@ public class StartEditing extends Extension {
 	}
 
 	private void changeModelTable(ProjectTable pt){
-    	 com.iver.andami.ui.mdiManager.View[] views = (com.iver.andami.ui.mdiManager.View[]) PluginServices.getMDIManager().getAllViews();
+    	 com.iver.andami.ui.mdiManager.View[] views = PluginServices.getMDIManager().getAllViews();
 
  		for (int i=0 ; i<views.length ; i++){
  			if (views[i] instanceof Table){
@@ -215,8 +211,7 @@ public class StartEditing extends Extension {
 		if (selected.length == 1 && selected[0] instanceof FLyrVect) {
 			if (selected[0].isEditing())
 				return false;
-			else
-				return true;
+			return true;
 		}
 		return false;
 	}
@@ -232,10 +227,8 @@ public class StartEditing extends Extension {
 			return false;
 		}
 
-		if (f instanceof View) {
+		if (f instanceof View)
 			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
 }

@@ -45,7 +45,6 @@ import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.ComplexSelectionCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 
 /**
  * Extensión que gestiona la herramienta de seleccionar.

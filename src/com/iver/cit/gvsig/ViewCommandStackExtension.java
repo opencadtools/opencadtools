@@ -71,8 +71,7 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
 			return true;
-		else
-			return false;
+		return false;
 
 	}
 

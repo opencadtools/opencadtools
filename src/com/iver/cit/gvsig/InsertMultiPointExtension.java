@@ -44,12 +44,9 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.core.FShape;
-import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPointCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 /**
  * Extensión que gestiona la inserción de multipuntos en edición.
  *
@@ -88,7 +85,7 @@ public class InsertMultiPointExtension extends Extension {
       	try {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE){
 				view = (View) PluginServices.getMDIManager().getActiveView();
-		        mapControl = (MapControl) view.getMapControl();
+		        mapControl = view.getMapControl();
 		        if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
 					return false;
 		        FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
@@ -107,10 +104,7 @@ public class InsertMultiPointExtension extends Extension {
      */
     public boolean isVisible() {
     	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-		{
 			return true;
-		}
-		else
-			return false;
+		return false;
     }
 	}

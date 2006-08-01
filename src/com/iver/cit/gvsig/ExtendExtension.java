@@ -49,7 +49,6 @@ import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.ExtendCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.StretchCADTool;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 /**
@@ -91,7 +90,7 @@ public class ExtendExtension extends Extension {
 		try {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 				view = (View) PluginServices.getMDIManager().getActiveView();
-				mapControl = (MapControl) view.getMapControl();
+				mapControl = view.getMapControl();
 				EditionManager em=CADExtension.getEditionManager();
 				if (em.getActiveLayerEdited()==null)
 					return false;
@@ -116,10 +115,7 @@ public class ExtendExtension extends Extension {
 	 */
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-		{
 			return true;
-		}
-		else
-			return false;
+		return false;
 	}
 }

@@ -46,7 +46,6 @@ import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.View;
-import com.iver.cit.gvsig.gui.cad.tools.BreakCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.JoinCADTool;
 
 /**
@@ -88,7 +87,7 @@ public class JoinExtension extends Extension {
 		try {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 				view = (View) PluginServices.getMDIManager().getActiveView();
-				mapControl = (MapControl) view.getMapControl();
+				mapControl = view.getMapControl();
 				if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
 					return false;
 				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
@@ -107,10 +106,7 @@ public class JoinExtension extends Extension {
 	 */
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-		{
 			return true;
-		}
-		else
-			return false;
+		return false;
 	}
 }

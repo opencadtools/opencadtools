@@ -1,16 +1,8 @@
 package com.iver.cit.gvsig;
 
-import java.io.IOException;
-
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.edition.EditionException;
-import com.iver.cit.gvsig.fmap.layers.FLayer;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.View;
-import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 /**
  * DOCUMENT ME!
@@ -64,8 +56,7 @@ public class GridExtension extends Extension {
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
 			return true;
-		else
-			return false;
+		return false;
 
 	}
 }

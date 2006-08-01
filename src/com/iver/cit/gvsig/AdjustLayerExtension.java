@@ -67,10 +67,8 @@ public class AdjustLayerExtension extends Extension {
 			return false;
 		}
 
-		if (f instanceof View) {
+		if (f instanceof View)
 			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
 }
