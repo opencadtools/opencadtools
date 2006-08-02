@@ -211,4 +211,9 @@ public class WriterGT2Shp extends AbstractWriter {
 		
 	}
 
+	public boolean canAlterTable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

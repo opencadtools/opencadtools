@@ -31,6 +31,7 @@ import com.iver.cit.gvsig.fmap.core.v02.FLabel;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
+import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.dxf.DXFMemoryDriver;
@@ -57,6 +58,7 @@ import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.jdbc_spatial.DlgConnection;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 import com.iver.cit.gvsig.project.ProjectView;
+import com.iver.utiles.PostProcessSupport;
 import com.iver.utiles.SimpleFileFilter;
 import com.iver.utiles.swing.threads.AbstractMonitorableTask;
 
@@ -165,8 +167,10 @@ public class ExportTo extends Extension {
 
 				if (res == JOptionPane.YES_OPTION)
 				{
+					PostProcessSupport.executeCalls();
+					ILayerDefinition lyrDef = (ILayerDefinition) writer.getTableDefinition();
 					FLayer newLayer = LayerFactory.createLayer(
-							writer.getTableDefinition().getName(), reader, mapContext.getProjection());
+							lyrDef.getName(), reader, mapContext.getProjection());
 					mapContext.getLayers().addLayer(newLayer);
 				}
 			}
@@ -258,6 +262,7 @@ public class ExportTo extends Extension {
 					.getText(this, "intro_tablename"));
 			if (tableName == null)
 				return;
+			tableName = tableName.toLowerCase();
 			DlgConnection dlg = new DlgConnection();
 			dlg.setModal(true);
 			dlg.setVisible(true);
@@ -270,6 +275,7 @@ public class ExportTo extends Extension {
 			DBLayerDefinition dbLayerDef = new DBLayerDefinition();
 			dbLayerDef.setCatalogName(cs.getDb());
 			dbLayerDef.setTableName(tableName);
+			dbLayerDef.setName(tableName);
 			dbLayerDef.setShapeType(layer.getShapeType());
 			SelectableDataSource sds = layer.getRecordset();
 			FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
@@ -290,6 +296,12 @@ public class ExportTo extends Extension {
 			PostGisDriver postGISDriver=new PostGisDriver();
 			postGISDriver.setLyrDef(dbLayerDef);
 			postGISDriver.open();
+			PostProcessSupport.clearList();
+			Object[] params = new Object[2];
+			params[0] = conex;
+			params[1] = dbLayerDef;
+			PostProcessSupport.addToPostProcess(postGISDriver, "setData", 
+					params, 1);
 
 			writeFeatures(mapContext, layer, writer, postGISDriver);
 
@@ -307,6 +319,16 @@ public class ExportTo extends Extension {
 
 	}
 
+	/**
+	 * Lanza un thread en background que escribe las features. Cuando termina, pregunta al usuario si quiere
+	 * añadir la nueva capa a la vista. Para eso necesita un driver de lectura ya configurado.
+	 * @param mapContext
+	 * @param layer
+	 * @param writer
+	 * @param reader
+	 * @throws DriverException
+	 * @throws DriverIOException
+	 */
 	private void writeFeatures(FMap mapContext, FLyrVect layer, IWriter writer, Driver reader) throws DriverException, DriverIOException
 	{
 		PluginServices.cancelableBackgroundExecution(new WriterTask(mapContext, layer, writer, reader));

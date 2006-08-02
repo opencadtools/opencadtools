@@ -293,4 +293,9 @@ public class WriterGT2 extends AbstractWriter {
 		
 	}
 
+	public boolean canAlterTable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
