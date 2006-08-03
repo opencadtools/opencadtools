@@ -316,14 +316,14 @@ public class CADToolAdapter extends Behavior {
 
 		if (mF != null)
 		{
-            mF.getStatusBar().setMessage("1",
+            mF.getStatusBar().setMessage("units",
                     FConstant.NAMES[vp.getDistanceUnits()]);
-            mF.getStatusBar().setMessage("6", "1:"+mapControl.getMapContext().getScaleView());
-            mF.getStatusBar().setMessage("7", iProj.getAbrev());
+            mF.getStatusBar().setControlValue("scale",String.valueOf(mapControl.getMapContext().getScaleView()));
+			mF.getStatusBar().setMessage("projection", iProj.getAbrev());
 
-			mF.getStatusBar().setMessage("2",
+			mF.getStatusBar().setMessage("x",
 					axisText[0] + String.valueOf(nf.format(p.getX()/FMap.CHANGEM[vp.getDistanceUnits()])));
-			mF.getStatusBar().setMessage("3",
+			mF.getStatusBar().setMessage("y",
 					axisText[1] + String.valueOf(nf.format(p.getY()/FMap.CHANGEM[vp.getDistanceUnits()])));
 		}
 	}
