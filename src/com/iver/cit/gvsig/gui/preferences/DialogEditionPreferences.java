@@ -68,8 +68,7 @@ public class DialogEditionPreferences  {
 			// TODO Auto-generated method stub
 
 		}
-		public boolean storeValues() {
-			return true;
+		public void storeValues() {
 		}
 		public void initializeDefaults() {
 			// TODO Auto-generated method stub

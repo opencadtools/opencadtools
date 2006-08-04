@@ -57,6 +57,7 @@ import javax.swing.table.TableModel;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.preferences.AbstractPreferencePage;
+import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -294,7 +295,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	}
 
-	public boolean storeValues() {
+	public void storeValues() throws StoreException {
 		TableModel tm = getJTableSnapping().getModel();
 		ArrayList layersToSnap = new ArrayList();
 		for (int i = 0; i < tm.getRowCount(); i++) {
@@ -366,10 +367,11 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 				}
 
 		} // while
-
-		SelectionCADTool.tolerance = Integer.parseInt(getJTxtTolerance().getText());
-
-		return true;
+		try{
+			SelectionCADTool.tolerance = Integer.parseInt(getJTxtTolerance().getText());
+		}catch (Exception e) {
+			throw new StoreException(PluginServices.getText(this, "tolerancia_incorrecta"),e);
+		}
 	}
 
 	public void initializeDefaults() {
