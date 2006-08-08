@@ -57,7 +57,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.7  2006-07-20 11:03:27  fjp
+ * Revision 1.8  2006-08-08 07:19:05  caballero
+ * afterRowEditEvent con IRow
+ *
+ * Revision 1.7  2006/07/20 11:03:27  fjp
  * *** empty log message ***
  *
  * Revision 1.6  2006/07/13 12:36:01  fjp
@@ -120,7 +123,7 @@ public class EditionChangeManager implements IEditionListener{
 	 *  (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#afterRowEditEvent(com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent)
 	 */
-	public void afterRowEditEvent(AfterRowEditEvent e) {
+	public void afterRowEditEvent(IRow feat, AfterRowEditEvent e) {
 		View[] views = (View[]) PluginServices.getMDIManager().getAllViews();
 
 		for (int i=0 ; i<views.length ; i++){
