@@ -43,7 +43,10 @@
 *
 * $Id$
 * $Log$
-* Revision 1.1  2006-08-10 08:18:35  caballero
+* Revision 1.2  2006-08-10 11:13:02  caballero
+* mostrar unidades
+*
+* Revision 1.1  2006/08/10 08:18:35  caballero
 * configurar grid
 *
 * Revision 1.1  2006/08/04 11:41:05  caballero
@@ -107,6 +110,8 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.ViewPort;
+import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.gui.cad.CADGrid;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
@@ -127,8 +132,9 @@ public class GridPage extends AbstractPreferencePage {
 		addComponent(chkShowGrid);
 		chkAdjustGrid=new JCheckBox(PluginServices.getText(this,"ajustar_rejilla"));
 		addComponent(chkAdjustGrid);
-		// distance x
 		addComponent(lblUnits);
+
+		// distance x
 		addComponent(PluginServices.getText(this, "distance_x") + ":",
 			txtDistanceX = new JTextField("", 15));
 		// distance y
@@ -140,6 +146,7 @@ public class GridPage extends AbstractPreferencePage {
 	public void initializeValues() {
 		cta=CADExtension.getCADToolAdapter();
 		cta.initializeGrid();
+		ViewPort vp=cta.getMapControl().getViewPort();
 //		boolean showGrid = prefs.getBoolean("grid.showgrid",cta.getGrid().isShowGrid());
 //		boolean adjustGrid = prefs.getBoolean("grid.adjustgrid",cta.getGrid().isAdjustGrid());
 //
@@ -150,7 +157,8 @@ public class GridPage extends AbstractPreferencePage {
 		chkAdjustGrid.setSelected(cg.isAdjustGrid());
 		txtDistanceX.setText(String.valueOf(cg.getGridSizeX()));
 		txtDistanceY.setText(String.valueOf(cg.getGridSizeY()));
-		lblUnits.setText(PluginServices.getText(this,"Unidades"));
+		lblUnits.setText(PluginServices.getText(this,"Unidades")+ "           "+PluginServices.getText(this,FConstant.NAMES[vp.getDistanceUnits()]));
+
 //		cta.setGridVisibility(showGrid);
 //		cta.setAdjustGrid(adjustGrid);
 //		cta.getGrid().setGridSizeX(dx);
@@ -202,6 +210,8 @@ public class GridPage extends AbstractPreferencePage {
 	public void initializeDefaults() {
 		chkShowGrid.setSelected(cta.getGrid().isShowGrid());
 		chkAdjustGrid.setSelected(cta.getGrid().isAdjustGrid());
+		ViewPort vp=cta.getMapControl().getViewPort();
+		lblUnits.setText(PluginServices.getText(this,"Unidades")+ "           "+PluginServices.getText(this,FConstant.NAMES[vp.getDistanceUnits()]));
 		txtDistanceX.setText(String.valueOf(cta.getGrid().getGridSizeX()));
 		txtDistanceY.setText(String.valueOf(cta.getGrid().getGridSizeY()));
 	}
