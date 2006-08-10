@@ -63,9 +63,9 @@ public class GridAccelerator implements KeyEventDispatcher {
 			return false;
 		
 		CADToolAdapter toolAdap = CADExtension.getCADToolAdapter();
-		toolAdap.setGridVisibility(!toolAdap.getGrid().getUseGrid());
+		toolAdap.setGridVisibility(!toolAdap.getGrid().isShowGrid());
 		
-		System.err.println("Ponemos GRID a " + toolAdap.getGrid().getUseGrid());
+		System.err.println("Ponemos GRID a " + toolAdap.getGrid().isShowGrid());
 		
 		return false;
 	}

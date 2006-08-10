@@ -57,16 +57,16 @@ public class ForceCursorAccelerator implements KeyEventDispatcher {
 	public boolean dispatchKeyEvent(KeyEvent e) {
 		if (e.getID() == KeyEvent.KEY_PRESSED)
 			return false;
-		
+
 		View v = PluginServices.getMDIManager().getActiveView();
 		if (!(v instanceof com.iver.cit.gvsig.gui.View))
 			return false;
-		
+
 		CADToolAdapter toolAdap = CADExtension.getCADToolAdapter();
-		toolAdap.setAdjustGrid(!toolAdap.getGrid().getAdjustGrig());
-		
-		System.err.println("Ponemos ForceCursor a " + toolAdap.getGrid().getAdjustGrig());
-		
+		toolAdap.setAdjustGrid(!toolAdap.getGrid().isAdjustGrid());
+
+		System.err.println("Ponemos ForceCursor a " + toolAdap.getGrid().isAdjustGrid());
+
 		return false;
 	}
 

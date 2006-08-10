@@ -56,7 +56,8 @@ import java.awt.geom.Rectangle2D;
  */
 public class CADGrid {
 	private boolean grid = false;
-	private double gridSize = 1000;
+	private double gridSizeX = 1000;
+	private double gridSizeY = 1000;
 	private ViewPort viewport;
 	private boolean adjustGrid;
 
@@ -85,16 +86,16 @@ public class CADGrid {
 	public double adjustToGrid(Point2D point) {
 		if (adjustGrid) {
 			Point2D auxp = new Point2D.Double(0, 0);
-			double x = ((point.getX() + gridSize) % gridSize) -
-				((auxp.getX()) % gridSize);
-			double y = ((point.getY() + gridSize) % gridSize) -
-				((auxp.getY()) % gridSize);
+			double x = ((point.getX() + gridSizeX) % gridSizeX) -
+				((auxp.getX()) % gridSizeX);
+			double y = ((point.getY() + gridSizeY) % gridSizeY) -
+				((auxp.getY()) % gridSizeY);
 			Point2D p = (Point2D) point.clone();
-			if (x>gridSize/2){
-				x=x-gridSize;
+			if (x>gridSizeX/2){
+				x=x-gridSizeX;
 			}
-			if (y>gridSize/2){
-				y=y-gridSize;
+			if (y>gridSizeY/2){
+				y=y-gridSizeY;
 			}
 			point.setLocation((point.getX() - x), (point.getY() - y));
 			return p.distance(point);
@@ -117,20 +118,20 @@ public class CADGrid {
 		Rectangle2D extent = viewport.getAdjustedExtent();
 		Point2D auxp = new Point2D.Double(0, 0);
 
-		for (double i = extent.getMinX(); i < (extent.getMaxX() + gridSize);
-				i += gridSize) {
+		for (double i = extent.getMinX(); i < (extent.getMaxX() + gridSizeX);
+				i += gridSizeX) {
 			for (double j = extent.getMinY();
-					j < (extent.getMaxY() + gridSize); j += gridSize) {
+					j < (extent.getMaxY() + gridSizeY); j += gridSizeY) {
 				Point2D po = new Point2D.Double(i, j);
 				Point2D point = viewport.fromMapPoint(po);
-				double x = ((po.getX() + gridSize) % gridSize) -
-					((auxp.getX()) % gridSize);
-				double y = ((po.getY() + gridSize) % gridSize) -
-					((auxp.getY()) % gridSize);
+				double x = ((po.getX() + gridSizeX) % gridSizeX) -
+					((auxp.getX()) % gridSizeX);
+				double y = ((po.getY() + gridSizeY) % gridSizeY) -
+					((auxp.getY()) % gridSizeY);
 				x = (point.getX() - viewport.fromMapDistance(x));
 				y = (point.getY() + viewport.fromMapDistance(y));
 
-				if (viewport.fromMapDistance(gridSize) > 3) {
+				if (viewport.fromMapDistance(gridSizeX) > 3 && viewport.fromMapDistance(gridSizeY) > 3)  {
 					g.drawRect((int) x, (int) y, 1, 1);
 				}
 			}
@@ -143,7 +144,7 @@ public class CADGrid {
 	 *
 	 * @param b boolean
 	 */
-	public void setUseGrid(boolean b) {
+	public void setShowGrid(boolean b) {
 		grid = b;
 	}
 
@@ -152,7 +153,7 @@ public class CADGrid {
 	 *
 	 * @return True si se usa el grid.
 	 */
-	public boolean getUseGrid() {
+	public boolean isShowGrid() {
 		return grid;
 	}
 
@@ -171,15 +172,20 @@ public class CADGrid {
 	 *
 	 * @return True si se está ajustando al grid.
 	 */
-	public boolean getAdjustGrig() {
+	public boolean isAdjustGrid() {
 		return adjustGrid;
 	}
 
-	public double getGridSize() {
-		return gridSize;
+	public double getGridSizeX() {
+		return gridSizeX;
 	}
-
-	public void setGridSize(double gridSize) {
-		this.gridSize = gridSize;
+	public double getGridSizeY() {
+		return gridSizeY;
+	}
+	public void setGridSizeX(double gridSize) {
+		this.gridSizeX = gridSize;
+	}
+	public void setGridSizeY(double gridSize) {
+		this.gridSizeY = gridSize;
 	}
 }

@@ -46,8 +46,11 @@ import javax.swing.JMenuItem;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.preferences.GenericDlgPreferences;
+import com.iver.cit.gvsig.ViewControls;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.gui.preferences.EditionPreferencePage;
+import com.iver.cit.gvsig.gui.preferences.FlatnessPage;
+import com.iver.cit.gvsig.gui.preferences.GridPage;
 import com.iver.cit.gvsig.gui.toc.FPopupMenu;
 import com.iver.cit.gvsig.gui.toc.TocMenuEntry;
 import com.iver.utiles.extensionPoints.ExtensionPoints;
@@ -76,9 +79,16 @@ public class PopupEditionProperties extends TocMenuEntry {
 
 	public void actionPerformed(ActionEvent e) {
 		lyr = getNodeLayer();
+		//ViewControls vc=(ViewControls)PluginServices.getExtension(ViewControls.class);
 		EditionPreferencePage pref = new EditionPreferencePage();
 		pref.setLayers(getMapContext().getLayers());
-		
+		//pref.setParentID(vc.getPreferencesPage().getID());
+		GridPage gridPage=new GridPage();
+		gridPage.setParentID(pref.getID());
+		FlatnessPage flatnessPage=new FlatnessPage();
+		flatnessPage.setParentID(pref.getID());
+
+
 //		JDialog dlg = new JDialog((Frame) PluginServices.getMainFrame(),
 //				PluginServices.getText(this, "Edition_Properties"));
 //		dlg.getContentPane().setLayout(new BorderLayout());
@@ -88,18 +98,21 @@ public class PopupEditionProperties extends TocMenuEntry {
 //		dlg.setModal(true);
 //		dlg.setVisible(true);
 
-		ExtensionPoints extensionPoints = 
+		ExtensionPoints extensionPoints =
 			ExtensionPointsSingleton.getInstance();
 		extensionPoints.add("AplicationPreferences",pref.getID(), pref);
+		extensionPoints.add("AplicationPreferences",gridPage.getID(), gridPage);
+		extensionPoints.add("AplicationPreferences",flatnessPage.getID(), flatnessPage);
+
 		GenericDlgPreferences dlg = new GenericDlgPreferences();
 		dlg.getViewInfo().setTitle(PluginServices.getText(this, "Edition_Properties"));
-		
+
 		//dlg.addPreferencePage(pref);
 		dlg.setActivePage(pref);
 		PluginServices.getMDIManager().addView(dlg);
-		
-		
-		
+
+
+
 	}
 
 }

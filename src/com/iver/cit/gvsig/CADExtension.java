@@ -188,6 +188,8 @@ public class CADExtension extends Extension {
 
 		if (ct == null)
 			throw new RuntimeException("No such cad tool");
+		cta.initializeFlatness();
+		cta.initializeGrid();
 		cta.setCadTool(ct);
 		ct.init();
 		if (showCommand) {

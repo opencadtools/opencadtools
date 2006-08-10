@@ -19,6 +19,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.prefs.Preferences;
 
 import org.cresques.cts.IProjection;
 
@@ -97,6 +98,7 @@ public class CADToolAdapter extends Behavior {
 	private boolean bOrtoMode;
 
 	private Color theTipColor = new Color(255, 255, 155);
+	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 
 	/**
 	 * Pinta de alguna manera especial las geometrias seleccionadas para la
@@ -681,7 +683,7 @@ public class CADToolAdapter extends Behavior {
 	 *            DOCUMENT ME!
 	 */
 	public void setGridVisibility(boolean value) {
-		getGrid().setUseGrid(value);
+		getGrid().setShowGrid(value);
 		getGrid().setViewPort(getMapControl().getViewPort());
 		getMapControl().repaint();
 	}
@@ -943,5 +945,24 @@ public class CADToolAdapter extends Behavior {
 		return editionManager;
 	}
 
+	public void initializeFlatness() {
+		Preferences prefs = Preferences.userRoot().node( "gvsig.options.view" );
+		double flatness = prefs.getDouble("flatness",FConverter.flatness);
+		FConverter.flatness=flatness;
+
+
+	}
+	public void initializeGrid(){
+		boolean showGrid = prefs.getBoolean("grid.showgrid",getGrid().isShowGrid());
+		boolean adjustGrid = prefs.getBoolean("grid.adjustgrid",getGrid().isAdjustGrid());
+
+		double dx = prefs.getDouble("grid.distancex",getGrid().getGridSizeX());
+		double dy = prefs.getDouble("grid.distancey",getGrid().getGridSizeY());
+
+		setGridVisibility(showGrid);
+		setAdjustGrid(adjustGrid);
+		getGrid().setGridSizeX(dx);
+		getGrid().setGridSizeY(dy);
+	}
 
 }
