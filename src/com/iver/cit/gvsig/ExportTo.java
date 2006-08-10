@@ -300,7 +300,7 @@ public class ExportTo extends Extension {
 			Object[] params = new Object[2];
 			params[0] = conex;
 			params[1] = dbLayerDef;
-			PostProcessSupport.addToPostProcess(postGISDriver, "setData", 
+			PostProcessSupport.addToPostProcess(postGISDriver, "setData",
 					params, 1);
 
 			writeFeatures(mapContext, layer, writer, postGISDriver);
@@ -490,10 +490,10 @@ public class ExportTo extends Extension {
 				newFile = new File(path);
 
 
-				SHPLayerDefinition lyrDef = new SHPLayerDefinition();
+
 				SelectableDataSource sds = layer.getRecordset();
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
-				lyrDef.setFieldsDesc(fieldsDescrip);
+
 				if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
 				// ficheros
 				{
@@ -503,30 +503,35 @@ public class ExportTo extends Extension {
 					ShpWriter[] writers=new ShpWriter[3];
 
 					// puntos
-					String aux = path.replaceFirst(".shp", "_points.shp");
+					String auxPoint = path.replaceFirst(".shp", "_points.shp");
 
-					File filePoints = new File(aux);
-					lyrDef.setFile(filePoints);
-					lyrDef.setName(filePoints.getName());
-					lyrDef.setShapeType(FShape.POINT);
+					SHPLayerDefinition lyrDefPoint = new SHPLayerDefinition();
+					lyrDefPoint.setFieldsDesc(fieldsDescrip);
+					File filePoints = new File(auxPoint);
+					lyrDefPoint.setFile(filePoints);
+					lyrDefPoint.setName(filePoints.getName());
+					lyrDefPoint.setShapeType(FShape.POINT);
 					writer1.setFile(filePoints);
-					lyrDef.setFile(filePoints);
-					writer1.initialize(lyrDef);
+					writer1.initialize(lyrDefPoint);
 					writers[0]=writer1;
 					drivers[0]=getOpenShpDriver(filePoints);
 					//drivers[0]=null;
 
+
+
 					ShpWriter writer2 = (ShpWriter) LayerFactory.getWM().getWriter(
 					"Shape Writer");
 					// Lineas
-					aux = path.replaceFirst(".shp", "_line.shp");
-					File fileLines = new File(aux);
-					lyrDef.setFile(fileLines);
-					lyrDef.setName(fileLines.getName());
-					lyrDef.setShapeType(FShape.LINE);
+					String auxLine = path.replaceFirst(".shp", "_line.shp");
+					SHPLayerDefinition lyrDefLine = new SHPLayerDefinition();
+					lyrDefLine.setFieldsDesc(fieldsDescrip);
+
+					File fileLines = new File(auxLine);
+					lyrDefLine.setFile(fileLines);
+					lyrDefLine.setName(fileLines.getName());
+					lyrDefLine.setShapeType(FShape.LINE);
 					writer2.setFile(fileLines);
-					lyrDef.setFile(fileLines);
-					writer2.initialize(lyrDef);
+					writer2.initialize(lyrDefLine);
 					writers[1]=writer2;
 					drivers[1]=getOpenShpDriver(fileLines);
 					//drivers[1]=null;
@@ -534,14 +539,15 @@ public class ExportTo extends Extension {
 					ShpWriter writer3 = (ShpWriter) LayerFactory.getWM().getWriter(
 					"Shape Writer");
 					// Polígonos
-					aux = path.replaceFirst(".shp", "_polygons.shp");
-					File filePolygons = new File(aux);
-					lyrDef.setFile(filePolygons);
-					lyrDef.setName(filePolygons.getName());
-					lyrDef.setShapeType(FShape.POLYGON);
+					String auxPolygon = path.replaceFirst(".shp", "_polygons.shp");
+					SHPLayerDefinition lyrDefPolygon = new SHPLayerDefinition();
+					lyrDefPolygon.setFieldsDesc(fieldsDescrip);
+					File filePolygons = new File(auxPolygon);
+					lyrDefPolygon.setFile(filePolygons);
+					lyrDefPolygon.setName(filePolygons.getName());
+					lyrDefPolygon.setShapeType(FShape.POLYGON);
 					writer3.setFile(filePolygons);
-					lyrDef.setFile(filePolygons);
-					writer3.initialize(lyrDef);
+					writer3.initialize(lyrDefPolygon);
 					writers[2]=writer3;
 					drivers[2]=getOpenShpDriver(filePolygons);
 					//drivers[2]=null;
@@ -551,7 +557,8 @@ public class ExportTo extends Extension {
 					ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
 						"Shape Writer");
 					IndexedShpDriver drv = getOpenShpDriver(newFile);
-
+					SHPLayerDefinition lyrDef = new SHPLayerDefinition();
+					lyrDef.setFieldsDesc(fieldsDescrip);
 					lyrDef.setFile(newFile);
 					lyrDef.setName(newFile.getName());
 					lyrDef.setShapeType(layer.getShapeType());
