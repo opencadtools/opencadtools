@@ -462,7 +462,7 @@ public class BreakCADTool extends DefaultCADTool {
             GeneralPathX gpx=new GeneralPathX();
             gpx.append(geomAux.getInternalShape(),true);
             if (gpx.isClosed()) {
-                newGp2.append(newGp1.getPathIterator(null),true);
+                newGp2.append(newGp1.getPathIterator(null,FConverter.flatness),true);
                 IGeometry geom1=ShapeFactory.createPolyline2D(newGp2);
                 VectorialLayerEdited vle = getVLE();
                 VectorialEditableAdapter vea = vle.getVEA();

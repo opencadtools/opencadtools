@@ -57,6 +57,7 @@ import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
@@ -230,7 +231,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
         int numParts = 0;
 
 
-        theIterator = gp.getPathIterator(null); //, flatness);
+        theIterator = gp.getPathIterator(null, FConverter.flatness);
         while (!theIterator.isDone()) {
             theType = theIterator.currentSegment(theData);
             switch (theType) {

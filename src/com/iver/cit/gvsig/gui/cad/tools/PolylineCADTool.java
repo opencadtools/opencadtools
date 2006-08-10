@@ -54,6 +54,7 @@ import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.gui.cad.CADTool;
@@ -111,7 +112,7 @@ public class PolylineCADTool extends DefaultCADTool {
 
         // No queremos guardar FGeometryCollections:
         GeneralPathX gp = new GeneralPathX();
-        gp.append(fgc.getPathIterator(null), true);
+        gp.append(fgc.getPathIterator(null,FConverter.flatness), true);
         IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
 //        if (gp.isClosed())
 //        {
