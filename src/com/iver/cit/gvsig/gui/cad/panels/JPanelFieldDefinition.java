@@ -56,9 +56,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		DefaultTableModel tm=(DefaultTableModel) jTable.getModel();
 		boolean valid=true;
 		for (int i = 0;i<tm.getRowCount();i++) {
-			String s=(String)tm.getValueAt(0,i);
-			valid=validate(s);
-
+				String s=(String)tm.getValueAt(i,0);
+				valid=validate(s);
 		}
 		if (valid)
 			super.next();
