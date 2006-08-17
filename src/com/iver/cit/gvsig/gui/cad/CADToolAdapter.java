@@ -200,11 +200,11 @@ public class CADToolAdapter extends Behavior {
 		// DE CONFIGURACIÓN DEL SNAPPING
 		FinalPointSnapper defaultSnap = new FinalPointSnapper();
 		NearestPointSnapper nearestSnap = new NearestPointSnapper();
-		PixelSnapper pixSnap = new PixelSnapper();
+		// PixelSnapper pixSnap = new PixelSnapper();
 		snappers.clear();
 		snappers.add(defaultSnap);
 		snappers.add(nearestSnap);
-		snappers.add(pixSnap);
+		// snappers.add(pixSnap);
 
 		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
 		double minDist = mapTolerance;
