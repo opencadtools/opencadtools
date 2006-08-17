@@ -41,17 +41,25 @@
 package com.iver.cit.gvsig.gui.cad.snapping.panels;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
+import com.sun.media.sound.Toolkit;
+import com.sun.medialib.mlib.Image;
 ;
 
 public class SnapConfig2 extends JPanel {
@@ -60,12 +68,15 @@ public class SnapConfig2 extends JPanel {
 	private JPanel jPanel = null;
 	private JScrollPane jScrollPane = null;
 	
+	 private BufferedImage myCanvas = new BufferedImage(12, 12, BufferedImage.TYPE_INT_ARGB);
+	
 	private ArrayList snappers;
 	
 	 class MyCellRenderer extends JCheckBox implements ListCellRenderer {
 
 	     // This is the only method defined by ListCellRenderer.
 	     // We just reconfigure the JLabel each time we're called.
+
 
 	     public Component getListCellRendererComponent(
 	       JList list,
@@ -183,6 +194,12 @@ public class SnapConfig2 extends JPanel {
 			ISnapper s = (ISnapper) snappers.get(i); 
 			JCheckBox snapperComponent = new JCheckBox(s.getToolTipText());
 			// snapperComponent.setPreferredSize(new Dimension(200, 30));
+	         Graphics2D g2 = myCanvas.createGraphics();
+	         g2.clearRect(0,0, 12, 12);
+	         s.draw(g2, new Point(5,5));
+	         g2.dispose();
+	         // snapperComponent.getLabel().setIcon(new ImageIcon(myCanvas));
+
 			newPanel.add(snapperComponent);
 		}
 		getJScrollPane().setViewportView(newPanel);

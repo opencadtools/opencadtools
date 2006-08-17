@@ -53,33 +53,53 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import com.iver.cit.gvsig.gui.cad.snapping.FinalPointSnapper;
 
 public class testDialog {
 	public static void main(String[] args) {
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		JDialog dlg = new JDialog();
 
 		ArrayList list = new ArrayList();
 		for (int i=0; i < 20; i++)
 			list.add(new FinalPointSnapper());
-		SnapConfig2 panel = new SnapConfig2();
+		SnapConfig panel = new SnapConfig();
 		panel.setSnappers(list);
 		Action act = new AbstractAction(){
 			public void actionPerformed(java.awt.event.ActionEvent arg0) {
 				System.out.println("HOla");
-				HashPrintRequestAttributeSet att = new HashPrintRequestAttributeSet();
-				
-				PrinterJob job = PrinterJob.getPrinterJob();
-				PageFormat defaulFormat = job.defaultPage();
-				// PageFormat selectedFormat = job.pageDialog(defaulFormat);
-				Paper paper = new Paper();
-				paper.setSize(MediaSize.ISO.A5.getX(MediaSize.INCH),MediaSize.ISO.A5.getY(MediaSize.INCH));
-				defaulFormat.setPaper(paper);
-				job.defaultPage(defaulFormat);
-				if (job.printDialog()) {
-					// System.out.println(job.)
-				}				
+//				HashPrintRequestAttributeSet att = new HashPrintRequestAttributeSet();
+//				
+//				PrinterJob job = PrinterJob.getPrinterJob();
+//				PageFormat defaulFormat = job.defaultPage();
+//				// PageFormat selectedFormat = job.pageDialog(defaulFormat);
+//				Paper paper = new Paper();
+//				paper.setSize(MediaSize.ISO.A5.getX(MediaSize.INCH),MediaSize.ISO.A5.getY(MediaSize.INCH));
+//				defaulFormat.setPaper(paper);
+//				job.defaultPage(defaulFormat);
+//				if (job.printDialog()) {
+//					// System.out.println(job.)
+//				}				
 			};
 		};
 		JButton btnPrint = new JButton(act);

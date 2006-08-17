@@ -7,7 +7,7 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 
-public class FinalPointSnapper extends AbstractSnapper {
+public class FinalPointSnapper extends AbstractSnapper implements ISnapperVectorial {
 
 	public Point2D getSnapPoint(Point2D point, IGeometry geom, double tolerance, Point2D lastPointEntered) {
 		Point2D resul = null;

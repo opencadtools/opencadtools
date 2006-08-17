@@ -3,7 +3,7 @@ package com.iver.cit.gvsig.gui.cad.snapping;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
 
-import com.iver.cit.gvsig.fmap.core.IGeometry;
+import javax.swing.JComponent;
 
 /**
  * @author fjp
@@ -11,7 +11,6 @@ import com.iver.cit.gvsig.fmap.core.IGeometry;
  */
 public interface ISnapper {
 	
-	Point2D getSnapPoint(Point2D queryPoint, IGeometry geomToSnap, double tolerance, Point2D lastPointEntered);
 
 	// void setSnapPoint(Point2D snapPoint);
 	
@@ -25,5 +24,10 @@ public interface ISnapper {
 	 * @return
 	 */
 	int getPriority();
+	
+	boolean isEnabled();
+	public void setEnabled(boolean enabled);
+	
+	JComponent getConfigurator();
 
 }

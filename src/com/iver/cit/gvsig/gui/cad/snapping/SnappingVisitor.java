@@ -14,7 +14,7 @@ import com.vividsolutions.jts.index.ItemVisitor;
  */
 public class SnappingVisitor implements ItemVisitor {
 
-	ISnapper snapper;
+	ISnapperVectorial snapper;
 	Point2D snapPoint = null;
 	Point2D queryPoint = null;
 	Point2D lastPointEntered = null;
@@ -23,7 +23,7 @@ public class SnappingVisitor implements ItemVisitor {
 	double distActual;
 	double tolerance;
 	
-	public SnappingVisitor(ISnapper snapper, Point2D queryPoint, double tolerance, Point2D lastPointEntered)
+	public SnappingVisitor(ISnapperVectorial snapper, Point2D queryPoint, double tolerance, Point2D lastPointEntered)
 	{
 		this.snapper = snapper;
 		this.tolerance = tolerance;
@@ -53,8 +53,8 @@ public class SnappingVisitor implements ItemVisitor {
 		return snapPoint;
 	}
 
-	public double getMinDist() {
-		return minDist;
-	}
+//	public double getMinDist() {
+//		return minDist;
+//	}
 
 }

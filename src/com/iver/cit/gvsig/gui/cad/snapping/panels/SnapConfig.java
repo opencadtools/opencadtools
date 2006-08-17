@@ -42,25 +42,113 @@ package com.iver.cit.gvsig.gui.cad.snapping.panels;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
-import com.iver.utiles.DefaultListModel;
 ;
 
+/**
+ * @author fjp
+ *
+ * Necesitamos un sitio donde estén registrados todos los snappers que 
+ * se pueden usar. ExtensionPoints es el sitio adecuado.
+ * Este diálogo recuperará esa lista para que el usuario marque los
+ * snappers con los que desea trabajar.
+ */
 public class SnapConfig extends JPanel {
 
 	private JCheckBox jChkBoxRefentActive = null;
-	private JList jListSnappers = null;
+	private JTable jListSnappers = null;
 	private JPanel jPanel = null;
 	private JScrollPane jScrollPane = null;
 	
 	private ArrayList snappers;
+	
+	/**
+	 * @author fjp
+	 * primera columna editable con un check box para habilitar/deshabilitar el snapper
+	 * segunda columna con el símbolo del snapper
+	 * tercera con el tooltip
+	 * cuarta con un botón para configurar el snapper si es necesario.
+	 */
+	class MyTableModel extends AbstractTableModel {
+		
+		public ArrayList mySnappers;
+		
+		public MyTableModel(ArrayList snappers)
+		{
+			this.mySnappers = snappers;
+		}
+
+		public int getColumnCount() {
+			return 4;
+		}
+
+		public int getRowCount() {
+			return mySnappers.size();
+		}
+
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
+			if (columnIndex == 0)
+				return true;
+			else
+				return false;
+		}
+
+		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+			ISnapper snap = (ISnapper) mySnappers.get(rowIndex);
+			switch (columnIndex)
+			{
+			case 0:
+				snap.setEnabled(((Boolean)aValue).booleanValue());
+			}
+
+		}
+
+		public Object getValueAt(int rowIndex, int columnIndex) {
+			ISnapper snap = (ISnapper) mySnappers.get(rowIndex);
+			switch (columnIndex)
+			{
+			case 0:
+				return new Boolean(snap.isEnabled());
+			case 1:
+				return snap;				
+			case 2:
+				return snap.getToolTipText();
+			}
+			return null;
+		}
+
+		public Class getColumnClass(int columnIndex) {
+			switch (columnIndex)
+			{
+			case 0:
+				return Boolean.class;
+			case 1:
+				return String.class;
+			case 2:
+				return String.class;
+			case 3:
+				return String.class;
+			}
+			return null;
+		}
+
+		public String getColumnName(int column) {
+			// TODO Auto-generated method stub
+			return super.getColumnName(column);
+		}
+		
+	}
 	
 	 class MyCellRenderer extends JCheckBox implements ListCellRenderer {
 
@@ -142,10 +230,10 @@ public class SnapConfig extends JPanel {
 	 * 	
 	 * @return javax.swing.JList	
 	 */
-	private JList getJListSnappers() {
+	private JTable getJListSnappers() {
 		if (jListSnappers == null) {
-			jListSnappers = new JList();
-			jListSnappers.setCellRenderer(new MyCellRenderer());
+			jListSnappers = new JTable();
+			// jListSnappers.setCellRenderer(new MyCellRenderer());
 		}
 		return jListSnappers;
 	}
@@ -185,7 +273,7 @@ public class SnapConfig extends JPanel {
 
 	public void setSnappers(ArrayList snappers) {
 		this.snappers = snappers;
-		DefaultListModel listModel = new DefaultListModel(snappers);
+		MyTableModel listModel = new MyTableModel(snappers);
 		getJListSnappers().setModel(listModel);
 	}
 	

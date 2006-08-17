@@ -10,7 +10,7 @@ import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineSegment;
 
-public class NearestPointSnapper extends AbstractSnapper {
+public class NearestPointSnapper extends AbstractSnapper implements ISnapperVectorial {
 
 	public Point2D getSnapPoint(Point2D point, IGeometry geom, double tolerance, Point2D lastPointEntered) {
 		Point2D resul = null;

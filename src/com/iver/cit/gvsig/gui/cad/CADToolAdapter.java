@@ -35,7 +35,6 @@ import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
-import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
@@ -45,9 +44,12 @@ import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
 import com.iver.cit.gvsig.gui.View;
-import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
 import com.iver.cit.gvsig.gui.cad.snapping.FinalPointSnapper;
+import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
+import com.iver.cit.gvsig.gui.cad.snapping.ISnapperRaster;
+import com.iver.cit.gvsig.gui.cad.snapping.ISnapperVectorial;
 import com.iver.cit.gvsig.gui.cad.snapping.NearestPointSnapper;
+import com.iver.cit.gvsig.gui.cad.snapping.PixelSnapper;
 import com.iver.cit.gvsig.gui.cad.snapping.SnappingVisitor;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.layers.ILayerEdited;
@@ -198,9 +200,11 @@ public class CADToolAdapter extends Behavior {
 		// DE CONFIGURACIÓN DEL SNAPPING
 		FinalPointSnapper defaultSnap = new FinalPointSnapper();
 		NearestPointSnapper nearestSnap = new NearestPointSnapper();
+		PixelSnapper pixSnap = new PixelSnapper();
 		snappers.clear();
 		snappers.add(defaultSnap);
 		snappers.add(nearestSnap);
+		snappers.add(pixSnap);
 
 		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
 		double minDist = mapTolerance;
@@ -235,17 +239,29 @@ public class CADToolAdapter extends Behavior {
 						if (theSnapper.getPriority() < usedSnap.getPriority())
 							break;
 					}
+					SnappingVisitor snapVisitor = null;
+					Point2D theSnappedPoint = null;
+					if (theSnapper instanceof ISnapperVectorial)
+					{
+						snapVisitor = new SnappingVisitor((ISnapperVectorial) theSnapper, point, mapTolerance, lastPoint);
+						// System.out.println("Cache size = " + cache.size());
+						cache.query(e, snapVisitor);
+						theSnappedPoint = snapVisitor.getSnapPoint();
+					}
+					if (theSnapper instanceof ISnapperRaster)
+					{
+						ISnapperRaster snapRaster = (ISnapperRaster) theSnapper;
+						theSnappedPoint = snapRaster.getSnapPoint(getMapControl(), point, mapTolerance, lastPoint);
+					}
+					
 
-					SnappingVisitor snapVisitor = new SnappingVisitor(theSnapper, point, mapTolerance, lastPoint);
-					// System.out.println("Cache size = " + cache.size());
-					cache.query(e, snapVisitor);
-
-					if (snapVisitor.getSnapPoint() != null) {
-						if (minDist > snapVisitor.getMinDist())
+					if (theSnappedPoint != null) {
+						double distAux = theSnappedPoint.distance(point);
+						if (minDist > distAux)
 						{
-							minDist = snapVisitor.getMinDist();
+							minDist = distAux;
 							usedSnap = theSnapper;
-							mapHandlerAdjustedPoint.setLocation(snapVisitor.getSnapPoint());
+							mapHandlerAdjustedPoint.setLocation(theSnappedPoint);
 						}
 					}
 				}
