@@ -208,7 +208,7 @@ public class StartEditing extends Extension {
 
 		FLayer[] selected = f.getModel().getMapContext().getLayers()
 				.getActives();
-		if (selected.length == 1 && selected[0] instanceof FLyrVect) {
+		if (selected.length == 1 && selected[0].isAvailable() && selected[0] instanceof FLyrVect) {
 			if (selected[0].isEditing())
 				return false;
 			return true;

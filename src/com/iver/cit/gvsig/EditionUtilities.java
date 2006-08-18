@@ -50,7 +50,7 @@ public class EditionUtilities {
         	int numActiveVectorialEditable = 0;
         	for (int i = 0; i < capas.getLayersCount(); i++) {
         		if (capas.getLayer(i) instanceof FLyrVect &&
-        				capas.getLayer(i).isActive()) {
+        				capas.getLayer(i).isActive() && capas.getLayer(i).isAvailable()) {
         			numActiveVectorial++;
         			if (capas.getLayer(i).isEditing())
         				numActiveVectorialEditable++;
