@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Vector;
 
 import javax.swing.JComponent;
@@ -280,6 +281,39 @@ public class ExportTo extends Extension {
 			SelectableDataSource sds = layer.getRecordset();
 			FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 			dbLayerDef.setFieldsDesc(fieldsDescrip);
+	        // Creamos el driver. OJO: Hay que añadir el campo ID a la
+	        // definición de campos.
+
+	        boolean bFound = false;
+	        for (int i=0; i < fieldsDescrip.length; i++)
+	        {
+	        	FieldDescription f = fieldsDescrip[i];
+	        	if (f.getFieldName().equalsIgnoreCase("gid"))
+	        	{
+	        		bFound = true;
+	        		break;
+	        	}
+	        }
+	        // Si no está, lo añadimos
+	        if (!bFound)
+	        {
+	        	int numFieldsAnt = fieldsDescrip.length;
+	        	FieldDescription[] newFields = new FieldDescription[dbLayerDef.getFieldsDesc().length + 1];
+	            for (int i=0; i < numFieldsAnt; i++)
+	            {
+	            	newFields[i] = fieldsDescrip[i];
+	            }
+	            newFields[numFieldsAnt] = new FieldDescription();
+	            newFields[numFieldsAnt].setFieldDecimalCount(0);
+	            newFields[numFieldsAnt].setFieldType(Types.INTEGER);
+	            newFields[numFieldsAnt].setFieldLength(7);
+	            newFields[numFieldsAnt].setFieldName("gid");
+	            dbLayerDef.setFieldsDesc(newFields);
+
+	        }
+
+			
+
 			dbLayerDef.setFieldGeometry("the_geom");
 			dbLayerDef.setFieldID("gid");
 
