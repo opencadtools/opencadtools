@@ -43,7 +43,10 @@
 *
 * $Id$
 * $Log$
-* Revision 1.1  2006-08-10 08:18:35  caballero
+* Revision 1.2  2006-08-22 07:37:32  jaume
+* *** empty log message ***
+*
+* Revision 1.1  2006/08/10 08:18:35  caballero
 * configurar grid
 *
 * Revision 1.1  2006/08/04 11:41:05  caballero
@@ -155,10 +158,6 @@ public class FlatnessPage extends AbstractPreferencePage {
 		FConverter.flatness=flatness;
 	}
 
-	public void cancelAction() {
-		initializeValues();
-	}
-
 	public void initializeDefaults() {
 		txtFlatness.setText(String.valueOf(FConverter.flatness));
 	}
@@ -184,5 +183,9 @@ public class FlatnessPage extends AbstractPreferencePage {
 			jTextArea.setText(PluginServices.getText(this,"specifies_the_minimum_size_of_the_lines_that_will_form_the_curves"));
 		}
 		return jTextArea;
+	}
+
+	public boolean isValueChanged() {
+		return super.hasChanged();
 	}
 }

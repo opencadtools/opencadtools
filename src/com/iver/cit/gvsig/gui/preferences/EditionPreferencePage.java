@@ -43,6 +43,10 @@ package com.iver.cit.gvsig.gui.preferences;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -86,6 +90,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	private JPanel jPanelNord = null;
 
 	private JPanel jPanelCache = null;
+	private boolean changed = false;
 
 	private FLayers layers;
 
@@ -412,6 +417,11 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			jTxtTolerance.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 			jTxtTolerance.setText("4");
 			jTxtTolerance.setBounds(new java.awt.Rectangle(142, 8, 39, 15));
+			jTxtTolerance.addKeyListener(new KeyListener() {
+               	public void keyPressed(KeyEvent e) { changed = true; }
+				public void keyReleased(KeyEvent e) { changed = true; }
+				public void keyTyped(KeyEvent e){ changed = true; }
+			});
 		}
 		return jTxtTolerance;
 	}
@@ -467,6 +477,11 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			// TableModel tm = new DefaultTableModel(4,3);
 			// jTableSnapping.setModel(tm);
 			// jTableSnapping.setTableHeader(head);
+			jTableSnapping.addKeyListener(new KeyListener() {
+               	public void keyPressed(KeyEvent e) { changed = true; }
+				public void keyReleased(KeyEvent e) { changed = true; }
+				public void keyTyped(KeyEvent e){ changed = true; }
+			});
 		}
 		return jTableSnapping;
 	}
@@ -521,9 +536,8 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		return jPanelCache;
 	}
 
-	public void cancelAction() {
-		// TODO Auto-generated method stub
-
+	public boolean isValueChanged() {
+		return changed;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

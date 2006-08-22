@@ -86,9 +86,10 @@ public class DialogEditionPreferences  {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		public void cancelAction() {
-			// TODO Auto-generated method stub
 
+		public boolean isValueChanged() {
+			// TODO Auto-generated method stub
+			return false;
 		}
 
 	}

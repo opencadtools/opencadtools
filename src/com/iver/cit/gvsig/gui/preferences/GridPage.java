@@ -43,7 +43,10 @@
 *
 * $Id$
 * $Log$
-* Revision 1.2  2006-08-10 11:13:02  caballero
+* Revision 1.3  2006-08-22 07:37:32  jaume
+* *** empty log message ***
+*
+* Revision 1.2  2006/08/10 11:13:02  caballero
 * mostrar unidades
 *
 * Revision 1.1  2006/08/10 08:18:35  caballero
@@ -203,10 +206,6 @@ public class GridPage extends AbstractPreferencePage {
 		cta.getGrid().setGridSizeY(dy);
 	}
 
-	public void cancelAction() {
-		initializeValues();
-	}
-
 	public void initializeDefaults() {
 		chkShowGrid.setSelected(cta.getGrid().isShowGrid());
 		chkAdjustGrid.setSelected(cta.getGrid().isAdjustGrid());
@@ -218,5 +217,9 @@ public class GridPage extends AbstractPreferencePage {
 
 	public ImageIcon getIcon() {
 		return icon;
+	}
+
+	public boolean isValueChanged() {
+		return super.hasChanged();
 	}
 }
