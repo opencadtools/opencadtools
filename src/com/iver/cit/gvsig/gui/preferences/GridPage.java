@@ -43,7 +43,10 @@
 *
 * $Id$
 * $Log$
-* Revision 1.3  2006-08-22 07:37:32  jaume
+* Revision 1.4  2006-08-22 12:27:53  jaume
+* improved performances when saving
+*
+* Revision 1.3  2006/08/22 07:37:32  jaume
 * *** empty log message ***
 *
 * Revision 1.2  2006/08/10 11:13:02  caballero
@@ -204,6 +207,7 @@ public class GridPage extends AbstractPreferencePage {
 		cta.setAdjustGrid(adjustGrid);
 		cta.getGrid().setGridSizeX(dx);
 		cta.getGrid().setGridSizeY(dy);
+
 	}
 
 	public void initializeDefaults() {
@@ -221,5 +225,9 @@ public class GridPage extends AbstractPreferencePage {
 
 	public boolean isValueChanged() {
 		return super.hasChanged();
+	}
+
+	public void setChangesApplied() {
+		setChanged(false);
 	}
 }

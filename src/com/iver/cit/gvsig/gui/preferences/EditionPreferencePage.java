@@ -374,6 +374,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		} // while
 		try{
 			SelectionCADTool.tolerance = Integer.parseInt(getJTxtTolerance().getText());
+
 		}catch (Exception e) {
 			throw new StoreException(PluginServices.getText(this, "tolerancia_incorrecta"),e);
 		}
@@ -538,6 +539,10 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	public boolean isValueChanged() {
 		return changed;
+	}
+
+	public void setChangesApplied() {
+		changed = false;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

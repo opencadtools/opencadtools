@@ -91,6 +91,10 @@ public class DialogEditionPreferences  {
 			// TODO Auto-generated method stub
 			return false;
 		}
+		public void setChangesApplied() {
+			// TODO Auto-generated method stub
+
+		}
 
 	}
 	public static void main(String[] args) {

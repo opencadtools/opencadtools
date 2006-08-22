@@ -43,7 +43,10 @@
 *
 * $Id$
 * $Log$
-* Revision 1.2  2006-08-22 07:37:32  jaume
+* Revision 1.3  2006-08-22 12:27:53  jaume
+* improved performances when saving
+*
+* Revision 1.2  2006/08/22 07:37:32  jaume
 * *** empty log message ***
 *
 * Revision 1.1  2006/08/10 08:18:35  caballero
@@ -156,6 +159,7 @@ public class FlatnessPage extends AbstractPreferencePage {
 		prefs.putDouble("flatness", flatness);
 
 		FConverter.flatness=flatness;
+
 	}
 
 	public void initializeDefaults() {
@@ -187,5 +191,9 @@ public class FlatnessPage extends AbstractPreferencePage {
 
 	public boolean isValueChanged() {
 		return super.hasChanged();
+	}
+
+	public void setChangesApplied() {
+		setChanged(false);
 	}
 }
