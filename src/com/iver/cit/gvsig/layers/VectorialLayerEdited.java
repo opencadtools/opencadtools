@@ -74,8 +74,11 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void clearSelection() {
 		selectedHandler.clear();
 		selectedRow.clear();
-		FBitSet selection=getVEA().getSelection();
-		selection.clear();
+		if (getVEA() != null)
+		{
+			FBitSet selection=getVEA().getSelection();
+			selection.clear();
+		}
 	}
 	/**
 	 * @return Returns the selectedRow.
