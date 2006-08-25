@@ -1,5 +1,10 @@
 package com.iver.cit.gvsig;
 
+import java.awt.Component;
+
+import javax.swing.JOptionPane;
+
+import com.hardcode.driverManager.Driver;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
@@ -9,6 +14,8 @@ import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
+import com.iver.cit.gvsig.fmap.edition.IWriteable;
+import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.rules.IRule;
 import com.iver.cit.gvsig.fmap.edition.rules.RulePolygon;
@@ -69,7 +76,7 @@ public class StartEditing extends Extension {
 			ProjectView model = vista.getModel();
 			FMap mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
-
+			boolean bEditingStarted = false;
 			for (int i = 0; i < layers.getLayersCount(); i++) {
 				if (layers.getLayer(i) instanceof FLyrVect
 						&& layers.getLayer(i).isActive()) {
@@ -84,9 +91,19 @@ public class StartEditing extends Extension {
 					try {
 						Legend legendOriginal=lv.getLegend().cloneLegend();
 
+	            		if (!lv.isWritable())
+	            		{
+	        				JOptionPane.showMessageDialog(
+	        						(Component) PluginServices.getMDIManager().getActiveView(),
+	        						PluginServices.getText(this, "this_layer_is_not_self_editable"),
+	        						PluginServices.getText(this, "warning_title"), 
+	        						JOptionPane.WARNING_MESSAGE);
+	            		}
+	                	
 						lv.setEditing(true);
 						VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
-								.getSource();
+						.getSource();
+						
 						vea.getRules().clear();
 						if (vea.getShapeType() == FShape.POLYGON)
 						{

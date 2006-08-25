@@ -14,6 +14,7 @@ import com.iver.cit.gvsig.fmap.FMap;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
@@ -96,19 +97,6 @@ public class StopEditing extends Extension {
 		}
 		return false;
 	}
-	private boolean isWritable(FLyrVect lyrVect) {
-		if (!lyrVect.getSource().getDriver().isWritable())
-			return false;
-		VectorialEditableAdapter vea = (VectorialEditableAdapter) lyrVect
-				.getSource();
-		IWriter writer = vea.getWriter();
-		if (writer != null)
-		{
-			if (writer instanceof ISpatialWriter)
-				return true;
-		}
-		return false;
-	}
 	/**
 	 * DOCUMENT ME!
 	 */
@@ -118,7 +106,7 @@ public class StopEditing extends Extension {
 		int resp = JOptionPane.NO_OPTION;
 
 		try {
-			if (isWritable(layer)) {
+			if (layer.isWritable()) {
 				resp = JOptionPane.showConfirmDialog((Component) PluginServices
 						.getMainFrame(), PluginServices.getText(this,
 						"realmente_desea_guardar_la_capa")
@@ -141,9 +129,9 @@ public class StopEditing extends Extension {
 								PluginServices
 										.getText(
 												this,
-												"no_existe_writer_para_este_formato_de_capa_o_no_tiene_permisos_de_escritura_puede_exportar_o_cancelar_desea_cancelar_la_edicion")
+												"no_existe_writer_para_este_formato_de_capa_o_no_tiene_permisos_de_escritura_los_datos_no_se_guardaran_desea_continuar")
 										+ " : " + layer.getName(),
-								PluginServices.getText(this, "cancelar"),
+								PluginServices.getText(this, "cancelar_edicion"),
 								JOptionPane.YES_NO_OPTION);
 				if (resp == JOptionPane.YES_OPTION) { // CANCEL EDITING
 					cancelEdition(layer);

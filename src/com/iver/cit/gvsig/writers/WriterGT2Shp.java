@@ -216,4 +216,9 @@ public class WriterGT2Shp extends AbstractWriter {
 		return false;
 	}
 
+	public boolean canSaveEdits() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }
