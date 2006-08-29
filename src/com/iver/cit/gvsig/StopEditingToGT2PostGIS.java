@@ -14,7 +14,7 @@ import org.geotools.feature.SchemaException;
 import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -49,7 +49,7 @@ public class StopEditingToGT2PostGIS extends Extension {
 
         View vista = (View) f;
         ProjectView model = vista.getModel();
-        FMap mapa = model.getMapContext();
+        MapContext mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
             if (s.equals("STOPEDITING")){
             for (int i = 0; i < layers.getLayersCount(); i++) {

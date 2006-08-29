@@ -2,7 +2,7 @@ package com.iver.cit.gvsig;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.commands.CommandListener;
@@ -34,7 +34,7 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 
 		View vista = (View) f;
 		ProjectView model = vista.getModel();
-		FMap mapa = model.getMapContext();
+		MapContext mapa = model.getMapContext();
 		FLayers layers = mapa.getLayers();
 		if (s.equals("COMMANDSTACK")) {
 			for (int i =0;i<layers.getLayersCount();i++){

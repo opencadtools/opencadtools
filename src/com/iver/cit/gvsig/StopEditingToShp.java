@@ -7,7 +7,7 @@ import javax.swing.JFileChooser;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -46,7 +46,7 @@ public class StopEditingToShp extends Extension {
         vista = (View) f;
 
         ProjectView model = vista.getModel();
-        FMap mapa = model.getMapContext();
+        MapContext mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
             if (s.equals("STOPEDITING"))
             {

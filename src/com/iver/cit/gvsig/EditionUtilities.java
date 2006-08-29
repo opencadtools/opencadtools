@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.DriverException;
-import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.LayerDefinition;
@@ -42,7 +42,7 @@ public class EditionUtilities {
         if (f instanceof View) {
         	View vista = (View) f;
         	ProjectView model = vista.getModel();
-        	FMap mapa = model.getMapContext();
+        	MapContext mapa = model.getMapContext();
 
         	FLayers capas = mapa.getLayers();
 
@@ -81,7 +81,7 @@ public class EditionUtilities {
         if (f instanceof View) {
         	View vista = (View) f;
         	ProjectView model = vista.getModel();
-        	FMap mapa = model.getMapContext();
+        	MapContext mapa = model.getMapContext();
         	
         	ArrayList resul = new ArrayList();
 

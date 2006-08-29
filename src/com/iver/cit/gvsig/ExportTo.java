@@ -22,7 +22,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
-import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
@@ -73,10 +73,10 @@ public class ExportTo extends Extension {
 		ReadableVectorial va;
 		SelectableDataSource sds;
 		FBitSet bitSet;
-		FMap mapContext;
+		MapContext mapContext;
 		VectorialDriver reader;
 
-		public WriterTask(FMap mapContext, FLyrVect lyr, IWriter writer, Driver reader) throws DriverException, DriverIOException
+		public WriterTask(MapContext mapContext, FLyrVect lyr, IWriter writer, Driver reader) throws DriverException, DriverIOException
 		{
 			this.mapContext = mapContext;
 			this.lyrVect = lyr;
@@ -209,7 +209,7 @@ public class ExportTo extends Extension {
 		if (f instanceof View) {
 			View vista = (View) f;
 			ProjectView model = vista.getModel();
-			FMap mapa = model.getMapContext();
+			MapContext mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
 			FLayer[] actives = layers.getActives();
 			try {
@@ -257,7 +257,7 @@ public class ExportTo extends Extension {
 		}
 	}
 
-	public void saveToPostGIS(FMap mapContext, FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToPostGIS(MapContext mapContext, FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			String tableName = JOptionPane.showInputDialog(PluginServices
 					.getText(this, "intro_tablename"));
@@ -363,11 +363,11 @@ public class ExportTo extends Extension {
 	 * @throws DriverException
 	 * @throws DriverIOException
 	 */
-	private void writeFeatures(FMap mapContext, FLyrVect layer, IWriter writer, Driver reader) throws DriverException, DriverIOException
+	private void writeFeatures(MapContext mapContext, FLyrVect layer, IWriter writer, Driver reader) throws DriverException, DriverIOException
 	{
 		PluginServices.cancelableBackgroundExecution(new WriterTask(mapContext, layer, writer, reader));
 	}
-	private void writeMultiFeatures(FMap mapContext, FLyrVect layers, IWriter[] writers, Driver[] readers) throws DriverException, DriverIOException{
+	private void writeMultiFeatures(MapContext mapContext, FLyrVect layers, IWriter[] writers, Driver[] readers) throws DriverException, DriverIOException{
 		MultiWriterTask mwt=new MultiWriterTask();
 		for (int i=0;i<writers.length;i++) {
 			mwt.addTask(new WriterTask(mapContext, layers, writers[i], readers[i]));
@@ -454,7 +454,7 @@ public class ExportTo extends Extension {
 		progress.close();
 	}
 
-	public void saveToDxf(FMap mapContext, FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToDxf(MapContext mapContext, FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			JFileChooser jfc = new JFileChooser();
 			SimpleFileFilter filterShp = new SimpleFileFilter("dxf",
@@ -501,7 +501,7 @@ public class ExportTo extends Extension {
 
 	}
 
-	public void saveToShp(FMap mapContext, FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToShp(MapContext mapContext, FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			JFileChooser jfc = new JFileChooser();
 			SimpleFileFilter filterShp = new SimpleFileFilter("shp",
@@ -626,7 +626,7 @@ public class ExportTo extends Extension {
 	 * @throws EditionException
 	 * @throws DriverIOException
 	 */
-	public void saveToGml(FMap mapContext, FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToGml(MapContext mapContext, FLyrVect layer) throws EditionException, DriverIOException {
 		try {
 			JFileChooser jfc = new JFileChooser();
 			SimpleFileFilter filterShp = new SimpleFileFilter("gml",

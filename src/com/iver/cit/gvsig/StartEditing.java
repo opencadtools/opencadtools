@@ -8,7 +8,7 @@ import com.hardcode.driverManager.Driver;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
@@ -74,7 +74,7 @@ public class StartEditing extends Extension {
 			editionManager.setMapControl(mapControl);
 
 			ProjectView model = vista.getModel();
-			FMap mapa = model.getMapContext();
+			MapContext mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
 			boolean bEditingStarted = false;
 			for (int i = 0; i < layers.getLayersCount(); i++) {

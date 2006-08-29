@@ -27,7 +27,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiFrame.MainFrame;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
-import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
@@ -340,9 +340,9 @@ public class CADToolAdapter extends Behavior {
 			mF.getStatusBar().setMessage("projection", iProj.getAbrev());
 
 			mF.getStatusBar().setMessage("x",
-					axisText[0] + String.valueOf(nf.format(p.getX()/FMap.CHANGEM[vp.getDistanceUnits()])));
+					axisText[0] + String.valueOf(nf.format(p.getX()/MapContext.CHANGEM[vp.getDistanceUnits()])));
 			mF.getStatusBar().setMessage("y",
-					axisText[1] + String.valueOf(nf.format(p.getY()/FMap.CHANGEM[vp.getDistanceUnits()])));
+					axisText[1] + String.valueOf(nf.format(p.getY()/MapContext.CHANGEM[vp.getDistanceUnits()])));
 		}
 	}
 

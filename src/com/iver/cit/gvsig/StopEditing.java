@@ -10,7 +10,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
-import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
@@ -57,7 +57,7 @@ public class StopEditing extends Extension {
 		vista = (View) f;
 		boolean isStop=false;
 		ProjectView model = vista.getModel();
-		FMap mapa = model.getMapContext();
+		MapContext mapa = model.getMapContext();
 		FLayers layers = mapa.getLayers();
 		EditionManager edMan = CADExtension.getEditionManager();
 		if (s.equals("STOPEDITING")) {

@@ -13,7 +13,7 @@ import org.geotools.feature.FeatureType;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.FMap;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -45,7 +45,7 @@ public class StopEditingToGT2Shp extends Extension {
 
         View vista = (View) f;
         ProjectView model = vista.getModel();
-        FMap mapa = model.getMapContext();
+        MapContext mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
             if (s.equals("STOPEDITING")){
             for (int i = 0; i < layers.getLayersCount(); i++) {
