@@ -30,7 +30,7 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 	 */
 	public void execute(String s) {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveView();
+				.getActiveWindow();
 
 		View vista = (View) f;
 		ProjectView model = vista.getModel();
@@ -46,7 +46,7 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 						vea.getCommandRecord().addCommandListener(this);
 						csd=new CommandStackDialog();
 						csd.setModel(((IEditableSource)lyrVect.getSource()).getCommandRecord());
-						PluginServices.getMDIManager().addView(csd);
+						PluginServices.getMDIManager().addWindow(csd);
 						return;
 					}
 				}

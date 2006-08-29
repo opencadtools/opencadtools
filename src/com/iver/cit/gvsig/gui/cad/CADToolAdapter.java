@@ -681,7 +681,7 @@ public class CADToolAdapter extends Behavior {
 				ct.transition(option);
 			} catch (Exception e) {
 				View vista = (View) PluginServices.getMDIManager()
-						.getActiveView();
+						.getActiveWindow();
 				vista.getConsolePanel().addText(
 						"\n" + PluginServices.getText(this, "incorrect_option")
 								+ " : " + option, JConsole.ERROR);
@@ -789,9 +789,9 @@ public class CADToolAdapter extends Behavior {
 		 * PluginServices.getMainFrame().addTextToConsole("\n"
 		 * +cadtool.getName()); }
 		 */
-		if (PluginServices.getMDIManager().getActiveView() instanceof View)
+		if (PluginServices.getMDIManager().getActiveWindow() instanceof View)
 		{
-			View vista = (View) PluginServices.getMDIManager().getActiveView();
+			View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 			vista.getConsolePanel().addText(
 					"\n" + "#" + cadtool.getQuestion() + " > ", JConsole.MESSAGE);
 			// ***PluginServices.getMainFrame().addTextToConsole("\n" +

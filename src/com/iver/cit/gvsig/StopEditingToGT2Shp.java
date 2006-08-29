@@ -41,7 +41,7 @@ public class StopEditingToGT2Shp extends Extension {
 	 */
     public void execute(String s) {
         com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-                                                             .getActiveView();
+                                                             .getActiveWindow();
 
         View vista = (View) f;
         ProjectView model = vista.getModel();

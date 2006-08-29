@@ -105,11 +105,11 @@ public class PopupEditionProperties extends TocMenuEntry {
 		extensionPoints.add("AplicationPreferences",flatnessPage.getID(), flatnessPage);
 
 		GenericDlgPreferences dlg = new GenericDlgPreferences();
-		dlg.getViewInfo().setTitle(PluginServices.getText(this, "Edition_Properties"));
+		dlg.getWindowInfo().setTitle(PluginServices.getText(this, "Edition_Properties"));
 
 		//dlg.addPreferencePage(pref);
 		dlg.setActivePage(pref);
-		PluginServices.getMDIManager().addView(dlg);
+		PluginServices.getMDIManager().addWindow(dlg);
 
 
 

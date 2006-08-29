@@ -92,7 +92,7 @@ public class CADExtension extends Extension {
 	private static CADToolAdapter adapter=null;
 
 	public static CADToolAdapter getCADToolAdapter() {
-		com.iver.andami.ui.mdiManager.IWindow view=PluginServices.getMDIManager().getActiveView();
+		com.iver.andami.ui.mdiManager.IWindow view=PluginServices.getMDIManager().getActiveWindow();
 		if (view instanceof View) {
 			View v=(View)view;
 			if (!adapters.containsKey(v)) {
@@ -193,8 +193,8 @@ public class CADExtension extends Extension {
 		cta.setCadTool(ct);
 		ct.init();
 		if (showCommand) {
-			if (PluginServices.getMDIManager().getActiveView() instanceof View) {
-				View vista = (View) PluginServices.getMDIManager().getActiveView();
+			if (PluginServices.getMDIManager().getActiveWindow() instanceof View) {
+				View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 				vista.getConsolePanel().addText("\n" + ct.getName(),
 					JConsole.COMMAND);
 				cta.askQuestion();
@@ -222,7 +222,7 @@ public class CADExtension extends Extension {
 	 */
 	public boolean isVisible() {
 		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-			view = (View) PluginServices.getMDIManager().getActiveView();
+			view = (View) PluginServices.getMDIManager().getActiveWindow();
 			mapControl = view.getMapControl();
 			FLayer[] layers = mapControl.getMapContext().getLayers()
 					.getActives();
@@ -395,7 +395,7 @@ public class CADExtension extends Extension {
 	}
 
 	public static void initFocus() {
-		view = (View) PluginServices.getMDIManager().getActiveView();
+		view = (View) PluginServices.getMDIManager().getActiveWindow();
 		MapControl mapControl = view.getMapControl();
 		CADToolAdapter cta=getCADToolAdapter();
 		if (!mapControl.getNamesMapTools().containsKey("cadtooladapter")){

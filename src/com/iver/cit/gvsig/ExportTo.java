@@ -161,7 +161,7 @@ public class ExportTo extends Extension {
 			writer.postProcess();
 			if (reader != null){
 				int res = JOptionPane.showConfirmDialog(
-					(JComponent) PluginServices.getMDIManager().getActiveView()
+					(JComponent) PluginServices.getMDIManager().getActiveWindow()
 					, PluginServices.getText(this, "insertar_en_la_vista_la_capa_creada"),
 					PluginServices.getText(this,"insertar_capa"),
 					JOptionPane.YES_NO_OPTION);
@@ -204,7 +204,7 @@ public class ExportTo extends Extension {
 	 */
 	public void execute(String actionCommand) {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveView();
+				.getActiveWindow();
 
 		if (f instanceof View) {
 			View vista = (View) f;
@@ -403,7 +403,7 @@ public class ExportTo extends Extension {
 			rowCount = bitSet.cardinality();
 
 		ProgressMonitor progress = new ProgressMonitor(
-				(JComponent) PluginServices.getMDIManager().getActiveView(),
+				(JComponent) PluginServices.getMDIManager().getActiveWindow(),
 				PluginServices.getText(this, "exportando_features"),
 				PluginServices.getText(this, "exportando_features"), 0,
 				rowCount);
@@ -704,7 +704,7 @@ public class ExportTo extends Extension {
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveView();
+				.getActiveWindow();
 
 		if (f == null) {
 			return false;

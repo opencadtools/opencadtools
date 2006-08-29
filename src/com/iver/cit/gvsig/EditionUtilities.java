@@ -35,7 +35,7 @@ public class EditionUtilities {
 	{
 		int status = EDITION_STATUS_NO_EDITION;
         com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-        .getActiveView();
+        .getActiveWindow();
         if (f == null)
         	return status;
 
@@ -74,7 +74,7 @@ public class EditionUtilities {
 	{
 		int status = EDITION_STATUS_NO_EDITION;
         com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-        .getActiveView();
+        .getActiveWindow();
         if (f == null)
         	return null;
 

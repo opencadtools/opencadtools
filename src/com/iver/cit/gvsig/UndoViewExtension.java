@@ -70,7 +70,7 @@ public class UndoViewExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 
 
 		if (s.compareTo("UNDO") == 0) {
@@ -107,7 +107,7 @@ public class UndoViewExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 		MapControl mapControl = vista.getMapControl();
 		FLayers layers=mapControl.getMapContext().getLayers();
 		for (int i=0;i<layers.getLayersCount();i++){
@@ -126,7 +126,7 @@ public class UndoViewExtension extends Extension {
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-															 .getActiveView();
+															 .getActiveWindow();
 
 		if (f == null) {
 			return false;

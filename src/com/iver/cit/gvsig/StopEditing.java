@@ -52,7 +52,7 @@ public class StopEditing extends Extension {
 	 */
 	public void execute(String s) {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveView();
+				.getActiveWindow();
 
 		vista = (View) f;
 		boolean isStop=false;
@@ -165,7 +165,7 @@ public class StopEditing extends Extension {
 
 		ISpatialWriter writer = (ISpatialWriter) vea.getWriter();
 		com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
-				.getMDIManager().getAllViews();
+				.getMDIManager().getAllWindows();
 		for (int j = 0; j < views.length; j++) {
 			if (views[j] instanceof Table) {
 				Table table = (Table) views[j];
@@ -194,7 +194,7 @@ public class StopEditing extends Extension {
 
 	private void cancelEdition(FLyrVect layer) throws IOException {
 		com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
-				.getMDIManager().getAllViews();
+				.getMDIManager().getAllWindows();
 		for (int j = 0; j < views.length; j++) {
 			if (views[j] instanceof Table) {
 				Table table = (Table) views[j];

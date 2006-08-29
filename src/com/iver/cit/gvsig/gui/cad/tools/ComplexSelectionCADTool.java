@@ -520,7 +520,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 		System.out.println("ESTADO ACTUAL: " + getStatus());
 
 		FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
-		com.iver.andami.ui.mdiManager.IWindow[] views = (com.iver.andami.ui.mdiManager.IWindow[]) PluginServices.getMDIManager().getAllViews();
+		com.iver.andami.ui.mdiManager.IWindow[] views = (com.iver.andami.ui.mdiManager.IWindow[]) PluginServices.getMDIManager().getAllWindows();
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){

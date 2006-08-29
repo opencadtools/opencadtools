@@ -41,7 +41,7 @@ public class StopEditingToShp extends Extension {
      */
     public void execute(String s) {
         com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-                                                             .getActiveView();
+                                                             .getActiveWindow();
 
         vista = (View) f;
 

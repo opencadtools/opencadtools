@@ -383,7 +383,7 @@ public abstract class DefaultCADTool implements CADTool {
 					getCadToolAdapter().setCadTool(ct);
 					ct.init();
 					View vista = (View) PluginServices.getMDIManager()
-							.getActiveView();
+							.getActiveWindow();
 					vista.getConsolePanel().addText("\n" + ct.getName(),
 							JConsole.COMMAND);
 					return true;
@@ -402,17 +402,17 @@ public abstract class DefaultCADTool implements CADTool {
 	public abstract String toString();
 
 	public void throwValueException(String s, double d) {
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 		vista.getConsolePanel().addText(s + " : " + d, JConsole.ERROR);
 	}
 
 	public void throwOptionException(String s, String o) {
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 		vista.getConsolePanel().addText(s + " : " + o, JConsole.ERROR);
 	}
 
 	public void throwPointException(String s, double x, double y) {
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 		vista.getConsolePanel().addText(s + " : " + " X = " + x + ", Y = " + y,
 				JConsole.ERROR);
 	}

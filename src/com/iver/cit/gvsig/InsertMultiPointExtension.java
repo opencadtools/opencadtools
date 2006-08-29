@@ -84,7 +84,7 @@ public class InsertMultiPointExtension extends Extension {
 
       	try {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE){
-				view = (View) PluginServices.getMDIManager().getActiveView();
+				view = (View) PluginServices.getMDIManager().getActiveWindow();
 		        mapControl = view.getMapControl();
 		        if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
 					return false;

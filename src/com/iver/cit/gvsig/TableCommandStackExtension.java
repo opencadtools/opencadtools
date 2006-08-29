@@ -26,7 +26,7 @@ public class TableCommandStackExtension extends Extension {
 	 */
 	public void execute(String s) {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveView();
+				.getActiveWindow();
 
 		Table table = (Table) f;
 		ProjectTable model = table.getModel();
@@ -42,7 +42,7 @@ public class TableCommandStackExtension extends Extension {
 			}
 			CommandStackDialog csd = new CommandStackDialog();
 			csd.setModel(cr);
-			PluginServices.getMDIManager().addView(csd);
+			PluginServices.getMDIManager().addWindow(csd);
 		}
 	}
 
@@ -58,7 +58,7 @@ public class TableCommandStackExtension extends Extension {
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-		.getActiveView();
+		.getActiveWindow();
 		if (f instanceof Table){
 		Table table = (Table) f;
 		ProjectTable model = table.getModel();

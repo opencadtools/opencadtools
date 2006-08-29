@@ -59,7 +59,7 @@ public class OrtoAccelerator implements KeyEventDispatcher {
 		if (e.getID() == KeyEvent.KEY_PRESSED)
 			return false;
 		
-		IWindow v = PluginServices.getMDIManager().getActiveView();
+		IWindow v = PluginServices.getMDIManager().getActiveWindow();
 		if (!(v instanceof com.iver.cit.gvsig.gui.View))
 			return false;
 		

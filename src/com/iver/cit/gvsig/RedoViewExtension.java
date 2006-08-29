@@ -70,7 +70,7 @@ public class RedoViewExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 		MapControl mapControl = vista.getMapControl();
 
 		if (s.compareTo("REDO") == 0) {
@@ -102,7 +102,7 @@ public class RedoViewExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		View vista = (View) PluginServices.getMDIManager().getActiveView();
+		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 		MapControl mapControl = vista.getMapControl();
 		FLayers layers=mapControl.getMapContext().getLayers();
 		for (int i=0;i<layers.getLayersCount();i++){
@@ -121,7 +121,7 @@ public class RedoViewExtension extends Extension {
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-															 .getActiveView();
+															 .getActiveWindow();
 
 		if (f == null) {
 			return false;

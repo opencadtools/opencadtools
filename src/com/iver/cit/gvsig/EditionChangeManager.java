@@ -57,7 +57,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.9  2006-08-29 07:13:57  cesar
+ * Revision 1.10  2006-08-29 07:56:33  cesar
+ * Rename the *View* family of classes to *Window* (ie: SingletonView to SingletonWindow, ViewInfo to WindowInfo, etc)
+ *
+ * Revision 1.9  2006/08/29 07:13:57  cesar
  * Rename class com.iver.andami.ui.mdiManager.View to com.iver.andami.ui.mdiManager.IWindow
  *
  * Revision 1.8  2006/08/08 07:19:05  caballero
@@ -127,7 +130,7 @@ public class EditionChangeManager implements IEditionListener{
 	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#afterRowEditEvent(com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent)
 	 */
 	public void afterRowEditEvent(IRow feat, AfterRowEditEvent e) {
-		IWindow[] views = (IWindow[]) PluginServices.getMDIManager().getAllViews();
+		IWindow[] views = (IWindow[]) PluginServices.getMDIManager().getAllWindows();
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){

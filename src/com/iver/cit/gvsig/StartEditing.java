@@ -63,7 +63,7 @@ public class StartEditing extends Extension {
 	public void execute(String actionCommand) {
 		CADExtension.initFocus();
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveView();
+				.getActiveWindow();
 
 		if (f instanceof View) {
 			vista = (View) f;
@@ -94,7 +94,7 @@ public class StartEditing extends Extension {
 	            		if (!lv.isWritable())
 	            		{
 	        				JOptionPane.showMessageDialog(
-	        						(Component) PluginServices.getMDIManager().getActiveView(),
+	        						(Component) PluginServices.getMDIManager().getActiveWindow(),
 	        						PluginServices.getText(this, "this_layer_is_not_self_editable"),
 	        						PluginServices.getText(this, "warning_title"), 
 	        						JOptionPane.WARNING_MESSAGE);
@@ -181,7 +181,7 @@ public class StartEditing extends Extension {
 
 	public static void startCommandsApplicable(View vista,FLyrVect lv) {
 		if (vista==null)
-			vista=(View)PluginServices.getMDIManager().getActiveView();
+			vista=(View)PluginServices.getMDIManager().getActiveWindow();
 		CADTool[] cadtools = CADExtension.getCADTools();
 		KeywordMap keywordMap = new KeywordMap(true);
 		for (int i = 0; i < cadtools.length; i++) {
@@ -201,7 +201,7 @@ public class StartEditing extends Extension {
 	}
 
 	private void changeModelTable(ProjectTable pt){
-    	 com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices.getMDIManager().getAllViews();
+    	 com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices.getMDIManager().getAllWindows();
 
  		for (int i=0 ; i<views.length ; i++){
  			if (views[i] instanceof Table){
@@ -217,7 +217,7 @@ public class StartEditing extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		View f = (View) PluginServices.getMDIManager().getActiveView();
+		View f = (View) PluginServices.getMDIManager().getActiveWindow();
 
 		if (f == null) {
 			return false;
@@ -238,7 +238,7 @@ public class StartEditing extends Extension {
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveView();
+				.getActiveWindow();
 
 		if (f == null) {
 			return false;

@@ -143,7 +143,7 @@ public class FileBasedPanel extends JWizardPanel {
 		if (chooserPanel == null) {
 			chooserPanel = new ProjChooserPanel(FOpenDialog.getLastProjection());
 			chooserPanel.setBounds(new java.awt.Rectangle(16,98,348,44));
-			IWindow view= PluginServices.getMDIManager().getActiveView();
+			IWindow view= PluginServices.getMDIManager().getActiveWindow();
 			if (view instanceof com.iver.cit.gvsig.gui.View){
 				if (((com.iver.cit.gvsig.gui.View)view).getMapControl().getMapContext().getLayers().getLayersCount()!=0){
 					chooserPanel.getJBtnChangeProj().setEnabled(false);

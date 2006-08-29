@@ -74,9 +74,9 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 	public void activationChanged(LayerEvent e) {
 		if (e.getSource().isActive()){
 			ile=getLayerEdited(e.getSource());
-			if (PluginServices.getMDIManager().getActiveView() instanceof View)
+			if (PluginServices.getMDIManager().getActiveWindow() instanceof View)
 			{
-				View view=(View)PluginServices.getMDIManager().getActiveView();
+				View view=(View)PluginServices.getMDIManager().getActiveWindow();
 				if (e.getSource().isEditing()){
 					view.showConsole();
 				}else{
@@ -213,7 +213,7 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 			getMapControl().setTool("zoomIn");
 			FLyrVect lv=(FLyrVect)vle.getLayer();
 			if (e.getAffectedLayer().equals(lv)){
-				View view=(View)PluginServices.getMDIManager().getActiveView();
+				View view=(View)PluginServices.getMDIManager().getActiveWindow();
 				view.hideConsole();
 				view.validate();
 				view.repaint();

@@ -139,7 +139,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		// te hagan un redibujado.
 		FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
 		//lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents();
-		com.iver.andami.ui.mdiManager.IWindow[] views = (com.iver.andami.ui.mdiManager.IWindow[]) PluginServices.getMDIManager().getAllViews();
+		com.iver.andami.ui.mdiManager.IWindow[] views = (com.iver.andami.ui.mdiManager.IWindow[]) PluginServices.getMDIManager().getAllWindows();
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){
@@ -189,7 +189,7 @@ public class SelectionCADTool extends DefaultCADTool {
                     	FLabel fl=lyrAnnotation.getLabel(lyrAnnotation.getInEdition());
         				if (fl!=null){
 
-        					View vista=(View)PluginServices.getMDIManager().getActiveView();
+        					View vista=(View)PluginServices.getMDIManager().getActiveWindow();
         					TextFieldEdit tfe=new TextFieldEdit(lyrAnnotation);
 
         					tfe.show(vista.getMapControl().getViewPort().fromMapPoint(fl.getOrig()),vista.getMapControl());
