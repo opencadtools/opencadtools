@@ -58,7 +58,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public VectorialLayerEdited(FLayer lyr)
 	{
 		super(lyr);
-		lyr.getFMap().addLayerDrawingListener(this);
+		lyr.getMapContext().addLayerDrawingListener(this);
 		// Por defecto, siempre hacemos snapping sobre la capa en edición.
 		layersToSnap.add(lyr);
 	}
@@ -94,7 +94,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			clearSelection();
 		}
 		// Se comprueba si se pincha en una gemometría
-		ViewPort vp=getLayer().getFMap().getViewPort();
+		ViewPort vp=getLayer().getMapContext().getViewPort();
 		double tam =vp.toMapDistance(SelectionCADTool.tolerance);
 		Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() - tam,
 				firstPoint.getY() - tam, tam * 2, tam * 2);
@@ -131,7 +131,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
 		lastPoint = new Point2D.Double(x, y);
-		ViewPort vp=getLayer().getFMap().getViewPort();
+		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
 		selectedRow.clear();
 
@@ -196,7 +196,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void selectInsidePolygon(IGeometry polygon) {
 		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
-		ViewPort vp=getLayer().getFMap().getViewPort();
+		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
 		selectedRow.clear();
 		Rectangle2D rect = polygon.getBounds2D();
@@ -229,7 +229,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void selectCrossPolygon(IGeometry polygon) {
 		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
-		ViewPort vp=getLayer().getFMap().getViewPort();
+		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
 		selectedRow.clear();
 		Rectangle2D rect = polygon.getBounds2D();
@@ -262,7 +262,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void selectOutPolygon(IGeometry polygon) {
 		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
-		ViewPort vp=getLayer().getFMap().getViewPort();
+		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
 		selectedRow.clear();
 
@@ -293,7 +293,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void selectAll() {
 		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
-		ViewPort vp=getLayer().getFMap().getViewPort();
+		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
 		selectedRow.clear();
 		try {
@@ -325,7 +325,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		double min = java.lang.Double.MAX_VALUE;
 //		 Cogemos las entidades seleccionadas
 		clearSelection();
-		ViewPort vp=getLayer().getFMap().getViewPort();
+		ViewPort vp=getLayer().getMapContext().getViewPort();
 		BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gs = selectionImage.createGraphics();
 		BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -387,7 +387,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		if (((FLyrVect) getLayer()).getSource() instanceof VectorialEditableAdapter) {
 			VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) getLayer())
 					.getSource();
-			ViewPort vp = getLayer().getFMap().getViewPort();
+			ViewPort vp = getLayer().getMapContext().getViewPort();
 			BufferedImage selectionImage = new BufferedImage(
 					vp.getImageWidth(), vp.getImageHeight(),
 					BufferedImage.TYPE_INT_ARGB);

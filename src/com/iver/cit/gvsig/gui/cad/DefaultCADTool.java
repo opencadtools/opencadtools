@@ -180,7 +180,7 @@ public abstract class DefaultCADTool implements CADTool {
 				ArrayList selectedRow = vle.getSelectedRow();
 
 
-				ViewPort vp = vle.getLayer().getFMap().getViewPort();
+				ViewPort vp = vle.getLayer().getMapContext().getViewPort();
 				BufferedImage selectionImage = new BufferedImage(vp
 						.getImageWidth(), vp.getImageHeight(),
 						BufferedImage.TYPE_INT_ARGB);

@@ -187,7 +187,7 @@ public class CopyCADTool extends DefaultCADTool {
         //          getCadToolAdapter().getMapControl().getViewPort()
         //              .getAffineTransform());
         if (status.equals("Copy.SecondPointToMove")) {
-        	ViewPort vp=vle.getLayer().getFMap().getViewPort();
+        	ViewPort vp=vle.getLayer().getMapContext().getViewPort();
             int dx = vp.fromMapDistance(x - firstPoint.getX());
             int dy = -vp.fromMapDistance(y - firstPoint.getY());
             Image img = vle.getSelectionImage();

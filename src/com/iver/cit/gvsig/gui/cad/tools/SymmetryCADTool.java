@@ -168,7 +168,7 @@ public class SymmetryCADTool extends DefaultCADTool {
 private void drawSymmetry(Graphics g,Point2D pAux) {
 	ArrayList selectedRow=getSelectedRows();
     VectorialLayerEdited vle=getVLE();
-	ViewPort vp=vle.getLayer().getFMap().getViewPort();
+	ViewPort vp=vle.getLayer().getMapContext().getViewPort();
 
 	GeneralPathX gpx=new GeneralPathX();
 	gpx.moveTo(firstPoint.getX(),firstPoint.getY());

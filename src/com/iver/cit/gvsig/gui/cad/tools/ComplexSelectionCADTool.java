@@ -238,7 +238,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 		String status = actualState.getName();
 		VectorialLayerEdited vle = getVLE();
 		ArrayList selectedHandler = vle.getSelectedHandler();
-		ViewPort vp=vle.getLayer().getFMap().getViewPort();
+		ViewPort vp=vle.getLayer().getMapContext().getViewPort();
 		if (status.equals("Selection.SecondPoint") || status.equals("Selection.SecondPointOutRectangle")) {
 			// Dibuja el rectángulo de selección
 			GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,

@@ -208,7 +208,7 @@ public class ScaleCADTool extends DefaultCADTool {
 
 		if (status.equals("Scale.ScaleFactorOrReference")) {
 			VectorialLayerEdited vle = getVLE();
-			ViewPort vp = vle.getLayer().getFMap().getViewPort();
+			ViewPort vp = vle.getLayer().getMapContext().getViewPort();
 			Point2D point = vp.fromMapPoint(firstPoint.getX(), firstPoint
 					.getY());
 			double size = getCadToolAdapter().getMapControl().getViewPort()
@@ -244,7 +244,7 @@ public class ScaleCADTool extends DefaultCADTool {
 					"Factor = " + scale);
 		} else if (status.equals("Scale.EndPointScale")) {
 			VectorialLayerEdited vle = getVLE();
-			ViewPort vp = vle.getLayer().getFMap().getViewPort();
+			ViewPort vp = vle.getLayer().getMapContext().getViewPort();
 			Point2D point = vp.fromMapPoint(scalePoint.getX(), scalePoint
 					.getY());
 

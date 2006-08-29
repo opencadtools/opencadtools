@@ -311,7 +311,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		VectorialLayerEdited vle = getVLE();
 		if (vle == null) return;
 		ArrayList selectedHandler = vle.getSelectedHandler();
-		ViewPort vp=vle.getLayer().getFMap().getViewPort();
+		ViewPort vp=vle.getLayer().getMapContext().getViewPort();
 		if (status.equals("Selection.SecondPoint")) {
 			// Dibuja el rectángulo de selección
 			GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,

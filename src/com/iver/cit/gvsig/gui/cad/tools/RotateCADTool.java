@@ -202,7 +202,7 @@ public class RotateCADTool extends DefaultCADTool {
 			double h;
 			w = x - firstPoint.getX();
 			h = y - firstPoint.getY();
-			ViewPort vp=vle.getLayer().getFMap().getViewPort();
+			ViewPort vp=vle.getLayer().getMapContext().getViewPort();
 			Point2D point = vp.fromMapPoint(firstPoint.getX(),
 								firstPoint.getY());
 			AffineTransform at = AffineTransform.getRotateInstance(Math.atan2(
