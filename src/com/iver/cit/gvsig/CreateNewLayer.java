@@ -38,7 +38,7 @@ public class CreateNewLayer extends Extension {
 	 */
 public void execute(String actionCommand) {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveView();
+				.getActiveWindow();
 
 		if (f instanceof View) {
 			View vista = (View) f;
@@ -109,12 +109,12 @@ public void execute(String actionCommand) {
 								vista, actionCommand));
 			}
 			wizard.getWizardComponents().getFinishButton().setEnabled(false);
-			wizard.getViewInfo().setWidth(540);
-			wizard.getViewInfo().setHeight(350);
-			wizard.getViewInfo().setTitle(PluginServices.getText(this,"new_layer"));
+			wizard.getWindowInfo().setWidth(540);
+			wizard.getWindowInfo().setHeight(350);
+			wizard.getWindowInfo().setTitle(PluginServices.getText(this,"new_layer"));
 			// Utilities.centerComponentOnScreen(wizard);
 			// wizardFrame.show();
-			PluginServices.getMDIManager().addView(wizard);
+			PluginServices.getMDIManager().addWindow(wizard);
 			// System.out.println("Salgo con " + panelChoose.getLayerName());
 		}
 	}
@@ -122,7 +122,7 @@ public void execute(String actionCommand) {
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-		View f = (View) PluginServices.getMDIManager().getActiveView();
+		View f = (View) PluginServices.getMDIManager().getActiveWindow();
 
 		if (f == null)
 			return false;
@@ -134,7 +134,7 @@ public void execute(String actionCommand) {
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveView();
+				.getActiveWindow();
 
 		if (f == null) {
 			return false;
