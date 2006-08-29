@@ -1,7 +1,7 @@
 package com.iver.cit.gvsig;
 
 import com.iver.andami.PluginServices;
-import com.iver.andami.ui.mdiManager.View;
+import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.edition.AfterFieldEditEvent;
 import com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent;
@@ -57,7 +57,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.8  2006-08-08 07:19:05  caballero
+ * Revision 1.9  2006-08-29 07:13:57  cesar
+ * Rename class com.iver.andami.ui.mdiManager.View to com.iver.andami.ui.mdiManager.IWindow
+ *
+ * Revision 1.8  2006/08/08 07:19:05  caballero
  * afterRowEditEvent con IRow
  *
  * Revision 1.7  2006/07/20 11:03:27  fjp
@@ -124,7 +127,7 @@ public class EditionChangeManager implements IEditionListener{
 	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#afterRowEditEvent(com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent)
 	 */
 	public void afterRowEditEvent(IRow feat, AfterRowEditEvent e) {
-		View[] views = (View[]) PluginServices.getMDIManager().getAllViews();
+		IWindow[] views = (IWindow[]) PluginServices.getMDIManager().getAllViews();
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){

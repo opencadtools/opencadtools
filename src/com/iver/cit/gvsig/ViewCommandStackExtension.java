@@ -29,7 +29,7 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 				.getActiveView();
 
 		View vista = (View) f;

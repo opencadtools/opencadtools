@@ -37,7 +37,7 @@ public class CreateNewLayer extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 public void execute(String actionCommand) {
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 				.getActiveView();
 
 		if (f instanceof View) {
@@ -133,7 +133,7 @@ public void execute(String actionCommand) {
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 				.getActiveView();
 
 		if (f == null) {

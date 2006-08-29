@@ -120,7 +120,7 @@ public class RedoViewExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 															 .getActiveView();
 
 		if (f == null) {

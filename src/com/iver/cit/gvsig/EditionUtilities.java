@@ -34,7 +34,7 @@ public class EditionUtilities {
 	public static int getEditionStatus()
 	{
 		int status = EDITION_STATUS_NO_EDITION;
-        com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+        com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
         .getActiveView();
         if (f == null)
         	return status;
@@ -73,7 +73,7 @@ public class EditionUtilities {
 	public static FLayer[] getActiveAndEditedLayers()
 	{
 		int status = EDITION_STATUS_NO_EDITION;
-        com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+        com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
         .getActiveView();
         if (f == null)
         	return null;

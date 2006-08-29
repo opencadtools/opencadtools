@@ -44,7 +44,7 @@ import java.awt.KeyEventDispatcher;
 import java.awt.event.KeyEvent;
 
 import com.iver.andami.PluginServices;
-import com.iver.andami.ui.mdiManager.View;
+import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
@@ -58,7 +58,7 @@ public class GridAccelerator implements KeyEventDispatcher {
 		if (e.getID() == KeyEvent.KEY_PRESSED)
 			return false;
 		
-		View v = PluginServices.getMDIManager().getActiveView();
+		IWindow v = PluginServices.getMDIManager().getActiveView();
 		if (!(v instanceof com.iver.cit.gvsig.gui.View))
 			return false;
 		

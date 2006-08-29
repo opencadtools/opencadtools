@@ -25,7 +25,7 @@ public class TableCommandStackExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 				.getActiveView();
 
 		Table table = (Table) f;
@@ -57,7 +57,7 @@ public class TableCommandStackExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 		.getActiveView();
 		if (f instanceof Table){
 		Table table = (Table) f;

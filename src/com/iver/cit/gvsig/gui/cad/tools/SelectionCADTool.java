@@ -139,7 +139,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		// te hagan un redibujado.
 		FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
 		//lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents();
-		com.iver.andami.ui.mdiManager.View[] views = (com.iver.andami.ui.mdiManager.View[]) PluginServices.getMDIManager().getAllViews();
+		com.iver.andami.ui.mdiManager.IWindow[] views = (com.iver.andami.ui.mdiManager.IWindow[]) PluginServices.getMDIManager().getAllViews();
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){

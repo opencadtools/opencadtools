@@ -62,7 +62,7 @@ public class StartEditing extends Extension {
 	 */
 	public void execute(String actionCommand) {
 		CADExtension.initFocus();
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 				.getActiveView();
 
 		if (f instanceof View) {
@@ -201,7 +201,7 @@ public class StartEditing extends Extension {
 	}
 
 	private void changeModelTable(ProjectTable pt){
-    	 com.iver.andami.ui.mdiManager.View[] views = PluginServices.getMDIManager().getAllViews();
+    	 com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices.getMDIManager().getAllViews();
 
  		for (int i=0 ; i<views.length ; i++){
  			if (views[i] instanceof Table){
@@ -237,7 +237,7 @@ public class StartEditing extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
-		com.iver.andami.ui.mdiManager.View f = PluginServices.getMDIManager()
+		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 				.getActiveView();
 
 		if (f == null) {

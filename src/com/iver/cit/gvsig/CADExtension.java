@@ -92,7 +92,7 @@ public class CADExtension extends Extension {
 	private static CADToolAdapter adapter=null;
 
 	public static CADToolAdapter getCADToolAdapter() {
-		com.iver.andami.ui.mdiManager.View view=PluginServices.getMDIManager().getActiveView();
+		com.iver.andami.ui.mdiManager.IWindow view=PluginServices.getMDIManager().getActiveView();
 		if (view instanceof View) {
 			View v=(View)view;
 			if (!adapters.containsKey(v)) {
