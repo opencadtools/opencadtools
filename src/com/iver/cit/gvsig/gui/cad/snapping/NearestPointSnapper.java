@@ -16,7 +16,7 @@ public class NearestPointSnapper extends AbstractSnapper implements ISnapperVect
 		Point2D resul = null;
 		Coordinate c = new Coordinate(point.getX(), point.getY());
 		
-		PathIterator theIterator = geom.getPathIterator(null, FConverter.flatness); //polyLine.getPathIterator(null, flatness);
+		PathIterator theIterator = geom.getPathIterator(null, FConverter.FLATNESS); //polyLine.getPathIterator(null, flatness);
 		double[] theData = new double[6];
 		double minDist = tolerance;
 		Coordinate from = null, first = null;

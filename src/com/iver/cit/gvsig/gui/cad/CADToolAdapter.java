@@ -100,6 +100,8 @@ public class CADToolAdapter extends Behavior {
 	private boolean bOrtoMode;
 
 	private Color theTipColor = new Color(255, 255, 155);
+
+	private static boolean flatnessInitialized=false;
 	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 
 	/**
@@ -253,7 +255,7 @@ public class CADToolAdapter extends Behavior {
 						ISnapperRaster snapRaster = (ISnapperRaster) theSnapper;
 						theSnappedPoint = snapRaster.getSnapPoint(getMapControl(), point, mapTolerance, lastPoint);
 					}
-					
+
 
 					if (theSnappedPoint != null) {
 						double distAux = theSnappedPoint.distance(point);
@@ -962,11 +964,12 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	public void initializeFlatness() {
-		Preferences prefs = Preferences.userRoot().node( "gvsig.options.view" );
-		double flatness = prefs.getDouble("flatness",FConverter.flatness);
-		FConverter.flatness=flatness;
-
-
+		if (!flatnessInitialized){
+			flatnessInitialized=true;
+			Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
+			double flatness = prefs.getDouble("flatness",FConverter.FLATNESS);
+			FConverter.FLATNESS=flatness;
+		}
 	}
 	public void initializeGrid(){
 		boolean showGrid = prefs.getBoolean("grid.showgrid",getGrid().isShowGrid());

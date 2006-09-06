@@ -292,7 +292,7 @@ public class EditVertexCADTool extends DefaultCADTool {
         Point2D ptSrc = new Point2D.Double();
         boolean bFirst = false;
 
-        theIterator = gp.getPathIterator(null, FConverter.flatness);
+        theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
         int numSegmentsAdded = 0;
         while (!theIterator.isDone()) {
             theType = theIterator.currentSegment(theData);
@@ -434,7 +434,7 @@ public class EditVertexCADTool extends DefaultCADTool {
             Point2D pLast=new Point2D.Double();
             Point2D pAnt = new Point2D.Double();
             Point2D firstPoint=null;
-            theIterator = geome.getPathIterator(null,FConverter.flatness); //, flatness);
+            theIterator = geome.getPathIterator(null,FConverter.FLATNESS); //, flatness);
             int numSegmentsAdded = 0;
             while (!theIterator.isDone()) {
                 theType = theIterator.currentSegment(theData);

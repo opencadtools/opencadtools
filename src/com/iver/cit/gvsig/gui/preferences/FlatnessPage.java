@@ -43,7 +43,10 @@
 *
 * $Id$
 * $Log$
-* Revision 1.3  2006-08-22 12:27:53  jaume
+* Revision 1.4  2006-09-06 15:29:59  caballero
+* initialize flatness
+*
+* Revision 1.3  2006/08/22 12:27:53  jaume
 * improved performances when saving
 *
 * Revision 1.2  2006/08/22 07:37:32  jaume
@@ -130,11 +133,11 @@ public class FlatnessPage extends AbstractPreferencePage {
 	}
 
 	public void initializeValues() {
-		double flatness = prefs.getDouble("flatness",FConverter.flatness);
+		double flatness = FConverter.FLATNESS;
 
 		txtFlatness.setText(String.valueOf(flatness));
 
-		FConverter.flatness=flatness;
+		FConverter.FLATNESS=flatness;
 	}
 
 	public String getID() {
@@ -158,12 +161,12 @@ public class FlatnessPage extends AbstractPreferencePage {
 		}
 		prefs.putDouble("flatness", flatness);
 
-		FConverter.flatness=flatness;
+		FConverter.FLATNESS=flatness;
 
 	}
 
 	public void initializeDefaults() {
-		txtFlatness.setText(String.valueOf(FConverter.flatness));
+		txtFlatness.setText(String.valueOf(FConverter.FLATNESS));
 	}
 
 	public ImageIcon getIcon() {

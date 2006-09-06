@@ -351,7 +351,7 @@ public class BreakCADTool extends DefaultCADTool {
         GeneralPathX newGp1 = new GeneralPathX();
         GeneralPathX newGp2 = new GeneralPathX();
         IGeometry geomAux=((DefaultFeature)rowEdited.getLinkedRow()).getGeometry();
-        PathIterator theIterator=geomAux.getPathIterator(null,FConverter.flatness);
+        PathIterator theIterator=geomAux.getPathIterator(null,FConverter.FLATNESS);
         Point2D[] pointsOrdered=getOrderPoints(geomAux);
         double[] theData = new double[6];
         boolean isFirstPart=true;
@@ -462,7 +462,7 @@ public class BreakCADTool extends DefaultCADTool {
             GeneralPathX gpx=new GeneralPathX();
             gpx.append(geomAux.getInternalShape(),true);
             if (gpx.isClosed()) {
-                newGp2.append(newGp1.getPathIterator(null,FConverter.flatness),true);
+                newGp2.append(newGp1.getPathIterator(null,FConverter.FLATNESS),true);
                 IGeometry geom1=ShapeFactory.createPolyline2D(newGp2);
                 VectorialLayerEdited vle = getVLE();
                 VectorialEditableAdapter vea = vle.getVEA();
@@ -516,7 +516,7 @@ public class BreakCADTool extends DefaultCADTool {
     }
 
     private Point2D[] getOrderPoints(IGeometry geomAux) {
-    	PathIterator theIterator=geomAux.getPathIterator(null,FConverter.flatness);
+    	PathIterator theIterator=geomAux.getPathIterator(null,FConverter.FLATNESS);
     	double[] theData = new double[6];
         Point2D previous=null;
         ArrayList points =new ArrayList();

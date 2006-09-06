@@ -231,7 +231,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
         int numParts = 0;
 
 
-        theIterator = gp.getPathIterator(null, FConverter.flatness);
+        theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
         while (!theIterator.isDone()) {
             theType = theIterator.currentSegment(theData);
             switch (theType) {

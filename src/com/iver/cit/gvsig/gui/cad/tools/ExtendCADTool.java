@@ -188,7 +188,7 @@ public class ExtendCADTool extends DefaultCADTool {
     	Point2D p1=null;
         Point2D p2=null;
 		GeneralPathX gpx=new GeneralPathX();
-		PathIterator theIterator=geometry1.getInternalShape().getPathIterator(null,FConverter.flatness);
+		PathIterator theIterator=geometry1.getInternalShape().getPathIterator(null,FConverter.FLATNESS);
 		boolean first=true;
 		double[] theData = new double[6];
         int theType;
@@ -242,7 +242,7 @@ public class ExtendCADTool extends DefaultCADTool {
 		Point2D p1=null;
         Point2D p2=null;
 		ArrayList lines=new ArrayList();
-    	PathIterator theIterator=geometry1.getInternalShape().getPathIterator(null,FConverter.flatness);
+    	PathIterator theIterator=geometry1.getInternalShape().getPathIterator(null,FConverter.FLATNESS);
 		double[] theData = new double[6];
         int theType;
 			while (!theIterator.isDone()) {
