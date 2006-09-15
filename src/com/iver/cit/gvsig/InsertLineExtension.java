@@ -45,9 +45,9 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.ArcCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.LineCADTool;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extensión que gestiona la inserción de líneas en edición.

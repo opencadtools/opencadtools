@@ -45,12 +45,12 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolygonCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extensión que gestiona la inserción de poligonos en edición.

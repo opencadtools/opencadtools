@@ -37,11 +37,11 @@ import com.iver.cit.gvsig.fmap.layers.LayerDrawingListener;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerPositionEvent;
 import com.iver.cit.gvsig.fmap.rendering.Legend;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDrawingListener{

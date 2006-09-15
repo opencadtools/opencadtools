@@ -43,7 +43,6 @@ import com.iver.cit.gvsig.fmap.layers.SpatialCache;
 import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.snapping.FinalPointSnapper;
 import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
 import com.iver.cit.gvsig.gui.cad.snapping.ISnapperRaster;
@@ -54,6 +53,7 @@ import com.iver.cit.gvsig.gui.cad.snapping.SnappingVisitor;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.console.JConsole;
 import com.vividsolutions.jts.geom.Envelope;
 

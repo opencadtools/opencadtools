@@ -51,8 +51,8 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.gui.preferences.EditionPreferencePage;
 import com.iver.cit.gvsig.gui.preferences.FlatnessPage;
 import com.iver.cit.gvsig.gui.preferences.GridPage;
-import com.iver.cit.gvsig.gui.toc.FPopupMenu;
-import com.iver.cit.gvsig.gui.toc.TocMenuEntry;
+import com.iver.cit.gvsig.project.documents.view.toc.TocMenuEntry;
+import com.iver.cit.gvsig.project.documents.view.toc.gui.FPopupMenu;
 import com.iver.utiles.extensionPoints.ExtensionPoints;
 import com.iver.utiles.extensionPoints.ExtensionPointsSingleton;
 

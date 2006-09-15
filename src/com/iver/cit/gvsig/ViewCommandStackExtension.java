@@ -8,9 +8,9 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.commands.CommandListener;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.command.CommandStackDialog;
-import com.iver.cit.gvsig.project.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * DOCUMENT ME!

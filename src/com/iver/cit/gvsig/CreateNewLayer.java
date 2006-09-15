@@ -12,12 +12,12 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * DOCUMENT ME!

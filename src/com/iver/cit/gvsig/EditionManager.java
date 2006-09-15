@@ -15,10 +15,10 @@ import com.iver.cit.gvsig.fmap.layers.LayerCollectionListener;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerListener;
 import com.iver.cit.gvsig.fmap.layers.LayerPositionEvent;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.layers.FactoryLayerEdited;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * @author fjp

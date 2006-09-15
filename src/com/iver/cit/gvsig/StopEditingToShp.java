@@ -16,8 +16,8 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
-import com.iver.cit.gvsig.gui.View;
-import com.iver.cit.gvsig.project.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.SimpleFileFilter;
 
 

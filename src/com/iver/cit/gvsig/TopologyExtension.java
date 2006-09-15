@@ -66,7 +66,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.GraphicLayer;
 import com.iver.cit.gvsig.fmap.rendering.FGraphic;
-import com.iver.cit.gvsig.gui.View;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.topology.TopologyBuilder;
 import com.iver.cit.gvsig.topology.triangulation.DelaunayTriangulation;
 import com.iver.cit.gvsig.topology.triangulation.Pnt;

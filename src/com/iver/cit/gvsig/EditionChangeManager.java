@@ -11,7 +11,7 @@ import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IEditionListener;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
-import com.iver.cit.gvsig.gui.Table;
+import com.iver.cit.gvsig.project.documents.table.gui.Table;
 
 /* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
  *
@@ -57,7 +57,10 @@ import com.iver.cit.gvsig.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.10  2006-08-29 07:56:33  cesar
+ * Revision 1.11  2006-09-15 10:42:17  caballero
+ * extensibilidad de documentos
+ *
+ * Revision 1.10  2006/08/29 07:56:33  cesar
  * Rename the *View* family of classes to *Window* (ie: SingletonView to SingletonWindow, ViewInfo to WindowInfo, etc)
  *
  * Revision 1.9  2006/08/29 07:13:57  cesar
@@ -137,8 +140,8 @@ public class EditionChangeManager implements IEditionListener{
 				Table table=(Table)views[i];
 				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(fLayer))
 					table.refresh();
-			}else if (views[i] instanceof com.iver.cit.gvsig.gui.View){
-				com.iver.cit.gvsig.gui.View view=(com.iver.cit.gvsig.gui.View)views[i];
+			}else if (views[i] instanceof com.iver.cit.gvsig.project.documents.view.gui.View){
+				com.iver.cit.gvsig.project.documents.view.gui.View view=(com.iver.cit.gvsig.project.documents.view.gui.View)views[i];
 				 
 				fLayer.setDirty(true);
 				view.getMapControl().rePaintDirtyLayers();

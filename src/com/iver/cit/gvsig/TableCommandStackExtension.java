@@ -5,9 +5,9 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.commands.CommandRecord;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.Table;
 import com.iver.cit.gvsig.gui.command.CommandStackDialog;
-import com.iver.cit.gvsig.project.ProjectTable;
+import com.iver.cit.gvsig.project.documents.table.ProjectTable;
+import com.iver.cit.gvsig.project.documents.table.gui.Table;
 
 /**
  * DOCUMENT ME!

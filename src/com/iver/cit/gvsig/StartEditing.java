@@ -24,13 +24,13 @@ import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.XMLException;
 import com.iver.cit.gvsig.fmap.rendering.Legend;
-import com.iver.cit.gvsig.gui.Table;
-import com.iver.cit.gvsig.gui.View;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
-import com.iver.cit.gvsig.project.ProjectTable;
-import com.iver.cit.gvsig.project.ProjectView;
+import com.iver.cit.gvsig.project.documents.table.ProjectTable;
+import com.iver.cit.gvsig.project.documents.table.gui.Table;
+import com.iver.cit.gvsig.project.documents.view.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.console.jedit.KeywordMap;
 import com.iver.utiles.console.jedit.Token;
 

@@ -14,8 +14,8 @@ import jwizardcomponent.JWizardPanel;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
-import com.iver.cit.gvsig.gui.FOpenDialog;
 import com.iver.cit.gvsig.gui.panels.ProjChooserPanel;
+import com.iver.cit.gvsig.project.documents.gui.FOpenDialog;
 import com.iver.utiles.SimpleFileFilter;
 
 public class FileBasedPanel extends JWizardPanel {
@@ -144,8 +144,8 @@ public class FileBasedPanel extends JWizardPanel {
 			chooserPanel = new ProjChooserPanel(FOpenDialog.getLastProjection());
 			chooserPanel.setBounds(new java.awt.Rectangle(16,98,348,44));
 			IWindow view= PluginServices.getMDIManager().getActiveWindow();
-			if (view instanceof com.iver.cit.gvsig.gui.View){
-				if (((com.iver.cit.gvsig.gui.View)view).getMapControl().getMapContext().getLayers().getLayersCount()!=0){
+			if (view instanceof com.iver.cit.gvsig.project.documents.view.gui.View){
+				if (((com.iver.cit.gvsig.project.documents.view.gui.View)view).getMapControl().getMapContext().getLayers().getLayersCount()!=0){
 					chooserPanel.getJBtnChangeProj().setEnabled(false);
 				}
 			}

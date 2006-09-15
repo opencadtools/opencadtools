@@ -59,7 +59,7 @@ public class GridAccelerator implements KeyEventDispatcher {
 			return false;
 		
 		IWindow v = PluginServices.getMDIManager().getActiveWindow();
-		if (!(v instanceof com.iver.cit.gvsig.gui.View))
+		if (!(v instanceof com.iver.cit.gvsig.project.documents.view.gui.View))
 			return false;
 		
 		CADToolAdapter toolAdap = CADExtension.getCADToolAdapter();
