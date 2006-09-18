@@ -89,25 +89,17 @@ public class PopupEditionProperties extends TocMenuEntry {
 		flatnessPage.setParentID(pref.getID());
 
 
-//		JDialog dlg = new JDialog((Frame) PluginServices.getMainFrame(),
-//				PluginServices.getText(this, "Edition_Properties"));
-//		dlg.getContentPane().setLayout(new BorderLayout());
-//		dlg.getContentPane().add(pref, BorderLayout.CENTER);
-//		dlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//		dlg.pack();
-//		dlg.setModal(true);
-//		dlg.setVisible(true);
 
-		ExtensionPoints extensionPoints =
-			ExtensionPointsSingleton.getInstance();
-		extensionPoints.add("AplicationPreferences",pref.getID(), pref);
-		extensionPoints.add("AplicationPreferences",gridPage.getID(), gridPage);
-		extensionPoints.add("AplicationPreferences",flatnessPage.getID(), flatnessPage);
-
+		//		ExtensionPoints extensionPoints =
+//			ExtensionPointsSingleton.getInstance();
+//		extensionPoints.add("AplicationPreferences",pref.getID(), pref);
+//		extensionPoints.add("AplicationPreferences",gridPage.getID(), gridPage);
+//		extensionPoints.add("AplicationPreferences",flatnessPage.getID(), flatnessPage);
 		GenericDlgPreferences dlg = new GenericDlgPreferences();
+		dlg.addPreferencePage(pref);
+		dlg.addPreferencePage(gridPage);
+		dlg.addPreferencePage(flatnessPage);
 		dlg.getWindowInfo().setTitle(PluginServices.getText(this, "Edition_Properties"));
-
-		//dlg.addPreferencePage(pref);
 		dlg.setActivePage(pref);
 		PluginServices.getMDIManager().addWindow(dlg);
 
