@@ -64,7 +64,7 @@ import com.iver.utiles.SimpleFileFilter;
 import com.iver.utiles.swing.threads.AbstractMonitorableTask;
 
 public class ExportTo extends Extension {
-
+	private String lastPath = null;
 	private class WriterTask extends AbstractMonitorableTask
 	{
 		FLyrVect lyrVect;
@@ -312,7 +312,7 @@ public class ExportTo extends Extension {
 
 	        }
 
-			
+
 
 			dbLayerDef.setFieldGeometry("the_geom");
 			dbLayerDef.setFieldID("gid");
@@ -456,7 +456,7 @@ public class ExportTo extends Extension {
 
 	public void saveToDxf(MapContext mapContext, FLyrVect layer) throws EditionException, DriverIOException {
 		try {
-			JFileChooser jfc = new JFileChooser();
+			JFileChooser jfc = new JFileChooser(lastPath);
 			SimpleFileFilter filterShp = new SimpleFileFilter("dxf",
 					PluginServices.getText(this, "dxf_files"));
 			jfc.setFileFilter(filterShp);
@@ -486,6 +486,8 @@ public class ExportTo extends Extension {
 				DXFMemoryDriver dxfDriver=new DXFMemoryDriver();
 				dxfDriver.open(newFile);
 				writeFeatures(mapContext, layer, writer, dxfDriver);
+				String fileName = newFile.getAbsolutePath();
+				lastPath  = fileName.substring(0, fileName.lastIndexOf(File.separatorChar));
 			}
 
 		} catch (DriverException e) {
