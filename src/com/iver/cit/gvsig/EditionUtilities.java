@@ -5,27 +5,24 @@ import java.util.ArrayList;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapContext;
-import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.LayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
-import com.iver.cit.gvsig.project.documents.view.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
-import com.iver.utiles.NumberUtilities;
 
 /**
  * @author fjp
- * 
+ *
  * Clase con métodos muy útiles a la hora de hacer nuevas extensiones, y otras
  * cosas que puedan ser genéricas para este plugin.
  *
  */
 public class EditionUtilities {
-	
+
 	public static final int EDITION_STATUS_NO_EDITION = 0;
 	public static final int EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE = 1;
 	public static final int EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE = 2;
@@ -41,7 +38,7 @@ public class EditionUtilities {
 
         if (f instanceof View) {
         	View vista = (View) f;
-        	ProjectView model = vista.getModel();
+        	IProjectView model = vista.getModel();
         	MapContext mapa = model.getMapContext();
 
         	FLayers capas = mapa.getLayers();
@@ -64,9 +61,9 @@ public class EditionUtilities {
         		return EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE;
         	if (numActiveVectorial > 1)
         		return EDITION_STATUS_MULTIPLE_VECTORIAL_LAYER_ACTIVE;
-        	
+
         }
-		
+
 		return status;
 	}
 
@@ -80,9 +77,9 @@ public class EditionUtilities {
 
         if (f instanceof View) {
         	View vista = (View) f;
-        	ProjectView model = vista.getModel();
+        	IProjectView model = vista.getModel();
         	MapContext mapa = model.getMapContext();
-        	
+
         	ArrayList resul = new ArrayList();
 
         	FLayers capas = mapa.getLayers();
@@ -101,9 +98,9 @@ public class EditionUtilities {
         		}
         	}
        		return (FLayer[]) resul.toArray(new FLayer[0]);
-        	
+
         }
-		
+
 		return null;
 	}
 
@@ -112,7 +109,7 @@ public class EditionUtilities {
 		if (layer.getSource().getDriver() instanceof VectorialDatabaseDriver)
 		{
 			VectorialDatabaseDriver dbDriver = (VectorialDatabaseDriver) layer.getSource().getDriver();
-			return dbDriver.getLyrDef(); 
+			return dbDriver.getLyrDef();
 		}
 		else
 		{
@@ -125,9 +122,9 @@ public class EditionUtilities {
 			} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
 				e.printStackTrace();
 				throw new DriverException(e);
-			}		
+			}
 		}
 		return lyrDef;
 	}
-	
+
 }

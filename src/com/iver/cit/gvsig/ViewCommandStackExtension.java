@@ -9,7 +9,7 @@ import com.iver.cit.gvsig.fmap.edition.commands.CommandListener;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.command.CommandStackDialog;
-import com.iver.cit.gvsig.project.documents.view.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
@@ -33,7 +33,7 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 				.getActiveWindow();
 
 		View vista = (View) f;
-		ProjectView model = vista.getModel();
+		IProjectView model = vista.getModel();
 		MapContext mapa = model.getMapContext();
 		FLayers layers = mapa.getLayers();
 		if (s.equals("COMMANDSTACK")) {

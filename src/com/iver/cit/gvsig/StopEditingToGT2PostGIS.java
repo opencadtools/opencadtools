@@ -22,7 +22,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.jdbc_spatial.DlgConnection;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
-import com.iver.cit.gvsig.project.documents.view.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.writers.WriterGT2;
 
@@ -48,7 +48,7 @@ public class StopEditingToGT2PostGIS extends Extension {
                                                              .getActiveWindow();
 
         View vista = (View) f;
-        ProjectView model = vista.getModel();
+        IProjectView model = vista.getModel();
         MapContext mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
             if (s.equals("STOPEDITING")){

@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
-import com.hardcode.driverManager.Driver;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
@@ -14,8 +13,6 @@ import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.EditionException;
-import com.iver.cit.gvsig.fmap.edition.IWriteable;
-import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.rules.IRule;
 import com.iver.cit.gvsig.fmap.edition.rules.RulePolygon;
@@ -29,7 +26,7 @@ import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.ProjectTable;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
-import com.iver.cit.gvsig.project.documents.view.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.console.jedit.KeywordMap;
 import com.iver.utiles.console.jedit.Token;
@@ -73,7 +70,7 @@ public class StartEditing extends Extension {
 			EditionManager editionManager=CADExtension.getEditionManager();
 			editionManager.setMapControl(mapControl);
 
-			ProjectView model = vista.getModel();
+			IProjectView model = vista.getModel();
 			MapContext mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
 			boolean bEditingStarted = false;
@@ -96,14 +93,14 @@ public class StartEditing extends Extension {
 	        				JOptionPane.showMessageDialog(
 	        						(Component) PluginServices.getMDIManager().getActiveWindow(),
 	        						PluginServices.getText(this, "this_layer_is_not_self_editable"),
-	        						PluginServices.getText(this, "warning_title"), 
+	        						PluginServices.getText(this, "warning_title"),
 	        						JOptionPane.WARNING_MESSAGE);
 	            		}
-	                	
+
 						lv.setEditing(true);
 						VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
 						.getSource();
-						
+
 						vea.getRules().clear();
 						if (vea.getShapeType() == FShape.POLYGON)
 						{

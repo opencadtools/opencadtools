@@ -57,7 +57,7 @@ import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.iver.cit.gvsig.jdbc_spatial.DlgConnection;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
-import com.iver.cit.gvsig.project.documents.view.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.PostProcessSupport;
 import com.iver.utiles.SimpleFileFilter;
@@ -208,7 +208,7 @@ public class ExportTo extends Extension {
 
 		if (f instanceof View) {
 			View vista = (View) f;
-			ProjectView model = vista.getModel();
+			IProjectView model = vista.getModel();
 			MapContext mapa = model.getMapContext();
 			FLayers layers = mapa.getLayers();
 			FLayer[] actives = layers.getActives();

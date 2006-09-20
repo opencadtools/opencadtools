@@ -18,7 +18,7 @@ import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.project.documents.view.ProjectView;
+import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.writers.WriterGT2;
 import com.iver.utiles.SimpleFileFilter;
@@ -44,7 +44,7 @@ public class StopEditingToGT2Shp extends Extension {
                                                              .getActiveWindow();
 
         View vista = (View) f;
-        ProjectView model = vista.getModel();
+        IProjectView model = vista.getModel();
         MapContext mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
             if (s.equals("STOPEDITING")){
