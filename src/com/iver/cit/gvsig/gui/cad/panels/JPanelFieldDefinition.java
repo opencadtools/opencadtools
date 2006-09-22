@@ -40,6 +40,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	private JPanel jPanelEast = null;
 	private JButton jButtonAddField = null;
 	private JButton jButtonDeleteField = null;
+	private int MAX_FIELD_LENGTH = 254;
 
 
 	public JPanelFieldDefinition(JWizardComponents wizardComponents) {
@@ -118,6 +119,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	private JTable getJTable() {
 		if (jTable == null) {
 			jTable = new JTable();
+
 			DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
 			tm.addColumn(PluginServices.getText(this,"field"));
 
@@ -270,6 +272,12 @@ public class JPanelFieldDefinition extends JWizardPanel {
 				fieldsDesc[i].setFieldType(Types.DATE);
 			int fieldLength = Integer.parseInt((String) tm.getValueAt(i,2));
 			fieldsDesc[i].setFieldLength(fieldLength);
+
+			if (fieldsDesc[i].getFieldType() == Types.VARCHAR && fieldLength > MAX_FIELD_LENGTH ) {
+				JOptionPane.showMessageDialog(this, PluginServices.getText(this, "max_length_is") + ": " + MAX_FIELD_LENGTH+
+						"\n"+PluginServices.getText(this, "length of field")+ " "+ fieldsDesc[i].getFieldName() + " " + PluginServices.getText(this, "will_be_truncated"));
+				fieldLength = MAX_FIELD_LENGTH;
+			}
 
 			// TODO: HACERLO BIEN
 			if (strType.equals("Double"))
