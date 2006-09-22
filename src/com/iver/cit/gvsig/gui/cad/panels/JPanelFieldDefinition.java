@@ -3,6 +3,7 @@ package com.iver.cit.gvsig.gui.cad.panels;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.sql.Types;
+import java.util.ArrayList;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -18,11 +19,11 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import com.iver.andami.PluginServices;
-import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
-
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
+
+import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 
 /**
  * @author fjp
@@ -59,7 +60,27 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		for (int i = 0;i<tm.getRowCount();i++) {
 				String s=(String)tm.getValueAt(i,0);
 				valid=validate(s);
+				String type = (String) tm.getValueAt(i,1);
+				int length = Integer.parseInt((String) tm.getValueAt(i,2));
+				if (type.equals("String") && length > MAX_FIELD_LENGTH) {
+					JOptionPane.showMessageDialog(this, PluginServices.getText(this, "max_length_is") + ": " + MAX_FIELD_LENGTH+
+							"\n"+PluginServices.getText(this, "length of field")+ " '"+ s + "' " + PluginServices.getText(this, "will_be_truncated"));
+					tm.setValueAt(String.valueOf(MAX_FIELD_LENGTH),i,2);
+				}
+
 		}
+
+		// ensure no field name is used more than once
+		ArrayList fieldNames = new ArrayList();
+		for (int i = 0; i < jTable.getRowCount(); i++) {
+			if (fieldNames.contains(tm.getValueAt(i,0))) {
+				valid = false;
+				JOptionPane.showMessageDialog(this, PluginServices.getText(this, "two_or_more_fields_with_the_same_name"));
+				break;
+			}
+			fieldNames.add(tm.getValueAt(i, 0));
+		}
+
 		if (valid)
 			super.next();
 		if (!((FileBasedPanel)getWizardComponents().getWizardPanel(2)).getPath().equals(""))
@@ -191,10 +212,29 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			jButtonAddField.setBounds(new java.awt.Rectangle(7,5,85,23));
 			jButtonAddField.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// Add a new row
 					DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
+
+					// Figure out a suitable field name
+					ArrayList fieldNames = new ArrayList();
+					for (int i = 0; i < jTable.getRowCount(); i++) {
+						fieldNames.add(tm.getValueAt(i, 0));
+					}
+					String[] currentFieldNames = (String[]) fieldNames.toArray(new String[0]);
+					String newField = PluginServices.getText(this, "new_field").replaceAll(" +", "_");
+					int index=0;
+					for (int i = 0; i < currentFieldNames.length; i++) {
+						if (currentFieldNames[i].startsWith(newField)) {
+							try {
+								index = Integer.parseInt(currentFieldNames[i].replaceAll(newField,""));
+							} catch (Exception ex) { /* we don't care */}
+						}
+					}
+					String newFieldName = newField+(++index);
+
+
+					// Add a new row
 					Object[] newRow = new Object[tm.getColumnCount()];
-					newRow[0] = PluginServices.getText(this,"field");
+					newRow[0] = newFieldName;
 					newRow[1] = "String";
 					newRow[2] = "20";
 					tm.addRow(newRow);
@@ -272,12 +312,6 @@ public class JPanelFieldDefinition extends JWizardPanel {
 				fieldsDesc[i].setFieldType(Types.DATE);
 			int fieldLength = Integer.parseInt((String) tm.getValueAt(i,2));
 			fieldsDesc[i].setFieldLength(fieldLength);
-
-			if (fieldsDesc[i].getFieldType() == Types.VARCHAR && fieldLength > MAX_FIELD_LENGTH ) {
-				JOptionPane.showMessageDialog(this, PluginServices.getText(this, "max_length_is") + ": " + MAX_FIELD_LENGTH+
-						"\n"+PluginServices.getText(this, "length of field")+ " "+ fieldsDesc[i].getFieldName() + " " + PluginServices.getText(this, "will_be_truncated"));
-				fieldLength = MAX_FIELD_LENGTH;
-			}
 
 			// TODO: HACERLO BIEN
 			if (strType.equals("Double"))
