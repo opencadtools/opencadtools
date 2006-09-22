@@ -64,7 +64,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 				int length = Integer.parseInt((String) tm.getValueAt(i,2));
 				if (type.equals("String") && length > MAX_FIELD_LENGTH) {
 					JOptionPane.showMessageDialog(this, PluginServices.getText(this, "max_length_is") + ": " + MAX_FIELD_LENGTH+
-							"\n"+PluginServices.getText(this, "length of field")+ " '"+ s + "' " + PluginServices.getText(this, "will_be_truncated"));
+							"\n"+PluginServices.getText(this, "length_of_field")+ " '"+ s + "' " + PluginServices.getText(this, "will_be_truncated"));
 					tm.setValueAt(String.valueOf(MAX_FIELD_LENGTH),i,2);
 				}
 
