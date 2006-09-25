@@ -183,9 +183,9 @@ public class PolygonCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status.equals("Polygon.OptionOrRadiusOrPoint")) {
-            if (s.equals("C") || s.equals("c") || s.equals("Circunscrito")) {
+            if (s.equals("C") || s.equals("c") || s.equals(PluginServices.getText(this,"circumscribed"))) {
                 isI = false;
-            } else if (s.equals("I") || s.equals("i") || s.equals("Inscrito")) {
+            } else if (s.equals("I") || s.equals("i") || s.equals(PluginServices.getText(this,"into_circle"))) {
                 isI = true;
             }
         }
