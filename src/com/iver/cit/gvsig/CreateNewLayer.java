@@ -10,8 +10,10 @@ import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverManager;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
+import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
@@ -45,7 +47,9 @@ public void execute(String actionCommand) {
 
 			LOGO = new javax.swing.ImageIcon(this.getClass().getClassLoader()
 					.getResource("images/package_graphics.png"));
-
+			CADToolAdapter cta=CADExtension.getCADToolAdapter();
+			MapControl mapControl = vista.getMapControl();
+			cta.setMapControl(mapControl);
 			/* SimpleLogoJWizardFrame wizardFrame = new SimpleLogoJWizardFrame(
 					LOGO);
 			wizardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
