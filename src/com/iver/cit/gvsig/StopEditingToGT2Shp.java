@@ -14,6 +14,7 @@ import org.geotools.feature.FeatureType;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapContext;
+import com.iver.cit.gvsig.fmap.crs.CRSFactory;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -84,7 +85,7 @@ public class StopEditingToGT2Shp extends Extension {
              /*
 				 * FLyrVect layer = (FLyrVect) test.createLayer("prueba",
 				 * (VectorialFileDriver) driverManager.getDriver( "gvSIG shp
-				 * driver"), original, ProjectionPool.get("EPSG:23030"));
+				 * driver"), original, CRSFactory.getCRS("EPSG:23030"));
 				 */
             SimpleFileFilter filterShp = new SimpleFileFilter(".shp", "Ficheros .shp");
             jfc.setFileFilter(filterShp);

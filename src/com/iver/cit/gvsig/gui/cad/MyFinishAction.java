@@ -1,9 +1,7 @@
 package com.iver.cit.gvsig.gui.cad;
 
 import java.awt.Component;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Types;
@@ -14,7 +12,6 @@ import jwizardcomponent.FinishAction;
 import jwizardcomponent.JWizardComponents;
 
 import org.cresques.cts.IProjection;
-import org.cresques.cts.ProjectionPool;
 
 import com.hardcode.driverManager.Driver;
 import com.iver.andami.PluginServices;
@@ -24,6 +21,7 @@ import com.iver.cit.gvsig.StartEditing;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ICanReproject;
+import com.iver.cit.gvsig.fmap.crs.CRSFactory;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DXFLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
@@ -233,7 +231,7 @@ public class MyFinishAction extends FinishAction
     	        IProjection proj = null;
     	        if (drv instanceof ICanReproject)
     	        {
-    	            proj = ProjectionPool.get("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection());
+    	            proj = CRSFactory.getCRS("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection());
     	        }
 
     			lyr = (FLyrVect) LayerFactory.createDBLayer(dbDriver, layerName, proj);
