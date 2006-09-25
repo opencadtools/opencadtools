@@ -95,10 +95,10 @@ public class CADExtension extends Extension {
 		com.iver.andami.ui.mdiManager.IWindow view=PluginServices.getMDIManager().getActiveWindow();
 		if (view instanceof View) {
 			View v=(View)view;
-			if (!adapters.containsKey(v)) {
-				adapters.put(v,new CADToolAdapter());
+			if (!adapters.containsKey(v.getModel())) {
+				adapters.put(v.getModel(),new CADToolAdapter());
 			}
-			adapter=(CADToolAdapter)adapters.get(v);
+			adapter=(CADToolAdapter)adapters.get(v.getModel());
 			return adapter;
 		}
 		return adapter;
