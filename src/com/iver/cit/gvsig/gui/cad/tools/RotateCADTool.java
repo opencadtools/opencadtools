@@ -245,6 +245,8 @@ public class RotateCADTool extends DefaultCADTool {
 			}
 			*/
 		}else{
+			if (!vle.getLayer().isVisible())
+				return;
 			 Image imgSel = vle.getSelectionImage();
              g.drawImage(imgSel, 0, 0, null);
              Image imgHand = vle.getHandlersImage();

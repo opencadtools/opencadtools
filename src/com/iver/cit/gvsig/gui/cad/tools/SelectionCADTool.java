@@ -345,6 +345,8 @@ public class SelectionCADTool extends DefaultCADTool {
 			}
 			return;
 		}else{
+			if (!vle.getLayer().isVisible())
+				return;
 			try{
 			Image imgSel = vle.getSelectionImage();
 	        if (imgSel!=null)
