@@ -70,9 +70,8 @@ import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SymmetryCADTool;
-import com.iver.cit.gvsig.gui.popupmenu.PopupEditionProperties;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
-import com.iver.cit.gvsig.project.documents.view.toc.gui.FPopupMenu;
+import com.iver.cit.gvsig.project.documents.view.toc.MenuEntry;
 import com.iver.utiles.console.JConsole;
 import com.iver.utiles.console.ResponseListener;
 import com.iver.utiles.console.jedit.JEditTextArea;
@@ -111,11 +110,7 @@ public class CADExtension extends Extension {
 	public void initialize() {
 
 		// Registramos los Popup menus:
-
-    	// Adds an entry to the TOC's floating menu
-        FPopupMenu.addEntry(new PopupEditionProperties());
-
-
+        MenuEntry.register();
 
 		// Fijamos que los símbolos de dibujo tengan outline
 		// TODO: Esto se debe configurar en el cuadro de diálogo de preferencias
