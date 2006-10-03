@@ -223,7 +223,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		jLabelCache
 				.setText(PluginServices.getText(this, "capas_edition_cache"));
 		jLabelCache.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-		jLabelCache.setPreferredSize(new java.awt.Dimension(303, 15));
+		jLabelCache.setPreferredSize(new java.awt.Dimension(500,20));
 		jLabelCache.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 		jLabel1 = new JLabel();
 		jLabel1.setText("pixels");
@@ -238,7 +238,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		jLabel.setPreferredSize(new java.awt.Dimension(28, 20));
 		jLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-		this.setSize(new java.awt.Dimension(426, 239));
+		this.setSize(new java.awt.Dimension(502,288));
 		this.setPreferredSize(this.getSize());
 		this.add(getJPanelNord(), BorderLayout.NORTH);
 
@@ -448,6 +448,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
+			jScrollPane.setPreferredSize(new java.awt.Dimension(500,419));
 			jScrollPane.setViewportView(getJTableSnapping());
 		}
 		return jScrollPane;
@@ -514,25 +515,10 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	 */
 	private JPanel getJPanelCache() {
 		if (jPanelCache == null) {
-			GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-			gridBagConstraints1.fill = java.awt.GridBagConstraints.BOTH;
-			gridBagConstraints1.gridx = 0;
-			gridBagConstraints1.weighty = 1.0;
-			gridBagConstraints1.gridy = 1;
-			gridBagConstraints1.weightx = 1.0;
-			gridBagConstraints1.insets = new java.awt.Insets(5, 10, 5, 10);
-			GridBagConstraints gridBagConstraints = new GridBagConstraints();
-			gridBagConstraints.insets = new java.awt.Insets(5, 10, 2, 75);
-			gridBagConstraints.gridy = 0;
-			gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-			gridBagConstraints.ipadx = 14;
-			gridBagConstraints.gridwidth = 3;
-			gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-			gridBagConstraints.gridx = 0;
 			jPanelCache = new JPanel();
-			jPanelCache.setLayout(new GridBagLayout());
-			jPanelCache.add(jLabelCache, gridBagConstraints);
-			jPanelCache.add(getJScrollPane(), gridBagConstraints1);
+			jPanelCache.setLayout(new BorderLayout());
+			jPanelCache.add(jLabelCache, java.awt.BorderLayout.NORTH);
+			jPanelCache.add(getJScrollPane(), java.awt.BorderLayout.EAST);
 		}
 		return jPanelCache;
 	}
@@ -545,5 +531,5 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		changed = false;
 	}
 
-} // @jve:decl-index=0:visual-constraint="10,10"
+}  //  @jve:decl-index=0:visual-constraint="14,10"
 
