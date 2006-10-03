@@ -69,6 +69,9 @@ public class StopEditing extends Extension {
 					VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getActiveLayerEdited();
 					lyrEd.clearSelection();
 					isStop=stopEditing(lv, mapControl);
+					if (isStop){
+						lv.removeLayerListener(edMan);						
+					}
 
 					// return;
 				}
@@ -77,6 +80,8 @@ public class StopEditing extends Extension {
 				vista.getMapControl().setTool("zoomIn");
 				vista.hideConsole();
 				vista.repaintMap();
+				CADExtension.clearView();
+				
 			}
 		}
 		PluginServices.getMainFrame().enableControls();
