@@ -15,6 +15,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 
+import org.cresques.cts.ICoordTrans;
+
 import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.gdbms.engine.values.Value;
@@ -30,6 +32,7 @@ import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FLabel;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.DriverAttributes;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
@@ -101,7 +104,14 @@ public class ExportTo extends Extension {
 
 		}
 		public void run() throws Exception {
-
+			ICoordTrans ct = lyrVect.getCoordTrans();
+			DriverAttributes attr = va.getDriverAttributes();
+			boolean bMustClone = false;
+			if (attr != null) {
+				if (attr.isLoadedInMemory()) {
+					bMustClone = attr.isLoadedInMemory();
+				}
+			}
 			if (lyrVect instanceof FLyrAnnotation && lyrVect.getShapeType()!=FShape.POINT) {
 				SHPLayerDefinition lyrDef=(SHPLayerDefinition)writer.getTableDefinition();
 				lyrDef.setShapeType(FShape.POINT);
@@ -118,6 +128,11 @@ public class ExportTo extends Extension {
 					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
 						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
 						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
+					}
+					if (ct != null) {
+						if (bMustClone)
+							geom = geom.cloneGeometry();
+						geom.reProject(ct);
 					}
 					reportStep();
 					setNote(PluginServices.getText(this, "exporting_") + i);
@@ -140,6 +155,11 @@ public class ExportTo extends Extension {
 					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
 						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
 						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
+					}
+					if (ct != null) {
+						if (bMustClone)
+							geom = geom.cloneGeometry();
+						geom.reProject(ct);
 					}
 					reportStep();
 					setNote(PluginServices.getText(this, "exporting_") + counter);
