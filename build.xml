@@ -20,6 +20,7 @@
 	<import file="compile-classpath.xml"/>
 	<import file="../libFMap/compile-classpath.xml"/>
 	<import file="../_fwAndami/compile-classpath.xml"/>
+	<property name="compile-sourcepath" value="../libFMap/src:../appgvSIG/src:../extJDBC/src"/>
 	
   <target name="init">
     <!-- Create the time stamp -->
