@@ -17,10 +17,9 @@
 	<property name="gvsigJar" location="${extensionsDir}/com.iver.cit.gvsig/lib/com.iver.cit.gvsig.jar"/>
 	<property name="andamiLibs" location="${andami}/lib"/>
 	<property name="fmapLibs" location="../libFMap/lib" />
-	<property name="fmap-compile-classpath" value="${fmapLibs}/batik-awt-util.jar:${andamiLibs}/castor-0.9.5.3-xml.jar:${fmapLibs}/cms.jar:${fmapLibs}/driver-manager-1.1.jar:${fmapLibs}/gdbms-0.8-SNAPSHOT.jar:${fmapLibs}/geoapi-2.0.jar:${fmapLibs}/gt2-gml.jar:${fmapLibs}/gt2-legacy.jar:${fmapLibs}/gt2-main.jar:${fmapLibs}/gt2-postgis.jar:${fmapLibs}/gt2-wfs.jar:${fmapLibs}/gt2-wms.jar:${fmapLibs}/gt2sidx.jar:${fmapLibs}/hsqldb.jar:${andamiLibs}/iver-utiles.jar:${fmapLibs}/jecw.jar:${fmapLibs}/jts-1.7.jar:${fmapLibs}/jtsio-1.7.jar:${andamiLibs}/log4j-1.2.8.jar:${fmapLibs}/wmsclient.jar:${fmapLibs}/mysql-connector-java-3.1.7-bin.jar:${fmapLibs}/postgis-jdbc-driver.jar:${fmapLibs}/postgresql-74.213.jar:${fmapLibs}/remote-clients.jar:${fmapLibs}/spatialindex.jar:${fmapLibs}/units-0.01.jar:${fmapLibs}/vecmath-1.3.jar" />
-	<property name="compile-classpath" value="${andamiJar}:${andamiLibs}/beans.jar:${fmapLibs}/cms.jar:${fmapLibs}/driver-manager-1.1.jar:${fmapLibs}/gdbms-0.8-SNAPSHOT.jar:${fmapLibs}/gt2-main.jar:${lib}/gt2-postgis.jar:${lib}/gt2-shapefile.jar:${gvsigJar}:${andamiLibs}/iver-utiles.jar:${lib}/jdom-1.0b10.jar:${fmapLibs}/jts.jar:${andamiLibs}/JWizardComponent.jar:${lib}/Smc.jar:${fmap-compile-classpath}"/>
-	<property name="compile-sourcepath" value="../libFMap/src:../appgvSIG/src:../extJDBC/src"/>
-	
+	<import file="compile-classpath.xml"/>
+	<import file="../libFMap/compile-classpath.xml"/>
+	<import file="../_fwAndami/compile-classpath.xml"/>
 	
   <target name="init">
     <!-- Create the time stamp -->
@@ -66,8 +65,11 @@
 				target="1.4"
 				debug="${debug}"
 				debuglevel="${debuglevel}"
-				classpath="${compile-classpath}"
-				sourcepath="${compile-sourcepath}"/>
+				sourcepath="${compile-sourcepath}">
+		    	<classpath refid="extCAD.compile-classpath"/>
+	    		<classpath refid="libFMap.compile-classpath"/>
+	    		<classpath refid="_fwAndami.compile-classpath"/>
+			</javac>
 		</target>
 		
 		<target name="create-jar"
