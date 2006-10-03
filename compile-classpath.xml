@@ -5,6 +5,7 @@
 	<property name="andamiJar" location="${andami}/andami.jar" />
 	<property name="fmapLibs" location="../libFMap/lib" />
 	<property name="gvsigJar" location="${andami}/gvSIG/extensiones/com.iver.cit.gvsig/lib/com.iver.cit.gvsig.jar"/>
+	<property name="JDBCDist" location="../extJDBC/dist"/>
 
 	<!-- defines the classpath to be used for compilation -->
 	<path id="extCAD.compile-classpath">
@@ -13,6 +14,10 @@
 	    <pathelement location="${andamiLibs}/beans.jar"/>
 	    <pathelement location="${fmapLibs}/cms.jar"/>
 	    <pathelement location="${fmapLibs}/driver-manager-1.1.jar"/>
+	    <pathelement location="${fmapLibs}/fmap.jar"/>
+		<fileset dir="${JDBCDist}">
+        	<include name="*.jar"/>
+      	</fileset>
 	    <pathelement location="${fmapLibs}/gdbms-0.8-SNAPSHOT.jar"/>
 	    <pathelement location="${fmapLibs}/gt2-main.jar"/>
 	    <pathelement location="${CADLibs}/gt2-postgis.jar"/>

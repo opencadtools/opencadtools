@@ -1,4 +1,4 @@
-<project name="Generar extension en Andami" default="dist" basedir=".">
+<project name="extCAD" default="dist" basedir=".">
     <description>
         Instala el plugin de CAD
     </description>
@@ -20,13 +20,13 @@
 	<import file="compile-classpath.xml"/>
 	<import file="../libFMap/compile-classpath.xml"/>
 	<import file="../_fwAndami/compile-classpath.xml"/>
-	<property name="compile-sourcepath" value="../libFMap/src:../appgvSIG/src:../extJDBC/src"/>
+	<property name="compile-sourcepath" value="../appgvSIG/src"/>
 	
   <target name="init">
     <!-- Create the time stamp -->
     <tstamp/>
-    <!-- Create the build directory structure used by compile -->
-    <mkdir dir="${build}"/>
+	<echo>
+		Compiling ${ant.project.name}...</echo>
 
   </target>
 
@@ -54,7 +54,7 @@
 	
 		<target name="batch-build"
 				description="compile the sources, create the jar file"
-				depends="compile,create-jar,copy-data-files,move-to-andami">
+				depends="init,compile,create-jar,copy-data-files,move-to-andami">
 		</target>
 
 		<target name="compile" description="compile the source" >
