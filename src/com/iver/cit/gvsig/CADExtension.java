@@ -282,6 +282,10 @@ public class CADExtension extends Extension {
 			if ((cta == null) || (view == null))
 				return false;
 
+			if (cta.getMapControl() == null){
+				return false;
+			}
+
 			if (e.getID() != KeyEvent.KEY_RELEASED)
 				return false;
 			if (!(e.getComponent() instanceof JTextComponent)) {
@@ -375,6 +379,10 @@ public class CADExtension extends Extension {
 
 	public static View getView() {
 		return view;
+	}
+
+	public static void clearView() {
+		view = null;
 	}
 
 	/**
