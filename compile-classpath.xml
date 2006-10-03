@@ -1,0 +1,28 @@
+<project name="extCAD.compile-classpath" basedir=".">
+	<property name="CADLibs" location="../extCAD/lib"/>
+	<property name="andami" location="../_fwAndami"/>
+	<property name="andamiLibs" location="${andami}/lib"/>
+	<property name="andamiJar" location="${andami}/andami.jar" />
+	<property name="fmapLibs" location="../libFMap/lib" />
+	<property name="gvsigJar" location="${andami}/gvSIG/extensiones/com.iver.cit.gvsig/lib/com.iver.cit.gvsig.jar"/>
+
+	<!-- defines the classpath to be used for compilation -->
+	<path id="extCAD.compile-classpath">
+
+	    <pathelement location="${andamiJar}"/>
+	    <pathelement location="${andamiLibs}/beans.jar"/>
+	    <pathelement location="${fmapLibs}/cms.jar"/>
+	    <pathelement location="${fmapLibs}/driver-manager-1.1.jar"/>
+	    <pathelement location="${fmapLibs}/gdbms-0.8-SNAPSHOT.jar"/>
+	    <pathelement location="${fmapLibs}/gt2-main.jar"/>
+	    <pathelement location="${CADLibs}/gt2-postgis.jar"/>
+	    <pathelement location="${CADLibs}/gt2-shapefile.jar"/>
+   	    <pathelement location="${gvsigJar}"/>
+	    <pathelement location="${andamiLibs}/iver-utiles.jar"/>
+	    <pathelement location="${CADLibs}/jdom-1.0b10.jar"/>
+	    <pathelement location="${fmapLibs}/jts-1.7.jar"/>
+	    <pathelement location="${andamiLibs}/JWizardComponent.jar"/>
+	    <pathelement location="${CADLibs}/Smc.jar"/>
+
+	</path>
+</project>
