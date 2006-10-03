@@ -40,5 +40,6 @@ public class StartEditingTocMenuEntry extends AbstractTocContextMenuAction {
 	public void execute(ITocItem item, FLayer[] selectedItems) {
 		StartEditing startEditind=(StartEditing)PluginServices.getExtension(StartEditing.class);
 		startEditind.execute("STARTEDITING");
+		PluginServices.getMainFrame().enableControls();
    }
 }

@@ -40,5 +40,6 @@ public class StopEditingTocMenuEntry extends AbstractTocContextMenuAction {
 	public void execute(ITocItem item, FLayer[] selectedItems) {
 		StopEditing stopEditind=(StopEditing)PluginServices.getExtension(StopEditing.class);
 		stopEditind.execute("STOPEDITING");
+		PluginServices.getMainFrame().enableControls();
    }
 }
