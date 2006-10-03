@@ -888,6 +888,9 @@ public class CADToolAdapter extends Behavior {
 	 * @param actionCommand
 	 */
 	public void keyPressed(String actionCommand) {
+		if (CADExtension.getEditionManager().getActiveLayerEdited()== null) {
+			return;
+		}
 		if (actionCommand.equals("eliminar")) {
 			delete();
 		} else if (actionCommand.equals("escape")) {
