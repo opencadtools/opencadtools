@@ -381,6 +381,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	}
 
 	public void initializeDefaults() {
+		getJTxtTolerance().setText("4");
 		TableModel tm = getJTableSnapping().getModel();
 		for (int i = 0; i < tm.getRowCount(); i++) {
 			String layerName = (String) tm.getValueAt(i, 1);
