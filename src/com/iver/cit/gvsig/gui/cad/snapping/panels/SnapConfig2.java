@@ -41,25 +41,19 @@
 package com.iver.cit.gvsig.gui.cad.snapping.panels;
 
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
-import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
-import com.sun.media.sound.Toolkit;
-import com.sun.medialib.mlib.Image;
 ;
 
 public class SnapConfig2 extends JPanel {
