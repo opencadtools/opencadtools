@@ -14,8 +14,8 @@ import jwizardcomponent.JWizardPanel;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
-import com.iver.cit.gvsig.gui.panels.ProjChooserPanel;
 import com.iver.cit.gvsig.project.documents.gui.FOpenDialog;
+import com.iver.cit.gvsig.gui.panels.CRSSelectPanel;
 import com.iver.utiles.SimpleFileFilter;
 
 public class FileBasedPanel extends JWizardPanel {
@@ -24,7 +24,7 @@ public class FileBasedPanel extends JWizardPanel {
 	private JLabel jLabel = null;
 	private JTextField jTextFieldPath = null;
 	private JButton jButtonSelectPath = null;
-	private ProjChooserPanel chooserPanel = null;
+	private CRSSelectPanel crsSelectPanel = null;
 	private String fileExt;
 
 //	private class MyInputEventListener implements CaretListener
@@ -139,25 +139,25 @@ public class FileBasedPanel extends JWizardPanel {
 	 *
 	 * @return javax.swing.JPanel
 	 */
-	private ProjChooserPanel getChooserPanel() {
-		if (chooserPanel == null) {
-			chooserPanel = new ProjChooserPanel(FOpenDialog.getLastProjection());
-			chooserPanel.setBounds(new java.awt.Rectangle(16,98,348,44));
+	private CRSSelectPanel getChooserPanel() {
+		if (crsSelectPanel == null) {
+			crsSelectPanel = CRSSelectPanel.getPanel(FOpenDialog.getLastProjection());
+			crsSelectPanel.setBounds(new java.awt.Rectangle(16,98,348,44));
 			IWindow view= PluginServices.getMDIManager().getActiveWindow();
 			if (view instanceof com.iver.cit.gvsig.project.documents.view.gui.View){
 				if (((com.iver.cit.gvsig.project.documents.view.gui.View)view).getMapControl().getMapContext().getLayers().getLayersCount()!=0){
-					chooserPanel.getJBtnChangeProj().setEnabled(false);
+					crsSelectPanel.getJBtnChangeProj().setEnabled(false);
 				}
 			}
-			chooserPanel.addActionListener(new java.awt.event.ActionListener() {
+			crsSelectPanel.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-			        if (chooserPanel.isOkPressed()) {
-			        	FOpenDialog.setLastProjection(chooserPanel.getCurProj());
+			        if (crsSelectPanel.isOkPressed()) {
+			        	FOpenDialog.setLastProjection(crsSelectPanel.getCurProj());
 			        }
 				}
 			});
 		}
-		return chooserPanel;
+		return crsSelectPanel;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
