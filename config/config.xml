@@ -213,13 +213,6 @@
 				<selectable-tool icon="images/SelCAD.png" action-command="_selection" tooltip="selection" group="vista" position="15"/>
 			</tool-bar>
 		</extension>
-		<extension class-name="com.iver.cit.gvsig.TopologyExtension"
-			description="Extensión para crear topología."
-			active="true">
-			<menu text="Capa/Topology/Clean" action-command="CLEAN"/>
-			<menu text="Capa/Topology/Show Errors" action-command="SHOW_ERRORS"/>
-			<menu text="Capa/Topology/Triangulation" action-command="TRIANGULATION"/>
-		</extension>
 
 	</extensions>
 </plugin-config>
