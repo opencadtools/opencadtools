@@ -337,7 +337,7 @@ public class CADToolAdapter extends Behavior {
 		if (mF != null)
 		{
             mF.getStatusBar().setMessage("units",
-                    FConstant.NAMES[vp.getDistanceUnits()]);
+            		PluginServices.getText(this, FConstant.NAMES[vp.getDistanceUnits()]));
             mF.getStatusBar().setControlValue("scale",String.valueOf(mapControl.getMapContext().getScaleView()));
 			mF.getStatusBar().setMessage("projection", iProj.getAbrev());
 
