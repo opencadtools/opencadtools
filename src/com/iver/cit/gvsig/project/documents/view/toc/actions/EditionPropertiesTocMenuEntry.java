@@ -42,7 +42,8 @@ public class EditionPropertiesTocMenuEntry extends AbstractTocContextMenuAction 
 
 	public void execute(ITocItem item, FLayer[] selectedItems) {
 		EditionPreferencePage pref = new EditionPreferencePage();
-		pref.setLayers(getMapContext().getLayers());
+		
+		pref.setMapContext(getMapContext());
 		GridPage gridPage=new GridPage();
 		gridPage.setParentID(pref.getID());
 		FlatnessPage flatnessPage=new FlatnessPage();
