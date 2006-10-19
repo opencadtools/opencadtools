@@ -160,7 +160,7 @@ public class DialogEditionPreferences  {
 
 		EditionPreferencePage edPref = new EditionPreferencePage();
 		//panel.addPreferencePage(edPref);
-		edPref.setLayers(layers);
+		// edPref.setLayers(layers);
 
 		dlg.getContentPane().add(panel);
 		dlg.pack();

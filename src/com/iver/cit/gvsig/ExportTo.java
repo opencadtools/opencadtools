@@ -1,9 +1,11 @@
 package com.iver.cit.gvsig;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -620,6 +622,17 @@ public class ExportTo extends Extension {
 					lyrDef.setShapeType(layer.getShapeType());
 					writer.setFile(newFile);
 					writer.initialize(lyrDef);
+					// CODIGO PARA EXPORTAR UN SHP A UN CHARSET DETERMINADO
+					// ES UTIL PARA QUE UN DBF SE VEA CORRECTAMENTE EN EXCEL, POR EJEMPLO
+//					Charset resul = (Charset) JOptionPane.showInputDialog((Component)PluginServices.getMDIManager().getActiveWindow(), 
+//								PluginServices.getText(ExportTo.class, "select_charset_for_writing"),
+//								"Charset", JOptionPane.QUESTION_MESSAGE, null, 
+//								Charset.availableCharsets().values().toArray(),
+//								writer.getCharsetForWriting().displayName());
+//					if (resul == null)
+//						return;
+//					Charset charset = resul;
+//					writer.setCharsetForWriting(charset);
 					writeFeatures(mapContext, layer, writer, drv);
 
 				}

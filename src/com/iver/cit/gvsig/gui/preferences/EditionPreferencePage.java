@@ -41,10 +41,6 @@
 package com.iver.cit.gvsig.gui.preferences;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -64,12 +60,13 @@ import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
+import com.iver.cit.gvsig.fmap.MapContext;
+import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SingleLayerIterator;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
-import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 public class EditionPreferencePage extends AbstractPreferencePage {
@@ -93,6 +90,8 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	private boolean changed = false;
 
 	private FLayers layers;
+
+	private MapContext mapContext;
 
 	private class MyRecord {
 		public Boolean bSelec = new Boolean(false);
@@ -372,6 +371,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 				}
 
 		} // while
+		mapContext.redraw();
 		try{
 			SelectionCADTool.tolerance = Integer.parseInt(getJTxtTolerance().getText());
 
@@ -398,9 +398,10 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		return null;
 	}
 
-	public void setLayers(FLayers layers) {
+	public void setMapContext(MapContext mc) {
 		// addLayer(layers);
-		this.layers = layers;
+		this.mapContext = mc;
+		this.layers = mc.getLayers();
 		MyTableModel tm = new MyTableModel(layers);
 		getJTableSnapping().setModel(tm);
 		getJTxtTolerance().setText(String.valueOf(SelectionCADTool.tolerance));
