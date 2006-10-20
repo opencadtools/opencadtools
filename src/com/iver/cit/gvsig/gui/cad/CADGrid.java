@@ -112,27 +112,26 @@ public class CADGrid {
 		if (!grid) {
 			return;
 		}
+		if (viewport.fromMapDistance(gridSizeX) > 3
+				&& viewport.fromMapDistance(gridSizeY) > 3) {
+			g.setColor(Color.lightGray);
 
-		g.setColor(Color.lightGray);
+			Rectangle2D extent = viewport.getAdjustedExtent();
+			Point2D auxp = new Point2D.Double(0, 0);
 
-		Rectangle2D extent = viewport.getAdjustedExtent();
-		Point2D auxp = new Point2D.Double(0, 0);
+			for (double i = extent.getMinX(); i < (extent.getMaxX() + gridSizeX); i += gridSizeX) {
+				for (double j = extent.getMinY(); j < (extent.getMaxY() + gridSizeY); j += gridSizeY) {
+					Point2D po = new Point2D.Double(i, j);
+					Point2D point = viewport.fromMapPoint(po);
+					double x = ((po.getX() + gridSizeX) % gridSizeX)
+							- ((auxp.getX()) % gridSizeX);
+					double y = ((po.getY() + gridSizeY) % gridSizeY)
+							- ((auxp.getY()) % gridSizeY);
+					x = (point.getX() - viewport.fromMapDistance(x));
+					y = (point.getY() + viewport.fromMapDistance(y));
 
-		for (double i = extent.getMinX(); i < (extent.getMaxX() + gridSizeX);
-				i += gridSizeX) {
-			for (double j = extent.getMinY();
-					j < (extent.getMaxY() + gridSizeY); j += gridSizeY) {
-				Point2D po = new Point2D.Double(i, j);
-				Point2D point = viewport.fromMapPoint(po);
-				double x = ((po.getX() + gridSizeX) % gridSizeX) -
-					((auxp.getX()) % gridSizeX);
-				double y = ((po.getY() + gridSizeY) % gridSizeY) -
-					((auxp.getY()) % gridSizeY);
-				x = (point.getX() - viewport.fromMapDistance(x));
-				y = (point.getY() + viewport.fromMapDistance(y));
-
-				if (viewport.fromMapDistance(gridSizeX) > 3 && viewport.fromMapDistance(gridSizeY) > 3)  {
 					g.drawRect((int) x, (int) y, 1, 1);
+
 				}
 			}
 		}
