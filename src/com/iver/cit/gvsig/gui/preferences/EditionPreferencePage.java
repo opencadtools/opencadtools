@@ -166,7 +166,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 				else
 					rec.maxFeat = new Integer(0);
 			}
-
+			changed  =true;
 			super.setValueAt(aValue, rowIndex, columnIndex);
 		}
 
