@@ -344,8 +344,7 @@ public class ExportTo extends Extension {
 			dbLayerDef.setSRID_EPSG(strSRID);
 			dbLayerDef.setConnection(conex);
 
-			PostGISWriter writer = new PostGISWriter(); // (PostGISWriter)LayerFactory.getWM().getWriter("PostGIS
-			// Writer");
+			PostGISWriter writer=(PostGISWriter)LayerFactory.getWM().getWriter("PostGISWriter");
 			writer.setWriteAll(true);
 			writer.setCreateTable(true);
 			writer.initialize(dbLayerDef);
@@ -624,9 +623,9 @@ public class ExportTo extends Extension {
 					writer.initialize(lyrDef);
 					// CODIGO PARA EXPORTAR UN SHP A UN CHARSET DETERMINADO
 					// ES UTIL PARA QUE UN DBF SE VEA CORRECTAMENTE EN EXCEL, POR EJEMPLO
-//					Charset resul = (Charset) JOptionPane.showInputDialog((Component)PluginServices.getMDIManager().getActiveWindow(), 
+//					Charset resul = (Charset) JOptionPane.showInputDialog((Component)PluginServices.getMDIManager().getActiveWindow(),
 //								PluginServices.getText(ExportTo.class, "select_charset_for_writing"),
-//								"Charset", JOptionPane.QUESTION_MESSAGE, null, 
+//								"Charset", JOptionPane.QUESTION_MESSAGE, null,
 //								Charset.availableCharsets().values().toArray(),
 //								writer.getCharsetForWriting().displayName());
 //					if (resul == null)
