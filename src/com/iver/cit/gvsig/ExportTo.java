@@ -712,9 +712,9 @@ public class ExportTo extends Extension {
 		IndexedShpDriver drv = new IndexedShpDriver();
 		if (!fileShp.exists()) {
 			fileShp.createNewFile();
-			File newFileSHX=new File(fileShp.getAbsolutePath().replaceAll(".shp",".shx"));
+			File newFileSHX=new File(fileShp.getAbsolutePath().replaceAll("[.]shp",".shx"));
 			newFileSHX.createNewFile();
-			File newFileDBF=new File(fileShp.getAbsolutePath().replaceAll(".shp",".dbf"));
+			File newFileDBF=new File(fileShp.getAbsolutePath().replaceAll("[.]shp",".dbf"));
 			newFileDBF.createNewFile();
 		}
 		drv.open(fileShp);
