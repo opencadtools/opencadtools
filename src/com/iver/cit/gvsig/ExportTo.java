@@ -344,7 +344,7 @@ public class ExportTo extends Extension {
 			dbLayerDef.setSRID_EPSG(strSRID);
 			dbLayerDef.setConnection(conex);
 
-			PostGISWriter writer=(PostGISWriter)LayerFactory.getWM().getWriter("PostGISWriter");
+			PostGISWriter writer=(PostGISWriter)LayerFactory.getWM().getWriter("PostGIS Writer");
 			writer.setWriteAll(true);
 			writer.setCreateTable(true);
 			writer.initialize(dbLayerDef);
