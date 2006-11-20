@@ -192,7 +192,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		if (jPanelEast == null) {
 			jPanelEast = new JPanel();
 			jPanelEast.setLayout(null);
-			jPanelEast.setPreferredSize(new java.awt.Dimension(100,100));
+			jPanelEast.setPreferredSize(new java.awt.Dimension(130,100));
 			jPanelEast.add(getJButtonAddField(), null);
 			jPanelEast.add(getJButtonDeleteField(), null);
 		}
@@ -209,7 +209,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		if (jButtonAddField == null) {
 			jButtonAddField = new JButton();
 			jButtonAddField.setText(PluginServices.getText(this,"add_field"));
-			jButtonAddField.setBounds(new java.awt.Rectangle(7,5,85,23));
+			jButtonAddField.setBounds(new java.awt.Rectangle(7,5,120,23));
 			jButtonAddField.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
@@ -270,7 +270,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		if (jButtonDeleteField == null) {
 			jButtonDeleteField = new JButton();
 			jButtonDeleteField.setText(PluginServices.getText(this,"delete_field"));
-			jButtonDeleteField.setBounds(new java.awt.Rectangle(7,33,85,23));
+			jButtonDeleteField.setBounds(new java.awt.Rectangle(7,33,120,23));
 			jButtonDeleteField.setEnabled(false);
 			jButtonDeleteField.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {

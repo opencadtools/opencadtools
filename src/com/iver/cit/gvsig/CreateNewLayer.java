@@ -113,7 +113,7 @@ public void execute(String actionCommand) {
 								vista, actionCommand));
 			}
 			wizard.getWizardComponents().getFinishButton().setEnabled(false);
-			wizard.getWindowInfo().setWidth(540);
+			wizard.getWindowInfo().setWidth(640);
 			wizard.getWindowInfo().setHeight(350);
 			wizard.getWindowInfo().setTitle(PluginServices.getText(this,"new_layer"));
 			// Utilities.centerComponentOnScreen(wizard);
