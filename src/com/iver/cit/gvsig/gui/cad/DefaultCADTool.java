@@ -177,7 +177,7 @@ public abstract class DefaultCADTool implements CADTool {
 				int index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
 				VectorialLayerEdited vle = getVLE();
 				clearSelection();
-				ArrayList selectedRow = vle.getSelectedRow();
+				//ArrayList selectedRow = vle.getSelectedRow();
 
 
 				ViewPort vp = vle.getLayer().getMapContext().getViewPort();
@@ -186,7 +186,7 @@ public abstract class DefaultCADTool implements CADTool {
 						BufferedImage.TYPE_INT_ARGB);
 				Graphics2D gs = selectionImage.createGraphics();
 				int inversedIndex=vea.getInversedIndex(index);
-				selectedRow.add(new DefaultRowEdited(df,
+				vle.addSelectionCache(new DefaultRowEdited(df,
 						IRowEdited.STATUS_ADDED, inversedIndex ));
 				vea.getSelection().set(inversedIndex);
 				IGeometry geom = df.getGeometry();
