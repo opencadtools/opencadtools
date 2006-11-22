@@ -111,7 +111,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
         jLabel = new JLabel();
         jLabel.setText(PluginServices.getText(this,"define_fields"));
         this.setLayout(new BorderLayout(5,5));
-        this.setSize(new java.awt.Dimension(437,232));
+        this.setSize(new java.awt.Dimension(499,232));
         this.add(jLabel, java.awt.BorderLayout.NORTH);
         this.add(getJScrollPane(), java.awt.BorderLayout.CENTER);
         this.add(getJPanelEast(), java.awt.BorderLayout.EAST);
@@ -192,7 +192,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		if (jPanelEast == null) {
 			jPanelEast = new JPanel();
 			jPanelEast.setLayout(null);
-			jPanelEast.setPreferredSize(new java.awt.Dimension(130,100));
+			jPanelEast.setPreferredSize(new java.awt.Dimension(170,100));
 			jPanelEast.add(getJButtonAddField(), null);
 			jPanelEast.add(getJButtonDeleteField(), null);
 		}
@@ -209,7 +209,9 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		if (jButtonAddField == null) {
 			jButtonAddField = new JButton();
 			jButtonAddField.setText(PluginServices.getText(this,"add_field"));
-			jButtonAddField.setBounds(new java.awt.Rectangle(7,5,120,23));
+			jButtonAddField.setLocation(new java.awt.Point(7,5));
+			jButtonAddField.setSize(new java.awt.Dimension(145,23));
+			jButtonAddField.setPreferredSize(new java.awt.Dimension(100,26));
 			jButtonAddField.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
@@ -270,7 +272,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		if (jButtonDeleteField == null) {
 			jButtonDeleteField = new JButton();
 			jButtonDeleteField.setText(PluginServices.getText(this,"delete_field"));
-			jButtonDeleteField.setBounds(new java.awt.Rectangle(7,33,120,23));
+			jButtonDeleteField.setLocation(new java.awt.Point(7,33));
+			jButtonDeleteField.setSize(new java.awt.Dimension(145,23));
 			jButtonDeleteField.setEnabled(false);
 			jButtonDeleteField.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
