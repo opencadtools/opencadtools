@@ -1,0 +1,78 @@
+// -*- tab-width: 4; -*-
+
+%{
+//
+// Vicente Caballero Navarro
+%}
+
+%start Matrix::Start
+%class MatrixCADTool
+%package com.iver.cit.gvsig.gui.cad.tools.smc
+%import com.iver.cit.gvsig.gui.cad.tools.MatrixCADTool
+%import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
+
+%map Matrix
+%%
+// A task begins life in suspended animation.
+
+Start
+	Entry {
+		selection();
+		setQuestion(
+		PluginServices.getText(this,"insert_first_point"));
+		setDescription(new String[]{"cancel"});
+
+		}
+	Exit{
+		}
+
+	{
+		addPoint( pointX:double,pointY:double,event:InputEvent)
+			SecondPoint {
+				setQuestion(PluginServices.getText(this,"insert_second_point"));
+				setDescription(new String[]{"cancel"});
+				addPoint( pointX,pointY,event);
+				}
+
+	}
+
+FirstPoint{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+		SecondPoint {
+			setQuestion(PluginServices.getText(this,"suprimir_objetos_origen"));
+			setDescription(new String[]{"cancel"});
+			addPoint( pointX,pointY,event);
+			}
+}
+SecondPoint{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+		FirstPoint {
+			setQuestion(PluginServices.getText(this,"suprimir_objetos_origen"));
+			setDescription(new String[]{"cancel"});
+			addPoint( pointX,pointY,event);
+			endMatrix();
+			}
+}
+
+Default
+{
+	addOption(s:String)
+		[s.equals(PluginServices.getText(this,"cancel"))]
+		Start{
+			end();
+			}
+	addOption(s:String)
+		Start{
+			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+			}
+	addValue(d:double)
+		Start{
+			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+			}
+	addPoint(pointX:double,pointY:double,event:InputEvent)
+		Start{
+			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+			}
+}
+%%

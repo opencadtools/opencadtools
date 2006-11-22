@@ -1,0 +1,82 @@
+// -*- tab-width: 4; -*-
+
+%{
+//
+// Vicente Caballero Navarro
+%}
+
+%start Equidistance::Distance
+%class EquidistanceCADTool
+%package com.iver.cit.gvsig.gui.cad.tools.smc
+%import com.iver.cit.gvsig.gui.cad.tools.EquidistanceCADTool
+%import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
+
+%map Equidistance
+%%
+// A task begins life in suspended animation.
+
+Distance
+	Entry {
+		selection();
+		setQuestion(
+		PluginServices.getText(this,"insert_first_point_or_distance"));
+		setDescription(new String[]{"cancel"});
+
+		}
+	Exit{
+		}
+
+	{
+
+		addPoint( pointX:double,pointY:double,event:InputEvent)
+			SecondPointDistance {
+				setQuestion(PluginServices.getText(this,"insert_second_point"));
+				setDescription(new String[]{"cancel"});
+				addPoint( pointX,pointY,event);
+				}
+		addValue(d:double)
+			Position{
+				setQuestion(PluginServices.getText(this,"position"));
+				setDescription(new String[]{"cancel"});
+				addValue(d);
+				}
+	}
+SecondPointDistance{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+		Position {
+			setQuestion(PluginServices.getText(this,"position"));
+			setDescription(new String[]{"cancel"});
+			addPoint( pointX,pointY,event);
+			}
+}
+Position{
+	addPoint( pointX:double,pointY:double,event:InputEvent)
+		Distance{
+			setDescription(new String[]{"cancel"});
+			addPoint( pointX,pointY,event);
+			end();
+			}
+}
+
+Default
+{
+	addOption(s:String)
+		[s.equals(PluginServices.getText(this,"cancel"))]
+		Distance{
+			end();
+			}
+	addOption(s:String)
+		Distance{
+			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+			}
+	addValue(d:double)
+		Distance{
+			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+			}
+	addPoint(pointX:double,pointY:double,event:InputEvent)
+		Distance{
+			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+			}
+}
+%%

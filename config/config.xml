@@ -82,13 +82,13 @@
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="images/Copy.png" action-command="_copy" tooltip="copy" group="vista" position="4"/>
 				<selectable-tool icon="images/Symmetry.png" action-command="_symmetry" tooltip="symmetry" group="vista" position="5"/>
-				<selectable-tool icon="images/Rotation.png" action-command="_rotate" tooltip="rotate" group="vista" position="6"/>
-				<selectable-tool icon="images/Scale.png" action-command="_scale" tooltip="scale" group="vista" position="7"/>
+				<selectable-tool icon="images/Rotation.png" action-command="_rotate" tooltip="rotate" group="vista" position="7"/>
+				<selectable-tool icon="images/Scale.png" action-command="_scale" tooltip="scale" group="vista" position="8"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.ExploitExtension"
 			description="Extensión encargada de simplificar geometrías complejas."
-			active="false">
+			active="true">
 			<menu text="geometry/modify/exploit" action-command="_exploit" icon="images/Exploit.png"/>
 			<tool-bar name="modificar" position="31">
 				<action-tool icon="images/Exploit.png" action-command="_exploit" tooltip="exploit" group="vista" position="14"/>
@@ -135,8 +135,11 @@
 			description="Extensión encargada de insertar polilíneas en una capa en edición."
 			active="true">
 			<menu text="geometry/insert/polyline" action-command="_polyline" icon="images/Line.png"/>
+			<menu text="geometry/insert/spline" action-command="_spline" icon="images/Spline.png"/>
+
 			<tool-bar name="insert" position="30">
 				<selectable-tool icon="images/Line.png" action-command="_polyline" tooltip="polyline" group="vista" position="5"/>
+				<selectable-tool icon="images/Spline.png" action-command="_spline" tooltip="spline" group="vista" position="5"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertPolygonExtension"
@@ -159,7 +162,7 @@
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.BreakExtension"
 			description="Extensión encargada de partir una geomtría en edición."
-			active="false">
+			active="true">
 			<menu text="geometry/modify/break" action-command="_break" icon="images/Break.png"/>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="images/Break.png" action-command="_break" tooltip="break" group="vista" position="9"/>
@@ -167,7 +170,7 @@
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.JoinExtension"
 			description="Extensión encargada de unir varias geometría en edición."
-			active="false">
+			active="true">
 			<menu text="geometry/modify/join" action-command="_join" icon="images/Join.png"/>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="images/Join.png" action-command="_join" tooltip="join" group="vista" position="10"/>
@@ -183,7 +186,7 @@
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.StretchExtension"
 			description="Extensión encargada de estirar geometrías en una capa en edición."
-			active="false">
+			active="true">
 			<menu text="geometry/modify/stretch" action-command="_stretch" icon="images/Stretch.png"/>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="images/Stretch.png" action-command="_stretch" tooltip="stretch" group="vista" position="12"/>
@@ -191,7 +194,7 @@
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.ExtendExtension"
 			description="Extensión encargada de alargar geometrías en una capa en edición."
-			active="false">
+			active="true">
 			<menu text="geometry/modify/extend" action-command="_extend" icon="images/Extend.png"/>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="images/Extend.png" action-command="_extend" tooltip="extend" group="vista" position="13"/>
@@ -213,6 +216,36 @@
 				<selectable-tool icon="images/SelCAD.png" action-command="_selection" tooltip="selection" group="vista" position="15"/>
 			</tool-bar>
 		</extension>
+		<extension class-name="com.iver.cit.gvsig.MatrixExtension"
+			description="Extensión encargada de crear una matriz a partir de la geometría seleccionada."
+			active="true">
+			<menu text="geometry/modify/matrix" action-command="_matrix" icon="images/Matriz.png"/>
+			<tool-bar name="modificar" position="31">
+				<selectable-tool icon="images/Matriz.png" action-command="_matrix" tooltip="matrix" group="vista" position="17"/>
+			</tool-bar>
+		</extension>
+		<extension class-name="com.iver.cit.gvsig.EquidistanceExtension"
+			description="Extensión encargada de crear una geometría equidistante a otra."
+			active="true">
+			<menu text="geometry/modify/equidistance" action-command="_equidistance" icon="images/Equidistance.png"/>
+			<tool-bar name="modificar" position="31">
+				<selectable-tool icon="images/Equidistance.png" action-command="_equidistance" tooltip="equidistance" group="vista" position="18"/>
+			</tool-bar>
+		</extension>
+		<extension class-name="com.iver.cit.gvsig.PreviousSelectionExtension"
+			description="Extensión encargada de restablecer la selección anterior."
+			active="true">
+			<menu text="geometry/modify/previous_selection" action-command="previous_selection" icon="images/previousSel.png"/>
+			<tool-bar name="modificar" position="31">
+				<action-tool icon="images/previousSel.png" action-command="previous_selection" tooltip="previous_selection" group="vista" position="19"/>
+			</tool-bar>
+		</extension>
+		
 
+		<extension class-name="com.iver.cit.gvsig.LayerPropertiesExtension"
+			description="Abre el diálogo de propiedades de la capa."
+			active="true" >
+			<menu text="Capa/Propiedades" action-command="PROPERTIES"/>
+		</extension>
 	</extensions>
 </plugin-config>
