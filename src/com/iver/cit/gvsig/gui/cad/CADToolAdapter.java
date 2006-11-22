@@ -43,17 +43,17 @@ import com.iver.cit.gvsig.fmap.layers.SpatialCache;
 import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
-import com.iver.cit.gvsig.gui.cad.snapping.FinalPointSnapper;
-import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
-import com.iver.cit.gvsig.gui.cad.snapping.ISnapperRaster;
-import com.iver.cit.gvsig.gui.cad.snapping.ISnapperVectorial;
-import com.iver.cit.gvsig.gui.cad.snapping.NearestPointSnapper;
-import com.iver.cit.gvsig.gui.cad.snapping.PixelSnapper;
-import com.iver.cit.gvsig.gui.cad.snapping.SnappingVisitor;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
+import com.iver.cit.gvsig.gui.preferences.SnapConfigPage;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.project.documents.view.snapping.GeometriesSnappingVisitor;
+import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperGeometriesVectorial;
+import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
+import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
+import com.iver.cit.gvsig.project.documents.view.snapping.SnappingVisitor;
 import com.iver.utiles.console.JConsole;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -198,15 +198,7 @@ public class CADToolAdapter extends Behavior {
 
 		ViewPort vp = getMapControl().getViewPort();
 
-		// TODO: PROVISIONAL. PONER ALGO COMO ESTO EN UN CUADRO DE DIALOGO
-		// DE CONFIGURACIÓN DEL SNAPPING
-		FinalPointSnapper defaultSnap = new FinalPointSnapper();
-		NearestPointSnapper nearestSnap = new NearestPointSnapper();
-		// PixelSnapper pixSnap = new PixelSnapper();
-		snappers.clear();
-		snappers.add(defaultSnap);
-		snappers.add(nearestSnap);
-		// snappers.add(pixSnap);
+		snappers=SnapConfigPage.getActivesSnappers();
 
 		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
 		double minDist = mapTolerance;
@@ -243,12 +235,18 @@ public class CADToolAdapter extends Behavior {
 					}
 					SnappingVisitor snapVisitor = null;
 					Point2D theSnappedPoint = null;
+
 					if (theSnapper instanceof ISnapperVectorial)
 					{
-						snapVisitor = new SnappingVisitor((ISnapperVectorial) theSnapper, point, mapTolerance, lastPoint);
+						if (theSnapper instanceof ISnapperGeometriesVectorial) {
+							snapVisitor=new GeometriesSnappingVisitor((ISnapperGeometriesVectorial) theSnapper,point,mapTolerance,lastPoint);
+						}else {
+							snapVisitor = new SnappingVisitor((ISnapperVectorial) theSnapper, point, mapTolerance, lastPoint);
+						}
 						// System.out.println("Cache size = " + cache.size());
 						cache.query(e, snapVisitor);
 						theSnappedPoint = snapVisitor.getSnapPoint();
+
 					}
 					if (theSnapper instanceof ISnapperRaster)
 					{
@@ -865,7 +863,7 @@ public class CADToolAdapter extends Behavior {
 		}
 		System.out.println("clear Selection");
 		selection.clear();
-		vle.clearSelection();
+		vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
 		/*
 		 * if (getCadTool() instanceof SelectionCADTool) { SelectionCADTool
 		 * selTool = (SelectionCADTool) getCadTool(); selTool.clearSelection(); }
@@ -902,7 +900,7 @@ public class CADToolAdapter extends Behavior {
 				selCad.init();
 				VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
 						.getEditionManager().getActiveLayerEdited();
-				vle.clearSelection();
+				vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
 
 				pushCadTool(selCad);
 				// getVectorialAdapter().getSelection().clear();
