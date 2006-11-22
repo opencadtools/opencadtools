@@ -71,6 +71,7 @@ import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SymmetryCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.project.documents.view.snapping.Snapping;
 import com.iver.cit.gvsig.project.documents.view.toc.MenuEntry;
 import com.iver.utiles.console.JConsole;
 import com.iver.utiles.console.ResponseListener;
@@ -111,7 +112,7 @@ public class CADExtension extends Extension {
 
 		// Registramos los Popup menus:
         MenuEntry.register();
-
+        Snapping.register();
 		// Fijamos que los símbolos de dibujo tengan outline
 		// TODO: Esto se debe configurar en el cuadro de diálogo de preferencias
 		CADTool.drawingSymbol.setOutlined(true);
