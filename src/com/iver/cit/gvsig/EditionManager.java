@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.CancelationException;
@@ -208,15 +209,18 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 			//FLayers layers=getMapControl().getMapContext().getLayers();
 			//if (layers.getLayersCount()>0)
 			//	layers.getLayer(0).setActive(true);
-			vle.clearSelection();
+			vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
 			editedLayers.remove(vle);
 			getMapControl().setTool("zoomIn");
 			FLyrVect lv=(FLyrVect)vle.getLayer();
 			if (e.getAffectedLayer().equals(lv)){
-				View view=(View)PluginServices.getMDIManager().getActiveWindow();
-				view.hideConsole();
-				view.validate();
-				view.repaint();
+				IWindow window=PluginServices.getMDIManager().getActiveWindow();
+				if (window instanceof View) {
+					View view=(View)window;
+					view.hideConsole();
+					view.validate();
+					view.repaint();
+				}
 			}
 			PluginServices.getMainFrame().enableControls();
 		}
