@@ -67,10 +67,10 @@ public class StopEditing extends Extension {
 					FLyrVect lv = (FLyrVect) actives[i];
 					MapControl mapControl = vista.getMapControl();
 					VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getActiveLayerEdited();
-					lyrEd.clearSelection();
+					lyrEd.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
 					isStop=stopEditing(lv, mapControl);
 					if (isStop){
-						lv.removeLayerListener(edMan);						
+						lv.removeLayerListener(edMan);
 					}
 
 					// return;
@@ -81,7 +81,7 @@ public class StopEditing extends Extension {
 				vista.hideConsole();
 				vista.repaintMap();
 				CADExtension.clearView();
-				
+
 			}
 		}
 		PluginServices.getMainFrame().enableControls();

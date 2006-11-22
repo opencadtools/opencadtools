@@ -45,30 +45,26 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.SplineCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.EquidistanceCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
- * Extensión que gestiona la inserción de polilíneas en edición.
+ * Extensión para crear una geometría equidistante a otra.
  *
  * @author Vicente Caballero Navarro
  */
-public class InsertPolyLineExtension extends Extension {
+public class EquidistanceExtension extends Extension {
 	private View view;
 
 	private MapControl mapControl;
-	private PolylineCADTool polyline;
-	private SplineCADTool spline;
+	private EquidistanceCADTool equidistanceCADTool;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		polyline = new PolylineCADTool();
-		spline = new SplineCADTool();
-		CADExtension.addCADTool("_polyline", polyline);
-		CADExtension.addCADTool("_spline", spline);
+		equidistanceCADTool=new EquidistanceCADTool();
+		CADExtension.addCADTool("_equidistance",equidistanceCADTool);
 	}
 
 	/**
@@ -76,11 +72,9 @@ public class InsertPolyLineExtension extends Extension {
 	 */
 	public void execute(String s) {
 		CADExtension.initFocus();
-		if (s.equals("_polyline")) {
-			CADExtension.setCADTool("_polyline",true);
-		}else if (s.equals("_spline")) {
-			CADExtension.setCADTool("_spline",true);
-		}
+		if (s.equals("_equidistance")) {
+        	CADExtension.setCADTool(s,true);
+        }
 		CADExtension.getEditionManager().setMapControl(mapControl);
 		CADExtension.getCADToolAdapter().configureMenu();
 	}
@@ -94,10 +88,12 @@ public class InsertPolyLineExtension extends Extension {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 				view = (View) PluginServices.getMDIManager().getActiveWindow();
 				mapControl = view.getMapControl();
-				if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
+				EditionManager em=CADExtension.getEditionManager();
+				FLyrVect lv=(FLyrVect)em.getActiveLayerEdited().getLayer();
+
+				if (em.getActiveLayerEdited()==null || lv.getRecordset().getSelection().cardinality()!=1)
 					return false;
-				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-				if (polyline.isApplicable(lv.getShapeType())){
+				if (equidistanceCADTool.isApplicable(lv.getShapeType())){
 					return true;
 				}
 			}

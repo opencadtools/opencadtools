@@ -40,69 +40,44 @@
  */
 package com.iver.cit.gvsig;
 
-import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.DriverException;
-import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.SplineCADTool;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.layers.ILayerEdited;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 /**
- * Extensión que gestiona la inserción de polilíneas en edición.
+ * Extensión que gestiona el poder cambiar la selección a una anterior.
  *
  * @author Vicente Caballero Navarro
  */
-public class InsertPolyLineExtension extends Extension {
-	private View view;
-
-	private MapControl mapControl;
-	private PolylineCADTool polyline;
-	private SplineCADTool spline;
+public class PreviousSelectionExtension extends Extension {
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		polyline = new PolylineCADTool();
-		spline = new SplineCADTool();
-		CADExtension.addCADTool("_polyline", polyline);
-		CADExtension.addCADTool("_spline", spline);
 	}
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals("_polyline")) {
-			CADExtension.setCADTool("_polyline",true);
-		}else if (s.equals("_spline")) {
-			CADExtension.setCADTool("_spline",true);
+		ILayerEdited layerEdited= CADExtension.getEditionManager().getActiveLayerEdited();
+		if (layerEdited instanceof VectorialLayerEdited) {
+			((VectorialLayerEdited)layerEdited).restorePreviousSelection();
+			VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)((VectorialLayerEdited)layerEdited).getLayer()).getSource();
+			vea.getCommandRecord().fireCommandsRepaint(null);
 		}
-		CADExtension.getEditionManager().setMapControl(mapControl);
-		CADExtension.getCADToolAdapter().configureMenu();
 	}
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
 	public boolean isEnabled() {
-
-		try {
-			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-				view = (View) PluginServices.getMDIManager().getActiveWindow();
-				mapControl = view.getMapControl();
-				if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
-					return false;
-				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-				if (polyline.isApplicable(lv.getShapeType())){
-					return true;
-				}
-			}
-		} catch (DriverException e) {
-			e.printStackTrace();
+		ILayerEdited layerEdited= CADExtension.getEditionManager().getActiveLayerEdited();
+		if (layerEdited instanceof VectorialLayerEdited) {
+			return ((VectorialLayerEdited)layerEdited).getPreviousSelection();
 		}
 		return false;
 	}
