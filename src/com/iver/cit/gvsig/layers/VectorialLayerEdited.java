@@ -30,18 +30,13 @@ import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.LayerCollectionEvent;
-import com.iver.cit.gvsig.fmap.layers.LayerCollectionListener;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawingListener;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
-import com.iver.cit.gvsig.fmap.layers.LayerPositionEvent;
 import com.iver.cit.gvsig.fmap.rendering.Legend;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
-import com.iver.cit.gvsig.gui.cad.snapping.ISnapper;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDrawingListener{
@@ -54,6 +49,12 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	private ArrayList snappers = new ArrayList();
 	private ArrayList layersToSnap = new ArrayList();
 	private Legend legend;
+	/** Selección previa**/
+	private ArrayList previousRowSelection=new ArrayList();
+	private ArrayList previousHandlerSelection=new ArrayList();
+	public static final boolean SAVEPREVIOUS=true;
+	public static final boolean NOTSAVEPREVIOUS=false;
+
 
 	public VectorialLayerEdited(FLayer lyr)
 	{
@@ -71,7 +72,15 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		return selectedRow;
 	}
 
-	public void clearSelection() {
+	public void clearSelection(boolean savePrevious) {
+		if (!selectedRow.isEmpty() && savePrevious) {
+			previousRowSelection.clear();
+			previousHandlerSelection.clear();
+		}
+		if (savePrevious) {
+			previousRowSelection.addAll(selectedRow);
+			previousHandlerSelection.addAll(selectedHandler);
+		}
 		selectedHandler.clear();
 		selectedRow.clear();
 		if (getVEA() != null)
@@ -79,6 +88,24 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			FBitSet selection=getVEA().getSelection();
 			selection.clear();
 		}
+	}
+	public void restorePreviousSelection() {
+		VectorialEditableAdapter vea=getVEA();
+		FBitSet selection=vea.getSelection();
+
+		selection.clear();
+		selectedRow.clear();
+		selectedHandler.clear();
+
+		selectedRow.addAll(previousRowSelection);
+		selectedHandler.addAll(previousHandlerSelection);
+		for (int i = 0;i < selectedRow.size(); i++) {
+			  IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+			  selection.set(edRow.getIndex());
+		}
+
+		previousRowSelection.clear();
+		previousHandlerSelection.clear();
 	}
 	/**
 	 * @return Returns the selectedRow.
@@ -91,7 +118,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		VectorialEditableAdapter vea = getVEA();
 		FBitSet selection = vea.getSelection();
 		if (!multipleSelection) {
-			clearSelection();
+			clearSelection(SAVEPREVIOUS);
 		}
 		// Se comprueba si se pincha en una gemometría
 		ViewPort vp=getLayer().getMapContext().getViewPort();
@@ -115,7 +142,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 				if (geom.intersects(rect)) { // , 0.1)){
 					selection.set(feats[i].getIndex(), true);
-					selectedRow.add(feats[i]);
+					addSelectionCache((DefaultRowEdited)feats[i]);
 					geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 					drawHandlers(geom.cloneGeometry(),gh,vp);
 				}
@@ -133,7 +160,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		lastPoint = new Point2D.Double(x, y);
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
-		selectedRow.clear();
+		clearSelection(SAVEPREVIOUS);
 
 		double x1;
 		double y1;
@@ -172,14 +199,14 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 				if (firstPoint.getX() < lastPoint.getX()) {
 					if (rect.contains(geom.getBounds2D())) {
-						selectedRow.add(feats[i]);
+						addSelectionCache((DefaultRowEdited)feats[i]);
 						selection.set(feats[i].getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
 					}
 				} else {
 					if (geom.intersects(rect)) { // , 0.1)){
-						selectedRow.add(feats[i]);
+						addSelectionCache((DefaultRowEdited)feats[i]);
 						selection.set(feats[i].getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
@@ -198,7 +225,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		FBitSet selection = vea.getSelection();
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
-		selectedRow.clear();
+		clearSelection(SAVEPREVIOUS);
 		Rectangle2D rect = polygon.getBounds2D();
 
 		String strEPSG = vp.getProjection().getAbrev().substring(5);
@@ -213,7 +240,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 					.getGeometry();
 					if (contains(polygon,geom)) {
-						selectedRow.add(feats[i]);
+						addSelectionCache((DefaultRowEdited)feats[i]);
 						selection.set(feats[i].getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
@@ -231,7 +258,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		FBitSet selection = vea.getSelection();
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
-		selectedRow.clear();
+		clearSelection(SAVEPREVIOUS);
 		Rectangle2D rect = polygon.getBounds2D();
 
 		String strEPSG = vp.getProjection().getAbrev().substring(5);
@@ -246,7 +273,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 					.getGeometry();
 					if (contains(polygon,geom) || intersects(polygon,geom)) {
-						selectedRow.add(feats[i]);
+						addSelectionCache((DefaultRowEdited)feats[i]);
 						selection.set(feats[i].getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
@@ -264,7 +291,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		FBitSet selection = vea.getSelection();
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
-		selectedRow.clear();
+		clearSelection(SAVEPREVIOUS);
 
 		try {
 			BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -272,11 +299,11 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gh = handlersImage.createGraphics();
 			for (int i = 0; i < vea.getRowCount(); i++) {
-				IRowEdited rowEd=(IRowEdited)vea.getRow(i);
+				IRowEdited rowEd=vea.getRow(i);
 				IGeometry geom = ((IFeature)rowEd.getLinkedRow())
 						.getGeometry();
 					if (!contains(polygon,geom) && !intersects(polygon,geom)) {
-						selectedRow.add(rowEd);
+						addSelectionCache((DefaultRowEdited)rowEd);
 						selection.set(rowEd.getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
@@ -295,17 +322,17 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		FBitSet selection = vea.getSelection();
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
-		selectedRow.clear();
+		clearSelection(SAVEPREVIOUS);
 		try {
 			BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gs = selectionImage.createGraphics();
 			BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gh = handlersImage.createGraphics();
 			for (int i = 0; i < vea.getRowCount(); i++) {
-				IRowEdited rowEd=(IRowEdited)vea.getRow(i);
+				IRowEdited rowEd=vea.getRow(i);
 				IGeometry geom = ((IFeature)rowEd.getLinkedRow())
 						.getGeometry();
-				selectedRow.add(rowEd);
+				addSelectionCache((DefaultRowEdited)rowEd);
 				selection.set(rowEd.getIndex(), true);
 				geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 				drawHandlers(geom.cloneGeometry(),gh,vp);
@@ -324,7 +351,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		FBitSet selection = vea.getSelection();
 		double min = java.lang.Double.MAX_VALUE;
 //		 Cogemos las entidades seleccionadas
-		clearSelection();
+		clearSelection(SAVEPREVIOUS);
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 		BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gs = selectionImage.createGraphics();
@@ -340,7 +367,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				IFeature feat=(DefaultFeature)dre.getLinkedRow();
 				IGeometry geom=feat.getGeometry();
 				handlers = geom.getHandlers(IGeometry.SELECTHANDLER);
-				selectedRow.add(dre);
+				addSelectionCache(dre);
 				geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 				drawHandlers(geom.cloneGeometry(),gh,vp);
 				// y miramos los handlers de cada entidad seleccionada
@@ -379,8 +406,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public VectorialEditableAdapter getVEA(){
 		if (((FLyrVect)getLayer()).getSource() instanceof VectorialEditableAdapter)
 			return (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
-		else
-			return null;
+		return null;
 	}
 
 	public void beforeLayerDraw(LayerDrawEvent e) throws CancelationException {
@@ -466,8 +492,8 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 	}
 
-	public void setSelectionCache(ArrayList selectedRowAux) {
-		clearSelection();
+	public void setSelectionCache(boolean savePrevious,ArrayList selectedRowAux) {
+		clearSelection(savePrevious);
 		VectorialEditableAdapter vea=getVEA();
 		FBitSet selection=vea.getSelection();
 		selectedRow.addAll(selectedRowAux);
@@ -482,5 +508,13 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	}
 	public Legend getLegend() {
 		return legend;
+	}
+
+	public void addSelectionCache(DefaultRowEdited edited) {
+		selectedRow.add(edited);
+	}
+
+	public boolean getPreviousSelection() {
+		return !selectedRow.isEmpty();
 	}
 }
