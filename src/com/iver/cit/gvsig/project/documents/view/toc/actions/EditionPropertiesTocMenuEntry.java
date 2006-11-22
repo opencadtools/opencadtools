@@ -7,6 +7,7 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.preferences.EditionPreferencePage;
 import com.iver.cit.gvsig.gui.preferences.FlatnessPage;
 import com.iver.cit.gvsig.gui.preferences.GridPage;
+import com.iver.cit.gvsig.gui.preferences.SnapConfigPage;
 import com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction;
 import com.iver.cit.gvsig.project.documents.view.toc.ITocItem;
 
@@ -42,16 +43,18 @@ public class EditionPropertiesTocMenuEntry extends AbstractTocContextMenuAction 
 
 	public void execute(ITocItem item, FLayer[] selectedItems) {
 		EditionPreferencePage pref = new EditionPreferencePage();
-		
+
 		pref.setMapContext(getMapContext());
 		GridPage gridPage=new GridPage();
 		gridPage.setParentID(pref.getID());
 		FlatnessPage flatnessPage=new FlatnessPage();
 		flatnessPage.setParentID(pref.getID());
-
+		SnapConfigPage snapConfigPage=new SnapConfigPage();
+		snapConfigPage.setParentID(pref.getID());
 
 		GenericDlgPreferences dlg = new GenericDlgPreferences();
 		dlg.addPreferencePage(pref);
+		dlg.addPreferencePage(snapConfigPage);
 		dlg.addPreferencePage(gridPage);
 		dlg.addPreferencePage(flatnessPage);
 		dlg.getWindowInfo().setTitle(PluginServices.getText(this, "Edition_Properties"));
