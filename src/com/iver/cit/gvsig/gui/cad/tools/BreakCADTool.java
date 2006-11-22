@@ -46,11 +46,9 @@ import java.awt.event.InputEvent;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.hardcode.gdbms.engine.values.Value;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -65,7 +63,6 @@ import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.BreakCADToolContext;
@@ -74,7 +71,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
 /**
- * DOCUMENT ME!
+ * Recorta una polilínea en dos partes.
  *
  * @author Vicente Caballero Navarro
  */
@@ -348,17 +345,22 @@ public class BreakCADTool extends DefaultCADTool {
 */
 
     private void breakGeometry(DefaultRowEdited dre) throws IOException, DriverIOException {
-        GeneralPathX newGp1 = new GeneralPathX();
+        breakGeom(dre);
+    }
+
+
+	private void breakGeom(DefaultRowEdited dre) throws DriverIOException, IOException {
+    	GeneralPathX newGp1 = new GeneralPathX();
         GeneralPathX newGp2 = new GeneralPathX();
         IGeometry geomAux=((DefaultFeature)rowEdited.getLinkedRow()).getGeometry();
-        PathIterator theIterator=geomAux.getPathIterator(null,FConverter.FLATNESS);
+    	PathIterator theIterator=geomAux.getPathIterator(null,FConverter.FLATNESS);
         Point2D[] pointsOrdered=getOrderPoints(geomAux);
         double[] theData = new double[6];
         boolean isFirstPart=true;
         boolean intersectsP2=false;
         int theType;
         int numParts = 0;
-
+        boolean isBreaked=false;
         Point2D previous=null;
 
             while (!theIterator.isDone()) {
@@ -386,14 +388,14 @@ public class BreakCADTool extends DefaultCADTool {
                                 Point2D p1=pointsOrdered[0];
                                 Point2D p2=pointsOrdered[1];
 
-                                if (intersects(geom,p1)){
-                                    isFirstPart=false;
+                                if (intersects(geom,p1) && !isBreaked){
+                                	isFirstPart=false;
                                     newGp1.lineTo(p1.getX(),p1.getY());
                                 }
-                                if (intersects(geom,p2)) {
+                                if (intersects(geom,p2) && !isBreaked) {
+                                	isBreaked=true;
                                     intersectsP2=true;
                                     newGp2.moveTo(p2.getX(),p2.getY());
-
                                 }
                             }
                          previous=new Point2D.Double(theData[0], theData[1]);
@@ -413,10 +415,15 @@ public class BreakCADTool extends DefaultCADTool {
                                 IGeometry geom=ShapeFactory.createPolyline2D(gpx);
                                 Point2D p1=pointsOrdered[0];
                                 Point2D p2=pointsOrdered[1];
-                                if (intersects(geom,p1)){
-                                    isFirstPart=false;
+                                if (intersects(geom,p1) && !isBreaked){
+                                	isFirstPart=false;
                                     newGp1.lineTo(p1.getX(),p1.getY());
+                                }
+                                if (intersects(geom,p2) && !isBreaked) {
+                                	isBreaked=true;
+                                    intersectsP2=true;
                                     newGp2.moveTo(p2.getX(),p2.getY());
+
                                 }
                             }
                          previous=new Point2D.Double(theData[0], theData[1]);
@@ -435,12 +442,17 @@ public class BreakCADTool extends DefaultCADTool {
                                 IGeometry geom=ShapeFactory.createPolyline2D(gpx);
                                 Point2D p1=pointsOrdered[0];
                                 Point2D p2=pointsOrdered[1];
-                                if (intersects(geom,p1)){
-                                    isFirstPart=false;
+                                if (intersects(geom,p1) && !isBreaked){
+                                	isFirstPart=false;
                                     newGp1.lineTo(p1.getX(),p1.getY());
-                                    newGp2.moveTo(p2.getX(),p2.getY());
                                 }
-                            }
+                                if (intersects(geom,p2) && !isBreaked) {
+                                	isBreaked=true;
+                                    intersectsP2=true;
+                                    newGp2.moveTo(p2.getX(),p2.getY());
+
+                                }
+                          }
                          previous=new Point2D.Double(theData[0], theData[1]);
                         if (isFirstPart)
                             newGp1.curveTo(theData[0], theData[1],theData[2], theData[3],theData[4], theData[5]);
@@ -461,65 +473,58 @@ public class BreakCADTool extends DefaultCADTool {
             } //end while loop
             GeneralPathX gpx=new GeneralPathX();
             gpx.append(geomAux.getInternalShape(),true);
-            if (gpx.isClosed()) {
-                newGp2.append(newGp1.getPathIterator(null,FConverter.FLATNESS),true);
-                IGeometry geom1=ShapeFactory.createPolyline2D(newGp2);
-                VectorialLayerEdited vle = getVLE();
-                VectorialEditableAdapter vea = vle.getVEA();
-                int num=vea.getRowCount();
-                DefaultFeature df1 = new DefaultFeature(geom1, dre.getAttributes(),String.valueOf(num));
-
-                vea.startComplexRow();
-                vea.removeRow(dre.getIndex(),getName(),EditionEvent.GRAPHIC);
-                int index1=vea.addRow(df1,PluginServices.getText(this,"parte1"),EditionEvent.GRAPHIC);
-                vea.endComplexRow(getName());
-                ViewPort vp=CADExtension.getEditionManager().getMapControl().getViewPort();
-                BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
-                Graphics2D gs = selectionImage.createGraphics();
-                //clearSelection();
-                ArrayList selectedRowAux = new ArrayList();//vle.getSelectedRow();
-                selectedRowAux.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED, vea.getInversedIndex(index1)));
-                vle.setSelectionCache(selectedRowAux);
-                geom1.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
-                vle.drawHandlers(geom1.cloneGeometry(),gs,vp);
-                vea.setSelectionImage(selectionImage);
-            }else {
-            IGeometry geom1=ShapeFactory.createPolyline2D(newGp1);
-            IGeometry geom2=ShapeFactory.createPolyline2D(newGp2);
             VectorialLayerEdited vle = getVLE();
             VectorialEditableAdapter vea = vle.getVEA();
-            int num=vea.getRowCount();
-            Value[] values=dre.getAttributes();
-            DefaultFeature df1 = new DefaultFeature(geom1,values,String.valueOf(num));
-            DefaultFeature df2 = new DefaultFeature(geom2, values,String.valueOf(num+1));
-
+            ArrayList selectedRowAux=new ArrayList();
             vea.startComplexRow();
-            int index1=vea.addRow(df1,PluginServices.getText(this,"parte1"),EditionEvent.GRAPHIC);
-            int index2=vea.addRow(df2,PluginServices.getText(this,"parte2"),EditionEvent.GRAPHIC);
-            vea.removeRow(dre.getIndex(),getName(),EditionEvent.GRAPHIC);
+            if (gpx.isClosed()) {
 
-            vea.endComplexRow(getName());
-            ViewPort vp=CADExtension.getEditionManager().getMapControl().getViewPort();
-            BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D gs = selectionImage.createGraphics();
-            //clearSelection();
-            ArrayList selectedRowAux = new ArrayList();//vle.getSelectedRow();
-            selectedRowAux.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED, vea.getInversedIndex(index1)));
-            selectedRowAux.add(new DefaultRowEdited(df2, IRowEdited.STATUS_ADDED, vea.getInversedIndex(index2)));
-            vle.setSelectionCache(selectedRowAux);
-            geom1.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
-            vle.drawHandlers(geom1.cloneGeometry(),gs,vp);
-            geom2.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
-            vle.drawHandlers(geom2.cloneGeometry(),gs,vp);
-            vea.setSelectionImage(selectionImage);
+                newGp2.append(newGp1.getPathIterator(null,FConverter.FLATNESS),true);
+                IGeometry geom1=ShapeFactory.createPolyline2D(newGp2);
+
+                DefaultFeature dfLine1 = (DefaultFeature) dre.getLinkedRow().cloneRow();
+	            dfLine1.setGeometry(geom1);
+				int indexLine1 = addGeometry(geom1, dfLine1
+						.getAttributes());
+
+				selectedRowAux.add(new DefaultRowEdited(dfLine1,
+						IRowEdited.STATUS_ADDED, indexLine1));
+
+			 }else {
+	            IGeometry geom1=ShapeFactory.createPolyline2D(newGp1);
+	            IGeometry geom2=ShapeFactory.createPolyline2D(newGp2);
+
+	            DefaultFeature dfLine1 = (DefaultFeature) dre.getLinkedRow().cloneRow();
+	            dfLine1.setGeometry(geom1);
+				int indexLine1 = addGeometry(geom1, dfLine1
+						.getAttributes());
+
+				selectedRowAux.add(new DefaultRowEdited(dfLine1,
+						IRowEdited.STATUS_ADDED, indexLine1));
+
+				DefaultFeature dfLine2 = (DefaultFeature) dre.getLinkedRow().cloneRow();
+		        dfLine2.setGeometry(geom2);
+				int indexLine2 = addGeometry(geom2, dfLine2
+							.getAttributes());
+
+				selectedRowAux.add(new DefaultRowEdited(dfLine2,
+							IRowEdited.STATUS_ADDED, indexLine2));
+
             }
+        	vea.removeRow(dre.getIndex(), getName(), EditionEvent.GRAPHIC);
+  			vea.endComplexRow(getName());
+			vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
+
     }
+
 
     private Point2D[] getOrderPoints(IGeometry geomAux) {
     	PathIterator theIterator=geomAux.getPathIterator(null,FConverter.FLATNESS);
     	double[] theData = new double[6];
         Point2D previous=null;
         ArrayList points =new ArrayList();
+        boolean isFirstPointBreak=false;
+        boolean isSecondPointBreak=false;
         while (!theIterator.isDone()) {
             int theType = theIterator.currentSegment(theData);
             switch (theType) {
@@ -537,16 +542,18 @@ public class BreakCADTool extends DefaultCADTool {
                             IGeometry geom=ShapeFactory.createPolyline2D(gpx);
                             boolean intersectFirst=intersects(geom,firstPoint);
                             boolean intersectSecond=intersects(geom,secondPoint);
-                            if (intersectFirst && intersectSecond){
-                                points.add(getNearPoint(previous));
+                            if (intersectFirst && intersectSecond && !isFirstPointBreak){
+                            	isFirstPointBreak=true;
+                            	isSecondPointBreak=true;
+                            	points.add(getNearPoint(previous));
                                 points.add(getDistantPoint(previous));
                                 return (Point2D[])points.toArray(new Point2D[0]);
-                            }
-                            if (intersectFirst) {
+                            }else if (intersectFirst && !isFirstPointBreak) {
+                            	isFirstPointBreak=true;
                                 points.add(firstPoint);
-                            }
-                            if (intersectSecond) {
-                                points.add(secondPoint);
+                            }else if (intersectSecond && !isSecondPointBreak) {
+                            	isSecondPointBreak=true;
+                            	points.add(secondPoint);
                             }
                         }
                      previous=new Point2D.Double(theData[0], theData[1]);
@@ -560,16 +567,18 @@ public class BreakCADTool extends DefaultCADTool {
                             IGeometry geom=ShapeFactory.createPolyline2D(gpx);
                             boolean intersectFirst=intersects(geom,firstPoint);
                             boolean intersectSecond=intersects(geom,secondPoint);
-                            if (intersectFirst && intersectSecond){
+                            if (intersectFirst && intersectSecond && !isFirstPointBreak){
+                            	isFirstPointBreak=true;
+                            	isSecondPointBreak=true;
                                 points.add(getNearPoint(previous));
                                 points.add(getDistantPoint(previous));
                                 return (Point2D[])points.toArray(new Point2D[0]);
-                            }
-                            if (intersectFirst) {
-                                points.add(firstPoint);
-                            }
-                            if (intersectSecond) {
-                                points.add(secondPoint);
+                            }else if (intersectFirst && !isFirstPointBreak){
+                            	isFirstPointBreak=true;
+                            	points.add(firstPoint);
+                            }else if (intersectSecond && !isSecondPointBreak){
+                            	isSecondPointBreak=true;
+                            	points.add(secondPoint);
                             }
                      }
                      previous=new Point2D.Double(theData[0], theData[1]);
@@ -584,15 +593,17 @@ public class BreakCADTool extends DefaultCADTool {
                             IGeometry geom=ShapeFactory.createPolyline2D(gpx);
                             boolean intersectFirst=intersects(geom,firstPoint);
                             boolean intersectSecond=intersects(geom,secondPoint);
-                            if (intersectFirst && intersectSecond){
-                                points.add(getNearPoint(previous));
+                            if (intersectFirst && intersectSecond && !isFirstPointBreak){
+                            	isFirstPointBreak=true;
+                            	isSecondPointBreak=true;
+                            	points.add(getNearPoint(previous));
                                 points.add(getDistantPoint(previous));
                                 return (Point2D[])points.toArray(new Point2D[0]);
-                            }
-                            if (intersectFirst) {
-                                points.add(firstPoint);
-                            }
-                            if (intersectSecond) {
+                            }else if (intersectFirst && !isFirstPointBreak){
+                            	isFirstPointBreak=true;
+                            	points.add(firstPoint);
+                            }else if (intersectSecond && !isSecondPointBreak){
+                            	isSecondPointBreak=true;
                                 points.add(secondPoint);
                             }
                      }
@@ -644,7 +655,7 @@ private Point2D getNearPoint(Point2D previous) {
                  g1.draw((Graphics2D)g,vp,DefaultCADTool.modifySymbol);
                  g2.draw((Graphics2D)g,vp,DefaultCADTool.modifySymbol);
              }
-             rowEdited = (DefaultRowEdited)((DefaultRowEdited)selectedRows.get(0));
+             rowEdited = (DefaultRowEdited)selectedRows.get(0);
                  //.getLinkedRow()
                  //	.cloneRow();
              IGeometry geom=((DefaultFeature)rowEdited.getLinkedRow()).getGeometry().cloneGeometry();
@@ -658,8 +669,8 @@ private Point2D getNearPoint(Point2D previous) {
         VectorialLayerEdited vle = getVLE();
         ArrayList selectedRows = vle.getSelectedRow();
         if (selectedRows.size() == 1) {
-            rowEdited = (DefaultRowEdited) ((DefaultRowEdited) selectedRows
-                    .get(0));
+            rowEdited = (DefaultRowEdited) selectedRows
+                    .get(0);
             IGeometry g = ((DefaultFeature) rowEdited.getLinkedRow())
                     .getGeometry().cloneGeometry();
             return intersects(g, p);
