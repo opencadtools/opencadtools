@@ -207,9 +207,10 @@ public class InternalPolygonCADTool extends DefaultCADTool {
 				} catch (DriverIOException e) {
 					e.printStackTrace();
 				}
-				selectedRows.clear();
-	    		selectedRows.add(dre);
-    		}
+				ArrayList rows=new ArrayList();
+				rows.add(dre);
+				vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, rows);
+			}
     		points.clear();
 
 

@@ -259,7 +259,7 @@ public class SelectionCADTool extends DefaultCADTool {
 				selectedRowsAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,row.getIndex()));
 			}
 			firstPoint=new Point2D.Double(x,y);
-			vle.setSelectionCache(selectedRowsAux);
+			vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowsAux);
 			//clearSelection();
 			//selectedRow.addAll(selectedRowsAux);
 			try {

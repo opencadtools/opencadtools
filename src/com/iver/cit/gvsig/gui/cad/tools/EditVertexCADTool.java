@@ -700,7 +700,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 							}
 
 							clearSelection();
-							selectedRows.add(new DefaultRowEdited(df,
+							vle.addSelectionCache(new DefaultRowEdited(df,
 									IRowEdited.STATUS_MODIFIED, row.getIndex()));
 							}
 						}

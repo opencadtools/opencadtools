@@ -173,7 +173,7 @@ public class ExtendCADTool extends DefaultCADTool {
 	    	}
 
 			vea.endComplexRow(getName());
-			vle.setSelectionCache(newSelectedRow);
+			vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, newSelectedRow);
         } catch (IOException e) {
 			e.printStackTrace();
 		} catch (DriverIOException e) {

@@ -159,7 +159,7 @@ public class CopyCADTool extends DefaultCADTool {
             	vea.endComplexRow(getName());
                 //clearSelection();
                 //selectedRow.addAll(selectedRowAux);
-                vle.setSelectionCache(selectedRowAux);
+                vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowAux);
             } catch (DriverIOException e) {
                 e.printStackTrace();
             } catch (IOException e) {

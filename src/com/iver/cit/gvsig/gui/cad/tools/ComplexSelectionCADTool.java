@@ -158,7 +158,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 				selectedRowsAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,row.getIndex()));
 			}
 			firstPoint=new Point2D.Double(x,y);
-			vle.setSelectionCache(selectedRowsAux);
+			vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowsAux);
 			try {
 				String description=PluginServices.getText(this,"move_handlers");
 				vea.endComplexRow(description);

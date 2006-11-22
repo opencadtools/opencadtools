@@ -155,7 +155,7 @@ public class SymmetryCADTool extends DefaultCADTool {
      * @param y parámetro x del punto que se pase para dibujar.
      */
     public void drawOperation(Graphics g, double x, double y) {
-        SymmetryCADToolState actualState = ((SymmetryCADToolContext) _fsm).getState();
+        SymmetryCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
         if (status.equals("Symmetry.SecondPoint")) {
@@ -256,7 +256,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 				}
 
 				vea.endComplexRow(getName());
-				vle.setSelectionCache(selectedRowAux);
+				vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowAux);
 				//clearSelection();
 				//selectedRow.addAll(selectedRowAux);
 			} catch (DriverIOException e) {
