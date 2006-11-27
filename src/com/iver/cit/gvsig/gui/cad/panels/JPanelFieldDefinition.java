@@ -177,7 +177,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			    }
 			});
 
-
+			jTable.getColumn(PluginServices.getText(this,"field")).setWidth(180);
 		}
 		return jTable;
 	}
