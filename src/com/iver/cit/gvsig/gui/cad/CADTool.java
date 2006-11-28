@@ -62,7 +62,7 @@ public interface CADTool {
 			new Color(100, 100, 100, 100));
 	public static FSymbol selectSymbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT,
 			Color.ORANGE);
-	
+
 	public static int TOPGEOMETRY = 2000;
 
 	public void init();
@@ -121,4 +121,6 @@ public interface CADTool {
 	public VectorialLayerEdited getVLE();
 	void clearSelection();
 	public boolean isApplicable(int shapeType);
+	public void setPreviosTool(DefaultCADTool tool);
+	public void restorePreviousTool();
 }

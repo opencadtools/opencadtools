@@ -123,6 +123,14 @@ WithHandlers{
 
 Default
 {
+	addOption(s:String)
+      [s.equals("")]
+      FirstPoint{
+        restorePreviousTool();
+        setQuestion(PluginServices.getText(this,"insert_point_selection"));
+        setDescription(new String[]{"cancel"});
+        end();
+        }
   addOption(s:String)
     [s.equals(PluginServices.getText(this,"cancel"))]
     FirstPoint{

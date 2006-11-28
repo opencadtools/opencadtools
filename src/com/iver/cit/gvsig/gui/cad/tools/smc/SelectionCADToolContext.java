@@ -168,7 +168,37 @@ public final class SelectionCADToolContext
         {
             SelectionCADTool ctxt = context.getOwner();
 
-            if (s.equals(PluginServices.getText(this,"cancel")))
+            if (s.equals(""))
+            {
+                boolean loopbackFlag =
+                    context.getState().getName().equals(
+                        Selection.FirstPoint.getName());
+
+                if (loopbackFlag == false)
+                {
+                    (context.getState()).Exit(context);
+                }
+
+                context.clearState();
+                try
+                {
+                    ctxt.restorePreviousTool();
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_selection"));
+                    ctxt.setDescription(new String[]{"cancel"});
+                    ctxt.end();
+                }
+                finally
+                {
+                    context.setState(Selection.FirstPoint);
+
+                    if (loopbackFlag == false)
+                    {
+                        (context.getState()).Entry(context);
+                    }
+
+                }
+            }
+            else if (s.equals(PluginServices.getText(this,"cancel")))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(

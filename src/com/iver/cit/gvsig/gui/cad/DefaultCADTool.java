@@ -75,6 +75,7 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
+import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.console.JConsole;
@@ -95,6 +96,8 @@ public abstract class DefaultCADTool implements CADTool {
 	private String[] currentdescriptions;
 
 	private String tool = "selection";
+
+	private DefaultCADTool previousTool;
 
 	/**
 	 * DOCUMENT ME!
@@ -325,6 +328,8 @@ public abstract class DefaultCADTool implements CADTool {
 	public void end() {
 		CADExtension.setCADTool("_selection", true);
 		PluginServices.getMainFrame().setSelectedTool("_selection");
+		CADTool cadtool=CADExtension.getCADTool();
+		cadtool.setPreviosTool(this);
 	}
 
 	public void init() {
@@ -415,6 +420,14 @@ public abstract class DefaultCADTool implements CADTool {
 		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 		vista.getConsolePanel().addText(s + " : " + " X = " + x + ", Y = " + y,
 				JConsole.ERROR);
+	}
+
+	public void setPreviosTool(DefaultCADTool tool) {
+		previousTool=tool;
+	}
+	public void restorePreviousTool() {
+		CADExtension.setCADTool(previousTool.toString(), true);
+		PluginServices.getMainFrame().setSelectedTool(previousTool.toString());
 	}
 
 }

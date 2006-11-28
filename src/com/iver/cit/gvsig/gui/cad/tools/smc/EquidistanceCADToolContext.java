@@ -342,6 +342,7 @@ public final class EquidistanceCADToolContext
                 context.clearState();
                 try
                 {
+                    ctxt.setQuestion(PluginServices.getText(this,"position"));
                     ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addValue(d);
                 }
