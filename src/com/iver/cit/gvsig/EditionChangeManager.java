@@ -10,8 +10,8 @@ import com.iver.cit.gvsig.fmap.edition.BeforeRowEditEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IEditionListener;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
  *
@@ -57,7 +57,12 @@ import com.iver.cit.gvsig.project.documents.table.gui.Table;
  *
  * $Id$
  * $Log$
- * Revision 1.11  2006-09-15 10:42:17  caballero
+ * Revision 1.12  2006-11-28 13:18:32  fjp
+ * No redibujar cuando se añade algo.
+ * Para que se dibuje con el símbolo por defecto del layer, habrá que tocar
+ * en los CADTool
+ *
+ * Revision 1.11  2006/09/15 10:42:17  caballero
  * extensibilidad de documentos
  *
  * Revision 1.10  2006/08/29 07:56:33  cesar
@@ -140,17 +145,19 @@ public class EditionChangeManager implements IEditionListener{
 				Table table=(Table)views[i];
 				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(fLayer))
 					table.refresh();
-			}else if (views[i] instanceof com.iver.cit.gvsig.project.documents.view.gui.View){
-				com.iver.cit.gvsig.project.documents.view.gui.View view=(com.iver.cit.gvsig.project.documents.view.gui.View)views[i];
+			}else if (views[i] instanceof View){
+				View view=(View) views[i];
 				 
 				fLayer.setDirty(true);
 				view.getMapControl().rePaintDirtyLayers();
-				/* FLayers layers=view.getMapControl().getMapContext().getLayers();
-				for (int j=0;j<layers.getLayersCount();j++){
-					if (layers.getLayer(j).equals(fLayer)){
-						view.repaintMap();
-					}
-				} */
+				if (e.getChangeType() == EditionEvent.CHANGE_TYPE_ADD)
+					// No redraw, just image paint
+					view.getMapControl().repaint();
+				else
+				{
+					fLayer.setDirty(true);
+					view.getMapControl().rePaintDirtyLayers();
+				}
 			}
 		}
 
