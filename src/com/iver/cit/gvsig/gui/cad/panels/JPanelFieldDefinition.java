@@ -60,6 +60,11 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		for (int i = 0;i<tm.getRowCount();i++) {
 				String s=(String)tm.getValueAt(i,0);
 				valid=validate(s);
+				String size=(String) tm.getValueAt(i,2);
+				valid=validateInteger(size);
+				if (!valid){
+					return;
+				}
 				String type = (String) tm.getValueAt(i,1);
 				int length = Integer.parseInt((String) tm.getValueAt(i,2));
 				if (type.equals("String") && length > MAX_FIELD_LENGTH) {
@@ -87,6 +92,21 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			setFinishButtonEnabled(true);
 		else
 			setFinishButtonEnabled(false);
+	}
+
+
+	private boolean validateInteger(String size) {
+		boolean valid=true;
+		try{
+		Integer.parseInt(size);
+		}catch (NumberFormatException e) {
+			valid=false;
+			JOptionPane.showMessageDialog((Component)PluginServices.getMainFrame(),
+					PluginServices.getText(this,"no_puede_continuar")+"\n"+
+					PluginServices.getText(this,"size")+" : "+size+"\n"+
+					PluginServices.getText(this,"incorrect_value"));
+		}
+		return valid;
 	}
 
 
@@ -144,11 +164,13 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
 			tm.addColumn(PluginServices.getText(this,"field"));
 
+
 			// TableColumn fieldTypeColumn = new TableColumn(1);
 			// fieldTypeColumn.setHeaderValue("Type");
 			// jTable.addColumn(fieldTypeColumn);
 			tm.addColumn(PluginServices.getText(this,"type"));
 			// MIRAR EL CÓDIGO DEL BOTÓN DE AÑADIR CAMPO PARA VER EL CellEditor con comboBox
+
 
 
 			/* TableColumn fieldLengthColumn = new TableColumn(2);
@@ -176,8 +198,9 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			        }
 			    }
 			});
-
 			jTable.getColumn(PluginServices.getText(this,"field")).setWidth(180);
+
+
 		}
 		return jTable;
 	}
