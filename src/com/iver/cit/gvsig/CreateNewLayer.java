@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import org.gvsig.gui.beans.wizard.WizardAndami;
-
 import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverManager;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
+import com.iver.andami.ui.wizard.WizardAndami;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
