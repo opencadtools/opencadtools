@@ -79,50 +79,36 @@ public class IntersectionPointSnapper extends AbstractSnapper
         Coordinate c = new Coordinate(point.getX(), point.getY());
         PathIterator theIterator = g1.getPathIterator(null, FConverter.FLATNESS);
         double[] theData = new double[6];
-        double minDist = tolerance;
-        Point2D from = null;
-        Point2D first = null;
+        Coordinate from = null;
+        Coordinate first = null;
         LineSegment[] lines = getLines(g2);
-//int num=0;
         while (!theIterator.isDone()) {
-            //System.out.println(num);
-            //num++;
-        	//while not done
-            int theType = theIterator.currentSegment(theData);
+        	int theType = theIterator.currentSegment(theData);
 
             switch (theType) {
             case PathIterator.SEG_MOVETO:
-                from = new Point2D.Double(theData[0], theData[1]);
+                from = new Coordinate(theData[0], theData[1]);
                 first = from;
 
                 break;
 
             case PathIterator.SEG_LINETO:
 
-                Point2D to = new Point2D.Double(theData[0], theData[1]);
-
-
+                Coordinate to = new Coordinate(theData[0], theData[1]);
+                LineSegment segmentLine = new LineSegment(from,to);
                 for (int i = 0; i < lines.length; i++) {
-                    LineSegment segment = new LineSegment(new Coordinate(
-                                from.getX(), from.getY()),
-                            new Coordinate(to.getX(), to.getY()));
-
-                    if (lines[i].equals(segment)) {
-                        continue;
-                    }
-
-                    Coordinate intersects = segment.intersection(lines[i]);
-
+//                    if (lines[i].equals(segmentLine)) {
+//                        continue;
+//                    }
+                    Coordinate intersects = segmentLine.intersection(lines[i]);
                     if (intersects == null) {
                         continue;
                     }
 
                     double dist = c.distance(intersects);
 
-                    if ((dist < minDist)) {
+                    if ((dist < tolerance)) {
                         resul = new Point2D.Double(intersects.x, intersects.y);
-                        minDist = dist;
-
                         return resul;
                     }
                 }
@@ -132,14 +118,12 @@ public class IntersectionPointSnapper extends AbstractSnapper
                 break;
 
             case PathIterator.SEG_CLOSE:
-                for (int i = 0; i < lines.length; i++) {
-                    LineSegment segment = new LineSegment(new Coordinate(
-                                from.getX(), from.getY()),
-                            new Coordinate(first.getX(), first.getY()));
+            	 LineSegment segment = new LineSegment(from,first);
 
-                    if (lines[i].equals(segment)) {
-                        continue;
-                    }
+            	for (int i = 0; i < lines.length; i++) {
+//                    if (lines[i].equals(segment)) {
+//                        continue;
+//                    }
 
                     Coordinate intersects = segment.intersection(lines[i]);
 
@@ -149,10 +133,8 @@ public class IntersectionPointSnapper extends AbstractSnapper
 
                     double dist = c.distance(intersects);
 
-                    if ((dist < minDist)) {
+                    if ((dist < tolerance)) {
                         resul = new Point2D.Double(intersects.x, intersects.y);
-                        minDist = dist;
-
                         return resul;
                     }
                 }
@@ -164,7 +146,6 @@ public class IntersectionPointSnapper extends AbstractSnapper
 
             theIterator.next();
         }
-
         return resul;
     }
 
