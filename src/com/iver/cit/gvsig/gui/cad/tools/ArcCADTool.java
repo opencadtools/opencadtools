@@ -132,7 +132,7 @@ public class ArcCADTool extends DefaultCADTool {
     }
 
     /**
-     * Método para dibujar la lo necesario para el estado en el que nos
+     * Método para dibujar lo necesario para el estado en el que nos
      * encontremos.
      *
      * @param g Graphics sobre el que dibujar.

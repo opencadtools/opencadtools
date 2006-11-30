@@ -29,7 +29,15 @@ FirstPoint
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			NextPointOrArcOrClose{
-				setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
+				setQuestion(
+					PluginServices.getText(this,"insert_next_point")+", "+
+				    PluginServices.getText(this,"arc")+
+				    "["+PluginServices.getText(this,"PolylineCADTool.arc")+"], "+
+				    PluginServices.getText(this,"close_polyline")+
+				    "["+PluginServices.getText(this,"PolylineCADTool.close_polyline")+"], "+
+				    PluginServices.getText(this,"cad.or")+" "+
+				    PluginServices.getText(this,"end")+
+				   	"["+PluginServices.getText(this,"PolylineCADTool.end")+"]");
 				setDescription(new String[]{"inter_arc","close_polyline","terminate","cancel"});
 				addPoint( pointX,pointY,event);
 				}
@@ -37,14 +45,22 @@ FirstPoint
 NextPointOrArcOrClose{
 
 	addOption(s:String)
-		[s.equals("A") ||  s.equals("a") || s.equals(PluginServices.getText(this,"inter_arc"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.arc")) || s.equals(PluginServices.getText(this,"inter_arc"))]
 		NextPointOrLineOrClose {
-			setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
+			setQuestion(
+				PluginServices.getText(this,"insert_next_point")+", "+
+				PluginServices.getText(this,"line")+
+				"["+PluginServices.getText(this,"PolylineCADTool.line")+"], "+
+				PluginServices.getText(this,"close_polyline")+
+				"["+PluginServices.getText(this,"PolylineCADTool.close_polyline")+"], "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"end")+
+				"["+PluginServices.getText(this,"PolylineCADTool.end")+"]");
 			setDescription(new String[]{"inter_line","close_polyline","terminate","cancel"});
 			addOption(s);
 			}
 	addOption(s:String)
-		[s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close_polyline"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.close_polyline")) || s.equals(PluginServices.getText(this,"close_polyline"))]
 		FirstPoint {
 			addOption(s);
 			closeGeometry();
@@ -52,7 +68,7 @@ NextPointOrArcOrClose{
 			end();
 			}
 	addOption(s:String)
-		[s.equals("T") ||  s.equals("t") || s.equals(PluginServices.getText(this,"terminate"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate"))]
 		FirstPoint {
 			addOption(s);
 			endGeometry();
@@ -60,7 +76,15 @@ NextPointOrArcOrClose{
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrArcOrClose {
-			setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
+			setQuestion(
+				PluginServices.getText(this,"insert_next_point")+", "+
+				PluginServices.getText(this,"arc")+
+				"["+PluginServices.getText(this,"PolylineCADTool.arc")+"], "+
+				PluginServices.getText(this,"close_polyline")+
+				"["+PluginServices.getText(this,"PolylineCADTool.close_polyline")+"], "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"end")+
+				"["+PluginServices.getText(this,"PolylineCADTool.end")+"]");
 			setDescription(new String[]{"inter_arc","close_polyline","terminate","cancel"});
 			addPoint( pointX,pointY,event);
 			}
@@ -68,19 +92,35 @@ NextPointOrArcOrClose{
 NextPointOrLineOrClose{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrLineOrClose {
-			setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
+			setQuestion(
+				PluginServices.getText(this,"insert_next_point")+", "+
+				PluginServices.getText(this,"line")+
+				"["+PluginServices.getText(this,"PolylineCADTool.line")+"], "+
+				PluginServices.getText(this,"close_polyline")+
+				"["+PluginServices.getText(this,"PolylineCADTool.close_polyline")+"], "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"end")+
+				"["+PluginServices.getText(this,"PolylineCADTool.end")+"]");
 			setDescription(new String[]{"inter_line","close_polyline","terminate","cancel"});
 			addPoint( pointX,pointY,event);
 			}
 	addOption(s:String)
-		[s.equals("N") ||  s.equals("n") || s.equals(PluginServices.getText(this,"inter_line"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.line")) || s.equals(PluginServices.getText(this,"inter_line"))]
 		NextPointOrArcOrClose {
-			setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
+			setQuestion(
+				PluginServices.getText(this,"insert_next_point")+", "+
+				PluginServices.getText(this,"arc")+
+				"["+PluginServices.getText(this,"PolylineCADTool.arc")+"], "+
+				PluginServices.getText(this,"close_polyline")+
+				"["+PluginServices.getText(this,"PolylineCADTool.close_polyline")+"], "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"end")+
+				"["+PluginServices.getText(this,"PolylineCADTool.end")+"]");
 			setDescription(new String[]{"inter_arc","close_polyline","terminate","cancel"});
 			addOption(s);
 			}
 	addOption(s:String)
-		[s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close_polyline"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.close_polyline")) || s.equals(PluginServices.getText(this,"close_polyline"))]
 		FirstPoint {
 			addOption(s);
 			closeGeometry();
@@ -88,7 +128,7 @@ NextPointOrLineOrClose{
 			end();
 			}
 	addOption(s:String)
-		[s.equals("T") ||  s.equals("t") || s.equals(PluginServices.getText(this,"terminate"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate"))]
 		FirstPoint {
 			addOption(s);
 			endGeometry();

@@ -179,7 +179,7 @@ public class CopyCADTool extends DefaultCADTool {
      * @param y parámetro x del punto que se pase para dibujar.
      */
     public void drawOperation(Graphics g, double x, double y) {
-        CopyCADToolState actualState = ((CopyCADToolContext) _fsm).getState();
+        CopyCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
         VectorialLayerEdited vle=getVLE();
         //ArrayList selectedRow=getSelectedRows();

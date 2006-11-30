@@ -29,12 +29,16 @@ FirstPoint
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			FirstPoint {
-				setQuestion(PluginServices.getText(this,"select_other_geometry_or_end"));
+				setQuestion(
+					PluginServices.getText(this,"select_other_geometry")+" "+
+		    		PluginServices.getText(this,"cad.or")+" "+
+		    		PluginServices.getText(this,"end")+
+		    		"["+PluginServices.getText(this,"JoinCADTool.end")+"]");
 				setDescription(new String[]{"cancel","end"});
 				addPoint( pointX,pointY,event);
 				}
 		addOption(s:String)
-			[s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"end"))]
+			[s.equalsIgnoreCase(PluginServices.getText(this,"JoinCADTool.end")) || s.equals(PluginServices.getText(this,"end"))]
 			FirstPoint {
 				setQuestion(PluginServices.getText(this,"select_geometry"));
 				setDescription(new String[]{"cancel"});

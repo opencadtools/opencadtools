@@ -303,7 +303,10 @@ public final class InternalPolygonCADToolContext
                 InternalPolygonCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion(PluginServices.getText(this,"next_point_or_end"));
+                ctxt.setQuestion(PluginServices.getText(this,"next_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"end")+
+		    "["+PluginServices.getText(this,"InternalPolygonCADTool.end")+"]");
                 ctxt.setDescription(new String[]{"end", "cancel"});
                 return;
             }
@@ -317,7 +320,9 @@ public final class InternalPolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"next_point_or_end"));
+                    ctxt.setQuestion(PluginServices.getText(this,"next_point")+" "+
+		    		PluginServices.getText(this,"cad.or")+" "+
+		    		"["+PluginServices.getText(this,"InternalPolygonCADTool.end")+"]");
                     ctxt.setDescription(new String[]{"end", "cancel"});
                     ctxt.addOption(s);
                 }
@@ -337,7 +342,10 @@ public final class InternalPolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"next_point_or_end"));
+                    ctxt.setQuestion(PluginServices.getText(this,"next_point")+" "+
+		    		PluginServices.getText(this,"cad.or")+" "+
+		    		PluginServices.getText(this,"end")+
+		    		"["+PluginServices.getText(this,"InternalPolygonCADTool.end")+"]");
                     ctxt.setDescription(new String[]{"end", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }

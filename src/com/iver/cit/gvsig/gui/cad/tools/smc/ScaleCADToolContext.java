@@ -327,7 +327,10 @@ public final class ScaleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_factor")+ " "+
+					PluginServices.getText(this,"cad.or")+" "+
+					PluginServices.getText(this,"reference")+
+					PluginServices.getText(this,"ScaleCADTool.reference"));
                     ctxt.setDescription(new String[]{"reference", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
@@ -377,14 +380,17 @@ public final class ScaleCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equals("R") || s.equals("r") || s.equals(PluginServices.getText(this,"reference")))
+                else if (s.equalsIgnoreCase(PluginServices.getText(this,"ScaleCADTool.reference")) || s.equals(PluginServices.getText(this,"reference")))
                 {
 
                     (context.getState()).Exit(context);
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_reference_point_or_factor"));
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_reference_point")+ " "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"factor")+
+				"["+PluginServices.getText(this,"ScaleCADTool.factor")+"]");
                         ctxt.setDescription(new String[]{"factor", "cancel"});
                     }
                     finally
@@ -463,14 +469,17 @@ public final class ScaleCADToolContext
             {
                 ScaleCADTool ctxt = context.getOwner();
 
-                if (s.equals("F") || s.equals("f") || s.equals(PluginServices.getText(this,"factor")))
+                if (s.equalsIgnoreCase(PluginServices.getText(this,"ScaleCADTool.factor")) || s.equals(PluginServices.getText(this,"factor")))
                 {
 
                     (context.getState()).Exit(context);
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_factor")+ " "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"reference")+
+				"["+PluginServices.getText(this,"ScaleCADTool.reference")+"]");
                         ctxt.setDescription(new String[]{"reference", "cancel"});
                         ctxt.addOption(s);
                     }

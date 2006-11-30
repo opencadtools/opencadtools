@@ -30,7 +30,11 @@ PointMain
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			ScaleFactorOrReference {
-				setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+				setQuestion(
+					PluginServices.getText(this,"insert_factor")+ " "+
+					PluginServices.getText(this,"cad.or")+" "+
+					PluginServices.getText(this,"reference")+
+					PluginServices.getText(this,"ScaleCADTool.reference"));
 				setDescription(new String[]{"reference","cancel"});
 				addPoint( pointX,pointY,event);
 				}
@@ -50,9 +54,13 @@ ScaleFactorOrReference{
 			refresh();
 			}
 	addOption(s:String)
-		[s.equals("R") || s.equals("r") || s.equals(PluginServices.getText(this,"reference"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"ScaleCADTool.reference")) || s.equals(PluginServices.getText(this,"reference"))]
 		PointOriginOrScaleFactor{
-			setQuestion(PluginServices.getText(this,"insert_reference_point_or_factor"));
+			setQuestion(
+				PluginServices.getText(this,"insert_reference_point")+ " "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"factor")+
+				"["+PluginServices.getText(this,"ScaleCADTool.factor")+"]");
 			setDescription(new String[]{"factor","cancel"});
 			//addOption(s);
 			}
@@ -65,9 +73,13 @@ ScaleFactorOrReference{
 }
 PointOriginOrScaleFactor{
 	addOption(s:String)
-		[s.equals("F") || s.equals("f") || s.equals(PluginServices.getText(this,"factor"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"ScaleCADTool.factor")) || s.equals(PluginServices.getText(this,"factor"))]
 		PointMain{
-			setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+			setQuestion(
+				PluginServices.getText(this,"insert_factor")+ " "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"reference")+
+				"["+PluginServices.getText(this,"ScaleCADTool.reference")+"]");
 			setDescription(new String[]{"reference","cancel"});
 			addOption(s);
 			}

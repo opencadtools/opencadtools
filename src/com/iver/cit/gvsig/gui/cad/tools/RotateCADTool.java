@@ -189,7 +189,7 @@ public class RotateCADTool extends DefaultCADTool {
      * @param y parámetro x del punto que se pase para dibujar.
      */
     public void drawOperation(Graphics g, double x, double y) {
-        RotateCADToolState actualState = ((RotateCADToolContext) _fsm).getState();
+        RotateCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
         VectorialLayerEdited vle=getVLE();
         //ArrayList selectedRow=getSelectedRows();

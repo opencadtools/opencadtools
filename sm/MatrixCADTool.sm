@@ -40,7 +40,6 @@ Start
 FirstPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		SecondPoint {
-			setQuestion(PluginServices.getText(this,"suprimir_objetos_origen"));
 			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			}
@@ -48,7 +47,6 @@ FirstPoint{
 SecondPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPoint {
-			setQuestion(PluginServices.getText(this,"suprimir_objetos_origen"));
 			setDescription(new String[]{"cancel"});
 			addPoint( pointX,pointY,event);
 			endMatrix();

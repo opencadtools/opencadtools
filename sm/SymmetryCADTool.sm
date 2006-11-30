@@ -38,7 +38,13 @@ FirstPoint
 SecondPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		CutOrCopy {
-			setQuestion(PluginServices.getText(this,"suprimir_objetos_origen"));
+			setQuestion(
+				PluginServices.getText(this,"del_original_geometries")+" "+
+				PluginServices.getText(this,"yes")+
+				"["+PluginServices.getText(this,"SymmetryCADTool.yes")+"], "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"no")+
+				"["+PluginServices.getText(this,"SymmetryCADTool.no")+"]");
 			setDescription(new String[]{"cancel","cut","copy"});
 			addPoint( pointX,pointY,event);
 			}

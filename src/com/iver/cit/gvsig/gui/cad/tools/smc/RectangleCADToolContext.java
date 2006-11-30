@@ -320,7 +320,10 @@ public final class RectangleCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_corner_or_square"));
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_corner")+" "+
+					PluginServices.getText(this,"cad.or")+" "+
+					PluginServices.getText(this,"square")+" "+
+					"["+PluginServices.getText(this,"RectangleCADTool.square")+"]");
                     ctxt.setDescription(new String[]{"square", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
@@ -353,7 +356,7 @@ public final class RectangleCADToolContext
             {
                 RectangleCADTool ctxt = context.getOwner();
 
-                if (s.equals("c") || s.equals("C") || s.equals(PluginServices.getText(this,"square")))
+                if (s.equalsIgnoreCase(PluginServices.getText(this,"RectangleCADTool.square")) || s.equals(PluginServices.getText(this,"square")))
                 {
 
                     (context.getState()).Exit(context);

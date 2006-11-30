@@ -183,9 +183,9 @@ public class PolygonCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status.equals("Polygon.OptionOrRadiusOrPoint")) {
-            if (s.equals("C") || s.equals("c") || s.equals(PluginServices.getText(this,"circumscribed"))) {
+            if (s.equalsIgnoreCase(PluginServices.getText(this,"PolygonCADTool.circumscribed")) || s.equals(PluginServices.getText(this,"circumscribed"))) {
                 isI = false;
-            } else if (s.equals("I") || s.equals("i") || s.equals(PluginServices.getText(this,"into_circle"))) {
+            } else if (s.equalsIgnoreCase(PluginServices.getText(this,"PolygonCADTool.into_circle")) || s.equals(PluginServices.getText(this,"into_circle"))) {
                 isI = true;
             }
         }
@@ -386,14 +386,13 @@ public class PolygonCADTool extends DefaultCADTool {
 	 * @return Cadena para mostrar por consola.
 	 */
 	public String getQuestion() {
-		PolygonCADToolState actualState = (PolygonCADToolState) _fsm.getState();
+		PolygonCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
         if (status.equals("Polygon.NumberOrCenterPoint")) {
         	return super.getQuestion()+"<"+numLines+">";
         }
-        else
-        	return super.getQuestion();
+       	return super.getQuestion();
 
 	}
 	public String toString() {

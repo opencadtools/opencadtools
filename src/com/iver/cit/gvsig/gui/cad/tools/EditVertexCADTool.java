@@ -222,18 +222,18 @@ public class EditVertexCADTool extends DefaultCADTool {
         	dif=2;
         }
         if (status.equals("EditVertex.SelectVertexOrDelete")){
-        	if(s.equals("s") || s.equals("S") || s.equals(PluginServices.getText(this,"next"))){
+        	if(s.equalsIgnoreCase(PluginServices.getText(this,"EditVertexCADTool.nextvertex")) || s.equals(PluginServices.getText(this,"next"))){
         		numSelect=numSelect-dif;
         		if (numSelect<0){
         			numSelect=numHandlers-1+(numSelect+1);
         		}
-           }else if(s.equals("a") || s.equals("A") || s.equals(PluginServices.getText(this,"previous"))){
+           }else if(s.equalsIgnoreCase(PluginServices.getText(this,"EditVertexCADTool.previousvertex")) || s.equals(PluginServices.getText(this,"previous"))){
         	   	numSelect=numSelect+dif;
        			if (numSelect>(numHandlers-1)){
        				numSelect=numSelect-(numHandlers);
        			}
 
-        	}else if(s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"del"))){
+        	}else if(s.equalsIgnoreCase(PluginServices.getText(this,"EditVertexCADTool.delvertex")) || s.equals(PluginServices.getText(this,"del"))){
         		if (handlers!=null){
         			IGeometry newGeometry=null;
         			if (ig instanceof FGeometryCollection) {
@@ -251,12 +251,15 @@ public class EditVertexCADTool extends DefaultCADTool {
 					} catch (DriverIOException e) {
 						e.printStackTrace();
 					}
+					clearSelection();
+					vle.addSelectionCache(new DefaultRowEdited(newRow,
+							IRowEdited.STATUS_MODIFIED, row.getIndex()));
 
-					vle.refreshSelectionCache(new Point2D.Double(0,0),getCadToolAdapter());
-					refresh();
+//					vle.refreshSelectionCache(new Point2D.Double(0,0),getCadToolAdapter());
+//					refresh();
 
         		}
-        	}else if(s.equals("i") || s.equals("I") || s.equals(PluginServices.getText(this,"add"))){
+        	}else if(s.equalsIgnoreCase(PluginServices.getText(this,"EditVertexCADTool.addvertex")) || s.equals(PluginServices.getText(this,"add"))){
             		addVertex=true;
             	}
         }
@@ -270,7 +273,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 			IGeometry ig = fea.getGeometry().cloneGeometry();
 			if (ig == null) continue;
 				Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
-				if (numSelect>handlers.length)
+				if (numSelect>=handlers.length)
 					numSelect=0;
 				FGraphicUtilities.DrawVertex((Graphics2D)g,at,handlers[numSelect]);
 		}
@@ -364,7 +367,13 @@ public class EditVertexCADTool extends DefaultCADTool {
                 shp = new FPolygon2D(newGp);
                 break;
         }
-        return ShapeFactory.createGeometry(shp);
+        IGeometry ig=ShapeFactory.createGeometry(shp);
+        int dif=1;//En el caso de ser polígono.
+       	numSelect=numSelect-dif;
+		if (numSelect<0){
+			numSelect=numHandlers-1+(numSelect+1);
+		}
+        return ig;
     }
 
     private IGeometry removeVertexGC(FGeometryCollection gc,Handler handler) {

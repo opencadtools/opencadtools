@@ -185,7 +185,7 @@ public class CircleCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status == "Circle.CenterPointOr3p") {
-            if (s.equals("3p") || s.equals("3P")) {
+            if (s.equalsIgnoreCase(PluginServices.getText(this,"CircleCADTool.3p"))) {
                 //Opción correcta.
             }
         }

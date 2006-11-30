@@ -20,7 +20,16 @@ SelectVertexOrDelete
 	Entry {
 		selection();
 		setQuestion(
-		PluginServices.getText(this,"next_previous_add_del_cancel"));
+			PluginServices.getText(this,"point")+", "+
+		    PluginServices.getText(this,"next")+
+		    "["+PluginServices.getText(this,"EditVertexCADTool.nextvertex")+"], "+
+		     PluginServices.getText(this,"previous")+
+		    "["+PluginServices.getText(this,"EditVertexCADTool.previousvertex")+"], "+
+		     PluginServices.getText(this,"add")+
+		    "["+PluginServices.getText(this,"EditVertexCADTool.addvertex")+"] "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		     PluginServices.getText(this,"del")+
+		    "["+PluginServices.getText(this,"EditVertexCADTool.delvertex")+"]");
 		setDescription(new String[]{"next","previous","add","del","cancel"});
 
 		}
@@ -45,7 +54,17 @@ SelectVertexOrDelete
 		[!s.equals("i") && !s.equals("I") && !s.equals(PluginServices.getText(this,"add"))]
 
 			SelectVertexOrDelete {
-				setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
+				setQuestion(
+					PluginServices.getText(this,"point")+", "+
+				    PluginServices.getText(this,"next")+
+				    "["+PluginServices.getText(this,"EditVertexCADTool.nextvertex")+"], "+
+				     PluginServices.getText(this,"previous")+
+				    "["+PluginServices.getText(this,"EditVertexCADTool.previousvertex")+"], "+
+				     PluginServices.getText(this,"add")+
+				    "["+PluginServices.getText(this,"EditVertexCADTool.addvertex")+"] "+
+				    PluginServices.getText(this,"cad.or")+" "+
+				     PluginServices.getText(this,"del")+
+				    "["+PluginServices.getText(this,"EditVertexCADTool.delvertex")+"]");
 				setDescription(new String[]{"next","previous","add","del","cancel"});
 				addOption(s);
 				}

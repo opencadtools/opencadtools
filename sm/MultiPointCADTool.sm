@@ -31,12 +31,17 @@ InsertPoint
 
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			InsertPoint {
-				setQuestion(PluginServices.getText(this,"insert_point_or_end"));
+				setQuestion(
+				 	PluginServices.getText(this,"insert_point")+" "+
+	    			PluginServices.getText(this,"cad.or")+" "+
+	    			PluginServices.getText(this,"end")+
+	   				"["+PluginServices.getText(this,"MultipointCADTool.end")+"]");
+
 				setDescription(new String[]{"cancel","end"});
 				addPoint( pointX,pointY,event);
 				}
 		addOption( s:String)
-			[s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"end"))]
+			[s.equalsIgnoreCase(PluginServices.getText(this,"MultipointCADTool.end")) || s.equals(PluginServices.getText(this,"end"))]
 			InsertPoint {
 				setQuestion(PluginServices.getText(this,"insert_point"));
 				setDescription(new String[]{"cancel"});

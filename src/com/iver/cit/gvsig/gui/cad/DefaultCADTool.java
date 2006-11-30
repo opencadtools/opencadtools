@@ -75,7 +75,6 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
-import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.console.JConsole;
@@ -391,6 +390,9 @@ public abstract class DefaultCADTool implements CADTool {
 							.getActiveWindow();
 					vista.getConsolePanel().addText("\n" + ct.getName(),
 							JConsole.COMMAND);
+					String question=ct.getQuestion();
+					vista.getConsolePanel().addText(
+							"\n" + "#" + question + " > ", JConsole.MESSAGE);
 					return true;
 				} else {
 					throw new CommandException(name);

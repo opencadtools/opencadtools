@@ -311,7 +311,7 @@ public final class MultiPointCADToolContext
             {
                 MultiPointCADTool ctxt = context.getOwner();
 
-                if (s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"end")))
+                if (s.equalsIgnoreCase(PluginServices.getText(this,"MultipointCADTool.end")) || s.equals(PluginServices.getText(this,"end")))
                 {
                     MultiPointCADToolState endState = context.getState();
 
@@ -345,7 +345,10 @@ public final class MultiPointCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point_or_end"));
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_point")+" "+
+	    			PluginServices.getText(this,"cad.or")+" "+
+	    			PluginServices.getText(this,"end")+
+	   				"["+PluginServices.getText(this,"MultipointCADTool.end")+"]");
                     ctxt.setDescription(new String[]{"cancel", "end"});
                     ctxt.addPoint(pointX, pointY, event);
                 }

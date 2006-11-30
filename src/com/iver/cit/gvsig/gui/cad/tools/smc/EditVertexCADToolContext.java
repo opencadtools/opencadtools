@@ -305,7 +305,16 @@ public final class EditVertexCADToolContext
                 EditVertexCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
+                ctxt.setQuestion(PluginServices.getText(this,"point")+", "+
+		    PluginServices.getText(this,"next")+
+		    "["+PluginServices.getText(this,"EditVertexCADTool.nextvertex")+"], "+
+		     PluginServices.getText(this,"previous")+
+		    "["+PluginServices.getText(this,"EditVertexCADTool.previousvertex")+"], "+
+		     PluginServices.getText(this,"add")+
+		    "["+PluginServices.getText(this,"EditVertexCADTool.addvertex")+"] "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		     PluginServices.getText(this,"del")+
+		    "["+PluginServices.getText(this,"EditVertexCADTool.delvertex")+"]");
                 ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
                 return;
             }
@@ -338,7 +347,16 @@ public final class EditVertexCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
+                        ctxt.setQuestion(PluginServices.getText(this,"point")+", "+
+				    PluginServices.getText(this,"next")+
+				    "["+PluginServices.getText(this,"EditVertexCADTool.nextvertex")+"], "+
+				     PluginServices.getText(this,"previous")+
+				    "["+PluginServices.getText(this,"EditVertexCADTool.previousvertex")+"], "+
+				     PluginServices.getText(this,"add")+
+				    "["+PluginServices.getText(this,"EditVertexCADTool.addvertex")+"] "+
+				    PluginServices.getText(this,"cad.or")+" "+
+				     PluginServices.getText(this,"del")+
+				    "["+PluginServices.getText(this,"EditVertexCADTool.delvertex")+"]");
                         ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
                         ctxt.addOption(s);
                     }

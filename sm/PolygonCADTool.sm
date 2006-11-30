@@ -41,7 +41,12 @@ NumberOrCenterPoint
 				}
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			OptionOrRadiusOrPoint {
-				setQuestion(PluginServices.getText(this,"into_circle_or_circumscribed"));
+				setQuestion(
+					PluginServices.getText(this,"into_circle")+" "+
+					"["+PluginServices.getText(this,"PolygonCADTool.into_circle")+"]"+
+	    			PluginServices.getText(this,"cad.or")+" "+
+	    			PluginServices.getText(this,"circumscribed")+
+	   				"["+PluginServices.getText(this,"PolygonCADTool.circumscribed")+"]");
 				setDescription(new String[]{"into_circle","circumscribed","cancel"});
 				addPoint( pointX,pointY,event);
 				}
@@ -50,7 +55,12 @@ NumberOrCenterPoint
 CenterPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		OptionOrRadiusOrPoint {
-			setQuestion(PluginServices.getText(this,"into_circle_or_circumscribed"));
+			setQuestion(
+				PluginServices.getText(this,"into_circle")+" "+
+				"["+PluginServices.getText(this,"PolygonCADTool.into_circle")+"]"+
+	    		PluginServices.getText(this,"cad.or")+" "+
+	    		PluginServices.getText(this,"circumscribed")+
+	   			"["+PluginServices.getText(this,"PolygonCADTool.circumscribed")+"]");
 			setDescription(new String[]{"into_circle","circumscribed","cancel"});
 			addPoint( pointX,pointY,event);
 			}

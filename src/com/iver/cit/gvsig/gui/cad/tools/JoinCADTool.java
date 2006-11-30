@@ -166,7 +166,7 @@ public class JoinCADTool extends DefaultCADTool {
      * @param s Diferent option.
      */
     public void addOption(String s) {
-    	if (s.equals(PluginServices.getText(this,"cancel"))|| s.equals("c")|| s.equals("C")){
+    	if (s.equals(PluginServices.getText(this,"cancel"))){
     		init();
     	}else {
     		try {

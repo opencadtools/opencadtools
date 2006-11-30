@@ -20,7 +20,10 @@ AddNextPoint
 	Entry {
 		selection();
 		setQuestion(
-		PluginServices.getText(this,"next_point_or_end"));
+			PluginServices.getText(this,"next_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"end")+
+		    "["+PluginServices.getText(this,"InternalPolygonCADTool.end")+"]");
 		setDescription(new String[]{"end","cancel"});
 
 		}
@@ -30,13 +33,20 @@ AddNextPoint
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			AddNextPoint {
-				setQuestion(PluginServices.getText(this,"next_point_or_end"));
+				setQuestion(
+					PluginServices.getText(this,"next_point")+" "+
+		    		PluginServices.getText(this,"cad.or")+" "+
+		    		PluginServices.getText(this,"end")+
+		    		"["+PluginServices.getText(this,"InternalPolygonCADTool.end")+"]");
 				setDescription(new String[]{"end","cancel"});
 				addPoint( pointX,pointY,event);
 				}
 		addOption(s:String)
 			AddNextPoint {
-				setQuestion(PluginServices.getText(this,"next_point_or_end"));
+				setQuestion(
+					PluginServices.getText(this,"next_point")+" "+
+		    		PluginServices.getText(this,"cad.or")+" "+
+		    		"["+PluginServices.getText(this,"InternalPolygonCADTool.end")+"]");
 				setDescription(new String[]{"end","cancel"});
 				addOption(s);
 				}

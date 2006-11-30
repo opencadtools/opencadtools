@@ -359,7 +359,6 @@ public final class MatrixCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"suprimir_objetos_origen"));
                     ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
@@ -397,7 +396,6 @@ public final class MatrixCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"suprimir_objetos_origen"));
                     ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                     ctxt.endMatrix();

@@ -359,7 +359,12 @@ public final class SymmetryCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"suprimir_objetos_origen"));
+                    ctxt.setQuestion(PluginServices.getText(this,"del_original_geometries")+" "+
+				PluginServices.getText(this,"yes")+
+				"["+PluginServices.getText(this,"SymmetryCADTool.yes")+"], "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"no")+
+				"["+PluginServices.getText(this,"SymmetryCADTool.no")+"]");
                     ctxt.setDescription(new String[]{"cancel", "cut", "copy"});
                     ctxt.addPoint(pointX, pointY, event);
                 }

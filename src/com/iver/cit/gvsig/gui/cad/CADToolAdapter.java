@@ -101,6 +101,8 @@ public class CADToolAdapter extends Behavior {
 
 	private Color theTipColor = new Color(255, 255, 155);
 
+	private Object lastQuestion;
+
 	private static boolean flatnessInitialized=false;
 	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 
@@ -792,11 +794,15 @@ public class CADToolAdapter extends Behavior {
 		if (PluginServices.getMDIManager().getActiveWindow() instanceof View)
 		{
 			View vista = (View) PluginServices.getMDIManager().getActiveWindow();
+			String question=cadtool.getQuestion();
+			if (lastQuestion==null || !(lastQuestion.equals(question)) || questionAsked) {
 			vista.getConsolePanel().addText(
-					"\n" + "#" + cadtool.getQuestion() + " > ", JConsole.MESSAGE);
+					"\n" + "#" + question + " > ", JConsole.MESSAGE);
 			// ***PluginServices.getMainFrame().addTextToConsole("\n" +
 			// cadtool.getQuestion());
-			questionAsked = true;
+			questionAsked = false;
+			}
+			lastQuestion=question;
 		}
 
 	}

@@ -317,7 +317,7 @@ public final class ExtendCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+                    ctxt.setQuestion(PluginServices.getText(this,"select_geometry_to_extend"));
                     ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }

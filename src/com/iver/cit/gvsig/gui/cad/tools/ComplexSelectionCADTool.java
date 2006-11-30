@@ -334,7 +334,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 			setType(s);
 			return;
 		}else if (status.equals("Selection.NextPointPolygon")){
-			if (s.equals(PluginServices.getText(this,"end_polygon")) || s.equals("E") || s.equals("e")) {
+			if (s.equals(PluginServices.getText(this,"end_polygon")) || s.equalsIgnoreCase(PluginServices.getText(this,"ComplexSelectionCADTool.end"))) {
 			IGeometry polygon=getGeometryPolygon(null);
 			GeneralPathX gpx=new GeneralPathX();
 			gpx.append(polygon,true);
@@ -403,7 +403,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	}
 
 	public boolean selectFeatures(double x, double y, InputEvent event) {
-		ComplexSelectionCADToolState actualState = (ComplexSelectionCADToolState) _fsm
+		ComplexSelectionCADToolState actualState =_fsm
 				.getState();
 
 		String status = actualState.getName();
@@ -483,20 +483,20 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	}
 
 	public void setType(String type) {
-		if (type.equals("OR") || type.equals("or")){
+		if (type.equalsIgnoreCase(PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle"))){
 			this.type=PluginServices.getText(this,"out_rectangle");
-		}else if (type.equals("IP") || type.equals("ip")){
+		}else if (type.equalsIgnoreCase(PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon"))){
 			this.type=PluginServices.getText(this,"inside_polygon");
-		}else if (type.equals("CP") || type.equals("cp")){
+		}else if (type.equalsIgnoreCase(PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon"))){
 			this.type=PluginServices.getText(this,"cross_polygon");
-		}else if (type.equals("OP") || type.equals("op")){
+		}else if (type.equalsIgnoreCase(PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon"))){
 			this.type=PluginServices.getText(this,"out_polygon");
-		}else if (type.equals("IC") || type.equals("ic")){
+		}else if (type.equalsIgnoreCase(PluginServices.getText(this,"ComplexSelectionCADTool.introcircle"))){
 			this.type=PluginServices.getText(this,"inside_circle");
-		}else if (type.equals("CC") || type.equals("cc")){
+		}else if (type.equalsIgnoreCase(PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle"))){
 			this.type=PluginServices.getText(this,"cross_circle");
-		}else if (type.equals("OC") || type.equals("oc")){
-			this.type=PluginServices.getText(this,"cross_circle");
+		}else if (type.equalsIgnoreCase(PluginServices.getText(this,"ComplexSelectionCADTool.outcircle"))){
+			this.type=PluginServices.getText(this,"out_circle");
 		}else if (type.equals(PluginServices.getText(this,"select_all"))){
 			selectAll();
 			init();
@@ -522,7 +522,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 		System.out.println("ESTADO ACTUAL: " + getStatus());
 
 		FLyrVect lv=(FLyrVect)((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited()).getLayer();
-		com.iver.andami.ui.mdiManager.IWindow[] views = (com.iver.andami.ui.mdiManager.IWindow[]) PluginServices.getMDIManager().getAllWindows();
+		com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices.getMDIManager().getAllWindows();
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){

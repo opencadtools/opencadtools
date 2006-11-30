@@ -30,7 +30,7 @@ SelectGeometryToExtend
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SelectGeometryToExtend {
-				setQuestion(PluginServices.getText(this,"insert_factor_or_reference"));
+				setQuestion(PluginServices.getText(this,"select_geometry_to_extend"));
 				setDescription(new String[]{"cancel"});
 				addPoint( pointX,pointY,event);
 				}

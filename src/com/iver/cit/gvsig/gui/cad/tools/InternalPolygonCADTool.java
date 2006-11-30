@@ -186,7 +186,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     	ArrayList selectedRows=vle.getSelectedRow();
     	VectorialEditableAdapter vea = vle.getVEA();
     	IRowEdited row=null;
-    	if (s.equals(PluginServices.getText(this,"end")) || s.equals("e")|| s.equals("E")){
+    	if (s.equals(PluginServices.getText(this,"end")) || s.equalsIgnoreCase(PluginServices.getText(this,"InternalPolygonCADTool.end"))){
     		if (points.size()>0){
     			row =  (DefaultRowEdited) selectedRows.get(0);
     			IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
@@ -214,7 +214,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     		points.clear();
 
 
-    	}else if (s.equals(PluginServices.getText(this,"cancel"))|| s.equals("c")|| s.equals("C")){
+    	}else if (s.equals(PluginServices.getText(this,"cancel"))){
     		points.clear();
     	}
     }

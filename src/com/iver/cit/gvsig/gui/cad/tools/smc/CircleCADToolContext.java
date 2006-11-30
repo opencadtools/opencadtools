@@ -310,7 +310,8 @@ public final class CircleCADToolContext
             {
                 CircleCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(PluginServices.getText(this,"insert_central_point_or_3p"));
+                ctxt.setQuestion(PluginServices.getText(this,"insert_central_point_or_3p")+
+		"["+PluginServices.getText(this,"CircleCADTool.3p")+"]");
                 ctxt.setDescription(new String[]{"cancel", "3P"});
                 return;
             }
@@ -319,7 +320,7 @@ public final class CircleCADToolContext
             {
                 CircleCADTool ctxt = context.getOwner();
 
-                if (s.equals("3p") || s.equals("3P"))
+                if (s.equalsIgnoreCase(PluginServices.getText(this,"CircleCADTool.3p")))
                 {
 
                     (context.getState()).Exit(context);

@@ -29,15 +29,21 @@ FirstPoint
 	{
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			NextPoint{
-				setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-				setDescription(new String[]{"inter_arc","close_polyline","terminate","cancel"});
+				setQuestion(
+					PluginServices.getText(this,"insert_next_point")+", "+
+					PluginServices.getText(this,"close")+" "+
+					"["+PluginServices.getText(this,"SplineCADTool.close")+"] "+
+					PluginServices.getText(this,"cad.or")+" "+
+					PluginServices.getText(this,"end")+" "+
+					"["+PluginServices.getText(this,"SplineCADTool.end")+"]");
+				setDescription(new String[]{"close","terminate","cancel"});
 				addPoint( pointX,pointY,event);
 				}
 	}
 NextPoint{
 
 	addOption(s:String)
-		[s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close_polyline"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"SplineCADTool.close")) || s.equals(PluginServices.getText(this,"close"))]
 		FirstPoint {
 			addOption(s);
 			closeGeometry();
@@ -45,7 +51,7 @@ NextPoint{
 			end();
 			}
 	addOption(s:String)
-		[s.equals("T") ||  s.equals("t") || s.equals(PluginServices.getText(this,"terminate"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"SplineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate"))]
 		FirstPoint {
 			addOption(s);
 			endGeometry();
@@ -53,8 +59,14 @@ NextPoint{
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPoint {
-			setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-			setDescription(new String[]{"close_polyline","terminate","cancel"});
+			setQuestion(
+				PluginServices.getText(this,"insert_next_point")+", "+
+				PluginServices.getText(this,"close")+" "+
+				"["+PluginServices.getText(this,"SplineCADTool.close")+"] "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"end")+" "+
+				"["+PluginServices.getText(this,"SplineCADTool.end")+"]");
+			setDescription(new String[]{"close","terminate","cancel"});
 			addPoint( pointX,pointY,event);
 			}
 }

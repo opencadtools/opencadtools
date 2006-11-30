@@ -345,8 +345,13 @@ public final class SplineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-                    ctxt.setDescription(new String[]{"inter_arc", "close_polyline", "terminate", "cancel"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point")+", "+
+					PluginServices.getText(this,"close")+" "+
+					"["+PluginServices.getText(this,"SplineCADTool.close")+"] "+
+					PluginServices.getText(this,"cad.or")+" "+
+					PluginServices.getText(this,"end")+" "+
+					"["+PluginServices.getText(this,"SplineCADTool.end")+"]");
+                    ctxt.setDescription(new String[]{"close", "terminate", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -378,7 +383,7 @@ public final class SplineCADToolContext
             {
                 SplineCADTool ctxt = context.getOwner();
 
-                if (s.equals("C") ||  s.equals("c") || s.equals(PluginServices.getText(this,"close_polyline")))
+                if (s.equalsIgnoreCase(PluginServices.getText(this,"SplineCADTool.close")) || s.equals(PluginServices.getText(this,"close")))
                 {
 
                     (context.getState()).Exit(context);
@@ -396,7 +401,7 @@ public final class SplineCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equals("T") ||  s.equals("t") || s.equals(PluginServices.getText(this,"terminate")))
+                else if (s.equalsIgnoreCase(PluginServices.getText(this,"SplineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate")))
                 {
 
                     (context.getState()).Exit(context);
@@ -429,8 +434,13 @@ public final class SplineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-                    ctxt.setDescription(new String[]{"close_polyline", "terminate", "cancel"});
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point")+", "+
+				PluginServices.getText(this,"close")+" "+
+				"["+PluginServices.getText(this,"SplineCADTool.close")+"] "+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"end")+" "+
+				"["+PluginServices.getText(this,"SplineCADTool.end")+"]");
+                    ctxt.setDescription(new String[]{"close", "terminate", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

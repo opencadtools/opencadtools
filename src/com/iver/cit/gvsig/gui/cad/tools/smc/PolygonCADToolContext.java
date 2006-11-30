@@ -322,7 +322,11 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"into_circle_or_circumscribed"));
+                    ctxt.setQuestion(PluginServices.getText(this,"into_circle")+" "+
+					"["+PluginServices.getText(this,"PolygonCADTool.into_circle")+"]"+
+	    			PluginServices.getText(this,"cad.or")+" "+
+	    			PluginServices.getText(this,"circumscribed")+
+	   				"["+PluginServices.getText(this,"PolygonCADTool.circumscribed")+"]");
                     ctxt.setDescription(new String[]{"into_circle", "circumscribed", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
@@ -402,7 +406,11 @@ public final class PolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"into_circle_or_circumscribed"));
+                    ctxt.setQuestion(PluginServices.getText(this,"into_circle")+" "+
+				"["+PluginServices.getText(this,"PolygonCADTool.into_circle")+"]"+
+	    		PluginServices.getText(this,"cad.or")+" "+
+	    		PluginServices.getText(this,"circumscribed")+
+	   			"["+PluginServices.getText(this,"PolygonCADTool.circumscribed")+"]");
                     ctxt.setDescription(new String[]{"into_circle", "circumscribed", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }

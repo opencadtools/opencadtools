@@ -201,7 +201,7 @@ public class ScaleCADTool extends DefaultCADTool {
      * @param y parámetro x del punto que se pase para dibujar.
      */
     public void drawOperation(Graphics g, double x, double y) {
-		ScaleCADToolState actualState = ((ScaleCADToolContext) _fsm).getState();
+		ScaleCADToolState actualState = _fsm.getState();
 		String status = actualState.getName();
 		ArrayList selectedRow = getSelectedRows();
 		Point2D currentPoint = new Point2D.Double(x, y);
@@ -337,7 +337,7 @@ public class ScaleCADTool extends DefaultCADTool {
     	//selectedRow.addAll(selectedRowAux);
     }
 
-	public String getName() {
+    public String getName() {
 		return PluginServices.getText(this,"scale_");
 	}
 

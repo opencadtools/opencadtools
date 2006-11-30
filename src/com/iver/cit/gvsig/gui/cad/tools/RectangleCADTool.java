@@ -221,7 +221,7 @@ public class RectangleCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status == "Rectangle.SecondPointOrSquare") {
-            if (s.equals("C") || s.equals("c")) {
+            if (s.equalsIgnoreCase(PluginServices.getText(this,"RectangleCADTool.square"))) {
                 //Opción correcta
             }
         }

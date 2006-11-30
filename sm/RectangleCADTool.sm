@@ -30,7 +30,11 @@ FirstPoint
 
 		addPoint( pointX:double,pointY:double,event:InputEvent)
 			SecondPointOrSquare {
-				setQuestion(PluginServices.getText(this,"insert_point_corner_or_square"));
+				setQuestion(
+					PluginServices.getText(this,"insert_point_corner")+" "+
+					PluginServices.getText(this,"cad.or")+" "+
+					PluginServices.getText(this,"square")+" "+
+					"["+PluginServices.getText(this,"RectangleCADTool.square")+"]");
 				setDescription(new String[]{"square","cancel"});
 				addPoint( pointX,pointY,event);
 				}
@@ -43,7 +47,7 @@ SecondPointOrSquare{
 			end();
 			}
 	addOption(s:String)
-		[s.equals("c") || s.equals("C") || s.equals(PluginServices.getText(this,"square"))]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"RectangleCADTool.square")) || s.equals(PluginServices.getText(this,"square"))]
 		SecondPointSquare {
 			setQuestion(PluginServices.getText(this,"insert_opposited_corner"));
 			setDescription(new String[]{"cancel"});

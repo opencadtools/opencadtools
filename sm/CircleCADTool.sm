@@ -20,7 +20,8 @@ CenterPointOr3p
 
 	Entry {
 		setQuestion(
-		PluginServices.getText(this,"insert_central_point_or_3p"));
+		PluginServices.getText(this,"insert_central_point_or_3p")+
+		"["+PluginServices.getText(this,"CircleCADTool.3p")+"]");
 		setDescription(new String[]{"cancel","3P"});
 		}
 	Exit{
@@ -34,7 +35,7 @@ CenterPointOr3p
 				addPoint( pointX,pointY,event);
 				}
 	addOption( s:String)
-		[s.equals("3p") || s.equals("3P")]
+		[s.equalsIgnoreCase(PluginServices.getText(this,"CircleCADTool.3p"))]
 			FirstPoint{
 				setQuestion(PluginServices.getText(this,"insert_first_point"));
 				setDescription(new String[]{"cancel"});

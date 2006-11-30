@@ -311,7 +311,7 @@ public final class JoinCADToolContext
             {
                 JoinCADTool ctxt = context.getOwner();
 
-                if (s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"end")))
+                if (s.equalsIgnoreCase(PluginServices.getText(this,"JoinCADTool.end")) || s.equals(PluginServices.getText(this,"end")))
                 {
                     JoinCADToolState endState = context.getState();
 
@@ -345,7 +345,10 @@ public final class JoinCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"select_other_geometry_or_end"));
+                    ctxt.setQuestion(PluginServices.getText(this,"select_other_geometry")+" "+
+		    		PluginServices.getText(this,"cad.or")+" "+
+		    		PluginServices.getText(this,"end")+
+		    		"["+PluginServices.getText(this,"JoinCADTool.end")+"]");
                     ctxt.setDescription(new String[]{"cancel", "end"});
                     ctxt.addPoint(pointX, pointY, event);
                 }

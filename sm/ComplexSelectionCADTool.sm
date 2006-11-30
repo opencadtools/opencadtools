@@ -22,7 +22,22 @@ FirstPoint
 
   Entry {
     setQuestion(
-    PluginServices.getText(this,"insert_point_selection_or_types"));
+	    PluginServices.getText(this,"insert_point")+" "+
+	    PluginServices.getText(this,"cad.or")+" "+
+	    PluginServices.getText(this,"circle")+
+	    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+	    PluginServices.getText(this,"out_rectangle")+
+	    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+	    PluginServices.getText(this,"polygon")+
+	    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+	    PluginServices.getText(this,"cross_polygon")+
+	   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+	    "#"+PluginServices.getText(this,"out_polygon")+
+	   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+	    PluginServices.getText(this,"cross_circle")+
+	   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+		PluginServices.getText(this,"out_circle")+
+	   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
     setDescription(new String[]{"out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
     }
   Exit{
@@ -31,7 +46,23 @@ FirstPoint
   {
     addOption(s:String)
       FirstPoint{
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         addOption(s);
         }
@@ -52,7 +83,9 @@ FirstPoint
     addPoint( pointX:double,pointY:double,event:InputEvent)
       [ctxt.getType().equals(PluginServices.getText(this,"inside_polygon")) || ctxt.getType().equals(PluginServices.getText(this,"cross_polygon")) || ctxt.getType().equals(PluginServices.getText(this,"out_polygon"))]
       NextPointPolygon{
-        setQuestion(PluginServices.getText(this,"insert_next_point_selection_or_end_polygon"));
+        setQuestion(
+        	PluginServices.getText(this,"insert_next_point_selection_or_end_polygon")+
+        	"["+PluginServices.getText(this,"ComplexSelectionCADTool.end")+"]");
         setDescription(new String[]{"end_polygon","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         addPoint( pointX,pointY,event);
         }
@@ -87,13 +120,45 @@ SecondPoint{
   // Si no lo hemos conseguido
   addPoint( pointX:double,pointY:double,event:InputEvent)
       FirstPoint {
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         addPoint(pointX,pointY,event);
         }
   addOption(s:String)
       FirstPoint{
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"end_polygon","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         setType(s);
         }
@@ -125,14 +190,46 @@ WithSelectedFeatures{
   // Cualquier otro caso (hemos pinchado en algo vacio), volvemos al estado inicial
   addPoint( pointX:double,pointY:double,event:InputEvent)
       FirstPoint {
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         addPoint( pointX,pointY,event);
         // refresh();
         }
 	 addOption(s:String)
       FirstPoint{
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"end_polygon","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         setType(s);
         }
@@ -161,13 +258,45 @@ SecondPointOutRectangle{
   // Si no lo hemos conseguido
   addPoint( pointX:double,pointY:double,event:InputEvent)
       FirstPoint {
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         addPoint(pointX,pointY,event);
         }
   addOption(s:String)
       FirstPoint{
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"end_polygon","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         setType(s);
         }
@@ -186,13 +315,45 @@ SecondPointCircle{
   // Si no lo hemos conseguido
   addPoint( pointX:double,pointY:double,event:InputEvent)
       FirstPoint {
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         addPoint(pointX,pointY,event);
         }
   addOption(s:String)
       FirstPoint{
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         setType(s);
         }
@@ -201,13 +362,30 @@ SecondPointCircle{
 NextPointPolygon{
   addPoint( pointX:double,pointY:double,event:InputEvent)
       NextPointPolygon {
-        setQuestion(PluginServices.getText(this,"insert_next_point_selection_or_end_polygon"));
+        setQuestion(PluginServices.getText(this,"insert_next_point_selection_or_end_polygon")+
+        	"["+PluginServices.getText(this,"ComplexSelectionCADTool.end")+"]");
         setDescription(new String[]{"end_polygon","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         addPoint(pointX,pointY,event);
         }
   addOption(s:String)
       FirstPoint{
-        setQuestion(PluginServices.getText(this,"insert_point_selection_or_types"));
+        setQuestion(
+			PluginServices.getText(this,"insert_point")+" "+
+		    PluginServices.getText(this,"cad.or")+" "+
+		    PluginServices.getText(this,"circle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.introcircle")+"], "+
+		    PluginServices.getText(this,"out_rectangle")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.outrectangle")+"], "+
+		    PluginServices.getText(this,"polygon")+
+		    "["+PluginServices.getText(this,"ComplexSelectionCADTool.intropolygon")+"], "+
+		    PluginServices.getText(this,"cross_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosspolygon")+"], "+"\n"+
+		    "#"+PluginServices.getText(this,"out_polygon")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outpolygon")+"], "+
+		    PluginServices.getText(this,"cross_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.crosscircle")+"], "+
+			PluginServices.getText(this,"out_circle")+
+		   	"["+PluginServices.getText(this,"ComplexSelectionCADTool.outcircle")+"]");
         setDescription(new String[]{"end_polygon","out_rectangle","inside_polygon","cross_polygon","out_polygon","inside_circle","cross_circle","out_circle","select_all","cancel"});
         addOption(s);
         }
