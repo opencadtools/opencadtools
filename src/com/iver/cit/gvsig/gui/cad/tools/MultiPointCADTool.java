@@ -191,7 +191,10 @@ public class MultiPointCADTool extends DefaultCADTool {
 			ys[i]=p[1];
 		}
 		addGeometry(ShapeFactory.createMultipoint2D(xs,ys));
-		points.clear();
 		end();
+	}
+	public void end() {
+		points.clear();
+		super.end();
 	}
 }
