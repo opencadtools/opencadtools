@@ -67,6 +67,7 @@ CenterPoint{
 }
 OptionOrRadiusOrPoint{
 	addOption(s:String)
+		[!s.equals(PluginServices.getText(this,"cancel"))]
 		RadiusOrPoint {
 			setQuestion(PluginServices.getText(this,"insert_radius"));
 			setDescription(new String[]{"cancel"});

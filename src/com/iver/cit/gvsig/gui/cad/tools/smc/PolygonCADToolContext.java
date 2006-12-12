@@ -443,20 +443,28 @@ public final class PolygonCADToolContext
             {
                 PolygonCADTool ctxt = context.getOwner();
 
+                if (!s.equals(PluginServices.getText(this,"cancel")))
+                {
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_radius"));
-                    ctxt.setDescription(new String[]{"cancel"});
-                    ctxt.addOption(s);
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_radius"));
+                        ctxt.setDescription(new String[]{"cancel"});
+                        ctxt.addOption(s);
+                    }
+                    finally
+                    {
+                        context.setState(Polygon.RadiusOrPoint);
+                        (context.getState()).Entry(context);
+                    }
                 }
-                finally
+                else
                 {
-                    context.setState(Polygon.RadiusOrPoint);
-                    (context.getState()).Entry(context);
+                    super.addOption(context, s);
                 }
+
                 return;
             }
 
