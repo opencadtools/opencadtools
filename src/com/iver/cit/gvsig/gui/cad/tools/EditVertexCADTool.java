@@ -241,7 +241,7 @@ public class EditVertexCADTool extends DefaultCADTool {
         			}else {
         				newGeometry=removeVertex(ig,handlers[numSelect]);
         			}
-        			numSelect=0;
+        			//numSelect=0;
 
         			IRow newRow=new DefaultFeature(newGeometry,row.getAttributes(),row.getID());
         			try {
