@@ -61,9 +61,9 @@ public class EditionUtilities {
         		
         	}        	
         	
-        	if (numActiveVectorialEditable == 1)
+        	if (numActiveVectorialEditable == 1 && numActiveVectorial == 1)
         		return EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE;
-        	if (numActiveVectorialEditable > 1)
+        	if (numActiveVectorialEditable > 1 && numActiveVectorial == numActiveVectorialEditable)
         		return EDITION_STATUS_MULTIPLE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE;
         	if (numActiveVectorial == 1)
         		return EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE;

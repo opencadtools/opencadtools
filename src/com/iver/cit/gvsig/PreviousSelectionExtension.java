@@ -76,6 +76,8 @@ public class PreviousSelectionExtension extends Extension {
 	 */
 	public boolean isEnabled() {
 		ILayerEdited layerEdited= CADExtension.getEditionManager().getActiveLayerEdited();
+		if (layerEdited == null)
+			return false;
 		if (layerEdited instanceof VectorialLayerEdited) {
 			return ((VectorialLayerEdited)layerEdited).getPreviousSelection();
 		}

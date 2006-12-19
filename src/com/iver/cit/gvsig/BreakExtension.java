@@ -89,9 +89,11 @@ public class BreakExtension extends Extension {
 				view = (View) PluginServices.getMDIManager().getActiveWindow();
 				mapControl = view.getMapControl();
 				EditionManager em=CADExtension.getEditionManager();
+				if (em.getActiveLayerEdited()==null)
+						return false;
 				FLyrVect lv=(FLyrVect)em.getActiveLayerEdited().getLayer();
 
-				if (em.getActiveLayerEdited()==null || lv.getRecordset().getSelection().cardinality()!=1)
+				if (lv.getRecordset().getSelection().cardinality()!=1)
 					return false;
 				if (breakCADTool.isApplicable(lv.getShapeType())){
 					return true;
