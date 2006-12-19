@@ -17,8 +17,10 @@ import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.crs.CRSFactory;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.LayersIterator;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.writers.WriterGT2;
@@ -49,15 +51,17 @@ public class StopEditingToGT2Shp extends Extension {
         MapContext mapa = model.getMapContext();
             FLayers layers = mapa.getLayers();
             if (s.equals("STOPEDITING")){
-            for (int i = 0; i < layers.getLayersCount(); i++) {
-                if (layers.getLayer(i) instanceof FLyrVect &&
-                        layers.getLayer(i).isEditing()) {
-                    FLyrVect lv = (FLyrVect) layers.getLayer(i);
-                    stopEditing(lv);
+                LayersIterator iter = new LayersIterator(layers);
+                FLayer layer;
+                while (iter.hasNext()) {
+                	layer = iter.nextLayer();
+                    if (layer instanceof FLyrVect &&
+                            layer.isEditing()) {                    
+                        stopEditing((FLyrVect)layer);
 
-                    return;
-                }
-            }
+                        return;
+                    }
+                }            
             }
             PluginServices.getMainFrame().enableControls();
     }
