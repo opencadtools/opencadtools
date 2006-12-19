@@ -11,6 +11,7 @@ import com.iver.cit.gvsig.fmap.drivers.VectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.LayersIterator;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -45,14 +46,21 @@ public class EditionUtilities {
 
         	int numActiveVectorial = 0;
         	int numActiveVectorialEditable = 0;
-        	for (int i = 0; i < capas.getLayersCount(); i++) {
-        		if (capas.getLayer(i) instanceof FLyrVect &&
-        				capas.getLayer(i).isActive() && capas.getLayer(i).isAvailable()) {
+        	
+        	LayersIterator iter = new LayersIterator(capas);
+        	
+        	FLayer capa;
+        	while (iter.hasNext()) {
+        		capa = iter.nextLayer();
+        		if (capa instanceof FLyrVect &&
+        				capa.isActive() && capa.isAvailable()) {
         			numActiveVectorial++;
-        			if (capas.getLayer(i).isEditing())
+        			if (capa.isEditing())
         				numActiveVectorialEditable++;
         		}
-        	}
+        		
+        	}        	
+        	
         	if (numActiveVectorialEditable == 1)
         		return EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE;
         	if (numActiveVectorialEditable > 1)
@@ -86,17 +94,25 @@ public class EditionUtilities {
 
         	int numActiveVectorial = 0;
         	int numActiveVectorialEditable = 0;
-        	for (int i = 0; i < capas.getLayersCount(); i++) {
-        		if (capas.getLayer(i) instanceof FLyrVect &&
-        				capas.getLayer(i).isActive()) {
+        	
+        	LayersIterator iter = new LayersIterator(capas);
+        	FLayer capa;
+        	while (iter.hasNext()) {
+        		capa = iter.nextLayer();
+        		if (capa instanceof FLyrVect &&
+        				capa.isActive()) {
         			numActiveVectorial++;
-        			if (capas.getLayer(i).isEditing())
+        			if (capa.isEditing())
         			{
         				numActiveVectorialEditable++;
-        				resul.add(capas.getLayer(i));
+        				resul.add(capa);
         			}
         		}
+
         	}
+        	if (resul.isEmpty())
+        		return null;
+        		
        		return (FLayer[]) resul.toArray(new FLayer[0]);
 
         }

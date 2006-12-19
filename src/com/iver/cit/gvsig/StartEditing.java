@@ -47,7 +47,7 @@ public class StartEditing extends Extension {
 //
 //	}
 
-	View vista;
+	//View vista;
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
@@ -60,103 +60,105 @@ public class StartEditing extends Extension {
 	public void execute(String actionCommand) {
 		CADExtension.initFocus();
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveWindow();
-
+		.getActiveWindow();
+		
 		if (f instanceof View) {
-			vista = (View) f;
-
-			vista.showConsole();
+			View vista = (View) f;
+			
 			MapControl mapControl = vista.getMapControl();
-			EditionManager editionManager=CADExtension.getEditionManager();
-			editionManager.setMapControl(mapControl);
-
-			IProjectView model = vista.getModel();
-			MapContext mapa = model.getMapContext();
-			FLayers layers = mapa.getLayers();
+			
+			IProjectView model = vista.getModel();						
+			FLayer[] actives = model.getMapContext().getLayers().getActives();
+			
 			boolean bEditingStarted = false;
-			for (int i = 0; i < layers.getLayersCount(); i++) {
-				if (layers.getLayer(i) instanceof FLyrVect
-						&& layers.getLayer(i).isActive()) {
-					/*
-					 * for (int j = 0; j < i; j++) {
-					 * layers.getLayer(j).setVisible(false); }
-					 */
+			if (actives.length == 1 &&	actives[0] instanceof FLyrVect) {
 
-					FLyrVect lv = (FLyrVect) layers.getLayer(i);
-					// lv.setVisible(true);
-					lv.addLayerListener(editionManager);
-					try {
-						Legend legendOriginal=lv.getLegend().cloneLegend();
+				vista.showConsole();
+				EditionManager editionManager=CADExtension.getEditionManager();
+				editionManager.setMapControl(mapControl);
 
-	            		if (!lv.isWritable())
-	            		{
-	        				JOptionPane.showMessageDialog(
-	        						(Component) PluginServices.getMDIManager().getActiveWindow(),
-	        						PluginServices.getText(this, "this_layer_is_not_self_editable"),
-	        						PluginServices.getText(this, "warning_title"),
-	        						JOptionPane.WARNING_MESSAGE);
-	            		}
-
-						lv.setEditing(true);
-						VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
-						.getSource();
-
-						vea.getRules().clear();
-						if (vea.getShapeType() == FShape.POLYGON)
-						{
-							IRule rulePol = new RulePolygon();
-							vea.getRules().add(rulePol);
-						}
-
-						if (!(lv.getSource().getDriver() instanceof IndexedShpDriver)){
-							VectorialLayerEdited vle=(VectorialLayerEdited)editionManager.getLayerEdited(lv);
-							vle.setLegend(legendOriginal);
-						}
-						vea.getCommandRecord().addCommandListener(mapControl);
-						// Si existe una tabla asociada a esta capa se cambia su
-						// modelo por el VectorialEditableAdapter.
-						ProjectExtension pe = (ProjectExtension) PluginServices
-								.getExtension(ProjectExtension.class);
-						ProjectTable pt = pe.getProject().getTable(lv);
-						if (pt != null){
-							pt.setModel(vea);
-							changeModelTable(pt);
-						}
-						startCommandsApplicable(vista,lv);
-						vista.repaintMap();
-					} catch (EditionException e) {
-						e.printStackTrace();
-						NotificationManager.addError(e);
-					} catch (DriverIOException e) {
-						e.printStackTrace();
-						NotificationManager.addError(e);
-					} catch (XMLException e) {
-						e.printStackTrace();
+				/*
+				 * for (int j = 0; j < i; j++) {
+				 * layers.getLayer(j).setVisible(false); }
+				 */
+				
+				FLyrVect lv = (FLyrVect) actives[0];
+				// lv.setVisible(true);
+				lv.addLayerListener(editionManager);
+				try {
+					Legend legendOriginal=lv.getLegend().cloneLegend();
+					
+					if (!lv.isWritable())
+					{
+						JOptionPane.showMessageDialog(
+								(Component) PluginServices.getMDIManager().getActiveWindow(),
+								PluginServices.getText(this, "this_layer_is_not_self_editable"),
+								PluginServices.getText(this, "warning_title"),
+								JOptionPane.WARNING_MESSAGE);
 					}
-
-//					return;
+					
+					lv.setEditing(true);
+					VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
+					.getSource();
+					
+					vea.getRules().clear();
+					if (vea.getShapeType() == FShape.POLYGON)
+					{
+						IRule rulePol = new RulePolygon();
+						vea.getRules().add(rulePol);
+					}
+					
+					if (!(lv.getSource().getDriver() instanceof IndexedShpDriver)){
+						VectorialLayerEdited vle=(VectorialLayerEdited)editionManager.getLayerEdited(lv);
+						vle.setLegend(legendOriginal);
+					}
+					vea.getCommandRecord().addCommandListener(mapControl);
+					// Si existe una tabla asociada a esta capa se cambia su
+					// modelo por el VectorialEditableAdapter.
+					ProjectExtension pe = (ProjectExtension) PluginServices
+					.getExtension(ProjectExtension.class);
+					ProjectTable pt = pe.getProject().getTable(lv);
+					if (pt != null){
+						pt.setModel(vea);
+						changeModelTable(pt);
+					}
+					
+					startCommandsApplicable(vista,lv);
+					vista.repaintMap();
+					
+				} catch (EditionException e) {
+					e.printStackTrace();
+					NotificationManager.addError(e);
+				} catch (DriverIOException e) {
+					e.printStackTrace();
+					NotificationManager.addError(e);
+				} catch (XMLException e) {
+					e.printStackTrace();
 				}
+				
+//				return;
 			}
-
-			/*
-			 * PluginServices.getMDIManager().setWaitCursor(); try { if
-			 * (((FLyrVect) capa).getSource().getDriver().getClass() ==
-			 * DXFCadDriver.class) { if (JOptionPane.showConfirmDialog(
-			 * (Component) PluginServices.getMainFrame(), "Todas las geometrías
-			 * del formato DXF no se pueden editar, de momento podemos editar:
-			 * Line, Point, Polyline, Arc, Circle y Ellipse. \n El resto de
-			 * geometrías se perderán con la edición. \n ¿Desea continuar?") ==
-			 * JOptionPane.YES_OPTION) { capa.startEdition();
-			 * vista.getMapControl().setCadTool("selection"); } else { } } else {
-			 * capa.startEdition();
-			 * vista.getMapControl().setCadTool("selection"); } } catch
-			 * (EditionException e) { // TODO Auto-generated catch block
-			 * e.printStackTrace(); }
-			 * PluginServices.getMDIManager().restoreCursor();
-			 */
-			// vista.getMapControl().drawMap(false);
 		}
+		
+		/*
+		 * PluginServices.getMDIManager().setWaitCursor(); try { if
+		 * (((FLyrVect) capa).getSource().getDriver().getClass() ==
+		 * DXFCadDriver.class) { if (JOptionPane.showConfirmDialog(
+		 * (Component) PluginServices.getMainFrame(), "Todas las geometrías
+		 * del formato DXF no se pueden editar, de momento podemos editar:
+		 * Line, Point, Polyline, Arc, Circle y Ellipse. \n El resto de
+		 * geometrías se perderán con la edición. \n ¿Desea continuar?") ==
+		 * JOptionPane.YES_OPTION) { capa.startEdition();
+		 * vista.getMapControl().setCadTool("selection"); } else { } } else {
+		 * capa.startEdition();
+		 * vista.getMapControl().setCadTool("selection"); } } catch
+		 * (EditionException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); }
+		 * PluginServices.getMDIManager().restoreCursor();
+		 */
+		// vista.getMapControl().drawMap(false);
 	}
+
 //	 private void registerKeyStrokes() {
 //		 JComponent theComponent = vista.getConsolePanel().getTxt();
 //
