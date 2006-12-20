@@ -21,6 +21,7 @@ import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
+import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
@@ -67,13 +68,15 @@ public class StopEditing extends Extension {
 					FLyrVect lv = (FLyrVect) actives[i];
 					MapControl mapControl = vista.getMapControl();
 					VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getActiveLayerEdited();
-					lyrEd.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
+					//lyrEd.clearSelection();
 					isStop=stopEditing(lv, mapControl);
 					if (isStop){
 						lv.removeLayerListener(edMan);
+						if (lv instanceof FLyrAnnotation){
+							FLyrAnnotation lva=(FLyrAnnotation)lv;
+				            lva.setMapping(lva.getMapping());
+						}
 					}
-
-					// return;
 				}
 			}
 			if (isStop) {
