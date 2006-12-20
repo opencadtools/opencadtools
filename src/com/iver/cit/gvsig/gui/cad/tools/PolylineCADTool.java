@@ -96,19 +96,16 @@ public class PolylineCADTool extends DefaultCADTool {
     }
 
     public void endGeometry() {
-        IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
+    	 try {
+ 			if (getVLE().getVEA().getShapeType()==FShape.POLYGON && !close){
+ 				closeGeometry();
+ 			}
+ 		} catch (DriverIOException e) {
+ 			e.printStackTrace();
+ 		}
+    	IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
         FGeometryCollection fgc = new FGeometryCollection(geoms);
-        try {
-			if (getVLE().getVEA().getShapeType()==FShape.POLYGON && !close){
-				GeneralPathX gpx=new GeneralPathX();
-				gpx.moveTo(antPoint.getX(),antPoint.getY());
-				gpx.lineTo(firstPoint.getX(),firstPoint.getY());
-				IGeometry line=ShapeFactory.createPolyline2D(gpx);
-				fgc.addGeometry(line);
-			}
-		} catch (DriverIOException e) {
-			e.printStackTrace();
-		}
+
 
         // No queremos guardar FGeometryCollections:
         GeneralPathX gp = new GeneralPathX();
@@ -137,6 +134,7 @@ public class PolylineCADTool extends DefaultCADTool {
         addGeometry(newGeom);
         _fsm = new PolylineCADToolContext(this);
         list.clear();
+        close=false;
         antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
     public void closeGeometry(){
