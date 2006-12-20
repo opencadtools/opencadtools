@@ -3,7 +3,8 @@
 	<property name="andami" location="../_fwAndami"/>
 	<property name="andamiLibs" location="${andami}/lib"/>
 	<property name="andamiJar" location="${andami}/andami.jar" />
-	<property name="fmapLibs" location="../libFMap/lib" />
+	<property name="fmap" location="../libFMap" />
+	<property name="fmapLibs" location="${fmap}/lib" />
 	<property name="gvsigJar" location="${andami}/gvSIG/extensiones/com.iver.cit.gvsig/lib/com.iver.cit.gvsig.jar"/>
 	<property name="JDBCDist" location="../extJDBC/dist"/>
 
@@ -14,7 +15,7 @@
 	    <pathelement location="${andamiLibs}/beans.jar"/>
 	    <pathelement location="${fmapLibs}/cms.jar"/>
 	    <pathelement location="${fmapLibs}/driver-manager-1.1.jar"/>
-	    <pathelement location="${fmapLibs}/fmap.jar"/>
+	    <pathelement location="${fmap}/dist/lib/fmap.jar"/>
 		<fileset dir="${JDBCDist}">
         	<include name="*.jar"/>
       	</fileset>
