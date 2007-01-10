@@ -307,4 +307,8 @@ public class LayerProperties extends JPanel implements ILegendPanel, IWindow {
 		return bCancel;
 	}
 
+	public String getHelp() {
+		return "help text for LayerProperties (change this)";
+	}
+
 }  //  @jve:decl-index=0:visual-constraint="10,10"
