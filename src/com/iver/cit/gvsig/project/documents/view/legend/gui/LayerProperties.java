@@ -7,11 +7,13 @@ import javax.swing.JPanel;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
+import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.rendering.Legend;
 import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.TableLayers;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -307,8 +309,20 @@ public class LayerProperties extends JPanel implements ILegendPanel, IWindow {
 		return bCancel;
 	}
 
-	public String getHelp() {
+	public String getDescription() {
 		return "help text for LayerProperties (change this)";
+	}
+
+	public ISymbol getPreviewSymbol() {
+		// TODO Implement it
+		throw new Error("Not yet implemented!");
+
+	}
+
+	public String getParentTitle() {
+		// TODO Implement it
+		throw new Error("Not yet implemented!");
+
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
