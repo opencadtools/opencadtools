@@ -12,6 +12,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.rendering.Legend;
 import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
+import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.StatusListener;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.TableLayers;
 
 import javax.swing.JButton;
@@ -62,6 +63,12 @@ public class LayerProperties extends JPanel implements ILegendPanel, IWindow {
 		this.add(getPNorth(), java.awt.BorderLayout.WEST);
 		this.add(getPCenter(), java.awt.BorderLayout.CENTER);
 		this.add(getPSouth(), java.awt.BorderLayout.SOUTH);
+		getTableLayers().addStatusListener(new StatusListener() {
+			public void click() {
+				lblPresentSubLayer.setText(getTableLayers().getPresentSubLayer());
+			}
+
+		});
 	}
 
 	/**
@@ -117,7 +124,7 @@ public class LayerProperties extends JPanel implements ILegendPanel, IWindow {
 	private JPanel getPCenterNorth() {
 		if (pCenterNorth == null) {
 			lblPresentSubLayer = new JLabel();
-			lblPresentSubLayer.setText("JLabel");
+			lblPresentSubLayer.setText(getTableLayers().getPresentSubLayer());
 			lblPresentSubLayer.setPreferredSize(new java.awt.Dimension(150,16));
 			jLabel = new JLabel();
 			jLabel.setText("capa actual");
