@@ -33,13 +33,15 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerDrawingListener;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
+import com.iver.cit.gvsig.fmap.layers.SelectionEvent;
+import com.iver.cit.gvsig.fmap.layers.SelectionListener;
 import com.iver.cit.gvsig.fmap.rendering.Legend;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDrawingListener{
+public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDrawingListener, SelectionListener{
 	private ArrayList selectedHandler = new ArrayList();
 	private ArrayList selectedRow = new ArrayList();
 	private Point2D lastPoint;
@@ -62,6 +64,11 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		lyr.getMapContext().addLayerDrawingListener(this);
 		// Por defecto, siempre hacemos snapping sobre la capa en edición.
 		layersToSnap.add(lyr);
+		try {
+			((FLyrVect)lyr).getRecordset().addSelectionListener(this);
+		} catch (DriverException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList getSelectedHandler() {
@@ -498,10 +505,17 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		FBitSet selection=vea.getSelection();
 		selectedRow.addAll(selectedRowAux);
 		for (int i = 0;i < selectedRow.size(); i++) {
-			  IRowEdited edRow = (IRowEdited) selectedRow.get(i);
-			  selection.set(edRow.getIndex());
+			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+			selection.set(edRow.getIndex());
 		}
-	}
+
+		try {
+			FLyrVect active = (FLyrVect)getLayer();
+			active.getRecordset().getSelectionSupport().fireSelectionEvents();
+		} catch (DriverException e) {
+			e.printStackTrace();
+		}
+    }
 
 	public void setLegend(Legend legend) {
 		this.legend=legend;
@@ -516,5 +530,10 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 	public boolean getPreviousSelection() {
 		return !selectedRow.isEmpty();
+	}
+
+	public void selectionChanged(SelectionEvent e) {
+		if (getVEA().getSelection().isEmpty())
+			clearSelection(NOTSAVEPREVIOUS);
 	}
 }
