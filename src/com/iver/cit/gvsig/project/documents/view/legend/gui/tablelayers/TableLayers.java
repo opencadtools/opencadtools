@@ -7,9 +7,14 @@ import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.rendering.EditionManagerLegend;
 import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
+import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.ActivatedCellEditor;
+import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.BlockedCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.CellIconOptionRenderer;
+import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.DisabledCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.FCellSymbolRenderer;
+import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.FilledCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.IconOptionCellEditor;
+import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.PresentCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.SymbolCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.ValueCellEditor;
 
@@ -17,10 +22,15 @@ import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.ValueCellEdi
  * TableRenderDemo.java requires no other files.
  */
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -60,13 +70,15 @@ public class TableLayers extends JPanel {
     private boolean DEBUG = false;
     private ReadableVectorial source;
     private EditionManagerLegend eml;
+    private JTable table;
+	private ArrayList statusListeners=new ArrayList();
 
     public TableLayers(ReadableVectorial source2, VectorialLegend legend2) {
         super(new GridLayout(1, 0));
         this.source = source2;
         this.eml = new EditionManagerLegend(legend2);
 
-        JTable table = new JTable(new MyTableModel());
+        table = new JTable(new MyTableModel());
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setShowHorizontalLines(false);
 
@@ -150,9 +162,33 @@ public class TableLayers extends JPanel {
      * @param column DOCUMENT ME!
      */
     public void setUpStatusColumn(JTable table, TableColumn column) {
-        IconOptionCellEditor blockeditor = new IconOptionCellEditor(selected,
+
+        PresentCellEditor presenteditor = new PresentCellEditor(eml,table,selected,
                 notselected);
-        column.setCellEditor(blockeditor);
+        presenteditor.addMouseListener(new MouseListener(){
+
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount()==2){
+					for (int i=0;i<statusListeners.size();i++) {
+						((StatusListener)statusListeners.get(i)).click();
+					}
+				}
+			}
+
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			public void mouseExited(MouseEvent e) {
+			}
+
+			public void mousePressed(MouseEvent e) {
+			}
+
+			public void mouseReleased(MouseEvent e) {
+			}
+
+		});
+        column.setCellEditor(presenteditor);
 
         CellIconOptionRenderer renderer = new CellIconOptionRenderer(true);
         column.setCellRenderer(renderer);
@@ -165,9 +201,9 @@ public class TableLayers extends JPanel {
      * @param column DOCUMENT ME!
      */
     public void setUpActivateColumn(JTable table, TableColumn column) {
-        IconOptionCellEditor blockeditor = new IconOptionCellEditor(active,
+        ActivatedCellEditor activatededitor = new ActivatedCellEditor(eml,table,active,
                 defuse);
-        column.setCellEditor(blockeditor);
+        column.setCellEditor(activatededitor);
 
         CellIconOptionRenderer renderer = new CellIconOptionRenderer(true);
         column.setCellRenderer(renderer);
@@ -180,9 +216,9 @@ public class TableLayers extends JPanel {
      * @param column DOCUMENT ME!
      */
     public void setUpDisableColumn(JTable table, TableColumn column) {
-        IconOptionCellEditor blockeditor = new IconOptionCellEditor(notdisable,
+        DisabledCellEditor disablededitor = new DisabledCellEditor(eml,table,notdisable,
                 disable);
-        column.setCellEditor(blockeditor);
+        column.setCellEditor(disablededitor);
 
         CellIconOptionRenderer renderer = new CellIconOptionRenderer(true);
         column.setCellRenderer(renderer);
@@ -195,7 +231,7 @@ public class TableLayers extends JPanel {
      * @param column DOCUMENT ME!
      */
     public void setUpBlockColumn(JTable table, TableColumn column) {
-        IconOptionCellEditor blockeditor = new IconOptionCellEditor(blocked,
+        BlockedCellEditor blockeditor = new BlockedCellEditor(eml,table,blocked,
                 unblocked);
         column.setCellEditor(blockeditor);
 
@@ -210,9 +246,9 @@ public class TableLayers extends JPanel {
      * @param column DOCUMENT ME!
      */
     public void setUpFillColumn(JTable table, TableColumn column) {
-        IconOptionCellEditor blockeditor = new IconOptionCellEditor(fill,
+        FilledCellEditor fillededitor = new FilledCellEditor(eml,table,fill,
                 notfill);
-        column.setCellEditor(blockeditor);
+        column.setCellEditor(fillededitor);
 
         CellIconOptionRenderer renderer = new CellIconOptionRenderer(true);
         column.setCellRenderer(renderer);
@@ -335,10 +371,10 @@ public class TableLayers extends JPanel {
             case 3:
 
                 if (eml.isDisable(row)) {
-                    return disable;
+                    return notdisable;
                 }
 
-                return notdisable;
+                return disable;
 
             case 4:
 
@@ -379,7 +415,7 @@ public class TableLayers extends JPanel {
          * editable.
          */
         public boolean isCellEditable(int row, int col) {
-            return true;
+        	return true;
         }
 
         /*
@@ -387,57 +423,57 @@ public class TableLayers extends JPanel {
          * data can change.
          */
         public void setValueAt(Object value, int row, int col) {
-            if (DEBUG) {
-                System.out.println("Setting value at " + row + "," + col +
-                    " to " + value + " (an instance of " + value.getClass() +
-                    ")");
-            }
-
-            ///data[row][col] = value;
-            ////////////////
-            switch (col) {
-            case 0:
-            	if (value.equals(selected)) {
-                    eml.setPresent(row,true);
-                }else {
-                	eml.setPresent(row,false);
-                }
-            case 1:
-                eml.setValue(row,value);
-            case 2:
-            	if (value.equals(active)) {
-                    eml.setActived(row,true);
-                }else {
-                	eml.setActived(row,false);
-                }
-            case 3:
-            	if (value.equals(disable)) {
-                    eml.setDisable(row,true);
-                }else {
-                	eml.setDisable(row,false);
-                }
-            case 4:
-            	if (value.equals(blocked)) {
-                    eml.setBlocked(row,true);
-                }else {
-                	eml.setBlocked(row,false);
-                }
-            case 5:
-            	if (value.equals(fill)) {
-                    eml.setFilled(row,true);
-                }else {
-                	eml.setFilled(row,false);
-                }
-            case 6:
-               eml.setSymbol(row,value);
-            }
-            /////////////
-            fireTableCellUpdated(row, col);
-
-            if (DEBUG) {
-                System.out.println("New value of data:");
-                printDebugData();
-            }
+//            if (DEBUG) {
+//                System.out.println("Setting value at " + row + "," + col +
+//                    " to " + value + " (an instance of " + value.getClass() +
+//                    ")");
+//            }
+//
+//            ///data[row][col] = value;
+//            ////////////////
+//            switch (col) {
+//            case 0:
+//            	if (value.equals(selected)) {
+//                    eml.setPresent(row,true);
+//                }else {
+//                	eml.setPresent(row,false);
+//                }
+//            case 1:
+//                eml.setValue(row,value);
+//            case 2:
+//            	if (value.equals(active)) {
+//                    eml.setActived(row,true);
+//                }else {
+//                	eml.setActived(row,false);
+//                }
+//            case 3:
+//            	if (value.equals(disable)) {
+//                    eml.setDisable(row,true);
+//                }else {
+//                	eml.setDisable(row,false);
+//                }
+//            case 4:
+//            	if (value.equals(blocked)) {
+//                    eml.setBlocked(row,true);
+//                }else {
+//                	eml.setBlocked(row,false);
+//                }
+//            case 5:
+//            	if (value.equals(fill)) {
+//                    eml.setFilled(row,true);
+//                }else {
+//                	eml.setFilled(row,false);
+//                }
+//            case 6:
+//               eml.setSymbol(row,value);
+//            }
+//            /////////////
+//            fireTableCellUpdated(row, col);
+//
+//            if (DEBUG) {
+//                System.out.println("New value of data:");
+//                printDebugData();
+//            }
         }
 
         private void printDebugData() {
@@ -457,4 +493,11 @@ public class TableLayers extends JPanel {
             System.out.println("--------------------------");
         }
     }
+
+	public String getPresentSubLayer() {
+		return eml.getPresentSubLayer();
+	}
+	public void addStatusListener(StatusListener listener) {
+		statusListeners.add(listener);
+	}
 }

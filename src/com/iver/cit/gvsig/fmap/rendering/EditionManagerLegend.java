@@ -14,6 +14,8 @@ public class EditionManagerLegend implements EditionLegend{
 	private ArrayList rules=new ArrayList();
 	private VectorialLegend vectorialLegend;
 	private VectorialLegend originalVectorialLegend;
+	private LegendControl lc=new LegendControl();
+
 	public EditionManagerLegend(VectorialLegend vl) {
 		originalVectorialLegend=vl;
 		vectorialLegend=vl;//(VectorialLegend)vl.cloneLegend();
@@ -35,29 +37,37 @@ public class EditionManagerLegend implements EditionLegend{
 		return symbol;
 	}
 	public boolean isActived(int i) {
-		return true;
+		return lc.isActivated(i);
 	}
 	public boolean isBlocked(int i) {
-		return false;
+		return lc.isBlocked(i);
 	}
 	public boolean isDisable(int i) {
-		return false;
+		return lc.isDisabled(i);
 	}
 	public boolean isFilled(int i) {
-		return true;
+		return lc.isFilled(i);
 	}
 	public boolean isPresent(int i) {
-		return true;
+		return (i==getPresent());
+	}
+	private int getPresent() {
+		return lc.getPresent();
 	}
 	public void setActived(int i,boolean b) {
+		lc.setActivated(i,b);
 	}
 	public void setBlocked(int i,boolean b) {
+		lc.setBlocked(i,b);
 	}
 	public void setDisable(int i, boolean b) {
+		lc.setDisabled(i,b);
 	}
 	public void setFilled(int i,boolean b) {
+		lc.setFilled(i,b);
 	}
-	public void setPresent(int i, boolean b) {
+	public void setPresent(int i) {
+		lc.setPresent(i);
 	}
 	public int getRowCount() {
 		if (vectorialLegend instanceof VectorialUniqueValueLegend || vectorialLegend instanceof VectorialIntervalLegend) {
@@ -94,5 +104,8 @@ public class EditionManagerLegend implements EditionLegend{
 	    }
 	}
 	public void setSymbol(int row, Object value) {
+	}
+	public String getPresentSubLayer() {
+		return getValue(getPresent()).toString();
 	}
 }
