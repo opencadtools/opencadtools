@@ -52,9 +52,7 @@ public class WriterGT2 extends AbstractWriter {
 	AttributeType[] types;
 	Transaction t;
 	int numReg = 0;
-	private boolean bWriteAll;
-
-    public static Class getClassBySqlTYPE(int type)
+	public static Class getClassBySqlTYPE(int type)
     {
         switch (type)
         {
