@@ -22,6 +22,7 @@ import java.util.Stack;
 import java.util.prefs.Preferences;
 
 import org.cresques.cts.IProjection;
+import org.gvsig.gui.beans.controls.combolabel.ComboCoords;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiFrame.MainFrame;
@@ -54,6 +55,7 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperGeometriesVect
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.SnappingVisitor;
+import com.iver.cit.gvsig.project.documents.view.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -105,7 +107,14 @@ public class CADToolAdapter extends Behavior {
 
 	private static boolean flatnessInitialized=false;
 	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
-
+	private StatusBarListener sbl=null;
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.IBehavior#setMapControl(com.iver.cit.gvsig.fmap.MapControl)
+	 */
+	public void setMapControl(MapControl mc) {
+		super.setMapControl(mc);
+		sbl=new StatusBarListener(getMapControl());
+	}
 	/**
 	 * Pinta de alguna manera especial las geometrias seleccionadas para la
 	 * edición. En caso de que el snapping esté activado, pintará el efecto del
@@ -310,19 +319,22 @@ public class CADToolAdapter extends Behavior {
 	private void showCoords(Point2D pPix)
 	{
 		String[] axisText = new String[2];
-		NumberFormat nf = NumberFormat.getInstance();
+		axisText[0] = "X = ";
+		axisText[1] = "Y = ";
+//		NumberFormat nf = NumberFormat.getInstance();
 		MapControl mapControl = getMapControl();
 		ViewPort vp = mapControl.getMapContext().getViewPort();
 		IProjection iProj = vp.getProjection();
-		if (iProj.getAbrev().equals("EPSG:4326") || iProj.getAbrev().equals("EPSG:4230")) {
-			axisText[0] = "Lon = ";
-			axisText[1] = "Lat = ";
-			nf.setMaximumFractionDigits(8);
-		} else {
-			axisText[0] = "X = ";
-			axisText[1] = "Y = ";
-			nf.setMaximumFractionDigits(2);
-		}
+
+//		if (iProj.getAbrev().equals("EPSG:4326") || iProj.getAbrev().equals("EPSG:4230")) {
+//			axisText[0] = "Lon = ";
+//			axisText[1] = "Lat = ";
+//			nf.setMaximumFractionDigits(8);
+//		} else {
+//			axisText[0] = "X = ";
+//			axisText[1] = "Y = ";
+//			nf.setMaximumFractionDigits(2);
+//		}
 		Point2D p;
 		if (mapAdjustedPoint == null)
 		{
@@ -332,6 +344,8 @@ public class CADToolAdapter extends Behavior {
 		{
 			p = mapAdjustedPoint;
 		}
+		sbl.setFractionDigits(p);
+		axisText = sbl.setCoorDisplayText(axisText);
 		MainFrame mF = PluginServices.getMainFrame();
 
 		if (mF != null)
@@ -341,10 +355,16 @@ public class CADToolAdapter extends Behavior {
             mF.getStatusBar().setControlValue("scale",String.valueOf(mapControl.getMapContext().getScaleView()));
 			mF.getStatusBar().setMessage("projection", iProj.getAbrev());
 
-			mF.getStatusBar().setMessage("x",
-					axisText[0] + String.valueOf(nf.format(p.getX()/MapContext.CHANGEM[vp.getDistanceUnits()])));
-			mF.getStatusBar().setMessage("y",
-					axisText[1] + String.valueOf(nf.format(p.getY()/MapContext.CHANGEM[vp.getDistanceUnits()])));
+//			mF.getStatusBar().setMessage("x",
+//					axisText[0] + String.valueOf(nf.format(p.getX()/MapContext.CHANGEM[vp.getDistanceUnits()])));
+//			mF.getStatusBar().setMessage("y",
+//					axisText[1] + String.valueOf(nf.format(p.getY()/MapContext.CHANGEM[vp.getDistanceUnits()])));
+			String[] coords=sbl.getCoords(p);
+			ComboCoords combocoords=(ComboCoords)PluginServices.getMainFrame().getComponentByName("coords");
+			combocoords.setLabelX(axisText[0]);
+			combocoords.setLabelY(axisText[1]);
+			combocoords.setValueX(coords[0]);
+			combocoords.setValueY(coords[1]);
 		}
 	}
 
