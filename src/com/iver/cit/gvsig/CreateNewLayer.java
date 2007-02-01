@@ -11,6 +11,7 @@ import com.iver.andami.plugins.Extension;
 import com.iver.andami.ui.wizard.WizardAndami;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
+import com.iver.cit.gvsig.fmap.edition.IWriteable;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
@@ -76,7 +77,9 @@ public void execute(String actionCommand) {
 				wizard.getWizardComponents().addWizardPanel(panelChoose);
 				wizard.getWizardComponents().addWizardPanel(panelFields);
 
-				panelChoose.setDriver(writerManager.getDriver("gvSIG shp driver"));
+				Driver driver = writerManager.getDriver("gvSIG shp driver");
+				panelFields.setWriter(((IWriteable)driver).getWriter());
+				panelChoose.setDriver(driver);
 				FileBasedPanel filePanel = new FileBasedPanel(wizard.getWizardComponents());
 				filePanel.setFileExtension("shp");
 				wizard.getWizardComponents().addWizardPanel(filePanel);
@@ -99,11 +102,12 @@ public void execute(String actionCommand) {
 							vista, actionCommand));
 			}
 			if (actionCommand.equals("POSTGIS"))
-			{
+			{				
 				wizard.getWizardComponents().addWizardPanel(panelChoose);
 				wizard.getWizardComponents().addWizardPanel(panelFields);
 				Driver driver = writerManager.getDriver("PostGIS JDBC Driver");
 				panelChoose.setDriver(driver);
+				panelFields.setWriter(((IWriteable)driver).getWriter());
 				wizard.getWizardComponents().addWizardPanel(
 					new PostGISpanel(wizard.getWizardComponents()));
 
