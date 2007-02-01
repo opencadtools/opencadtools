@@ -24,6 +24,7 @@ import jwizardcomponent.JWizardPanel;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
+import com.iver.cit.gvsig.fmap.edition.IWriter;
 
 /**
  * @author fjp
@@ -42,6 +43,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	private JButton jButtonAddField = null;
 	private JButton jButtonDeleteField = null;
 	private int MAX_FIELD_LENGTH = 254;
+	
+	private IWriter writer = null;
 
 
 	public JPanelFieldDefinition(JWizardComponents wizardComponents) {
@@ -61,7 +64,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 				String s=(String)tm.getValueAt(i,0);
 				valid=validate(s);
 				String size=(String) tm.getValueAt(i,2);
-				valid=validateInteger(size);
+				valid=valid && validateInteger(size);
 				if (!valid){
 					return;
 				}
@@ -85,7 +88,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			}
 			fieldNames.add(tm.getValueAt(i, 0));
 		}
-
+		
 		if (valid)
 			super.next();
 		if (!((FileBasedPanel)getWizardComponents().getWizardPanel(2)).getPath().equals(""))
@@ -94,6 +97,13 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			setFinishButtonEnabled(false);
 	}
 
+	public void setWriter(IWriter writer) {
+		this.writer = writer;
+	}
+	
+	public IWriter getWriter() {
+		return this.writer;
+	}
 
 	private boolean validateInteger(String size) {
 		boolean valid=true;
@@ -112,12 +122,36 @@ public class JPanelFieldDefinition extends JWizardPanel {
 
 	private boolean validate(String s) {
 		boolean valid=true;
+		if (s.equals("")) {
+			valid=false;
+			JOptionPane.showMessageDialog((Component)PluginServices.getMainFrame(),
+					PluginServices.getText(this,"no_puede_continuar")+"\n"+					
+					PluginServices.getText(this,"the_field_name_is_required"));
+		}
 		if (s.indexOf(" ")!=-1) {
 			valid=false;
 			JOptionPane.showMessageDialog((Component)PluginServices.getMainFrame(),
 					PluginServices.getText(this,"no_puede_continuar")+"\n"+
 					PluginServices.getText(this,"field")+" : "+s+"\n"+
 					PluginServices.getText(this,"contiene_espacios_en_blanco"));
+		}
+		if (this.writer != null && this.writer.getCapability("FieldNameMaxLength") != null) {
+			String value = writer.getCapability("FieldNameMaxLength");
+			int intValue;
+			try {
+				intValue = Integer.parseInt(value);
+			} catch (NumberFormatException e) {
+				intValue = 0;
+			}
+			if (intValue > 0 && s.length() > intValue) {
+				valid=false;
+				JOptionPane.showMessageDialog((Component)PluginServices.getMainFrame(),
+						PluginServices.getText(this,"no_puede_continuar")+"\n"+
+						PluginServices.getText(this,"field")+" : "+s+"\n"+
+						PluginServices.getText(this,"too_long_name")+"\n"+
+						PluginServices.getText(this,"maximun_name_size")+" : "+intValue+"\n"
+						);				
+			}
 		}
 		return valid;
 	}
@@ -245,7 +279,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 						fieldNames.add(tm.getValueAt(i, 0));
 					}
 					String[] currentFieldNames = (String[]) fieldNames.toArray(new String[0]);
-					String newField = PluginServices.getText(this, "new_field").replaceAll(" +", "_");
+					String newField = PluginServices.getText(this, "field").replaceAll(" +", "_");
 					int index=0;
 					for (int i = 0; i < currentFieldNames.length; i++) {
 						if (currentFieldNames[i].startsWith(newField)) {
@@ -255,7 +289,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 						}
 					}
 					String newFieldName = newField+(++index);
-
+					
 
 					// Add a new row
 					Object[] newRow = new Object[tm.getColumnCount()];
