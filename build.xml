@@ -40,6 +40,7 @@
     </copy>
   	<jar jarfile="${dist}/${jarName}" basedir="${build}"/>
     <copy file="config/config.xml" todir="${dist}"/>
+  	<copy file="build.number" todir="${dist}"/>
     <copy todir="${dist}">
     	<fileset dir="config" includes="text*.properties"/>
     </copy>
@@ -51,6 +52,12 @@
     	<fileset dir="${dist}" includes="**/**"/>
     </move>
   </target>
+	
+	<target name="import-build-number">
+		<copy todir=".">
+	  		<fileset file="${buildNumberFile}"/>
+	  	</copy>
+	</target>
 	
 		<target name="batch-build"
 				description="compile the sources, create the jar file"
@@ -81,6 +88,7 @@
 	
 		<target name="copy-data-files">
 		    <copy file="config/config.xml" todir="${dist}"/>
+			<copy file="build.number" todir="${dist}"/>
 			<copy todir="${dist}">
 				<fileset dir="config" includes="text*.properties"/>
 			</copy>
