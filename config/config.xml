@@ -3,6 +3,7 @@
 	<libraries library-dir="./"/>
 	<depends plugin-name="com.iver.cit.gvsig" />
 	<depends plugin-name="com.iver.cit.gvsig.jdbc_spatial" />
+	<depends plugin-name="com.iver.cit.gvsig.scripting" />
 	<resourceBundle name="text"/>
 	<extensions>
 		<extension class-name="com.iver.cit.gvsig.CreateNewLayer"
@@ -240,12 +241,24 @@
 				<action-tool icon="images/previousSel.png" action-command="previous_selection" tooltip="previous_selection" group="vista" position="19"/>
 			</tool-bar>
 		</extension>
-		
+
 
 		<extension class-name="com.iver.cit.gvsig.LayerPropertiesExtension"
 			description="Abre el diálogo de propiedades de la capa."
 			active="true" >
 			<menu text="Capa/Propiedades" action-command="PROPERTIES"/>
+		</extension>
+		<extension class-name="com.iver.cit.gvsig.ExpresionFieldExtension"
+			description="Extension that evaluate the expresion to a column."
+			active="true">
+			<menu text="field/expresion" tooltip="expresion"
+				action-command="EXPRESION"
+				icon="images/expresion.png" />
+			<tool-bar name="field_toolbar">
+				<action-tool icon="images/expresion.png"
+					action-command="EXPRESION" tooltip="expresion"
+					last="true"/>
+			</tool-bar>
 		</extension>
 	</extensions>
 </plugin-config>
