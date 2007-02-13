@@ -10,7 +10,6 @@ import com.iver.cit.gvsig.project.documents.view.snapping.AbstractSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
 
 public class FinalPointSnapper extends AbstractSnapper implements ISnapperVectorial {
-
 	public Point2D getSnapPoint(Point2D point, IGeometry geom, double tolerance, Point2D lastPointEntered) {
 		Point2D resul = null;
 
@@ -37,7 +36,7 @@ public class FinalPointSnapper extends AbstractSnapper implements ISnapperVector
 	 * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#draw(java.awt.Graphics, java.awt.geom.Point2D)
 	 */
 	public void draw(Graphics g, Point2D pPixels) {
-		g.setColor(getColor());	
+		g.setColor(getColor());
 //		g.drawRect((int) (pPixels.getX() - 6),
 //				(int) (pPixels.getY() - 6), 12, 12);
 //		g.drawRect((int) (pPixels.getX() - 3),
@@ -50,13 +49,4 @@ public class FinalPointSnapper extends AbstractSnapper implements ISnapperVector
 				(int) (pPixels.getY() - half),
 				getSizePixels(), getSizePixels());
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getPriority()
-	 */
-	public int getPriority()
-	{
-		return 3;
-	}
-
 }

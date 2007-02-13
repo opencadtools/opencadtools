@@ -100,7 +100,7 @@ public class SnapConfig extends JPanel {
 		}
 
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			if (columnIndex == 0 || columnIndex == 4)
+			if (columnIndex == 0 || columnIndex == 3)
 				return true;
 			return false;
 		}
@@ -109,10 +109,13 @@ public class SnapConfig extends JPanel {
 			ISnapper snap = (ISnapper) mySnappers.get(rowIndex);
 			switch (columnIndex)
 			{
-			case 0:
+			case 0://CheckBox
 				snap.setEnabled(((Boolean)aValue).booleanValue());
+				break;
+			case 3://Prioridad
+				snap.setPriority(((Integer)aValue).intValue());
+				break;
 			}
-
 		}
 
 		public Object getValueAt(int rowIndex, int columnIndex) {
@@ -126,7 +129,7 @@ public class SnapConfig extends JPanel {
 			case 2:
 				return snap.getToolTipText();
 			case 3:
-				return String.valueOf(snap.getPriority());
+				return new Integer(snap.getPriority());
 			case 4:
 				return new JButton();
 			}
@@ -143,7 +146,7 @@ public class SnapConfig extends JPanel {
 			case 2:
 				return String.class;
 			case 3:
-				return String.class;
+				return Integer.class;
 			case 4:
 				return JButton.class;
 			}
@@ -317,7 +320,6 @@ public class SnapConfig extends JPanel {
 		}
 
 	}
-
 	public void setApplySnappers(boolean applySnappers) {
 		getJChkBoxRefentActive().setSelected(applySnappers);
 	}

@@ -25,7 +25,6 @@ import java.awt.geom.Point2D;
  */
 public class MediumPointSnapper extends AbstractSnapper
     implements ISnapperVectorial {
-
 	/* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getSnapPoint(Point2D point,
      * IGeometry geom,double tolerance, Point2D lastPointEntered)
@@ -122,10 +121,4 @@ public class MediumPointSnapper extends AbstractSnapper
         g.drawLine(x2, y2, x3, y1);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getPriority()
-     */
-    public int getPriority() {
-        return 8;
-    }
 }

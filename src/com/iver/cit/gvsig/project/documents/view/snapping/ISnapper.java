@@ -27,7 +27,7 @@ public interface ISnapper {
 
 	boolean isEnabled();
 	public void setEnabled(boolean enabled);
-
+	public void setPriority(int priority);
 	IWindow getConfigurator();
 
 }

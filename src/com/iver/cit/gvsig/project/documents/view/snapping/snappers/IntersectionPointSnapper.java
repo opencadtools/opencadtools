@@ -29,7 +29,6 @@ import java.util.ArrayList;
 public class IntersectionPointSnapper extends AbstractSnapper
     implements ISnapperGeometriesVectorial {
     private IGeometry[] geometries;
-
     public IntersectionPointSnapper() {
         System.err.println("Construido IntersectionPoinSnapper");
     }
@@ -212,14 +211,6 @@ public class IntersectionPointSnapper extends AbstractSnapper
         g.drawLine(x1, y1, x2, y2);
         g.drawLine(x1, y2, x2, y1);
     }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getPriority()
-     */
-    public int getPriority() {
-        return 7;
-    }
-
     /**
      * DOCUMENT ME!
      *

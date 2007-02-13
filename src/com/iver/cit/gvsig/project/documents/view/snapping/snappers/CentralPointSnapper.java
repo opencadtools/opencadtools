@@ -19,7 +19,6 @@ import java.awt.geom.Point2D;
  */
 public class CentralPointSnapper extends AbstractSnapper
     implements ISnapperVectorial {
-
 	/* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getSnapPoint(Point2D point,
      * IGeometry geom,double tolerance, Point2D lastPointEntered)
@@ -62,12 +61,5 @@ public class CentralPointSnapper extends AbstractSnapper
         int half = getSizePixels() / 2;
         g.drawOval((int) (pPixels.getX() - half),
             (int) (pPixels.getY() - half), getSizePixels(), getSizePixels());
-    }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getPriority()
-     */
-    public int getPriority() {
-        return 4;
     }
 }

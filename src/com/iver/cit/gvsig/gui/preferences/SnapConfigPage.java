@@ -111,9 +111,10 @@ public class SnapConfigPage extends AbstractPreferencePage {
             ISnapper snp = (ISnapper) snappers.get(n);
             String nameClass=snp.getClass().getName();
             nameClass=nameClass.substring(nameClass.lastIndexOf('.'));
-            prefs.putBoolean("snapper_" + nameClass, b.booleanValue());
+            prefs.putBoolean("snapper_activated" + nameClass, b.booleanValue());
             if (b.booleanValue())
             	selected.put(snp, b);
+            prefs.putInt("snapper_priority"+ nameClass,snp.getPriority());
         }
         boolean b=snapConfig.applySnappers();
         prefs.putBoolean("apply-snappers",b);
@@ -162,12 +163,13 @@ public class SnapConfigPage extends AbstractPreferencePage {
             ISnapper snp = (ISnapper) snappers.get(n);
             String nameClass=snp.getClass().getName();
             nameClass=nameClass.substring(nameClass.lastIndexOf('.'));
-            boolean select = prefs.getBoolean("snapper_" + nameClass, false);
+            boolean select = prefs.getBoolean("snapper_activated" + nameClass, false);
             if (select)
             	selected.put(snp, new Boolean(select));
+            int priority = prefs.getInt("snapper_priority" + nameClass,3);
+            snp.setPriority(priority);
         }
-        prefs.getBoolean("apply-snappers",true);
-        applySnappers=true;
+        applySnappers = prefs.getBoolean("apply-snappers",true);
         snapConfig.setApplySnappers(applySnappers);
         snapConfig.selectSnappers(selected);
 

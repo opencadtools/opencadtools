@@ -8,7 +8,6 @@ import com.iver.andami.preferences.GenericDlgPreferences;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.preferences.EditionPreferencePage;
-import com.iver.cit.gvsig.gui.preferences.FieldExpresionPage;
 import com.iver.cit.gvsig.gui.preferences.FlatnessPage;
 import com.iver.cit.gvsig.gui.preferences.GridPage;
 import com.iver.cit.gvsig.gui.preferences.SnapConfigPage;
@@ -28,6 +27,7 @@ public class EditionPropertiesTocMenuEntry extends AbstractTocContextMenuAction 
 		ExtensionPoints extensionPoints = ExtensionPointsSingleton.getInstance();
     	extensionPoints.add("cad_editing_properties_pages","grid",GridPage.class);
     	extensionPoints.add("cad_editing_properties_pages","flatness",FlatnessPage.class);
+    	extensionPoints.add("cad_editing_properties_pages","snapping",SnapConfigPage.class);
     	return super.create();
 	}
 	public String getGroup() {

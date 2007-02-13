@@ -54,7 +54,6 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class PixelSnapper extends AbstractSnapper implements ISnapperRaster {
-
 	private Color refColor = Color.BLACK;
 	private int tolColorR = 100;
 	private int tolColorG = 100;
@@ -86,24 +85,24 @@ public class PixelSnapper extends AbstractSnapper implements ISnapperRaster {
 		if (fromX <0) fromX = 0;
 		int fromY =yPixel -half;
 		if (fromY <0) fromY = 0;
-		
+
 		int toX =xPixel + half;
 		if (toX > vp.getImageWidth()) toX = vp.getImageWidth();
 		int toY =yPixel + half;
 		if (toY > vp.getImageHeight()) toY = vp.getImageHeight();
-		
+
 		for (int testX= fromX; testX< toX; testX++)
 		{
 			for (int testY= fromY; testY< toY; testY++)
 			{
-				// System.out.println("Testing: " + testX + ", " + testY); 
+				// System.out.println("Testing: " + testX + ", " + testY);
 				int testRGB = img.getRGB(testX, testY);
 				// TODO: Aquí deberíamos trabajar con un ColorSpace y usar toCIEXYZ. Por ahora lo calculo con RGB.
 				int r = ColorModel.getRGBdefault().getRed(testRGB);
 				int g = ColorModel.getRGBdefault().getGreen(testRGB);
 				int b = ColorModel.getRGBdefault().getBlue(testRGB);
 				Coordinate cAux = new Coordinate(r, g, b);
-				
+
 				if (Math.abs(r-x1) < tolColorR)
 					if (Math.abs(g-y1) < tolColorG)
 						if (Math.abs(b-z1) < tolColorB)
@@ -116,7 +115,7 @@ public class PixelSnapper extends AbstractSnapper implements ISnapperRaster {
 								ySnapped = testY;
 							}
 						}
-			}			
+			}
 		}
 		Point2D pResul = null;
 		if (xSnapped != -1)
@@ -127,7 +126,7 @@ public class PixelSnapper extends AbstractSnapper implements ISnapperRaster {
 	}
 
 	public void draw(Graphics g, Point2D pPixels) {
-		g.setColor(getColor());	
+		g.setColor(getColor());
 		int half = getSizePixels() / 2;
 		g.drawOval((int) (pPixels.getX() - half),
 				(int) (pPixels.getY() - half),
@@ -136,10 +135,6 @@ public class PixelSnapper extends AbstractSnapper implements ISnapperRaster {
 
 	public String getToolTipText() {
 		return PluginServices.getText(this, "pixel_point");
-	}
-
-	public int getPriority() {
-		return 3;
 	}
 
 }

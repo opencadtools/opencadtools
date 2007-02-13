@@ -16,7 +16,6 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
  */
 public class InsertPointSnapper extends AbstractSnapper
     implements ISnapperVectorial {
-
 	/* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getSnapPoint(Point2D point,
      * IGeometry geom,double tolerance, Point2D lastPointEntered)
@@ -58,12 +57,5 @@ public class InsertPointSnapper extends AbstractSnapper
         g.drawLine(x3, y3, x3, y2);
         g.drawLine(x3, y2, x2, y2);
         g.drawLine(x2, y3, x2, y2);
-    }
-
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getPriority()
-     */
-    public int getPriority() {
-        return 6;
     }
 }
