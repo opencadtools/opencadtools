@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.prefs.Preferences;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -22,6 +23,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
@@ -82,6 +86,8 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
     private SelectableDataSource sds = null;
     private EvalExpresion evalExpresion=null;
     private IEditableSource ies=null;
+	private JPanel pMessage;
+	private JTextArea txtMessage;
     private static ArrayList operators=new ArrayList();
     public EvalExpresionDialog(Table table,BSFManager interpreter) {
         super();
@@ -147,8 +153,9 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
         bg.add(getRbString());
         bg.add(getRbDate());
         this.setLayout(new BorderLayout());
-        this.setSize(549, 372);
+        this.setSize(549, 480);
         this.add(getTabPrincipal(), java.awt.BorderLayout.CENTER);
+        this.add(getPMessage(), java.awt.BorderLayout.NORTH);
         this.add(getAcceptCancel(), java.awt.BorderLayout.SOUTH);
     }
 
@@ -199,102 +206,131 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
      * @return javax.swing.JPanel
      */
     private AcceptCancelPanel getAcceptCancel() {
-        if (this.acceptCancel == null) {
-            this.acceptCancel = new AcceptCancelPanel(new java.awt.event.ActionListener() {
-                        public void actionPerformed(
-                            java.awt.event.ActionEvent e) {
-                            try {
-                            	long t1=System.currentTimeMillis();
-                                evalExpresion();
-                                long t2=System.currentTimeMillis();
-                                System.out.println("Tiempo evaluar expresiones = "+(t2-t1));
-                            } catch (DriverException e1) {
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
+		if (this.acceptCancel == null) {
+			this.acceptCancel = new AcceptCancelPanel(
+					new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+							boolean isAccepted=true;
+							Preferences prefs = Preferences.userRoot().node(
+									"fieldExpresionOptions");
+							int limit;
+							limit = prefs.getInt("limit_rows_in_memory", -1);
+							if (limit != -1) {
+								int option = JOptionPane
+										.showConfirmDialog(
+												(Component) PluginServices
+														.getMainFrame(),
+												PluginServices
+														.getText(
+																this,
+																"it_has_established_a_limit_of_rows_will_lose_the_possibility_to_undo_wants_to_continue"));
+								if (option != JOptionPane.OK_OPTION) {
+									return;
+								}
+							}
+							try {
+								long t1 = System.currentTimeMillis();
+								isAccepted=evalExpresion();
+								long t2 = System.currentTimeMillis();
+								System.out
+										.println("Tiempo evaluar expresiones = "
+												+ (t2 - t1));
+							} catch (DriverException e1) {
+								e1.printStackTrace();
+							} catch (IOException e1) {
 								e1.printStackTrace();
 							} catch (DriverIOException e1) {
 								e1.printStackTrace();
 							} catch (BSFException e1) {
 								e1.printStackTrace();
 							}
+							if (isAccepted)
+								PluginServices.getMDIManager().closeWindow(
+									EvalExpresionDialog.this);
+						}
+					}, new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+							PluginServices.getMDIManager().closeWindow(
+									EvalExpresionDialog.this);
+						}
+					});
+			acceptCancel.setOkButtonEnabled(false);
 
-                            PluginServices.getMDIManager().closeWindow(EvalExpresionDialog.this);
-                        }
-                    },
-                    new java.awt.event.ActionListener() {
-                        public void actionPerformed(
-                            java.awt.event.ActionEvent e) {
-                            PluginServices.getMDIManager().closeWindow(EvalExpresionDialog.this);
-                        }
-                    });
+			// this.acceptCancel.setBounds(5,150,this.getWidth()-10,30);
+		}
 
-            //this.acceptCancel.setBounds(5,150,this.getWidth()-10,30);
-        }
-
-        return this.acceptCancel;
-    }
+		return this.acceptCancel;
+	}
     /**
-     * Evaluate the expresion.
-     *
-     * @throws EvalError
-     * @throws DriverException
-     * @throws DriverIOException
-     * @throws IOException
-     * @throws DriverIOException
-     * @throws IOException
-     * @throws BSFException
-     */
-    private void evalExpresion()
-        throws DriverException, IOException, DriverIOException, BSFException {
-        long rowCount = sds.getRowCount();
-        interpreter.eval(ExpresionFieldExtension.BEANSHELL,null,-1,-1,"java.lang.Object myF () {" +getTxtExp().getText()+ ";};");
-        if (rowCount > 0) {
-            try {
-                interpreter.eval(ExpresionFieldExtension.BEANSHELL,null,-1,-1,"myF()");
-            } catch (BSFException ee) {
-                int option=JOptionPane.showConfirmDialog((Component) PluginServices.getMainFrame(),
-                    PluginServices.getText(this,
-                        "error_expresion")+ee+PluginServices.getText(this,"continue?"));
-                if (option!=JOptionPane.OK_OPTION) {
-                	return;
-                }
-            }
-        }
-        ArrayList errors = new ArrayList();
-        ies.startComplexRow();
-        interpreter.declareBean("ee",evalExpresion,EvalExpresion.class);
-        String p= "for (int i=0; i < " +rowCount + "; i++){" +
-		"indexRow.set(i);" +
-		"java.lang.Object obj = myF();" +
-		//"long t1 = System.currentTimeMillis();" +
-		"ee.setValue(obj,i);" +
-		"ee.saveEdits(i);" +
-		//"t2 = System.currentTimeMillis();" +
-		//"print(\"Obj = \" + obj.toString());" +
-		"}" +
-		"ee.saveEdits(-1);" +
-		"";
-        interpreter.eval(ExpresionFieldExtension.BEANSHELL,null,-1,-1,p);
-        ies.endComplexRow(PluginServices.getText(this, "expresion"));
-//        try {
-//        	saveEdits();
-//		} catch (DriverLoadException e) {
-//			e.printStackTrace();
-//		} catch (EditionException e) {
-//			e.printStackTrace();
-//		} catch (DriverException e) {
-//			e.printStackTrace();
-//		} catch (com.iver.cit.gvsig.fmap.DriverException e) {
-//			e.printStackTrace();
-//		}
-        if (!errors.isEmpty()) {
-            JOptionPane.showMessageDialog((Component) PluginServices.getMainFrame(),
-                PluginServices.getText(this, "evaluate_expresion_with_errors") + " = " +
-                errors.size());
-        }
-        table.refresh();
-    }
+	 * Evaluate the expresion.
+	 *
+	 * @throws EvalError
+	 * @throws DriverException
+	 * @throws DriverIOException
+	 * @throws IOException
+	 * @throws DriverIOException
+	 * @throws IOException
+	 * @throws BSFException
+	 */
+    private boolean evalExpresion() throws DriverException, IOException,
+			DriverIOException, BSFException {
+		long rowCount = sds.getRowCount();
+		interpreter.eval(ExpresionFieldExtension.BEANSHELL, null, -1, -1,
+				"java.lang.Object expresion () {" + getTxtExp().getText()
+						+ ";};");
+		if (rowCount > 0) {
+			try {
+				interpreter.eval(ExpresionFieldExtension.BEANSHELL, null, -1,
+						-1, "expresion()");
+			} catch (BSFException ee) {
+				int option = JOptionPane.showConfirmDialog(
+						(Component) PluginServices.getMainFrame(),
+						PluginServices.getText(this, "error_expresion") + "\n"
+								+ ee.getMessage() + "\n"
+								+ PluginServices.getText(this, "continue?"));
+				if (option != JOptionPane.OK_OPTION) {
+					return false;
+				}
+			}
+		}
+		ies.startComplexRow();
+		interpreter.declareBean("ee", evalExpresion, EvalExpresion.class);
+		String p = "for (int i=0; i < " + rowCount + "; i++){"
+				+ "indexRow.set(i);" + "java.lang.Object obj = expresion();"
+				+ "ee.setValue(obj,i);" + "ee.saveEdits(i);" + "}" + "";
 
+		try {
+			interpreter
+					.eval(ExpresionFieldExtension.BEANSHELL, null, -1, -1, p);
+		} catch (BSFException ee) {
+			JOptionPane.showMessageDialog((Component) PluginServices
+					.getMainFrame(), PluginServices.getText(this,
+					"evaluate_expresion_with_errors"));
+		}
+
+		ies.endComplexRow(PluginServices.getText(this, "expresion"));
+		table.refresh();
+		return true;
+	}
+    /**
+	 * This method initializes pMessage
+	 *
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getPMessage() {
+		if (pMessage == null) {
+			txtMessage = new JTextArea();
+			txtMessage.setText(PluginServices.getText(this,"eval_expresion_will_be_carried_out_just_then"));
+			txtMessage.setPreferredSize(new java.awt.Dimension(500,70));
+			txtMessage.setEditable(false);
+			txtMessage.setBackground(UIManager.getColor(this));
+			pMessage = new JPanel();
+			pMessage.setBorder(javax.swing.BorderFactory.createTitledBorder(null, PluginServices.getText(this,"information"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, null));
+
+			pMessage.add(txtMessage, null);
+		}
+		return pMessage;
+	}
     private void evalExpresions() throws BSFException {
         ies = table.getModel().getModelo();
         sds = ies.getRecordset();
@@ -365,6 +401,18 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
     private JTextArea getTxtExp() {
         if (txtExp == null) {
             txtExp = new JTextArea();
+            txtExp.addCaretListener(new CaretListener(){
+				public void caretUpdate(CaretEvent e) {
+					if (txtExp.getText().length()>0)
+						getAcceptCancel().setOkButtonEnabled(true);
+					else
+						getAcceptCancel().setOkButtonEnabled(false);
+				}
+
+
+
+
+			});
         }
 
         return txtExp;
