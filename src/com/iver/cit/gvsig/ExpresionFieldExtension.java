@@ -23,6 +23,7 @@ import com.iver.cit.gvsig.project.documents.table.operators.EndsWith;
 import com.iver.cit.gvsig.project.documents.table.operators.Equal;
 import com.iver.cit.gvsig.project.documents.table.operators.Equals;
 import com.iver.cit.gvsig.project.documents.table.operators.Exp;
+import com.iver.cit.gvsig.project.documents.table.operators.Geometry;
 import com.iver.cit.gvsig.project.documents.table.operators.IndexOf;
 import com.iver.cit.gvsig.project.documents.table.operators.IsNumber;
 import com.iver.cit.gvsig.project.documents.table.operators.LastIndexOf;
@@ -59,9 +60,7 @@ import com.iver.cit.gvsig.project.documents.table.operators.Trim;
 import com.iver.utiles.extensionPoints.ExtensionPoints;
 import com.iver.utiles.extensionPoints.ExtensionPointsSingleton;
 /**
- *
  * @author Vicente Caballero Navarro
- *
  */
 public class ExpresionFieldExtension extends Extension{
 	//private static Interpreter interpreter=new Interpreter();
@@ -71,7 +70,7 @@ public class ExpresionFieldExtension extends Extension{
 	public void initialize() {
 		ExtensionPoints extensionPoints = ExtensionPointsSingleton.getInstance();
     	extensionPoints.add("cad_editing_properties_pages","fieldExpresion",FieldExpresionPage.class);
-		registerOperations();
+    	registerOperations();
 	}
 
 	public void execute(String actionCommand) {
@@ -81,7 +80,6 @@ public class ExpresionFieldExtension extends Extension{
 		PluginServices.getMDIManager().addWindow(eed);
 	}
 	public void postInitialize() {
-
 	}
 
 	public boolean isEnabled() {
@@ -119,6 +117,7 @@ public class ExpresionFieldExtension extends Extension{
 	     	extensionPoints.add("ColumnOperators",Equal.class.toString(),Equal.class);
 	     	extensionPoints.add("ColumnOperators",Equals.class.toString(),Equals.class);
 	     	extensionPoints.add("ColumnOperators",Exp.class.toString(),Exp.class);
+	     	extensionPoints.add("ColumnOperators",Geometry.class.toString(),Geometry.class);
 	     	extensionPoints.add("ColumnOperators",IndexOf.class.toString(),IndexOf.class);
 	     	extensionPoints.add("ColumnOperators",IsNumber.class.toString(),IsNumber.class);
 	     	extensionPoints.add("ColumnOperators",LastIndexOf.class.toString(),LastIndexOf.class);
