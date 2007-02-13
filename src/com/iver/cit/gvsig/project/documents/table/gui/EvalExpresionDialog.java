@@ -42,6 +42,7 @@ import com.iver.cit.gvsig.ExpresionFieldExtension;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.edition.IEditableSource;
+import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.iver.cit.gvsig.project.documents.table.GraphicOperator;
@@ -295,10 +296,20 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
 		}
 		ies.startComplexRow();
 		interpreter.declareBean("ee", evalExpresion, EvalExpresion.class);
-		String p = "for (int i=0; i < " + rowCount + "; i++){"
-				+ "indexRow.set(i);" + "java.lang.Object obj = expresion();"
-				+ "ee.setValue(obj,i);" + "ee.saveEdits(i);" + "}" + "";
-
+		FBitSet selection=sds.getSelection();
+		String p ="";
+		if (selection.cardinality() > 0) {
+			interpreter.declareBean("selection", selection, FBitSet.class);
+			p = "for (int i = selection.nextSetBit(0);" + "i >= 0;"
+					+ "i = selection.nextSetBit(i + 1)){" + "indexRow.set(i);"
+					+ "java.lang.Object obj = expresion();"
+					+ "ee.setValue(obj,i);" + "ee.saveEdits(i);" + "}" + "";
+		} else {
+			p = "for (int i=0; i < " + rowCount + "; i++){"
+					+ "indexRow.set(i);"
+					+ "java.lang.Object obj = expresion();"
+					+ "ee.setValue(obj,i);" + "ee.saveEdits(i);" + "}" + "";
+		}
 		try {
 			interpreter
 					.eval(ExpresionFieldExtension.BEANSHELL, null, -1, -1, p);
@@ -320,7 +331,7 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
 	private JPanel getPMessage() {
 		if (pMessage == null) {
 			txtMessage = new JTextArea();
-			txtMessage.setText(PluginServices.getText(this,"eval_expresion_will_be_carried_out_just_then"));
+			txtMessage.setText(PluginServices.getText(this,"eval_expresion_will_be_carried_out_right_now_with_current_values_in_table"));
 			txtMessage.setPreferredSize(new java.awt.Dimension(500,70));
 			txtMessage.setEditable(false);
 			txtMessage.setBackground(UIManager.getColor(this));
