@@ -57,7 +57,10 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  *
  * $Id$
  * $Log$
- * Revision 1.12  2006-11-28 13:18:32  fjp
+ * Revision 1.13  2007-02-13 17:10:06  caballero
+ * expresion
+ *
+ * Revision 1.12  2006/11/28 13:18:32  fjp
  * No redibujar cuando se añade algo.
  * Para que se dibuje con el símbolo por defecto del layer, habrá que tocar
  * en los CADTool
@@ -142,12 +145,12 @@ public class EditionChangeManager implements IEditionListener{
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){
-				Table table=(Table)views[i];
-				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(fLayer))
-					table.refresh();
+//				Table table=(Table)views[i];
+//				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(fLayer))
+//					table.refresh();
 			}else if (views[i] instanceof View){
 				View view=(View) views[i];
-				 
+
 				fLayer.setDirty(true);
 				view.getMapControl().rePaintDirtyLayers();
 				if (e.getChangeType() == EditionEvent.CHANGE_TYPE_ADD)
@@ -164,11 +167,11 @@ public class EditionChangeManager implements IEditionListener{
 	}
 	public void beforeFieldEditEvent(BeforeFieldEditEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	public void afterFieldEditEvent(AfterFieldEditEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
