@@ -75,17 +75,18 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 	public void activationChanged(LayerEvent e) {
 		if (e.getSource().isActive()){
 			ile=getLayerEdited(e.getSource());
-			if (PluginServices.getMDIManager().getActiveWindow() instanceof View)
-			{
-				View view=(View)PluginServices.getMDIManager().getActiveWindow();
-				if (e.getSource().isEditing()){
-					view.showConsole();
-				}else{
-					view.hideConsole();
-				}
-			}
-
 		}
+		IWindow window=PluginServices.getMDIManager().getActiveWindow();
+		if (window instanceof View){
+			View view=(View)window;
+			if (e.getSource().isEditing()){
+				view.showConsole();
+			}else{
+				view.hideConsole();
+			}
+		}
+
+
 		if (ile==null || ile.getLayer().equals(e.getSource())){
 
 			if (ile!=null && !ile.getLayer().isActive()) {

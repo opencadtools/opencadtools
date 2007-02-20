@@ -358,8 +358,8 @@ public abstract class DefaultCADTool implements CADTool {
 		VectorialEditableAdapter vea = vle.getVEA();
 		FBitSet selection = vea.getSelection();
 		selection.clear();
-		//vea.setSelectionImage(null);
-		//vea.setHandlersImage(null);
+//		vea.setSelectionImage(null);
+//		vea.setHandlersImage(null);
 
 	}
 
