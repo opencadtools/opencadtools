@@ -46,8 +46,6 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
-
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -70,8 +68,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADTo
  * @author Vicente Caballero Navarro
  */
 public class PolylineCADTool extends DefaultCADTool {
-	private static Logger logger = Logger.getLogger(PolylineCADTool.class.getName());
-    private PolylineCADToolContext _fsm;
+	private PolylineCADToolContext _fsm;
     private Point2D firstPoint;
     private Point2D antPoint;
     private Point2D antantPoint;
@@ -79,6 +76,7 @@ public class PolylineCADTool extends DefaultCADTool {
     private Point2D antInter;
     private ArrayList list = new ArrayList();
 	private boolean close=false;
+	private GeneralPathX gpx = null;
 
     /**
      * Crea un nuevo PolylineCADTool.
@@ -96,59 +94,39 @@ public class PolylineCADTool extends DefaultCADTool {
     }
 
     public void endGeometry() {
-    	 try {
+    	if (gpx==null) {
+    		gpx=new GeneralPathX();
+    		IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
+    		FGeometryCollection fgc = new FGeometryCollection(geoms);
+    		// No queremos guardar FGeometryCollections:
+    		gpx.append(fgc.getPathIterator(null,FConverter.FLATNESS), true);
+    	}
+        try {
  			if (getVLE().getVEA().getShapeType()==FShape.POLYGON && !close){
  				closeGeometry();
  			}
  		} catch (DriverIOException e) {
  			e.printStackTrace();
  		}
-    	IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
-        FGeometryCollection fgc = new FGeometryCollection(geoms);
 
-
-        // No queremos guardar FGeometryCollections:
-        GeneralPathX gp = new GeneralPathX();
-        gp.append(fgc.getPathIterator(null,FConverter.FLATNESS), true);
-        IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
-//        if (gp.isClosed())
-//        {
-//        	gp.ensureOrientation(false); // Poligono exterior.
-//        	// Voy a testear que se puede convertir a JTS:
-//        	IGeometry gAux = ShapeFactory.createPolygon2D(gp);
-//        	Geometry jtsG = gAux.toJTSGeometry();
-//        	logger.debug("A punto de escribir " + jtsG.toText());
-//        	try {
-//        		int shapeType = getVLE().getVEA().getShapeType();
-//				if ((shapeType ==FShape.POLYGON) || (shapeType == FShape.MULTI)) {
-//					newGeom = gAux;
-//				}
-//			} catch (DriverIOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//				return;
-//			}
-//
-//        }
-//
+        IGeometry newGeom = ShapeFactory.createPolyline2D(gpx);
         addGeometry(newGeom);
         _fsm = new PolylineCADToolContext(this);
         list.clear();
         close=false;
+        gpx=null;
         antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
     public void closeGeometry(){
+    	if (gpx==null) {
+    		gpx=new GeneralPathX();
+    		IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
+    		FGeometryCollection fgc = new FGeometryCollection(geoms);
+    		// No queremos guardar FGeometryCollections:
+    		gpx.append(fgc.getPathIterator(null,FConverter.FLATNESS), true);
+    	}
     	close=true;
-        GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-                2);
-        elShape.moveTo(antPoint.getX(), antPoint.getY());
-        elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-
-        list.add(ShapeFactory.createPolyline2D(elShape));
-
-
-        // list.add(ShapeFactory.createPolyline2D(elShape));
-
+    	gpx.closePath();
     }
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
@@ -184,14 +162,6 @@ public class PolylineCADTool extends DefaultCADTool {
     public void addPoint(double x, double y,InputEvent event) {
         PolylineCADToolState actualState = (PolylineCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
-
-//        if (status.equals("Polyline.FirstPoint")) {
-//            antPoint = new Point2D.Double(x, y);
-//
-//            if (firstPoint == null) {
-//                firstPoint = (Point2D) antPoint.clone();
-//            }
-//        } else
         if (status.equals("Polyline.NextPointOrArcOrClose") || status.equals("Polyline.FirstPoint")) {
 
            if (firstPoint == null) {
@@ -333,7 +303,7 @@ public class PolylineCADTool extends DefaultCADTool {
      */
     public void drawOperation(Graphics g, double x,
         double y) {
-        PolylineCADToolState actualState = ((PolylineCADToolContext)_fsm).getState();
+        PolylineCADToolState actualState = _fsm.getState();
         String status = actualState.getName();
 
         if (status.equals("Polyline.NextPointOrArcOrClose") || status.equals("Polyline.FirstPoint")) {

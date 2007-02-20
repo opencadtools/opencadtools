@@ -303,6 +303,7 @@ public class EditVertexCADTool extends DefaultCADTool {
         		newGp.moveTo(theData[0], theData[1]);
         		numSegmentsAdded++;
         		bFirst=false;
+        		theIterator.next();
         		continue;
         	}
             switch (theType) {
