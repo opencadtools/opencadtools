@@ -13,11 +13,11 @@ import java.awt.geom.Point2D;
 
 
 /**
- * Cuadrant point snapper.
+ * Quadrant point snapper.
  *
  * @author Vicente Caballero Navarro
  */
-public class CuadrantPointSnapper extends AbstractSnapper
+public class QuadrantPointSnapper extends AbstractSnapper
     implements ISnapperVectorial {
 	/* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getSnapPoint(Point2D point,
@@ -50,7 +50,7 @@ public class CuadrantPointSnapper extends AbstractSnapper
      * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getToolTipText()
      */
     public String getToolTipText() {
-        return PluginServices.getText(this, "cuadrant_point");
+        return PluginServices.getText(this, "quadrant_point");
     }
 
     /* (non-Javadoc)
