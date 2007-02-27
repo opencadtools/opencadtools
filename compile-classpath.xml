@@ -7,6 +7,7 @@
 	<property name="fmapLibs" location="${fmap}/lib" />
 	<property name="gvsigJar" location="${andami}/gvSIG/extensiones/com.iver.cit.gvsig/lib/com.iver.cit.gvsig.jar"/>
 	<property name="JDBCDist" location="../extJDBC/dist"/>
+	<property name="scriptingLibs" location="../extScripting/lib"/>
 
 	<!-- defines the classpath to be used for compilation -->
 	<path id="extCAD.compile-classpath">
@@ -29,6 +30,8 @@
 	    <pathelement location="${fmapLibs}/jts-1.7.jar"/>
 	    <pathelement location="${andamiLibs}/JWizardComponent.jar"/>
 	    <pathelement location="${CADLibs}/Smc.jar"/>
+		<pathelement location="${scriptingLibs}/bsf-2.3.0rc1.jar"/>
+		<pathelement location="${scriptingLibs}/bsh-2.0b1.jar"/>
 
 	</path>
 </project>
