@@ -15,20 +15,17 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.MemoryImageSource;
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.prefs.Preferences;
 
 import org.cresques.cts.IProjection;
-import org.gvsig.gui.beans.controls.combolabel.ComboCoords;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiFrame.MainFrame;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
-import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
@@ -355,16 +352,11 @@ public class CADToolAdapter extends Behavior {
             mF.getStatusBar().setControlValue("scale",String.valueOf(mapControl.getMapContext().getScaleView()));
 			mF.getStatusBar().setMessage("projection", iProj.getAbrev());
 
-//			mF.getStatusBar().setMessage("x",
-//					axisText[0] + String.valueOf(nf.format(p.getX()/MapContext.CHANGEM[vp.getDistanceUnits()])));
-//			mF.getStatusBar().setMessage("y",
-//					axisText[1] + String.valueOf(nf.format(p.getY()/MapContext.CHANGEM[vp.getDistanceUnits()])));
 			String[] coords=sbl.getCoords(p);
-			ComboCoords combocoords=(ComboCoords)PluginServices.getMainFrame().getComponentByName("coords");
-			combocoords.setLabelX(axisText[0]);
-			combocoords.setLabelY(axisText[1]);
-			combocoords.setValueX(coords[0]);
-			combocoords.setValueY(coords[1]);
+			mF.getStatusBar().setMessage("x",
+					axisText[0] + coords[0]);
+			mF.getStatusBar().setMessage("y",
+					axisText[1] + coords[1]);
 		}
 	}
 
