@@ -40,12 +40,12 @@
  */
 package com.iver.cit.gvsig.gui.cad;
 
-import com.iver.cit.gvsig.fmap.ViewPort;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+
+import com.iver.cit.gvsig.fmap.ViewPort;
 
 
 /**

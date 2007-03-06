@@ -16,14 +16,16 @@ import org.geotools.feature.AttributeType;
 import org.geotools.filter.Filter;
 import org.geotools.filter.FilterFactory;
 
+import com.hardcode.gdbms.driver.exceptions.InitializeWriterException;
+import com.iver.cit.gvsig.exceptions.visitors.ProcessWriterVisitorException;
+import com.iver.cit.gvsig.exceptions.visitors.StartWriterVisitorException;
+import com.iver.cit.gvsig.exceptions.visitors.StopWriterVisitorException;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
-import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
-import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.writers.AbstractWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -72,7 +74,7 @@ public class WriterGT2Shp extends AbstractWriter {
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.edition.IWriter#preProcess()
 	 */
-	public void preProcess() throws EditionException {
+	public void preProcess() throws StartWriterVisitorException {
 //		feature attributes creation
 		URL theUrl;
 		try {
@@ -88,9 +90,8 @@ public class WriterGT2Shp extends AbstractWriter {
 
 
 			// types = new AttributeType[lyrVect.getRecordset().getFieldCount() +1];
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EditionException(e);
+		} catch (IOException e) {
+			throw new StartWriterVisitorException(getName(),e);
 		}
 
 
@@ -99,7 +100,7 @@ public class WriterGT2Shp extends AbstractWriter {
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.edition.IWriter#process(com.iver.cit.gvsig.fmap.edition.IRowEdited)
 	 */
-	public void process(IRowEdited row) throws EditionException {
+	public void process(IRowEdited row) throws ProcessWriterVisitorException {
 
 		IFeature feat = (IFeature) row.getLinkedRow();
 		Object[] values = new Object[types.length];
@@ -117,8 +118,7 @@ public class WriterGT2Shp extends AbstractWriter {
         		featStore.removeFeatures(theFilter);
 			numReg++;
 		} catch (IOException e) {
-			e.printStackTrace();
-			throw new EditionException(e);
+			throw new ProcessWriterVisitorException(getName(),e);
 		}
 
 
@@ -129,7 +129,7 @@ public class WriterGT2Shp extends AbstractWriter {
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.edition.IWriter#postProcess()
 	 */
-	public void postProcess() throws EditionException {
+	public void postProcess() throws StopWriterVisitorException {
 		try
 		{
 			t.commit(); // commit opperations
@@ -138,16 +138,14 @@ public class WriterGT2Shp extends AbstractWriter {
 			try {
 				t.rollback();
 			} catch (IOException e) {
-				e.printStackTrace();
-				throw new EditionException(e);
+				throw new StopWriterVisitorException(getName(),e);
 			} // cancel opperations
 		}
 		finally {
 			try {
 				t.close();
 			} catch (IOException e) {
-				e.printStackTrace();
-				throw new EditionException(e);
+				throw new StopWriterVisitorException(getName(),e);
 			} // free resources
 		}
 
@@ -206,9 +204,9 @@ public class WriterGT2Shp extends AbstractWriter {
 
 	}
 
-	public void initialize(ITableDefinition tableDefinition) throws EditionException {
+	public void initialize(ITableDefinition tableDefinition) throws InitializeWriterException {
 		super.initialize(tableDefinition);
-		
+
 	}
 
 	public boolean canAlterTable() {

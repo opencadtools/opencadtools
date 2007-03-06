@@ -3,13 +3,13 @@ package com.iver.cit.gvsig;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.CancelationException;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerCollectionEvent;
 import com.iver.cit.gvsig.fmap.layers.LayerCollectionListener;
@@ -210,7 +210,12 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 			//FLayers layers=getMapControl().getMapContext().getLayers();
 			//if (layers.getLayersCount()>0)
 			//	layers.getLayer(0).setActive(true);
-			vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
+			try {
+				vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
+			} catch (ReadDriverException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			editedLayers.remove(vle);
 			getMapControl().setTool("zoomIn");
 			FLyrVect lv=(FLyrVect)vle.getLayer();

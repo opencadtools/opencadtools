@@ -7,16 +7,17 @@ import org.geotools.data.FeatureStore;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.postgis.PostgisDataStore;
 import org.geotools.data.postgis.PostgisDataStoreFactory;
-import org.geotools.factory.FactoryConfigurationError;
 import org.geotools.feature.FeatureType;
 import org.geotools.feature.SchemaException;
 
-import com.hardcode.gdbms.engine.data.driver.DriverException;
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.exceptions.layers.StartEditionLayerException;
+import com.iver.cit.gvsig.exceptions.layers.StopEditionLayerException;
+import com.iver.cit.gvsig.exceptions.visitors.StopWriterVisitorException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
-import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -59,7 +60,7 @@ public class StopEditingToGT2PostGIS extends Extension {
             while (iter.hasNext()) {
             	layer = iter.nextLayer();
                 if (layer instanceof FLyrVect &&
-                        layer.isEditing()) {                    
+                        layer.isEditing()) {
                     stopEditing((FLyrVect)layer);
 
                     return;
@@ -134,19 +135,16 @@ public class StopEditingToGT2PostGIS extends Extension {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (EditionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (DriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (com.iver.cit.gvsig.fmap.DriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (FactoryConfigurationError e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (SchemaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (StartEditionLayerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ReadDriverException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (StopWriterVisitorException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

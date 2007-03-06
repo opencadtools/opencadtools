@@ -46,18 +46,19 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
 import com.hardcode.driverManager.DriverLoadException;
-import com.hardcode.gdbms.engine.data.driver.DriverException;
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
+import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -67,7 +68,6 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
@@ -172,7 +172,6 @@ public abstract class DefaultCADTool implements CADTool {
 				values[i] = ValueFactory.createNullValue();
 			}
 			int num;
-			try {
 				num = vea.getRowCount();
 				DefaultFeature df = new DefaultFeature(geometry, values, String
 						.valueOf(num));
@@ -195,18 +194,20 @@ public abstract class DefaultCADTool implements CADTool {
 				geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
 				vle.drawHandlers(geom.cloneGeometry(), gs, vp);
 				vea.setSelectionImage(selectionImage);
-			} catch (IOException e) {
-				logger.debug(e);
-				NotificationManager.addError(e);
-				return;
-			}
 
-		} catch (DriverIOException e) {
-			e.printStackTrace();
-		} catch (DriverException e) {
-			e.printStackTrace();
+
 		} catch (DriverLoadException e) {
 			e.printStackTrace();
+			return;
+		} catch (ReadDriverException e) {
+			e.printStackTrace();
+			return;
+		} catch (ValidateRowException e) {
+			e.printStackTrace();
+			return;
+		} catch (ExpansionFileWriteException e) {
+			e.printStackTrace();
+			return;
 		}
 
 		draw(geometry.cloneGeometry());
@@ -222,10 +223,18 @@ public abstract class DefaultCADTool implements CADTool {
 		try {
 			getVLE().getVEA().modifyRow(index, row, getName(),
 					EditionEvent.GRAPHIC);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (DriverIOException e1) {
-			e1.printStackTrace();
+		} catch (ValidateRowException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExpansionFileWriteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		draw(row.getGeometry().cloneGeometry());
 	}
@@ -246,11 +255,16 @@ public abstract class DefaultCADTool implements CADTool {
 			DefaultFeature df = new DefaultFeature(geometry, values, String
 					.valueOf(num));
 			index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
-		} catch (DriverIOException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (DriverLoadException e) {
+			e.printStackTrace();
+		} catch (ValidateRowException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExpansionFileWriteException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return vea.getInversedIndex(index);
@@ -349,7 +363,7 @@ public abstract class DefaultCADTool implements CADTool {
 		return selectedHandlers;
 	}
 
-	public void clearSelection() {
+	public void clearSelection() throws ReadDriverException {
 		VectorialLayerEdited vle = getVLE();
 		ArrayList selectedRow = vle.getSelectedRow();
 		ArrayList selectedHandlers = vle.getSelectedHandler();
@@ -380,7 +394,7 @@ public abstract class DefaultCADTool implements CADTool {
 				int type = FShape.POINT;
 				try {
 					type = ((FLyrVect) getVLE().getLayer()).getShapeType();
-				} catch (com.iver.cit.gvsig.fmap.DriverException e) {
+				} catch (ReadDriverException e) {
 					e.printStackTrace();
 				}
 				if (ct.isApplicable(type)) {
@@ -394,9 +408,8 @@ public abstract class DefaultCADTool implements CADTool {
 					vista.getConsolePanel().addText(
 							"\n" + "#" + question + " > ", JConsole.MESSAGE);
 					return true;
-				} else {
-					throw new CommandException(name);
 				}
+				throw new CommandException(name);
 			}
 		}
 		return false;

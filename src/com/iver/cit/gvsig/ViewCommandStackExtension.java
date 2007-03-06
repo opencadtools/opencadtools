@@ -1,5 +1,6 @@
 package com.iver.cit.gvsig;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapContext;
@@ -76,11 +77,21 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 	}
 
 	public void commandRepaint() {
-		CADExtension.getCADTool().clearSelection();
+		try {
+			CADExtension.getCADTool().clearSelection();
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
 	public void commandRefresh() {
-		CADExtension.getCADTool().clearSelection();
+		try {
+			CADExtension.getCADTool().clearSelection();
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

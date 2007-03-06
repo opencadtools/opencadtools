@@ -1,11 +1,9 @@
 package com.iver.cit.gvsig;
 
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -21,11 +19,18 @@ import org.cresques.cts.ICoordTrans;
 
 import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverLoadException;
+import com.hardcode.gdbms.driver.exceptions.FileNotFoundDriverException;
+import com.hardcode.gdbms.driver.exceptions.InitializeWriterException;
+import com.hardcode.gdbms.driver.exceptions.OpenDriverException;
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.hardcode.gdbms.driver.exceptions.SchemaEditionException;
+import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.DriverException;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
+import com.iver.cit.gvsig.exceptions.visitors.VisitorException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -46,7 +51,7 @@ import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGisDriver;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
-import com.iver.cit.gvsig.fmap.edition.EditionException;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfFieldsMapping;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfWriter;
@@ -81,7 +86,7 @@ public class ExportTo extends Extension {
 		MapContext mapContext;
 		VectorialDriver reader;
 
-		public WriterTask(MapContext mapContext, FLyrVect lyr, IWriter writer, Driver reader) throws DriverException, DriverIOException
+		public WriterTask(MapContext mapContext, FLyrVect lyr, IWriter writer, Driver reader) throws ReadDriverException
 		{
 			this.mapContext = mapContext;
 			this.lyrVect = lyr;
@@ -265,13 +270,7 @@ public class ExportTo extends Extension {
 						}
 					} // actives[i]
 				} // for
-			} catch (EditionException e) {
-				e.printStackTrace();
-				NotificationManager.addError(e.getMessage(), e);
-			} catch (DriverException e) {
-				e.printStackTrace();
-				NotificationManager.addError(e.getMessage(), e);
-			} catch (DriverIOException e) {
+			} catch (ReadDriverException e) {
 				e.printStackTrace();
 				NotificationManager.addError(e.getMessage(), e);
 			}
@@ -279,7 +278,7 @@ public class ExportTo extends Extension {
 		}
 	}
 
-	public void saveToPostGIS(MapContext mapContext, FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToPostGIS(MapContext mapContext, FLyrVect layer){
 		try {
 			String tableName = JOptionPane.showInputDialog(PluginServices
 					.getText(this, "intro_tablename"));
@@ -360,16 +359,16 @@ public class ExportTo extends Extension {
 
 			writeFeatures(mapContext, layer, writer, postGISDriver);
 
-		} catch (DriverException e) {
-			e.printStackTrace();
-			throw new EditionException(e);
 		} catch (DriverLoadException e) {
-			throw new EditionException(e);
-		} catch (SQLException e) {
-			throw new EditionException(e);
-		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
 			e.printStackTrace();
-			throw new EditionException(e);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InitializeWriterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -381,14 +380,15 @@ public class ExportTo extends Extension {
 	 * @param layer
 	 * @param writer
 	 * @param reader
+	 * @throws ReadDriverException
 	 * @throws DriverException
 	 * @throws DriverIOException
 	 */
-	private void writeFeatures(MapContext mapContext, FLyrVect layer, IWriter writer, Driver reader) throws DriverException, DriverIOException
+	private void writeFeatures(MapContext mapContext, FLyrVect layer, IWriter writer, Driver reader) throws ReadDriverException
 	{
 		PluginServices.cancelableBackgroundExecution(new WriterTask(mapContext, layer, writer, reader));
 	}
-	private void writeMultiFeatures(MapContext mapContext, FLyrVect layers, IWriter[] writers, Driver[] readers) throws DriverException, DriverIOException{
+	private void writeMultiFeatures(MapContext mapContext, FLyrVect layers, IWriter[] writers, Driver[] readers) throws ReadDriverException{
 		MultiWriterTask mwt=new MultiWriterTask();
 		for (int i=0;i<writers.length;i++) {
 			mwt.addTask(new WriterTask(mapContext, layers, writers[i], readers[i]));
@@ -401,14 +401,15 @@ public class ExportTo extends Extension {
 	 *            features will be precessed.
 	 * @param writer
 	 *            (Must be already initialized)
+	 * @throws ReadDriverException
+	 * @throws ProcessWriterException
+	 * @throws ExpansionFileReadException
 	 * @throws EditionException
 	 * @throws DriverException
 	 * @throws DriverIOException
 	 * @throws com.hardcode.gdbms.engine.data.driver.DriverException
 	 */
-	public void writeFeaturesNoThread(FLyrVect layer, IWriter writer)
-			throws EditionException, DriverException, DriverIOException,
-			com.hardcode.gdbms.engine.data.driver.DriverException {
+	public void writeFeaturesNoThread(FLyrVect layer, IWriter writer) throws ReadDriverException, VisitorException, ExpansionFileReadException{
 		ReadableVectorial va = layer.getSource();
 		SelectableDataSource sds = layer.getRecordset();
 
@@ -445,7 +446,7 @@ public class ExportTo extends Extension {
 					Value[] values = sds.getRow(i);
 					IFeature feat = new DefaultFeature(geom, values, "" + i);
 					DefaultRowEdited edRow = new DefaultRowEdited(feat,
-							DefaultRowEdited.STATUS_ADDED, i);
+							IRowEdited.STATUS_ADDED, i);
 					writer.process(edRow);
 				}
 			}
@@ -463,7 +464,7 @@ public class ExportTo extends Extension {
 					Value[] values = sds.getRow(i);
 					IFeature feat = new DefaultFeature(geom, values, "" + i);
 					DefaultRowEdited edRow = new DefaultRowEdited(feat,
-							DefaultRowEdited.STATUS_ADDED, i);
+							IRowEdited.STATUS_ADDED, i);
 
 					writer.process(edRow);
 				}
@@ -475,7 +476,7 @@ public class ExportTo extends Extension {
 		progress.close();
 	}
 
-	public void saveToDxf(MapContext mapContext, FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToDxf(MapContext mapContext, FLyrVect layer)  {
 		try {
 			JFileChooser jfc = new JFileChooser(lastPath);
 			SimpleFileFilter filterShp = new SimpleFileFilter("dxf",
@@ -511,20 +512,17 @@ public class ExportTo extends Extension {
 				lastPath  = fileName.substring(0, fileName.lastIndexOf(File.separatorChar));
 			}
 
-		} catch (DriverException e) {
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new EditionException(e);
-		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
-			e.printStackTrace();
-			throw new EditionException(e);
-		} catch (IOException e) {
+		} catch (InitializeWriterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 
-	public void saveToShp(MapContext mapContext, FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToShp(MapContext mapContext, FLyrVect layer) {
 		try {
 			JFileChooser jfc = new JFileChooser();
 			SimpleFileFilter filterShp = new SimpleFileFilter("shp",
@@ -636,18 +634,13 @@ public class ExportTo extends Extension {
 
 				}
 			}
-		} catch (DriverException e) {
+		} catch (InitializeWriterException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new EditionException(e);
-		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
+		} catch (OpenDriverException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new EditionException(e);
-		}
-//		catch (IOException e) {
-//			e.printStackTrace();
-//			throw new EditionException(e);
-//		}
-		catch (IOException e) {
+		} catch (ReadDriverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -660,7 +653,7 @@ public class ExportTo extends Extension {
 	 * @throws EditionException
 	 * @throws DriverIOException
 	 */
-	public void saveToGml(MapContext mapContext, FLyrVect layer) throws EditionException, DriverIOException {
+	public void saveToGml(MapContext mapContext, FLyrVect layer)  {
 		try {
 			JFileChooser jfc = new JFileChooser();
 			SimpleFileFilter filterShp = new SimpleFileFilter("gml",
@@ -692,30 +685,33 @@ public class ExportTo extends Extension {
 				writeFeatures(mapContext, layer, writer, gmlDriver);
 			}
 
-		} catch (DriverException e) {
+		} catch (SchemaEditionException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new EditionException(e);
-		} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
+		} catch (InitializeWriterException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new EditionException(e);
-		}
-//		catch (IOException e) {
-//			e.printStackTrace();
-//			throw new EditionException(e);
-//		}
-		catch (IOException e) {
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
-	private IndexedShpDriver getOpenShpDriver(File fileShp) throws IOException {
+	private IndexedShpDriver getOpenShpDriver(File fileShp) throws OpenDriverException {
 		IndexedShpDriver drv = new IndexedShpDriver();
 		if (!fileShp.exists()) {
-			fileShp.createNewFile();
-			File newFileSHX=new File(fileShp.getAbsolutePath().replaceAll("[.]shp",".shx"));
-			newFileSHX.createNewFile();
-			File newFileDBF=new File(fileShp.getAbsolutePath().replaceAll("[.]shp",".dbf"));
-			newFileDBF.createNewFile();
+			try {
+				fileShp.createNewFile();
+				File newFileSHX=new File(fileShp.getAbsolutePath().replaceAll("[.]shp",".shx"));
+				newFileSHX.createNewFile();
+				File newFileDBF=new File(fileShp.getAbsolutePath().replaceAll("[.]shp",".dbf"));
+				newFileDBF.createNewFile();
+			} catch (IOException e) {
+				throw new FileNotFoundDriverException("SHP",e,fileShp.getAbsolutePath());
+			}
 		}
 		drv.open(fileShp);
 		return drv;

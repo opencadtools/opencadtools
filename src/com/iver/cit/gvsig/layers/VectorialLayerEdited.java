@@ -5,22 +5,21 @@ import java.awt.Image;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.StartEditing;
 import com.iver.cit.gvsig.ViewCommandStackExtension;
-import com.iver.cit.gvsig.fmap.DriverException;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
@@ -66,7 +65,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		layersToSnap.add(lyr);
 		try {
 			((FLyrVect)lyr).getRecordset().addSelectionListener(this);
-		} catch (DriverException e) {
+		} catch (ReadDriverException e) {
 			e.printStackTrace();
 		}
 	}
@@ -79,7 +78,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		return selectedRow;
 	}
 
-	public void clearSelection(boolean savePrevious) {
+	public void clearSelection(boolean savePrevious) throws ReadDriverException {
 		if (!selectedRow.isEmpty() && savePrevious) {
 			previousRowSelection.clear();
 			previousHandlerSelection.clear();
@@ -96,7 +95,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			selection.clear();
 		}
 	}
-	public void restorePreviousSelection() {
+	public void restorePreviousSelection() throws ReadDriverException {
 		VectorialEditableAdapter vea=getVEA();
 		FBitSet selection=vea.getSelection();
 
@@ -123,9 +122,16 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void selectWithPoint(double x, double y,boolean multipleSelection){
 		firstPoint = new Point2D.Double(x, y);
 		VectorialEditableAdapter vea = getVEA();
-		FBitSet selection = vea.getSelection();
+		FBitSet selection=null;
+		try {
+			selection = vea.getSelection();
+
 		if (!multipleSelection) {
 			clearSelection(SAVEPREVIOUS);
+		}
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		// Se comprueba si se pincha en una gemometría
 		ViewPort vp=getLayer().getMapContext().getViewPort();
@@ -156,19 +162,29 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
-		} catch (DriverException e1) {
-			e1.printStackTrace();
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
 	public void selectWithSecondPoint(double x, double y) {
 		VectorialEditableAdapter vea = getVEA();
-		FBitSet selection = vea.getSelection();
+		FBitSet selection=null;
+		try {
+			selection = vea.getSelection();
+
 		lastPoint = new Point2D.Double(x, y);
-		ViewPort vp=getLayer().getMapContext().getViewPort();
 		selection.clear();
 		clearSelection(SAVEPREVIOUS);
-
+		} catch (ReadDriverException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		ViewPort vp=getLayer().getMapContext().getViewPort();
 		double x1;
 		double y1;
 		double w1;
@@ -222,17 +238,29 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
-		} catch (DriverException e) {
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 	public void selectInsidePolygon(IGeometry polygon) {
 		VectorialEditableAdapter vea = getVEA();
-		FBitSet selection = vea.getSelection();
-		ViewPort vp=getLayer().getMapContext().getViewPort();
+		FBitSet selection=null;
+		try {
+			selection = vea.getSelection();
+
 		selection.clear();
 		clearSelection(SAVEPREVIOUS);
+		} catch (ReadDriverException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		ViewPort vp=getLayer().getMapContext().getViewPort();
+
 		Rectangle2D rect = polygon.getBounds2D();
 
 		String strEPSG = vp.getProjection().getAbrev().substring(5);
@@ -255,17 +283,28 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
-		} catch (DriverException e) {
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void selectCrossPolygon(IGeometry polygon) {
 		VectorialEditableAdapter vea = getVEA();
-		FBitSet selection = vea.getSelection();
-		ViewPort vp=getLayer().getMapContext().getViewPort();
-		selection.clear();
+		FBitSet selection=null;
+		try {
+			selection = vea.getSelection();
+			selection.clear();
 		clearSelection(SAVEPREVIOUS);
+		} catch (ReadDriverException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		ViewPort vp=getLayer().getMapContext().getViewPort();
+
 		Rectangle2D rect = polygon.getBounds2D();
 
 		String strEPSG = vp.getProjection().getAbrev().substring(5);
@@ -288,17 +327,27 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
-		} catch (DriverException e) {
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void selectOutPolygon(IGeometry polygon) {
 		VectorialEditableAdapter vea = getVEA();
-		FBitSet selection = vea.getSelection();
+		FBitSet selection=null;
+		try {
+			selection = vea.getSelection();
+			selection.clear();
+			clearSelection(SAVEPREVIOUS);
+		} catch (ReadDriverException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		ViewPort vp=getLayer().getMapContext().getViewPort();
-		selection.clear();
-		clearSelection(SAVEPREVIOUS);
 
 		try {
 			BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -318,18 +367,27 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
-		} catch (DriverIOException e) {
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public void selectAll() {
 		VectorialEditableAdapter vea = getVEA();
-		FBitSet selection = vea.getSelection();
+		FBitSet selection=null;
+		try {
+			selection = vea.getSelection();
+			selection.clear();
+			clearSelection(SAVEPREVIOUS);
+		} catch (ReadDriverException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		ViewPort vp=getLayer().getMapContext().getViewPort();
-		selection.clear();
-		clearSelection(SAVEPREVIOUS);
+
 		try {
 			BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gs = selectionImage.createGraphics();
@@ -346,19 +404,27 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
-		} catch (DriverIOException e) {
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void refreshSelectionCache(Point2D firstPoint,CADToolAdapter cta){
 		VectorialEditableAdapter vea = getVEA();
-		FBitSet selection = vea.getSelection();
+		FBitSet selection=null;
+		try {
+			selection = vea.getSelection();
+			//		 Cogemos las entidades seleccionadas
+			clearSelection(SAVEPREVIOUS);
+		} catch (ReadDriverException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		double min = java.lang.Double.MAX_VALUE;
-//		 Cogemos las entidades seleccionadas
-		clearSelection(SAVEPREVIOUS);
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 		BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gs = selectionImage.createGraphics();
@@ -388,9 +454,11 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 						selectedHandler.add(handlers[j]);
 					}
 				}
-			} catch (DriverIOException e) {
+			} catch (ReadDriverException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (ExpansionFileReadException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -500,19 +568,19 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	}
 
 	public void setSelectionCache(boolean savePrevious,ArrayList selectedRowAux) {
-		clearSelection(savePrevious);
-		VectorialEditableAdapter vea=getVEA();
-		FBitSet selection=vea.getSelection();
-		selectedRow.addAll(selectedRowAux);
-		for (int i = 0;i < selectedRow.size(); i++) {
-			IRowEdited edRow = (IRowEdited) selectedRow.get(i);
-			selection.set(edRow.getIndex());
-		}
-
 		try {
+			clearSelection(savePrevious);
+			VectorialEditableAdapter vea=getVEA();
+			FBitSet selection=vea.getSelection();
+			selectedRow.addAll(selectedRowAux);
+			for (int i = 0;i < selectedRow.size(); i++) {
+				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+				selection.set(edRow.getIndex());
+			}
 			FLyrVect active = (FLyrVect)getLayer();
 			active.getRecordset().getSelectionSupport().fireSelectionEvents();
-		} catch (DriverException e) {
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -533,7 +601,12 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	}
 
 	public void selectionChanged(SelectionEvent e) {
-		if (getVEA().getSelection().isEmpty())
-			clearSelection(NOTSAVEPREVIOUS);
+		try {
+			if (getVEA().getSelection().isEmpty())
+				clearSelection(NOTSAVEPREVIOUS);
+		} catch (ReadDriverException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

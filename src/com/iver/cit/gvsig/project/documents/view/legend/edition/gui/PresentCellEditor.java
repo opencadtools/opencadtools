@@ -43,7 +43,6 @@ package com.iver.cit.gvsig.project.documents.view.legend.edition.gui;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.EventListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;

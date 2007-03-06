@@ -48,12 +48,12 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
@@ -62,7 +62,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.SplineCADToolContext.SplineCADToolSt
 
 
 /**
- * CADTool Spline 
+ * CADTool Spline
  *
  * @author Vicente Caballero Navarro
  */
@@ -92,7 +92,7 @@ public class SplineCADTool extends DefaultCADTool {
 			if (getVLE().getVEA().getShapeType()==FShape.POLYGON && !close){
 				closeGeometry();
 			}
-		} catch (DriverIOException e) {
+		} catch (ReadDriverException e) {
 			e.printStackTrace();
 		}
 

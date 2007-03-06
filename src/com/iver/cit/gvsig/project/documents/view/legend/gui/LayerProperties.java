@@ -2,6 +2,8 @@ package com.iver.cit.gvsig.project.documents.view.legend.gui;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.iver.andami.PluginServices;
@@ -14,9 +16,6 @@ import com.iver.cit.gvsig.fmap.rendering.Legend;
 import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.StatusListener;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.TableLayers;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
 
 public class LayerProperties extends JPanel implements ILegendPanel, IWindow {
 

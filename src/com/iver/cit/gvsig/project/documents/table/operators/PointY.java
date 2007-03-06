@@ -3,10 +3,11 @@ package com.iver.cit.gvsig.project.documents.table.operators;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.cit.gvsig.ExpresionFieldExtension;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.project.documents.table.GraphicOperator;
 import com.iver.cit.gvsig.project.documents.table.IOperator;
@@ -19,7 +20,7 @@ public class PointY extends GraphicOperator{
 	public String addText(String s) {
 		return s.concat(toString()+"()");
 	}
-	public double process(Index index) throws DriverIOException {
+	public double process(Index index) throws ReadDriverException, ExpansionFileReadException {
 		ReadableVectorial adapter = getLayer().getSource();
 		IGeometry geom=adapter.getShape(index.get());
 		Double[][] xsys=getXY(geom);
@@ -39,7 +40,8 @@ public class PointY extends GraphicOperator{
 		int type=FShape.POINT;
 		try {
 			type=adapter.getShapeType();
-		} catch (DriverIOException e) {
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return (getType()==IOperator.NUMBER && type==FShape.POINT);

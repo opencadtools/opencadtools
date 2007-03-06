@@ -2,12 +2,7 @@ package com.iver.cit.gvsig.gui.cad.panels;
 
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
-import javax.swing.JPanel;
 
-import com.hardcode.driverManager.Driver;
-import com.hardcode.driverManager.DriverManager;
-import com.iver.cit.gvsig.fmap.layers.LayerChangeSupport;
-import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionPanel;
 import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 

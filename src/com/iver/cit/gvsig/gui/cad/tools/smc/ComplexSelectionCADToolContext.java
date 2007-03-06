@@ -5,10 +5,10 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.ComplexSelectionCADTool;
-import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import java.awt.event.InputEvent;
+
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.tools.ComplexSelectionCADTool;
 
 public final class ComplexSelectionCADToolContext
     extends statemap.FSMContext

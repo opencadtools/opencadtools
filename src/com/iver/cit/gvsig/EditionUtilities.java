@@ -2,8 +2,8 @@ package com.iver.cit.gvsig;
 
 import java.util.ArrayList;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.cit.gvsig.fmap.DriverException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.LayerDefinition;
@@ -46,9 +46,9 @@ public class EditionUtilities {
 
         	int numActiveVectorial = 0;
         	int numActiveVectorialEditable = 0;
-        	
+
         	LayersIterator iter = new LayersIterator(capas);
-        	
+
         	FLayer capa;
         	while (iter.hasNext()) {
         		capa = iter.nextLayer();
@@ -58,9 +58,9 @@ public class EditionUtilities {
         			if (capa.isEditing())
         				numActiveVectorialEditable++;
         		}
-        		
-        	}        	
-        	
+
+        	}
+
         	if (numActiveVectorialEditable == 1 && numActiveVectorial == 1)
         		return EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE;
         	if (numActiveVectorialEditable > 1 && numActiveVectorial == numActiveVectorialEditable)
@@ -94,7 +94,7 @@ public class EditionUtilities {
 
         	int numActiveVectorial = 0;
         	int numActiveVectorialEditable = 0;
-        	
+
         	LayersIterator iter = new LayersIterator(capas);
         	FLayer capa;
         	while (iter.hasNext()) {
@@ -112,7 +112,7 @@ public class EditionUtilities {
         	}
         	if (resul.isEmpty())
         		return null;
-        		
+
        		return (FLayer[]) resul.toArray(new FLayer[0]);
 
         }
@@ -120,26 +120,18 @@ public class EditionUtilities {
 		return null;
 	}
 
-	public static ILayerDefinition createLayerDefinition(FLyrVect layer) throws DriverException {
+	public static ILayerDefinition createLayerDefinition(FLyrVect layer) throws ReadDriverException {
 		LayerDefinition lyrDef;
 		if (layer.getSource().getDriver() instanceof VectorialDatabaseDriver)
 		{
 			VectorialDatabaseDriver dbDriver = (VectorialDatabaseDriver) layer.getSource().getDriver();
 			return dbDriver.getLyrDef();
 		}
-		else
-		{
-			lyrDef = new LayerDefinition();
-			lyrDef.setShapeType(layer.getShapeType());
-			lyrDef.setProjection(layer.getProjection());
-			lyrDef.setName(layer.getName());
-			try {
-				lyrDef.setFieldsDesc(layer.getRecordset().getFieldsDescription());
-			} catch (com.hardcode.gdbms.engine.data.driver.DriverException e) {
-				e.printStackTrace();
-				throw new DriverException(e);
-			}
-		}
+		lyrDef = new LayerDefinition();
+		lyrDef.setShapeType(layer.getShapeType());
+		lyrDef.setProjection(layer.getProjection());
+		lyrDef.setName(layer.getName());
+			lyrDef.setFieldsDesc(layer.getRecordset().getFieldsDescription());
 		return lyrDef;
 	}
 

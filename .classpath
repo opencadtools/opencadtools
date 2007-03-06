@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="/extScripting/lib/bsf-2.3.0rc1.jar"/>
 	<classpathentry kind="lib" path="/extScripting/lib/bsh-2.0b1.jar"/>
 	<classpathentry kind="lib" path="/extScripting/lib/js-1.5r3.jar"/>
+	<classpathentry sourcepath="/libExceptions" kind="lib" path="/libFMap/lib/gvsig-exceptions.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

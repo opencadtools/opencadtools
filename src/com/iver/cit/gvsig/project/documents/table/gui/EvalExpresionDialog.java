@@ -34,6 +34,7 @@ import org.gvsig.gui.beans.swing.JButton;
 
 import bsh.EvalError;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
@@ -145,6 +146,9 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
 	        evalExpresions();
         } catch (BSFException e) {
 			e.printStackTrace();
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	    evalExpresion=new EvalExpresion();
 	    evalExpresion.setTable(table);
@@ -236,13 +240,10 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
 								System.out
 										.println("Tiempo evaluar expresiones = "
 												+ (t2 - t1));
-							} catch (DriverException e1) {
-								e1.printStackTrace();
-							} catch (IOException e1) {
-								e1.printStackTrace();
-							} catch (DriverIOException e1) {
-								e1.printStackTrace();
 							} catch (BSFException e1) {
+								e1.printStackTrace();
+							} catch (ReadDriverException e1) {
+								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 							if (isAccepted)
@@ -272,9 +273,9 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
 	 * @throws DriverIOException
 	 * @throws IOException
 	 * @throws BSFException
+     * @throws ReadDriverException
 	 */
-    private boolean evalExpresion() throws DriverException, IOException,
-			DriverIOException, BSFException {
+    private boolean evalExpresion() throws BSFException, ReadDriverException {
 		long rowCount = sds.getRowCount();
 		interpreter.eval(ExpresionFieldExtension.BEANSHELL, null, -1, -1,
 				"java.lang.Object expresion () {" + getTxtExp().getText()
@@ -342,7 +343,7 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
 		}
 		return pMessage;
 	}
-    private void evalExpresions() throws BSFException {
+    private void evalExpresions() throws BSFException, ReadDriverException {
         ies = table.getModel().getModelo();
         sds = ies.getRecordset();
         interpreter.declareBean("sds", sds,SelectableDataSource.class);

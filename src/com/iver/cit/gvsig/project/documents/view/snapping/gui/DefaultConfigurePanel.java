@@ -1,6 +1,5 @@
 package com.iver.cit.gvsig.project.documents.view.snapping.gui;
 
-import java.awt.Color;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -13,7 +12,6 @@ import org.gvsig.gui.beans.AcceptCancelPanel;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
-import com.iver.cit.gvsig.project.documents.view.snapping.AbstractSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
 
 public class DefaultConfigurePanel extends JPanel implements IWindow {

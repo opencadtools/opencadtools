@@ -46,6 +46,7 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -53,7 +54,6 @@ import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
@@ -105,9 +105,10 @@ public class PolylineCADTool extends DefaultCADTool {
  			if (getVLE().getVEA().getShapeType()==FShape.POLYGON && !close){
  				closeGeometry();
  			}
- 		} catch (DriverIOException e) {
- 			e.printStackTrace();
- 		}
+ 		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         IGeometry newGeom = ShapeFactory.createPolyline2D(gpx);
         addGeometry(newGeom);

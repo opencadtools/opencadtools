@@ -47,11 +47,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.IOException;
 import java.util.ArrayList;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
+import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FPoint2D;
@@ -210,9 +213,9 @@ public class EditVertexCADTool extends DefaultCADTool {
         	if (numHandlers ==0){
         		try {
 					vea.removeRow(row.getIndex(),getName(),EditionEvent.GRAPHIC);
-				} catch (IOException e) {
+				} catch (ReadDriverException e) {
 					e.printStackTrace();
-				} catch (DriverIOException e) {
+				} catch (ExpansionFileReadException e) {
 					e.printStackTrace();
 				}
         	}
@@ -246,12 +249,17 @@ public class EditVertexCADTool extends DefaultCADTool {
         			IRow newRow=new DefaultFeature(newGeometry,row.getAttributes(),row.getID());
         			try {
 						vea.modifyRow(row.getIndex(),newRow,getName(),EditionEvent.GRAPHIC);
-					} catch (IOException e) {
+						clearSelection();
+        			} catch (ValidateRowException e) {
 						e.printStackTrace();
-					} catch (DriverIOException e) {
+					} catch (ExpansionFileWriteException e) {
+						e.printStackTrace();
+					} catch (ReadDriverException e) {
+						e.printStackTrace();
+					} catch (ExpansionFileReadException e) {
 						e.printStackTrace();
 					}
-					clearSelection();
+
 					vle.addSelectionCache(new DefaultRowEdited(newRow,
 							IRowEdited.STATUS_MODIFIED, row.getIndex()));
 
@@ -714,9 +722,13 @@ public class EditVertexCADTool extends DefaultCADTool {
 									IRowEdited.STATUS_MODIFIED, row.getIndex()));
 							}
 						}
-					} catch (IOException e) {
+					} catch (ValidateRowException e) {
 						e.printStackTrace();
-					} catch (DriverIOException e) {
+					} catch (ExpansionFileWriteException e) {
+						e.printStackTrace();
+					} catch (ReadDriverException e) {
+						e.printStackTrace();
+					} catch (ExpansionFileReadException e) {
 						e.printStackTrace();
 					}
 

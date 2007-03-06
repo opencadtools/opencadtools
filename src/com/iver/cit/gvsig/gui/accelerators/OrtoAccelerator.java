@@ -46,7 +46,6 @@ import java.awt.event.KeyEvent;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.EditionManager;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
 /**

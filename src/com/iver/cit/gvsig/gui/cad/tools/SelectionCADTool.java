@@ -47,10 +47,10 @@ import java.awt.Image;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.hardcode.driverManager.DriverLoadException;
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
@@ -61,7 +61,6 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FLabel;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.AnnotationEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
@@ -176,7 +175,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		return nextState;
 	}
 
-	protected void pointDoubleClick(MapControl map) {
+	protected void pointDoubleClick(MapControl map) throws ReadDriverException {
 		try {
 			FLayer[] actives = map.getMapContext()
             .getLayers().getActives();
@@ -199,8 +198,6 @@ public class SelectionCADTool extends DefaultCADTool {
 
 		} catch (DriverLoadException e) {
 			e.printStackTrace();
-		} catch (com.iver.cit.gvsig.fmap.DriverException e) {
-			e.printStackTrace();
 		}
 
 }
@@ -217,7 +214,11 @@ public class SelectionCADTool extends DefaultCADTool {
 	 */
 	public void addPoint(double x, double y, InputEvent event) {
 		if (event!=null && ((MouseEvent)event).getClickCount()==2){
-			pointDoubleClick((MapControl)event.getComponent());
+			try {
+				pointDoubleClick((MapControl)event.getComponent());
+			} catch (ReadDriverException e) {
+				e.printStackTrace();
+			}
 			return;
 		}
 		SelectionCADToolState actualState = (SelectionCADToolState) _fsm
@@ -262,14 +263,8 @@ public class SelectionCADTool extends DefaultCADTool {
 			vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowsAux);
 			//clearSelection();
 			//selectedRow.addAll(selectedRowsAux);
-			try {
-				String description=PluginServices.getText(this,"move_handlers");
-				vea.endComplexRow(description);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (DriverIOException e) {
-				e.printStackTrace();
-			}
+			String description=PluginServices.getText(this,"move_handlers");
+			vea.endComplexRow(description);
 		}
 	}
 

@@ -1,7 +1,10 @@
 package com.iver.cit.gvsig.project.documents.view.snapping.snappers;
 
-import com.iver.andami.PluginServices;
+import java.awt.Graphics;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FArc2D;
 import com.iver.cit.gvsig.fmap.core.FCircle2D;
 import com.iver.cit.gvsig.fmap.core.FEllipse2D;
@@ -10,13 +13,8 @@ import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.project.documents.view.snapping.AbstractSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineSegment;
-
-import java.awt.Graphics;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
 
 
 /**

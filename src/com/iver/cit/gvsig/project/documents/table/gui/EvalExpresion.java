@@ -1,27 +1,29 @@
 package com.iver.cit.gvsig.project.documents.table.gui;
 
-import java.io.IOException;
 import java.sql.Types;
 import java.util.BitSet;
 import java.util.Date;
 import java.util.prefs.Preferences;
 
 import com.hardcode.driverManager.DriverLoadException;
-import com.hardcode.gdbms.engine.data.driver.DriverException;
+import com.hardcode.gdbms.driver.exceptions.InitializeWriterException;
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.EditionUtilities;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
+import com.iver.cit.gvsig.exceptions.layers.StopEditionLayerException;
+import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
+import com.iver.cit.gvsig.exceptions.visitors.StopWriterVisitorException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.IRow;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
-import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
-import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IEditableSource;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
@@ -67,11 +69,7 @@ public class EvalExpresion {
 	    		 IGeometry geometry = ((DefaultFeature) rowEdited.getLinkedRow()).getGeometry();
 	    		 newRow = new DefaultFeature(geometry, values,rowEdited.getID());
 	    		 ies.modifyRow(rowEdited.getIndex(), newRow,"", EditionEvent.ALPHANUMERIC);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (DriverIOException e) {
-				e.printStackTrace();
-			}
+
 //	    	 IRow feat=null;
 //			try {
 //				feat = ies.getRow(i).getLinkedRow().cloneRow();
@@ -95,7 +93,19 @@ public class EvalExpresion {
 //				e.printStackTrace();
 //			} catch (DriverIOException e) {
 //				e.printStackTrace();
-//			}
+			} catch (ReadDriverException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExpansionFileReadException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ValidateRowException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExpansionFileWriteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 	    }
 	 /**
@@ -163,7 +173,7 @@ public class EvalExpresion {
 //			e.printStackTrace();
 //		}
 //    }
-	public void saveEdits(int numRows) throws EditionException, DriverLoadException, DriverException, com.iver.cit.gvsig.fmap.DriverException, IOException, DriverIOException {
+	public void saveEdits(int numRows) throws DriverLoadException, ReadDriverException, InitializeWriterException, StopWriterVisitorException {
 		if (limit==-1 || numRows == 0 || (numRows % limit)!=0) {
 			return;
 		}

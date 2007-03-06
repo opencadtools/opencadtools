@@ -46,7 +46,6 @@ import java.awt.event.InputEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
@@ -57,7 +56,6 @@ import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -148,7 +146,6 @@ public class MatrixCADTool extends DefaultCADTool {
 			ArrayList selectedRowAux = new ArrayList();
 			VectorialLayerEdited vle = getVLE();
 			VectorialEditableAdapter vea = vle.getVEA();
-			try {
 				vea.startComplexRow();
 				for (int i = 0; i < selectedRow.size(); i++) {
 					DefaultRowEdited row = (DefaultRowEdited) selectedRow
@@ -268,12 +265,6 @@ public class MatrixCADTool extends DefaultCADTool {
 				}
 				vea.endComplexRow(getName());
 				vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowAux);
-			} catch (DriverIOException e) {
-				e.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-
 			PluginServices.getMDIManager().restoreCursor();
 			end();
 		} else {// Cancelado

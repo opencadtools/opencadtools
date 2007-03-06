@@ -1,15 +1,14 @@
 package com.iver.cit.gvsig.project.documents.view.snapping.snappers;
 
-import com.iver.andami.PluginServices;
+import java.awt.Graphics;
+import java.awt.geom.Point2D;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.ICuadrantHandler;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.project.documents.view.snapping.AbstractSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
-
-import java.awt.Graphics;
-import java.awt.geom.Point2D;
 
 
 /**

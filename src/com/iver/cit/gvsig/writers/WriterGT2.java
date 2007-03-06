@@ -11,23 +11,25 @@ import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
-import org.geotools.factory.FactoryConfigurationError;
 import org.geotools.feature.AttributeType;
 import org.geotools.feature.AttributeTypeFactory;
 import org.geotools.feature.Feature;
 import org.geotools.feature.FeatureType;
-import org.geotools.feature.FeatureTypeBuilder;
+import org.geotools.feature.FeatureTypes;
 import org.geotools.feature.IllegalAttributeException;
 import org.geotools.feature.SchemaException;
 import org.geotools.filter.Filter;
 import org.geotools.filter.FilterFactory;
 
-import com.hardcode.gdbms.engine.data.driver.DriverException;
+import com.hardcode.gdbms.driver.exceptions.InitializeWriterException;
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.NullValue;
+import com.iver.cit.gvsig.exceptions.visitors.ProcessWriterVisitorException;
+import com.iver.cit.gvsig.exceptions.visitors.StartWriterVisitorException;
+import com.iver.cit.gvsig.exceptions.visitors.StopWriterVisitorException;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
-import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.writers.AbstractWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -80,7 +82,7 @@ public class WriterGT2 extends AbstractWriter {
         return NullValue.class;
     }
 
-	public static FeatureType getFeatureType(FLyrVect layer, String geomField, String featName) throws DriverException, com.iver.cit.gvsig.fmap.DriverException, FactoryConfigurationError, SchemaException {
+	public static FeatureType getFeatureType(FLyrVect layer, String geomField, String featName) throws SchemaException, ReadDriverException {
 
 		Class geomType = findBestGeometryClass(layer.getShapeType());
 		// geomType = Geometry.class;
@@ -94,7 +96,7 @@ public class WriterGT2 extends AbstractWriter {
 					layer.getRecordset().getFieldName(i-1),
 					getClassBySqlTYPE(layer.getRecordset().getFieldType(i-1)));
 		}
-		FeatureType featType = FeatureTypeBuilder.newFeatureType(att,featName);
+		FeatureType featType = FeatureTypes.newFeatureType(att,featName);
 		return featType;
 	}
 
@@ -124,7 +126,7 @@ public class WriterGT2 extends AbstractWriter {
 		  }
 
 
-	public WriterGT2(FeatureStore featureStore, boolean writeAllFeatures) throws IOException
+	public WriterGT2(FeatureStore featureStore, boolean writeAllFeatures)
 	{
 		this.featStore = featureStore;
 		this.bWriteAll = writeAllFeatures;
@@ -133,7 +135,7 @@ public class WriterGT2 extends AbstractWriter {
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.edition.IWriter#preProcess()
 	 */
-	public void preProcess() throws EditionException {
+	public void preProcess() throws StartWriterVisitorException{
 		try {
 			types = featStore.getSchema().getAttributeTypes();
 			t = new DefaultTransaction("handle");
@@ -142,9 +144,8 @@ public class WriterGT2 extends AbstractWriter {
 			t.addAuthorization("handle");  // provide authoriztion
 
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EditionException(e);
+		} catch (IOException e) {
+			throw new StartWriterVisitorException(getName(),e);
 		}
 
 
@@ -153,7 +154,7 @@ public class WriterGT2 extends AbstractWriter {
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.edition.IWriter#process(com.iver.cit.gvsig.fmap.edition.IRowEdited)
 	 */
-	public void process(IRowEdited row) throws EditionException {
+	public void process(IRowEdited row) throws ProcessWriterVisitorException {
 
 		IFeature feat = (IFeature) row.getLinkedRow();
 		// FeatureType featType = featStore.getSchema();
@@ -194,11 +195,9 @@ public class WriterGT2 extends AbstractWriter {
 
 			numReg++;
 		} catch (IOException e) {
-			e.printStackTrace();
-			throw new EditionException(e);
+			throw new ProcessWriterVisitorException(getName(),e);
 		} catch (IllegalAttributeException e) {
-			e.printStackTrace();
-			throw new EditionException(e);
+			throw new ProcessWriterVisitorException(getName(),e);
 		}
 
 
@@ -209,7 +208,7 @@ public class WriterGT2 extends AbstractWriter {
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.edition.IWriter#postProcess()
 	 */
-	public void postProcess() throws EditionException {
+	public void postProcess() throws StopWriterVisitorException  {
 		try
 		{
 			t.commit(); // commit opperations
@@ -218,16 +217,14 @@ public class WriterGT2 extends AbstractWriter {
 			try {
 				t.rollback();
 			} catch (IOException e) {
-				e.printStackTrace();
-				throw new EditionException(e);
+				throw new StopWriterVisitorException(getName(),e);
 			} // cancel opperations
 		}
 		finally {
 			try {
 				t.close();
 			} catch (IOException e) {
-				e.printStackTrace();
-				throw new EditionException(e);
+				throw new StopWriterVisitorException(getName(),e);
 			} // free resources
 		}
 
@@ -286,9 +283,9 @@ public class WriterGT2 extends AbstractWriter {
 
 	}
 
-	public void initialize(ITableDefinition tableDefinition) throws EditionException {
+	public void initialize(ITableDefinition tableDefinition) throws InitializeWriterException {
 		super.initialize(tableDefinition);
-		
+
 	}
 
 	public boolean canAlterTable() {

@@ -42,8 +42,8 @@ package com.iver.cit.gvsig.gui.cad;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.InputEvent;
-import java.util.ArrayList;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
@@ -119,7 +119,7 @@ public interface CADTool {
 	public void setDescription(String[] descriptions);
 	public String getName();
 	public VectorialLayerEdited getVLE();
-	void clearSelection();
+	void clearSelection() throws ReadDriverException;
 	public boolean isApplicable(int shapeType);
 	public void setPreviosTool(DefaultCADTool tool);
 	public void restorePreviousTool();

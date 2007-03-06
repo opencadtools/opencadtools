@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.EventObject;
 
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
-import com.iver.andami.ui.mdiManager.WindowInfo;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
 
 public class PropertySnapCellEditor extends JButton implements TableCellEditor{

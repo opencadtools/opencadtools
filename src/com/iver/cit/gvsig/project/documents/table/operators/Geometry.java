@@ -3,9 +3,10 @@ package com.iver.cit.gvsig.project.documents.table.operators;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.cit.gvsig.ExpresionFieldExtension;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.project.documents.table.GraphicOperator;
 import com.iver.cit.gvsig.project.documents.table.Index;
@@ -17,10 +18,10 @@ public class Geometry extends GraphicOperator{
 	public String addText(String s) {
 		return s.concat(toString()+"()");
 	}
-	public double process(Index index) throws DriverIOException {
+	public double process(Index index){
 		return 0;
 	}
-	public IGeometry getGeometry(Index index) throws DriverIOException {
+	public IGeometry getGeometry(Index index) throws ReadDriverException, ExpansionFileReadException {
 		ReadableVectorial adapter = getLayer().getSource();
 	   	IGeometry geom=adapter.getShape(index.get());
 	   	return geom;

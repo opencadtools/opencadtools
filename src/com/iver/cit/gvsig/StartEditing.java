@@ -4,20 +4,18 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.MapContext;
+import com.iver.cit.gvsig.exceptions.layers.StartEditionLayerException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.core.FShape;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
-import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.rules.IRule;
 import com.iver.cit.gvsig.fmap.edition.rules.RulePolygon;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.XMLException;
 import com.iver.cit.gvsig.fmap.rendering.Legend;
@@ -61,15 +59,15 @@ public class StartEditing extends Extension {
 		CADExtension.initFocus();
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 		.getActiveWindow();
-		
+
 		if (f instanceof View) {
 			View vista = (View) f;
-			
+
 			MapControl mapControl = vista.getMapControl();
-			
-			IProjectView model = vista.getModel();						
+
+			IProjectView model = vista.getModel();
 			FLayer[] actives = model.getMapContext().getLayers().getActives();
-			
+
 			boolean bEditingStarted = false;
 			if (actives.length == 1 &&	actives[0] instanceof FLyrVect) {
 
@@ -81,13 +79,13 @@ public class StartEditing extends Extension {
 				 * for (int j = 0; j < i; j++) {
 				 * layers.getLayer(j).setVisible(false); }
 				 */
-				
+
 				FLyrVect lv = (FLyrVect) actives[0];
 				// lv.setVisible(true);
 				lv.addLayerListener(editionManager);
 				try {
 					Legend legendOriginal=lv.getLegend().cloneLegend();
-					
+
 					if (!lv.isWritable())
 					{
 						JOptionPane.showMessageDialog(
@@ -96,18 +94,18 @@ public class StartEditing extends Extension {
 								PluginServices.getText(this, "warning_title"),
 								JOptionPane.WARNING_MESSAGE);
 					}
-					
+
 					lv.setEditing(true);
 					VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
 					.getSource();
-					
+
 					vea.getRules().clear();
 					if (vea.getShapeType() == FShape.POLYGON)
 					{
 						IRule rulePol = new RulePolygon();
 						vea.getRules().add(rulePol);
 					}
-					
+
 					if (!(lv.getSource().getDriver() instanceof IndexedShpDriver)){
 						VectorialLayerEdited vle=(VectorialLayerEdited)editionManager.getLayerEdited(lv);
 						vle.setLegend(legendOriginal);
@@ -122,24 +120,25 @@ public class StartEditing extends Extension {
 						pt.setModel(vea);
 						changeModelTable(pt);
 					}
-					
+
 					startCommandsApplicable(vista,lv);
 					vista.repaintMap();
-					
-				} catch (EditionException e) {
-					e.printStackTrace();
-					NotificationManager.addError(e);
-				} catch (DriverIOException e) {
-					e.printStackTrace();
-					NotificationManager.addError(e);
+
 				} catch (XMLException e) {
 					e.printStackTrace();
+					NotificationManager.addError(e);
+				} catch (StartEditionLayerException e) {
+					e.printStackTrace();
+					NotificationManager.addError(e);
+				} catch (ReadDriverException e) {
+					e.printStackTrace();
+					NotificationManager.addError(e);
 				}
-				
+
 //				return;
 			}
 		}
-		
+
 		/*
 		 * PluginServices.getMDIManager().setWaitCursor(); try { if
 		 * (((FLyrVect) capa).getSource().getDriver().getClass() ==
@@ -189,7 +188,8 @@ public class StartEditing extends Extension {
 					keywordMap.add(cadtools[i].getName(), Token.KEYWORD2);
 					keywordMap.add(cadtools[i].toString(), Token.KEYWORD3);
 				}
-			} catch (com.iver.cit.gvsig.fmap.DriverException e) {
+			} catch (ReadDriverException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

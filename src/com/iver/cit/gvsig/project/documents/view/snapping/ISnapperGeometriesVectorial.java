@@ -40,9 +40,9 @@
  */
 package com.iver.cit.gvsig.project.documents.view.snapping;
 
-import com.iver.cit.gvsig.fmap.core.IGeometry;
-
 import java.awt.geom.Point2D;
+
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 
 
 /**

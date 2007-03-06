@@ -14,7 +14,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.MemoryImageSource;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
@@ -22,16 +21,17 @@ import java.util.prefs.Preferences;
 
 import org.cresques.cts.IProjection;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiFrame.MainFrame;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -843,8 +843,8 @@ public class CADToolAdapter extends Behavior {
 		VectorialEditableAdapter vea = vle.getVEA();
 
 		vea.startComplexRow();
-		FBitSet selection = vea.getSelection();
 		try {
+			FBitSet selection = vea.getSelection();
 			int[] indexesToDel = new int[selection.cardinality()];
 			int j = 0;
 			for (int i = selection.nextSetBit(0); i >= 0; i = selection
@@ -865,23 +865,21 @@ public class CADToolAdapter extends Behavior {
 				vea.removeRow(indexesToDel[i], PluginServices.getText(this,
 						"deleted_feature"),EditionEvent.GRAPHIC);
 			}
-		} catch (DriverIOException e) {
+			System.out.println("clear Selection");
+			selection.clear();
+			vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			try {
-				String description=PluginServices.getText(this,"remove_geometry");
-				vea.endComplexRow(description);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (DriverIOException e1) {
-				e1.printStackTrace();
-			}
+			String description=PluginServices.getText(this,"remove_geometry");
+			vea.endComplexRow(description);
 		}
-		System.out.println("clear Selection");
-		selection.clear();
-		vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
+
+
 		/*
 		 * if (getCadTool() instanceof SelectionCADTool) { SelectionCADTool
 		 * selTool = (SelectionCADTool) getCadTool(); selTool.clearSelection(); }
@@ -918,7 +916,12 @@ public class CADToolAdapter extends Behavior {
 				selCad.init();
 				VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
 						.getEditionManager().getActiveLayerEdited();
-				vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
+				try {
+					vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
+				} catch (ReadDriverException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				pushCadTool(selCad);
 				// getVectorialAdapter().getSelection().clear();

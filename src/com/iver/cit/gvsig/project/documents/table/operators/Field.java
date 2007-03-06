@@ -5,9 +5,7 @@ import java.util.Date;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 
-import bsh.EvalError;
-
-import com.hardcode.gdbms.engine.data.driver.DriverException;
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.BooleanValue;
 import com.hardcode.gdbms.engine.values.DateValue;
 import com.hardcode.gdbms.engine.values.NumericValue;
@@ -35,26 +33,21 @@ public class Field extends AbstractOperator{
 		interpreter.declareBean(fd.getFieldAlias(),this,Field.class);
 		interpreter.eval(ExpresionFieldExtension.BEANSHELL,null,-1,-1,"java.lang.Object "+ fd.getFieldAlias()+ "(){return "+fd.getFieldAlias()+".getValue(indexRow,sds);};");
 	}
-	public Object getValue(Index indexRow,SelectableDataSource sds) {
-		try {
-			int index=sds.getFieldIndexByName(fd.getFieldName());
-			Value value=sds.getFieldValue(indexRow.get(),index);
-			if (value instanceof NumericValue) {
-				double dv=((NumericValue)value).doubleValue();
-				return new Double(dv);
-			}else if (value instanceof DateValue) {
-				Date date=((DateValue)value).getValue();
-				return date;
-			}else if (value instanceof BooleanValue){
-				boolean b=((BooleanValue)value).getValue();
-				return new Boolean(b);
-			}else {
-				return value.toString();
-			}
-		} catch (DriverException e) {
-			new EvalError(e.getMessage(),null,null);
+	public Object getValue(Index indexRow,SelectableDataSource sds) throws ReadDriverException {
+		int index=sds.getFieldIndexByName(fd.getFieldName());
+		Value value=sds.getFieldValue(indexRow.get(),index);
+		if (value instanceof NumericValue) {
+			double dv=((NumericValue)value).doubleValue();
+			return new Double(dv);
+		}else if (value instanceof DateValue) {
+			Date date=((DateValue)value).getValue();
+			return date;
+		}else if (value instanceof BooleanValue){
+			boolean b=((BooleanValue)value).getValue();
+			return new Boolean(b);
+		}else {
+			return value.toString();
 		}
-		return null;
 	}
 	public String toString() {
 		return fd.getFieldAlias();

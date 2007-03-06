@@ -1,7 +1,22 @@
 package com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers;
 
-import com.iver.andami.PluginServices;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
@@ -13,31 +28,9 @@ import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.CellIconOpti
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.DisabledCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.FCellSymbolRenderer;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.FilledCellEditor;
-import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.IconOptionCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.PresentCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.SymbolCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.ValueCellEditor;
-
-/*
- * TableRenderDemo.java requires no other files.
- */
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 
 /**

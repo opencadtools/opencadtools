@@ -14,8 +14,8 @@ import jwizardcomponent.JWizardPanel;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
-import com.iver.cit.gvsig.project.documents.gui.FOpenDialog;
 import com.iver.cit.gvsig.gui.panels.CRSSelectPanel;
+import com.iver.cit.gvsig.project.documents.gui.FOpenDialog;
 import com.iver.utiles.SimpleFileFilter;
 
 public class FileBasedPanel extends JWizardPanel {

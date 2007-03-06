@@ -40,13 +40,11 @@
  */
 package com.iver.cit.gvsig;
 
-import java.io.IOException;
-
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.exceptions.commands.EditionCommandException;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -86,12 +84,12 @@ public class RedoViewExtension extends Extension {
 						}
 
 					}
-			} catch (DriverIOException e) {
-				NotificationManager.addError(PluginServices.getText(this,"redo_error"),
-					e);
-			} catch (IOException e) {
-				NotificationManager.addError("redo_error",
-					e);
+			} catch (EditionCommandException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ReadDriverException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 			//vista.getMapControl().drawMap(false);

@@ -1,15 +1,13 @@
 package com.iver.cit.gvsig.project.documents.view.snapping;
 
-import com.iver.cit.gvsig.fmap.core.IGeometry;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.index.ItemVisitor;
-
-import java.awt.geom.Point2D;
-
-import java.util.ArrayList;
 
 
 /**

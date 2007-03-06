@@ -41,27 +41,19 @@
 package com.iver.cit.gvsig.gui.cad.tools;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FShape;
-import com.iver.cit.gvsig.fmap.core.GeneralPathX;
-import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EquidistanceCADToolContext;
@@ -170,7 +162,6 @@ public class EquidistanceCADTool extends DefaultCADTool {
             VectorialLayerEdited vle = getVLE();
             VectorialEditableAdapter vea = vle.getVEA();
             PluginServices.getMDIManager().setWaitCursor();
-    		try {
     			vea.startComplexRow();
     			for (int i = 0; i < selectedRow.size(); i++) {
     				DefaultRowEdited row = (DefaultRowEdited) selectedRow
@@ -186,11 +177,6 @@ public class EquidistanceCADTool extends DefaultCADTool {
     			vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowAux);
     			//clearSelection();
     			//selectedRow.addAll(selectedRowAux);
-    		} catch (DriverIOException e) {
-    			e.printStackTrace();
-    		} catch (IOException e1) {
-    			e1.printStackTrace();
-    		}
     		PluginServices.getMDIManager().restoreCursor();
     	}
     }

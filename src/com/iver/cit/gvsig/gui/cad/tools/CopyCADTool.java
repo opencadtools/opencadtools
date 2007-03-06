@@ -44,14 +44,15 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.util.ArrayList;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
+import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
@@ -160,11 +161,13 @@ public class CopyCADTool extends DefaultCADTool {
                 //clearSelection();
                 //selectedRow.addAll(selectedRowAux);
                 vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowAux);
-            } catch (DriverIOException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (ValidateRowException e) {
+				e.printStackTrace();
+			} catch (ReadDriverException e) {
+				e.printStackTrace();
+			} catch (ExpansionFileWriteException e) {
+				e.printStackTrace();
+			}
 
             PluginServices.getMDIManager().restoreCursor();
         }

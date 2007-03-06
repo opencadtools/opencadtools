@@ -3,9 +3,10 @@ package com.iver.cit.gvsig.project.documents.table;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 /**
  * @author Vicente Caballero Navarro
@@ -18,7 +19,7 @@ public abstract class GraphicOperator extends AbstractOperator{
 	public FLyrVect getLayer() {
 		return lv;
 	}
-	public abstract double process(Index index) throws DriverIOException;
+	public abstract double process(Index index) throws ReadDriverException, ExpansionFileReadException;
 	protected Double[][] getXY(IGeometry geometry) {
         ArrayList xs = new ArrayList();
         ArrayList ys = new ArrayList();

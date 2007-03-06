@@ -48,15 +48,17 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.awt.image.ImagingOpException;
-import java.io.IOException;
 import java.util.ArrayList;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
+import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
@@ -160,10 +162,18 @@ public class ScaleCADTool extends DefaultCADTool {
 			try {
 				double size=getCadToolAdapter().getMapControl().getViewPort().toMapDistance(getCadToolAdapter().getMapControl().getWidth());
 				scale(firstPoint.distance(lastPoint)/(size/40));
-			} catch (DriverIOException e) {
+			} catch (ValidateRowException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} catch (ExpansionFileWriteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ReadDriverException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExpansionFileReadException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 			PluginServices.getMDIManager().restoreCursor();
@@ -183,9 +193,17 @@ public class ScaleCADTool extends DefaultCADTool {
 
 			try {
 				scale(escalado);
-			} catch (DriverIOException e) {
+			} catch (ValidateRowException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (ExpansionFileWriteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ReadDriverException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExpansionFileReadException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -310,15 +328,23 @@ public class ScaleCADTool extends DefaultCADTool {
         if (status.equals("Scale.ScaleFactorOrReference")) {
     			try {
     				scale(d);
-    			} catch (DriverIOException e) {
-    				e.printStackTrace();
-    			} catch (IOException e1) {
-    				e1.printStackTrace();
-    			}
+    			} catch (ValidateRowException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExpansionFileWriteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ReadDriverException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExpansionFileReadException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
     	}
     }
-    private void scale(double scaleFactor) throws DriverIOException, IOException {
+    private void scale(double scaleFactor) throws ValidateRowException, ExpansionFileWriteException, ReadDriverException, ExpansionFileReadException{
     	VectorialLayerEdited vle=getVLE();
     	VectorialEditableAdapter vea=vle.getVEA();
     	vea.startComplexRow();

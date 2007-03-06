@@ -1,22 +1,25 @@
 package com.iver.cit.gvsig;
 
 import java.awt.Component;
-import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import com.hardcode.gdbms.engine.instruction.FieldNotFoundException;
+import com.hardcode.gdbms.driver.exceptions.InitializeWriterException;
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.fmap.DriverException;
+import com.iver.cit.gvsig.exceptions.layers.LegendLayerException;
+import com.iver.cit.gvsig.exceptions.layers.StartEditionLayerException;
+import com.iver.cit.gvsig.exceptions.layers.StopEditionLayerException;
+import com.iver.cit.gvsig.exceptions.table.CancelEditingTableException;
+import com.iver.cit.gvsig.exceptions.visitors.StopWriterVisitorException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
-import com.iver.cit.gvsig.fmap.edition.EditionException;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -150,22 +153,25 @@ public class StopEditing extends Extension {
 					return true;
 				}
 
-		} catch (EditionException e) {
+		} catch (LegendLayerException e) {
 			NotificationManager.addError(e);
-		} catch (IOException e) {
+		} catch (StartEditionLayerException e) {
 			NotificationManager.addError(e);
-		} catch (DriverException e) {
+		} catch (ReadDriverException e) {
 			NotificationManager.addError(e);
-		} catch (FieldNotFoundException e) {
-			e.printStackTrace();
+		} catch (InitializeWriterException e) {
+			NotificationManager.addError(e);
+		} catch (CancelEditingTableException e) {
+			NotificationManager.addError(e);
+		} catch (StopWriterVisitorException e) {
+			NotificationManager.addError(e);
 		}
 		return false;
 
 	}
 
 
-	private void saveLayer(FLyrVect layer) throws DriverException,
-			EditionException {
+	private void saveLayer(FLyrVect layer) throws ReadDriverException, InitializeWriterException, StopWriterVisitorException{
 		VectorialEditableAdapter vea = (VectorialEditableAdapter) layer
 				.getSource();
 
@@ -198,7 +204,7 @@ public class StopEditing extends Extension {
 
 	}
 
-	private void cancelEdition(FLyrVect layer) throws IOException {
+	private void cancelEdition(FLyrVect layer) throws CancelEditingTableException {
 		com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
 				.getMDIManager().getAllWindows();
 		for (int j = 0; j < views.length; j++) {
