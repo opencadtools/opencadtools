@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 import com.hardcode.driverManager.Driver;
+import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.driverManager.DriverManager;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
@@ -43,86 +44,100 @@ public void execute(String actionCommand) {
 				.getActiveWindow();
 
 		if (f instanceof View) {
-			View vista = (View) f;
+			try {
+				View vista = (View) f;
 
-			LOGO = new javax.swing.ImageIcon(this.getClass().getClassLoader()
-					.getResource("images/package_graphics.png"));
-			CADToolAdapter cta=CADExtension.getCADToolAdapter();
-			MapControl mapControl = vista.getMapControl();
-			cta.setMapControl(mapControl);
-			/* SimpleLogoJWizardFrame wizardFrame = new SimpleLogoJWizardFrame(
-					LOGO);
-			wizardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				LOGO = new javax.swing.ImageIcon(this.getClass()
+						.getClassLoader().getResource(
+								"images/package_graphics.png"));
+				CADToolAdapter cta = CADExtension.getCADToolAdapter();
+				MapControl mapControl = vista.getMapControl();
+				cta.setMapControl(mapControl);
+				/*
+				 * SimpleLogoJWizardFrame wizardFrame = new
+				 * SimpleLogoJWizardFrame( LOGO);
+				 * wizardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				 *
+				 * SwingUtilities.updateComponentTreeUI(wizardFrame);
+				 *
+				 * wizardFrame.setTitle("Creación de un nuevo Tema");
+				 */
+				WizardAndami wizard = new WizardAndami(LOGO);
 
-			SwingUtilities.updateComponentTreeUI(wizardFrame);
+				DriverManager writerManager = LayerFactory.getDM();
+				ArrayList spatialDrivers = new ArrayList();
+				String[] writerNames = writerManager.getDriverNames();
+				for (int i = 0; i < writerNames.length; i++) {
+					Driver drv = writerManager.getDriver(writerNames[i]);
+					if (drv instanceof ISpatialWriter)
+						spatialDrivers.add(drv.getName());
+				}
 
-			wizardFrame.setTitle("Creación de un nuevo Tema"); */
-			WizardAndami wizard = new WizardAndami(LOGO);
+				ChooseGeometryType panelChoose = new ChooseGeometryType(wizard
+						.getWizardComponents());
+				JPanelFieldDefinition panelFields = new JPanelFieldDefinition(
+						wizard.getWizardComponents());
 
-		    DriverManager writerManager = LayerFactory.getDM();
-		    ArrayList spatialDrivers = new ArrayList();
-		    String[] writerNames = writerManager.getDriverNames();
-			for (int i=0; i<writerNames.length; i++)
-			{
-				Driver drv = writerManager.getDriver(writerNames[i]);
-				if (drv instanceof ISpatialWriter)
-					spatialDrivers.add(drv.getName());
+				if (actionCommand.equals("SHP")) {
+					wizard.getWizardComponents().addWizardPanel(panelChoose);
+					wizard.getWizardComponents().addWizardPanel(panelFields);
+
+					Driver driver = writerManager.getDriver("gvSIG shp driver");
+					panelFields.setWriter(((IWriteable) driver).getWriter());
+					panelChoose.setDriver(driver);
+					FileBasedPanel filePanel = new FileBasedPanel(wizard
+							.getWizardComponents());
+					filePanel.setFileExtension("shp");
+					wizard.getWizardComponents().addWizardPanel(filePanel);
+
+					wizard.getWizardComponents().setFinishAction(
+							new MyFinishAction(wizard.getWizardComponents(),
+									vista, actionCommand));
+				}
+				if (actionCommand.equals("DXF")) {
+					panelChoose.setDriver(writerManager
+							.getDriver("gvSIG DXF Memory Driver"));
+					FileBasedPanel filePanel = new FileBasedPanel(wizard
+							.getWizardComponents());
+					filePanel.setFileExtension("dxf");
+					wizard.getWizardComponents().addWizardPanel(filePanel);
+					wizard.getWizardComponents().getBackButton().setEnabled(
+							false);
+					wizard.getWizardComponents().getNextButton().setEnabled(
+							false);
+
+					wizard.getWizardComponents().setFinishAction(
+							new MyFinishAction(wizard.getWizardComponents(),
+									vista, actionCommand));
+				}
+				if (actionCommand.equals("POSTGIS")) {
+					wizard.getWizardComponents().addWizardPanel(panelChoose);
+					wizard.getWizardComponents().addWizardPanel(panelFields);
+					Driver driver = writerManager
+							.getDriver("PostGIS JDBC Driver");
+					panelChoose.setDriver(driver);
+					panelFields.setWriter(((IWriteable) driver).getWriter());
+					wizard.getWizardComponents().addWizardPanel(
+							new PostGISpanel(wizard.getWizardComponents()));
+
+					wizard.getWizardComponents().setFinishAction(
+							new MyFinishAction(wizard.getWizardComponents(),
+									vista, actionCommand));
+				}
+
+				wizard.getWizardComponents().getFinishButton()
+						.setEnabled(false);
+				wizard.getWindowInfo().setWidth(640);
+				wizard.getWindowInfo().setHeight(350);
+				wizard.getWindowInfo().setTitle(
+						PluginServices.getText(this, "new_layer"));
+				// Utilities.centerComponentOnScreen(wizard);
+				// wizardFrame.show();
+				PluginServices.getMDIManager().addWindow(wizard);
+				// System.out.println("Salgo con " + panelChoose.getLayerName());
+			} catch (DriverLoadException e) {
+				e.printStackTrace();
 			}
-
-			ChooseGeometryType panelChoose = new ChooseGeometryType(wizard.getWizardComponents());
-			JPanelFieldDefinition panelFields = new JPanelFieldDefinition(wizard.getWizardComponents());
-
-			if (actionCommand.equals("SHP"))
-			{
-				wizard.getWizardComponents().addWizardPanel(panelChoose);
-				wizard.getWizardComponents().addWizardPanel(panelFields);
-
-				Driver driver = writerManager.getDriver("gvSIG shp driver");
-				panelFields.setWriter(((IWriteable)driver).getWriter());
-				panelChoose.setDriver(driver);
-				FileBasedPanel filePanel = new FileBasedPanel(wizard.getWizardComponents());
-				filePanel.setFileExtension("shp");
-				wizard.getWizardComponents().addWizardPanel(filePanel);
-
-				wizard.getWizardComponents().setFinishAction(
-						new MyFinishAction(wizard.getWizardComponents(),
-								vista, actionCommand));
-			}
-			if (actionCommand.equals("DXF"))
-			{
-				panelChoose.setDriver(writerManager.getDriver("gvSIG DXF Memory Driver"));
-				FileBasedPanel filePanel = new FileBasedPanel(wizard.getWizardComponents());
-				filePanel.setFileExtension("dxf");
-				wizard.getWizardComponents().addWizardPanel(filePanel);
-				wizard.getWizardComponents().getBackButton().setEnabled(false);
-				wizard.getWizardComponents().getNextButton().setEnabled(false);
-
-				wizard.getWizardComponents().setFinishAction(
-					new MyFinishAction(wizard.getWizardComponents(),
-							vista, actionCommand));
-			}
-			if (actionCommand.equals("POSTGIS"))
-			{				
-				wizard.getWizardComponents().addWizardPanel(panelChoose);
-				wizard.getWizardComponents().addWizardPanel(panelFields);
-				Driver driver = writerManager.getDriver("PostGIS JDBC Driver");
-				panelChoose.setDriver(driver);
-				panelFields.setWriter(((IWriteable)driver).getWriter());
-				wizard.getWizardComponents().addWizardPanel(
-					new PostGISpanel(wizard.getWizardComponents()));
-
-				wizard.getWizardComponents().setFinishAction(
-						new MyFinishAction(wizard.getWizardComponents(),
-								vista, actionCommand));
-			}
-			wizard.getWizardComponents().getFinishButton().setEnabled(false);
-			wizard.getWindowInfo().setWidth(640);
-			wizard.getWindowInfo().setHeight(350);
-			wizard.getWindowInfo().setTitle(PluginServices.getText(this,"new_layer"));
-			// Utilities.centerComponentOnScreen(wizard);
-			// wizardFrame.show();
-			PluginServices.getMDIManager().addWindow(wizard);
-			// System.out.println("Salgo con " + panelChoose.getLayerName());
 		}
 	}
 	/**

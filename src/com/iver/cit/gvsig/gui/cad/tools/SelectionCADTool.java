@@ -176,30 +176,21 @@ public class SelectionCADTool extends DefaultCADTool {
 	}
 
 	protected void pointDoubleClick(MapControl map) throws ReadDriverException {
-		try {
-			FLayer[] actives = map.getMapContext()
-            .getLayers().getActives();
-            for (int i=0; i < actives.length; i++){
-                if (actives[i] instanceof FLyrAnnotation && actives[i].isEditing()) {
-                    FLyrAnnotation lyrAnnotation = (FLyrAnnotation) actives[i];
-
-                    	lyrAnnotation.setSelectedEditing();
-                    	lyrAnnotation.setInEdition(lyrAnnotation.getRecordset().getSelection().nextSetBit(0));
-                    	FLabel fl=lyrAnnotation.getLabel(lyrAnnotation.getInEdition());
-        				if (fl!=null){
-
-        					View vista=(View)PluginServices.getMDIManager().getActiveWindow();
-        					TextFieldEdit tfe=new TextFieldEdit(lyrAnnotation);
-
-        					tfe.show(vista.getMapControl().getViewPort().fromMapPoint(fl.getOrig()),vista.getMapControl());
-        				}
-                }
+		FLayer[] actives = map.getMapContext()
+           .getLayers().getActives();
+        for (int i=0; i < actives.length; i++){
+            if (actives[i] instanceof FLyrAnnotation && actives[i].isEditing()) {
+                FLyrAnnotation lyrAnnotation = (FLyrAnnotation) actives[i];
+               	lyrAnnotation.setSelectedEditing();
+               	lyrAnnotation.setInEdition(lyrAnnotation.getRecordset().getSelection().nextSetBit(0));
+               	FLabel fl=lyrAnnotation.getLabel(lyrAnnotation.getInEdition());
+               	if (fl!=null){
+               		View vista=(View)PluginServices.getMDIManager().getActiveWindow();
+       				TextFieldEdit tfe=new TextFieldEdit(lyrAnnotation);
+        			tfe.show(vista.getMapControl().getViewPort().fromMapPoint(fl.getOrig()),vista.getMapControl());
+       			}
             }
-
-		} catch (DriverLoadException e) {
-			e.printStackTrace();
-		}
-
+        }
 }
 	/**
 	 * Equivale al transition del prototipo pero sin pasarle como pará metro el

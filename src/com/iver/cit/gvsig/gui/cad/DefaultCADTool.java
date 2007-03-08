@@ -196,9 +196,6 @@ public abstract class DefaultCADTool implements CADTool {
 				vea.setSelectionImage(selectionImage);
 
 
-		} catch (DriverLoadException e) {
-			e.printStackTrace();
-			return;
 		} catch (ReadDriverException e) {
 			e.printStackTrace();
 			return;
@@ -255,8 +252,6 @@ public abstract class DefaultCADTool implements CADTool {
 			DefaultFeature df = new DefaultFeature(geometry, values, String
 					.valueOf(num));
 			index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
-		} catch (DriverLoadException e) {
-			e.printStackTrace();
 		} catch (ValidateRowException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

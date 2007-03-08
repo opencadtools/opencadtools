@@ -518,6 +518,9 @@ public class ExportTo extends Extension {
 		} catch (InitializeWriterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (DriverLoadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -643,6 +646,9 @@ public class ExportTo extends Extension {
 		} catch (ReadDriverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (DriverLoadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -695,6 +701,9 @@ public class ExportTo extends Extension {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DriverLoadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
