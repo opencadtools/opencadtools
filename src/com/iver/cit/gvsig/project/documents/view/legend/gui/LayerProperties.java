@@ -17,7 +17,7 @@ import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.StatusListener;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.TableLayers;
 
-public class LayerProperties extends JPanel implements ILegendPanel, IWindow {
+public class LayerProperties extends JPanel implements IWindow {
 
 	private JPanel pWest = null;
 	private JPanel pCenter = null;

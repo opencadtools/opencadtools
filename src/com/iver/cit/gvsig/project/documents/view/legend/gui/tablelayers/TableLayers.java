@@ -138,8 +138,8 @@ public class TableLayers extends JPanel {
      * @param column DOCUMENT ME!
      */
     public void setUpSymbolColumn(JTable table, TableColumn column) {
-        SymbolCellEditor symboleditor = new SymbolCellEditor();
-        column.setCellEditor(symboleditor);
+        ///SymbolCellEditor symboleditor = new SymbolCellEditor();
+        ///column.setCellEditor(symboleditor);
 
         FCellSymbolRenderer renderer = new FCellSymbolRenderer(true);
         column.setCellRenderer(renderer);
