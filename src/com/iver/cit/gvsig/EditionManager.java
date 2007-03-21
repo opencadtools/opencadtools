@@ -76,15 +76,15 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 		if (e.getSource().isActive()){
 			ile=getLayerEdited(e.getSource());
 		}
-		IWindow window=PluginServices.getMDIManager().getActiveWindow();
-		if (window instanceof View){
-			View view=(View)window;
-			if (e.getSource().isEditing()){
-				view.showConsole();
-			}else{
-				view.hideConsole();
-			}
-		}
+//		IWindow window=PluginServices.getMDIManager().getActiveWindow();
+//		if (window instanceof View){
+//			View view=(View)window;
+//			if (e.getSource().isEditing()){
+//				view.showConsole();
+//			}else{
+//				view.hideConsole();
+//			}
+//		}
 
 
 		if (ile==null || ile.getLayer().equals(e.getSource())){

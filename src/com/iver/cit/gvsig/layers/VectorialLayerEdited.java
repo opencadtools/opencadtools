@@ -10,6 +10,7 @@ import java.util.EmptyStackException;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.StartEditing;
 import com.iver.cit.gvsig.ViewCommandStackExtension;
@@ -38,6 +39,7 @@ import com.iver.cit.gvsig.fmap.rendering.Legend;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDrawingListener, SelectionListener{
@@ -534,7 +536,13 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			ViewCommandStackExtension.csd.setModel(((IEditableSource) ((FLyrVect)getLayer()).getSource())
 							.getCommandRecord());
 		}
-
+		IWindow window=PluginServices.getMDIManager().getActiveWindow();
+		if (window instanceof View){
+			View view=(View)window;
+			if (e.getSource().isEditing()){
+				view.showConsole();
+			}
+		}
 		if (cadtool!=null){
 			CADExtension.getCADToolAdapter().setCadTool(cadtool);
 			PluginServices.getMainFrame().setSelectedTool(cadtool.toString());
@@ -547,6 +555,11 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void activationLost(LayerEvent e) {
 		try{
 			cadtool=CADExtension.getCADTool();
+			IWindow window=PluginServices.getMDIManager().getActiveWindow();
+			if (window instanceof View){
+				View view=(View)window;
+				view.hideConsole();
+			}
 		}catch (EmptyStackException e1) {
 			cadtool=new SelectionCADTool();
 			cadtool.init();
