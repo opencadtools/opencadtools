@@ -18,6 +18,7 @@ import javax.swing.table.TableColumn;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
+import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.rendering.EditionManagerLegend;
@@ -325,7 +326,8 @@ public class TableLayers extends JPanel {
         //        };
         public final Object[] longValues = {
                 new ImageIcon(), "Nombre1", new ImageIcon(), new ImageIcon(),
-                new ImageIcon(), new ImageIcon(), new FSymbol(FShape.MULTI)
+                new ImageIcon(), new ImageIcon(),
+                SymbologyFactory.createDefaultSymbolByShapeType(FShape.MULTI)
             };
 
         public int getColumnCount() {

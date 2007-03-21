@@ -29,6 +29,8 @@ import com.iver.cit.gvsig.EditionManager;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
+import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
+import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
@@ -80,7 +82,7 @@ public class CADToolAdapter extends Behavior {
 
 	private int lastY;
 
-	private FSymbol symbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT, Color.RED);
+	private ISymbol symbol = SymbologyFactory.createDefaultSymbolByShapeType(FConstant.SYMBOL_TYPE_POINT, Color.RED);
 
 	private Point2D mapAdjustedPoint;
 

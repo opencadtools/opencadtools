@@ -44,6 +44,9 @@ import java.awt.Graphics;
 import java.awt.event.InputEvent;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.iver.cit.gvsig.fmap.core.FShape;
+import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
+import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
@@ -56,12 +59,12 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * @author $author$
  */
 public interface CADTool {
-	public static FSymbol drawingSymbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT,
-			new Color(255, 0,0, 100)); // Le ponemos una transparencia
-	public static FSymbol modifySymbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT,
-			new Color(100, 100, 100, 100));
-	public static FSymbol selectSymbol = new FSymbol(FConstant.SYMBOL_TYPE_POINT,
-			Color.ORANGE);
+	public static ISymbol drawingSymbol = SymbologyFactory.
+		createDefaultSymbolByShapeType(FShape.POINT, new Color(255, 0,0, 100)); // Le ponemos una transparencia
+	public static ISymbol modifySymbol = SymbologyFactory.
+		createDefaultSymbolByShapeType(FShape.POINT, new Color(100, 100, 100, 100));
+	public static ISymbol selectSymbol = SymbologyFactory.
+		createDefaultSymbolByShapeType(FShape.POINT, Color.ORANGE);
 
 	public static int TOPGEOMETRY = 2000;
 

@@ -341,8 +341,9 @@ public abstract class DefaultCADTool implements CADTool {
 	}
 
 	public void init() {
-		CADTool.drawingSymbol.setOutlined(true);
-		CADTool.drawingSymbol.setOutlineColor(Color.GREEN);
+// jaume, should not be necessary
+//		CADTool.drawingSymbol.setOutlined(true);
+//		CADTool.drawingSymbol.setOutlineColor(Color.GREEN);
 
 	}
 
