@@ -57,7 +57,10 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  *
  * $Id$
  * $Log$
- * Revision 1.13  2007-02-13 17:10:06  caballero
+ * Revision 1.14  2007-03-21 12:25:41  caballero
+ * zoom remove cacheDrawing
+ *
+ * Revision 1.13  2007/02/13 17:10:06  caballero
  * expresion
  *
  * Revision 1.12  2006/11/28 13:18:32  fjp
@@ -145,14 +148,13 @@ public class EditionChangeManager implements IEditionListener{
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){
-//				Table table=(Table)views[i];
+				Table table=(Table)views[i];
+				///VCN Creo que no hace falta refrescar la tabla aquí
 //				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(fLayer))
 //					table.refresh();
-			}else if (views[i] instanceof View){
-				View view=(View) views[i];
+			}else if (views[i] instanceof com.iver.cit.gvsig.project.documents.view.gui.View){
+				com.iver.cit.gvsig.project.documents.view.gui.View view=(com.iver.cit.gvsig.project.documents.view.gui.View)views[i];
 
-				fLayer.setDirty(true);
-				view.getMapControl().rePaintDirtyLayers();
 				if (e.getChangeType() == EditionEvent.CHANGE_TYPE_ADD)
 					// No redraw, just image paint
 					view.getMapControl().repaint();
@@ -161,6 +163,13 @@ public class EditionChangeManager implements IEditionListener{
 					fLayer.setDirty(true);
 					view.getMapControl().rePaintDirtyLayers();
 				}
+
+				/* FLayers layers=view.getMapControl().getMapContext().getLayers();
+				for (int j=0;j<layers.getLayersCount();j++){
+					if (layers.getLayer(j).equals(fLayer)){
+						view.repaintMap();
+					}
+				} */
 			}
 		}
 
