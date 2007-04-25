@@ -205,7 +205,7 @@ public class JoinCADTool extends DefaultCADTool {
     }
     private boolean isIntoRect(Point2D p,Handler[] handlers) {
     	double tol=0.02;
-    	double angle=Double.MIN_VALUE;
+    	double angle=Double.NEGATIVE_INFINITY;
 
     	//for (int i=0;i<handlers.length;i++) {
     	//if (handlers.length>0) {
@@ -214,7 +214,7 @@ public class JoinCADTool extends DefaultCADTool {
     			Point2D p1Aux=handlers[j].getPoint();
     			if (!handlers[0].equalsPoint(handlers[j])) {
     				double angleAux=UtilFunctions.getAngle(p0,p1Aux);
-    				if (angle!=Double.MIN_VALUE && (angle>angleAux+tol || angle<angleAux-tol)) {
+    				if (angle!=Double.NEGATIVE_INFINITY && (angle>angleAux+tol || angle<angleAux-tol)) {
     					return false;
     				}
     				angle=angleAux;
