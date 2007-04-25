@@ -111,6 +111,7 @@ public class ExportTo extends Extension {
 
 		}
 		public void run() throws Exception {
+			va.start();
 			ICoordTrans ct = lyrVect.getCoordTrans();
 			DriverAttributes attr = va.getDriverAttributes();
 			boolean bMustClone = false;
@@ -186,6 +187,7 @@ public class ExportTo extends Extension {
 			}
 
 			writer.postProcess();
+			va.stop();
 			if (reader != null){
 				int res = JOptionPane.showConfirmDialog(
 					(JComponent) PluginServices.getMDIManager().getActiveWindow()
