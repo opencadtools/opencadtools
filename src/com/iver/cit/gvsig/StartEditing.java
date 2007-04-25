@@ -118,7 +118,7 @@ public class StartEditing extends Extension {
 					ProjectTable pt = pe.getProject().getTable(lv);
 					if (pt != null){
 						pt.setModel(vea);
-						changeModelTable(pt);
+						changeModelTable(pt,vea);
 					}
 
 					startCommandsApplicable(vista,lv);
@@ -199,19 +199,20 @@ public class StartEditing extends Extension {
 
 	}
 
-	private void changeModelTable(ProjectTable pt){
-    	 com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices.getMDIManager().getAllWindows();
+	private void changeModelTable(ProjectTable pt, VectorialEditableAdapter vea){
+   	 com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices.getMDIManager().getAllWindows();
 
- 		for (int i=0 ; i<views.length ; i++){
- 			if (views[i] instanceof Table){
- 				Table table=(Table)views[i];
- 				ProjectTable model =table.getModel();
- 				if (model.equals(pt)){
- 						table.setModel(pt);
- 				}
- 			}
- 		}
-    }
+		for (int i=0 ; i<views.length ; i++){
+			if (views[i] instanceof Table){
+				Table table=(Table)views[i];
+				ProjectTable model =table.getModel();
+				if (model.equals(pt)){
+						table.setModel(pt);
+						vea.getCommandRecord().addCommandListener(table);
+				}
+			}
+		}
+   }
 	/**
 	 * @see com.iver.andami.plugins.IExtension#isEnabled()
 	 */
