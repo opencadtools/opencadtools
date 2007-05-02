@@ -69,7 +69,6 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext;
@@ -309,7 +308,7 @@ public class SelectionCADTool extends DefaultCADTool {
 			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
 					vp,
-					CADTool.selectSymbol);
+					DefaultCADTool.selectSymbol);
 			Image img = vle.getSelectionImage();
 	        g.drawImage(img, 0, 0, null);
 	        return;
@@ -327,7 +326,7 @@ public class SelectionCADTool extends DefaultCADTool {
 				IGeometry geom = ((IFeature) rowEd.getLinkedRow())
 						.getGeometry().cloneGeometry();
 				g.setColor(Color.gray);
-				geom.draw((Graphics2D) g, vp, CADTool.modifySymbol);
+				geom.draw((Graphics2D) g, vp, DefaultCADTool.modifySymbol);
 			}
 			return;
 		}else{

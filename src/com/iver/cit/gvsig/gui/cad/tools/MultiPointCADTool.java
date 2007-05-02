@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MultiPointCADToolContext;
@@ -143,10 +142,10 @@ public class MultiPointCADTool extends DefaultCADTool {
 		}
 		ShapeFactory.createMultipoint2D(xs,ys).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.drawingSymbol);
+                DefaultCADTool.drawingSymbol);
 		ShapeFactory.createPoint2D(x,y).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.drawingSymbol);
+                DefaultCADTool.drawingSymbol);
     }
 
     /**

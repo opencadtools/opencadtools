@@ -59,12 +59,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * @author $author$
  */
 public interface CADTool {
-	public static ISymbol drawingSymbol = SymbologyFactory.
-		createDefaultSymbolByShapeType(FShape.MULTI, new Color(255, 0,0, 100)); // Le ponemos una transparencia
-	public static ISymbol modifySymbol = SymbologyFactory.
-		createDefaultSymbolByShapeType(FShape.MULTI, new Color(100, 100, 100, 100));
-	public static ISymbol selectSymbol = SymbologyFactory.
-		createDefaultSymbolByShapeType(FShape.MULTI, Color.ORANGE);
+	
 
 	public static int TOPGEOMETRY = 2000;
 

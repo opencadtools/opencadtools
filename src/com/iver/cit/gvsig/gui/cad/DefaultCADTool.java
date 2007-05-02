@@ -67,7 +67,11 @@ import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
+import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
+import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
+import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
@@ -85,6 +89,13 @@ import com.iver.utiles.console.JConsole;
  * @author Vicente Caballero Navarro
  */
 public abstract class DefaultCADTool implements CADTool {
+	public static ISymbol drawingSymbol = SymbologyFactory.
+	createDefaultSymbolByShapeType(FShape.MULTI, new Color(255, 0,0, 100)); // Le ponemos una transparencia
+	public static ISymbol modifySymbol = SymbologyFactory.
+	createDefaultSymbolByShapeType(FShape.MULTI, new Color(100, 100, 100, 100));
+	public static ISymbol selectSymbol = SymbologyFactory.
+	createDefaultSymbolByShapeType(FShape.MULTI, Color.ORANGE);
+
 	private static Logger logger = Logger.getLogger(DefaultCADTool.class
 			.getName());
 
@@ -106,7 +117,7 @@ public abstract class DefaultCADTool implements CADTool {
 			BufferedImage img = getCadToolAdapter().getMapControl().getImage();
 			Graphics2D gImag = (Graphics2D) img.getGraphics();
 			ViewPort vp = getCadToolAdapter().getMapControl().getViewPort();
-			geometry.draw(gImag, vp, CADTool.drawingSymbol);
+			geometry.draw(gImag, vp, DefaultCADTool.drawingSymbol);
 		}
 	}
 
@@ -150,7 +161,7 @@ public abstract class DefaultCADTool implements CADTool {
 		elShape.lineTo(endPoint.getX(), endPoint.getY());
 		ShapeFactory.createPolyline2D(elShape).draw(g,
 				getCadToolAdapter().getMapControl().getViewPort(),
-				CADTool.drawingSymbol);
+				DefaultCADTool.drawingSymbol);
 	}
 
 	/**
@@ -191,7 +202,7 @@ public abstract class DefaultCADTool implements CADTool {
 						IRowEdited.STATUS_ADDED, inversedIndex ));
 				vea.getSelection().set(inversedIndex);
 				IGeometry geom = df.getGeometry();
-				geom.cloneGeometry().draw(gs, vp, CADTool.drawingSymbol);
+				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
 				vle.drawHandlers(geom.cloneGeometry(), gs, vp);
 				vea.setSelectionImage(selectionImage);
 
@@ -316,7 +327,7 @@ public abstract class DefaultCADTool implements CADTool {
 			if (ig == null)
 				continue;
 			Handler[] handlers = ig.getHandlers(IGeometry.SELECTHANDLER);
-			FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers);
+			FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers, DefaultCADTool.selectSymbol);
 		}
 	}
 

@@ -48,7 +48,6 @@ import java.awt.geom.Point2D;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext;
@@ -154,7 +153,7 @@ public class EllipseCADTool extends DefaultCADTool {
 
             ShapeFactory.createEllipse(startAxis, endAxis, distance).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.modifySymbol);
+                DefaultCADTool.modifySymbol);
 
             Point2D mediop = new Point2D.Double((startAxis.getX() +
                     endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);

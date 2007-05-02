@@ -63,7 +63,7 @@ import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.cad.CADTool;
+import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ComplexSelectionCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ComplexSelectionCADToolContext.ComplexSelectionCADToolState;
@@ -247,7 +247,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
 					vp,
-					CADTool.selectSymbol);
+					DefaultCADTool.selectSymbol);
 			Image img = vle.getSelectionImage();
 	        g.drawImage(img, 0, 0, null);
 	        return;
@@ -259,7 +259,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 			// Dibuja el círculo de selección
 			circleSel.draw((Graphics2D) g,
 					vp,
-					CADTool.selectSymbol);
+					DefaultCADTool.selectSymbol);
 			Image img = vle.getSelectionImage();
 	        g.drawImage(img, 0, 0, null);
 	        return;
@@ -268,7 +268,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 			IGeometry polygon=getGeometryPolygon(new Point2D.Double(x,y));
 			polygon.draw((Graphics2D) g,
 					vp,
-					CADTool.selectSymbol);
+					DefaultCADTool.selectSymbol);
 			Image img = vle.getSelectionImage();
 	        g.drawImage(img, 0, 0, null);
 	        return;
@@ -286,7 +286,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 				IGeometry geom = ((IFeature) rowEd.getLinkedRow())
 						.getGeometry().cloneGeometry();
 				g.setColor(Color.gray);
-				geom.draw((Graphics2D) g, vp, CADTool.modifySymbol);
+				geom.draw((Graphics2D) g, vp, DefaultCADTool.modifySymbol);
 			}
 			return;
 		}else{

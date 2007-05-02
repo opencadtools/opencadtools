@@ -55,7 +55,6 @@ import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext;
@@ -92,7 +91,15 @@ public class PolylineCADTool extends DefaultCADTool {
     public void init() {
         _fsm = new PolylineCADToolContext(this);
     }
-
+    public IGeometry getGeometry() {
+		IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
+		FGeometryCollection fgc = new FGeometryCollection(geoms);
+		// No queremos guardar FGeometryCollections:
+		GeneralPathX gp = new GeneralPathX();
+		gp.append(fgc.getPathIterator(null, FConverter.FLATNESS), true);
+		IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
+		return newGeom;
+	}
     public void endGeometry() {
     	if (gpx==null) {
     		gpx=new GeneralPathX();
@@ -311,7 +318,7 @@ public class PolylineCADTool extends DefaultCADTool {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.drawingSymbol);
+                    DefaultCADTool.drawingSymbol);
             }
             if (antPoint!=null)
             	drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
@@ -320,7 +327,7 @@ public class PolylineCADTool extends DefaultCADTool {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.drawingSymbol);
+                    DefaultCADTool.drawingSymbol);
             }
 
             Point2D point = new Point2D.Double(x, y);
@@ -414,7 +421,7 @@ public class PolylineCADTool extends DefaultCADTool {
             if (ig != null) {
                 ig.draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.modifySymbol);
+                    DefaultCADTool.modifySymbol);
             }
         }
     }

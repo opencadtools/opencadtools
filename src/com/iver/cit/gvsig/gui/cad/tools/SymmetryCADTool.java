@@ -63,7 +63,6 @@ import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SymmetryCADToolContext;
@@ -175,7 +174,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 	GeneralPathX gpx=new GeneralPathX();
 	gpx.moveTo(firstPoint.getX(),firstPoint.getY());
 	gpx.lineTo(pAux.getX(),pAux.getY());
-	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D)g,vp,CADTool.modifySymbol);
+	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D)g,vp,DefaultCADTool.modifySymbol);
 	for (int i = 0; i < selectedRow.size(); i++) {
 		DefaultRowEdited row=(DefaultRowEdited) selectedRow.get(i);
 		DefaultFeature fea = (DefaultFeature) row.getLinkedRow();
@@ -197,7 +196,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 							inter.getY() + dif.getY());
 				}
 			}
-			geom.draw((Graphics2D)g,vp,CADTool.drawingSymbol);
+			geom.draw((Graphics2D)g,vp,DefaultCADTool.drawingSymbol);
 	}
 }
 

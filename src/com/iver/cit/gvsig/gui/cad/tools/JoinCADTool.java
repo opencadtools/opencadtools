@@ -65,7 +65,6 @@ import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.JoinCADToolContext;
@@ -163,7 +162,7 @@ public class JoinCADTool extends DefaultCADTool {
          DefaultRowEdited[] dres=(DefaultRowEdited[])selectedRows.toArray(new DefaultRowEdited[0]);
          for (int i=0;i<dres.length;i++) {
         	 IGeometry geom=((IFeature)dres[i].getLinkedRow()).getGeometry().cloneGeometry();
-        	 geom.draw((Graphics2D)g,vp,CADTool.selectSymbol);
+        	 geom.draw((Graphics2D)g,vp,DefaultCADTool.selectSymbol);
          }
     }
   /**

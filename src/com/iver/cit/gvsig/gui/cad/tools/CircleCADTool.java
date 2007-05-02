@@ -49,7 +49,6 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext;
@@ -158,7 +157,7 @@ public class CircleCADTool extends DefaultCADTool {
             Point2D currentPoint = new Point2D.Double(x, y);
             ShapeFactory.createCircle(center, currentPoint).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.drawingSymbol);
+                DefaultCADTool.drawingSymbol);
         } else if (status == "Circle.SecondPoint") {
             drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
         } else if (status == "Circle.ThirdPoint") {
@@ -169,7 +168,7 @@ public class CircleCADTool extends DefaultCADTool {
             if (geom != null) {
                 geom.draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.drawingSymbol);
+                    DefaultCADTool.drawingSymbol);
             }
         }
     }

@@ -57,6 +57,8 @@ import javax.swing.text.JTextComponent;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
+import com.iver.andami.preferences.IPreference;
+import com.iver.andami.preferences.IPreferenceExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
@@ -70,6 +72,7 @@ import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RotateCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SymmetryCADTool;
+import com.iver.cit.gvsig.gui.preferences.EditingPage;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.project.documents.view.snapping.Snapping;
 import com.iver.cit.gvsig.project.documents.view.toc.MenuEntry;
@@ -83,13 +86,14 @@ import com.iver.utiles.console.jedit.JEditTextArea;
  *
  * @author Vicente Caballero Navarro
  */
-public class CADExtension extends Extension {
+public class CADExtension extends Extension implements IPreferenceExtension{
 	private static HashMap adapters=new HashMap();
 
 	private static View view;
 
 	private MapControl mapControl;
 	private static CADToolAdapter adapter=null;
+	private EditingPage editingPage=new EditingPage();
 
 	public static CADToolAdapter getCADToolAdapter() {
 		com.iver.andami.ui.mdiManager.IWindow view=PluginServices.getMDIManager().getActiveWindow();
@@ -428,5 +432,11 @@ public class CADExtension extends Extension {
 		});
 		cta.getEditionManager().setMapControl(mapControl);
 		view.getMapControl().setTool("cadtooladapter");
+	}
+
+	public IPreference[] getPreferencesPages() {
+		IPreference[] preferences=new IPreference[1];
+		preferences[0]=editingPage;
+		return preferences;
 	}
 }

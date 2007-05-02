@@ -49,7 +49,6 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.RectangleCADToolContext;
@@ -184,7 +183,7 @@ public class RectangleCADTool extends DefaultCADTool {
             elShape.lineTo(firstPoint.getX(), firstPoint.getY());
             ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.drawingSymbol);
+                DefaultCADTool.drawingSymbol);
         } else if (status == "Rectangle.SecondPointSquare") {
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
                     4);
@@ -206,7 +205,7 @@ public class RectangleCADTool extends DefaultCADTool {
 
             ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.drawingSymbol);
+                DefaultCADTool.drawingSymbol);
         }
     }
 

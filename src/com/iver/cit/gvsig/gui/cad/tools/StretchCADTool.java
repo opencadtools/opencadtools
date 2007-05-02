@@ -261,7 +261,7 @@ public class StretchCADTool extends DefaultCADTool {
 
 				for (int j = 0; j < handlers.length; j++) {
 					if (rect.contains(handlers[j].getPoint())) {
-						FGraphicUtilities.DrawHandlers((Graphics2D) g,getCadToolAdapter().getMapControl().getViewPort().getAffineTransform(),new Handler[] {handlers[j]});
+						FGraphicUtilities.DrawHandlers((Graphics2D) g,getCadToolAdapter().getMapControl().getViewPort().getAffineTransform(),new Handler[] {handlers[j]},DefaultCADTool.selectSymbol);
 					}
 				}
 			}

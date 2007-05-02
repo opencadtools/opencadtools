@@ -52,7 +52,6 @@ import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
-import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.exception.ValueException;
@@ -159,16 +158,16 @@ public class PolygonCADTool extends DefaultCADTool {
             if (isI) {
                 getIPolygon(point, point.distance(center)).draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.drawingSymbol);
+                    DefaultCADTool.drawingSymbol);
             } else {
                 getCPolygon(point, point.distance(center)).draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    CADTool.drawingSymbol);
+                    DefaultCADTool.drawingSymbol);
             }
 
             ShapeFactory.createCircle(center, point.distance(center)).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                CADTool.modifySymbol);
+                DefaultCADTool.modifySymbol);
         }
     }
 

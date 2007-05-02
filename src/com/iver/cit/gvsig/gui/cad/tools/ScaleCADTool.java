@@ -243,7 +243,7 @@ public class ScaleCADTool extends DefaultCADTool {
 					UtilFunctions.scaleGeom(geometry, firstPoint, scale, scale);
 					geometry.draw((Graphics2D) g, getCadToolAdapter()
 							.getMapControl().getViewPort(),
-							CADTool.modifySymbol);
+							DefaultCADTool.modifySymbol);
 
 				}
 
@@ -278,7 +278,7 @@ public class ScaleCADTool extends DefaultCADTool {
 								escalado);
 						geometry.draw((Graphics2D) g, getCadToolAdapter()
 								.getMapControl().getViewPort(),
-								CADTool.modifySymbol);
+								DefaultCADTool.modifySymbol);
 
 					}
 				} else {
