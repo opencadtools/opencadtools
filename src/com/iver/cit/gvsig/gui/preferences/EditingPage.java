@@ -43,7 +43,10 @@
 *
 * $Id$
 * $Log$
-* Revision 1.2  2007-05-02 10:16:37  caballero
+* Revision 1.3  2007-05-02 16:55:13  caballero
+* Editing colors
+*
+* Revision 1.1.2.2  2007/05/02 15:49:56  caballero
 * Editing colors
 *
 * Revision 1.1.2.1  2007/05/02 07:50:56  caballero
@@ -184,6 +187,7 @@ import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
+import com.iver.cit.gvsig.fmap.core.symbols.IFillSymbol;
 import com.iver.cit.gvsig.fmap.core.symbols.ILineSymbol;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
@@ -202,28 +206,35 @@ import com.iver.utiles.XMLEntity;
  */
 public class EditingPage extends AbstractPreferencePage {
 
+	public static String DEFAULT_HANDLER_COLOR = "default_editing_handler_color";
+	public static String DEFAULT_HANDLER_OUTLINE_COLOR = "default_editing_handler_outline_color";
+
 	public static String DEFAULT_SELECTION_COLOR = "default_editing_selection_color";
-	public static String DEFAULT_SELECTION_OUTLINE_COLOR = "default_editing_selection_outline_color";
+//	public static String DEFAULT_SELECTION_OUTLINE_COLOR = "default_editing_selection_outline_color";
 
-	public static String DEFAULT_MODIFY_COLOR = "default_editing_modify_color";
-	public static String DEFAULT_MODIFY_OUTLINE_COLOR = "default_editing_modify_outline_color";
+	public static String DEFAULT_AXIS_REFERENCES_COLOR = "default_editing_axis_references_color";
+//	public static String DEFAULT_AXIS_REFERENCES_OUTLINE_COLOR = "default_editing_axis_references_outline_color";
 
-	public static String DEFAULT_DRAWING_COLOR = "default_editing_drawing_color";
-	public static String DEFAULT_DRAWING_OUTLINE_COLOR = "default_editing_drawing_outline_color";
+	public static String DEFAULT_RECTANGLE_SELECTION_COLOR = "default_editing_rectangle_selection_color";
+//	public static String DEFAULT_GEOMETRY_SELECTION_OUTLINE_COLOR = "default_editing_geometry_selection_outline_color";
 
 	protected String id;
 	private ImageIcon icon;
 	private ColorChooserPanel jccDefaultSelectionColor;
-	private ColorChooserPanel jccDefaultSelectionOutLineColor;
-	private ColorChooserPanel jccDefaultModifyColor;
-	private ColorChooserPanel jccDefaultModifyOutLineColor;
-	private ColorChooserPanel jccDefaultDrawingColor;
-	private ColorChooserPanel jccDefaultDrawingOutLineColor;
+//	private ColorChooserPanel jccDefaultSelectionOutLineColor;
+	private ColorChooserPanel jccDefaultAxisReferencesColor;
+//	private ColorChooserPanel jccDefaultAxisReferencesOutLineColor;
+	private ColorChooserPanel jccDefaultGeometrySelectionColor;
+//	private ColorChooserPanel jccDefaultGeometrySelectionOutLineColor;
+
+	private ColorChooserPanel jccDefaultHandlerColor;
+	private ColorChooserPanel jccDefaultHandlerOutLineColor;
 
 	private boolean panelStarted = false;
 	private JSlider jsDefaultSelectionAlpha;
-	private JSlider jsDefaultModifyAlpha;
-	private JSlider jsDefaultDrawingAlpha;
+	private JSlider jsDefaultAxisReferencesAlpha;
+	private JSlider jsDefaultGeometrySelectionAlpha;
+	private JSlider jsDefaultHandlerAlpha;
 
 	/**
 	 * Creates a new panel containing View preferences settings.
@@ -246,83 +257,95 @@ public class EditingPage extends AbstractPreferencePage {
 			Color color=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_SELECTION_COLOR));
 			jccDefaultSelectionColor.setColor(color);
 			jccDefaultSelectionColor.setAlpha(color.getAlpha());
-			Color colorOutLine=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_SELECTION_OUTLINE_COLOR));
-			jccDefaultSelectionOutLineColor.setColor(colorOutLine);
-			jccDefaultSelectionOutLineColor.setAlpha(color.getAlpha());
+//			Color colorOutLine=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_SELECTION_OUTLINE_COLOR));
+//			jccDefaultSelectionOutLineColor.setColor(colorOutLine);
+//			jccDefaultSelectionOutLineColor.setAlpha(color.getAlpha());
 			jsDefaultSelectionAlpha.setValue(color.getAlpha());
-			DefaultCADTool.selectSymbol = SymbologyFactory.
+			DefaultCADTool.selectionSymbol = SymbologyFactory.
 			createDefaultSymbolByShapeType(FShape.MULTI,color);
-			if (DefaultCADTool.selectSymbol instanceof ILineSymbol) {
-				((ILineSymbol) DefaultCADTool.selectSymbol).setLineColor(colorOutLine);
+//			DefaultCADTool.selectionSymbol.setOutlineColor(colorOutLine);
+		}else{
+			Color color=Color.RED;
+			jccDefaultSelectionColor.setColor(color);
+			jccDefaultSelectionColor.setAlpha(color.getAlpha());
+//			jccDefaultSelectionOutLineColor.setColor(color.darker());
+//			jccDefaultSelectionOutLineColor.setAlpha(color.getAlpha());
+			jsDefaultSelectionAlpha.setValue(color.getAlpha());
+			DefaultCADTool.selectionSymbol = SymbologyFactory.
+			createDefaultSymbolByShapeType(FShape.MULTI,color);
+//			DefaultCADTool.selectionSymbol.setOutlineColor(color.darker());
+		}
+
+
+		// Default axis references color
+		if (xml.contains(DEFAULT_AXIS_REFERENCES_COLOR)) {
+			Color color=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_AXIS_REFERENCES_COLOR));
+			jccDefaultAxisReferencesColor.setColor(color);
+			jccDefaultAxisReferencesColor.setAlpha(color.getAlpha());
+//			Color colorOutLine=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_AXIS_REFERENCES_OUTLINE_COLOR));
+//			jccDefaultAxisReferencesOutLineColor.setColor(colorOutLine);
+//			jccDefaultAxisReferencesOutLineColor.setAlpha(color.getAlpha());
+			jsDefaultAxisReferencesAlpha.setValue(color.getAlpha());
+			DefaultCADTool.axisReferencesSymbol = SymbologyFactory.
+			createDefaultSymbolByShapeType(FShape.MULTI,color);
+		}else{
+			Color color=new Color(100, 100, 100, 100);
+			jccDefaultAxisReferencesColor.setColor(color);
+			jccDefaultAxisReferencesColor.setAlpha(color.getAlpha());
+//			jccDefaultAxisReferencesOutLineColor.setColor(color.darker());
+//			jccDefaultAxisReferencesOutLineColor.setAlpha(color.getAlpha());
+			jsDefaultAxisReferencesAlpha.setValue(color.getAlpha());
+			DefaultCADTool.axisReferencesSymbol = SymbologyFactory.
+			createDefaultSymbolByShapeType(FShape.MULTI,color);
+		}
+
+		// Default geometry selection color
+		if (xml.contains(DEFAULT_RECTANGLE_SELECTION_COLOR)) {
+			Color color=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_RECTANGLE_SELECTION_COLOR));
+			jccDefaultGeometrySelectionColor.setColor(color);
+			jccDefaultGeometrySelectionColor.setAlpha(color.getAlpha());
+//			Color colorOutLine=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_GEOMETRY_SELECTION_OUTLINE_COLOR));
+//			jccDefaultGeometrySelectionOutLineColor.setColor(colorOutLine);
+//			jccDefaultGeometrySelectionOutLineColor.setAlpha(color.getAlpha());
+			jsDefaultGeometrySelectionAlpha.setValue(color.getAlpha());
+			DefaultCADTool.geometrySelectSymbol = SymbologyFactory.
+			createDefaultSymbolByShapeType(FShape.MULTI,color);
+		}else{
+			Color color=new Color(255, 0,0, 100);
+			jccDefaultGeometrySelectionColor.setColor(color);
+			jccDefaultGeometrySelectionColor.setAlpha(color.getAlpha());
+//			jccDefaultGeometrySelectionOutLineColor.setColor(color.darker());
+//			jccDefaultGeometrySelectionOutLineColor.setAlpha(color.getAlpha());
+			jsDefaultGeometrySelectionAlpha.setValue(color.getAlpha());
+			DefaultCADTool.geometrySelectSymbol = SymbologyFactory.
+			createDefaultSymbolByShapeType(FShape.MULTI,color);
+		}
+
+		// Default handler color
+		if (xml.contains(DEFAULT_HANDLER_COLOR)) {
+			Color color=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_HANDLER_COLOR));
+			jccDefaultHandlerColor.setColor(color);
+			jccDefaultHandlerColor.setAlpha(color.getAlpha());
+			Color colorOutLine=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_HANDLER_OUTLINE_COLOR));
+			jccDefaultHandlerOutLineColor.setColor(colorOutLine);
+			jccDefaultHandlerOutLineColor.setAlpha(color.getAlpha());
+			jsDefaultGeometrySelectionAlpha.setValue(color.getAlpha());
+			DefaultCADTool.handlerSymbol = SymbologyFactory.
+			createDefaultSymbolByShapeType(FShape.MULTI,color);
+			if (DefaultCADTool.handlerSymbol instanceof ILineSymbol) {
+				((ILineSymbol)DefaultCADTool.handlerSymbol).setLineColor(colorOutLine);
 			}
 		}else{
 			Color color=Color.ORANGE;
-			jccDefaultSelectionColor.setColor(color);
-			jccDefaultSelectionColor.setAlpha(color.getAlpha());
-			jccDefaultSelectionOutLineColor.setColor(color.darker());
-			jccDefaultSelectionOutLineColor.setAlpha(color.getAlpha());
-			jsDefaultSelectionAlpha.setValue(color.getAlpha());
-			DefaultCADTool.selectSymbol =SymbologyFactory.
+			jccDefaultHandlerColor.setColor(color);
+			jccDefaultHandlerColor.setAlpha(color.getAlpha());
+			jccDefaultHandlerOutLineColor.setColor(color.darker());
+			jccDefaultHandlerOutLineColor.setAlpha(color.getAlpha());
+			jsDefaultHandlerAlpha.setValue(color.getAlpha());
+			DefaultCADTool.handlerSymbol = SymbologyFactory.
 			createDefaultSymbolByShapeType(FShape.MULTI,color);
-			if (DefaultCADTool.selectSymbol instanceof ILineSymbol) {
-				((ILineSymbol) DefaultCADTool.selectSymbol).setLineColor(color.darker());
-			}
-		}
-
-
-		// Default modify color
-		if (xml.contains(DEFAULT_MODIFY_COLOR)) {
-			Color color=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_MODIFY_COLOR));
-			jccDefaultModifyColor.setColor(color);
-			jccDefaultModifyColor.setAlpha(color.getAlpha());
-			Color colorOutLine=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_MODIFY_OUTLINE_COLOR));
-			jccDefaultModifyOutLineColor.setColor(colorOutLine);
-			jccDefaultModifyOutLineColor.setAlpha(color.getAlpha());
-			jsDefaultModifyAlpha.setValue(color.getAlpha());
-			DefaultCADTool.modifySymbol = SymbologyFactory.
-			createDefaultSymbolByShapeType(FShape.MULTI,color);
-			if (DefaultCADTool.modifySymbol instanceof ILineSymbol) {
-				((ILineSymbol) DefaultCADTool.modifySymbol).setLineColor(colorOutLine);
-			}
-		}else{
-			Color color=new Color(100, 100, 100, 100);
-			jccDefaultModifyColor.setColor(color);
-			jccDefaultModifyColor.setAlpha(color.getAlpha());
-			jccDefaultModifyOutLineColor.setColor(color.darker());
-			jccDefaultModifyOutLineColor.setAlpha(color.getAlpha());
-			jsDefaultModifyAlpha.setValue(color.getAlpha());
-			DefaultCADTool.modifySymbol = SymbologyFactory.
-			createDefaultSymbolByShapeType(FShape.MULTI,color);
-			if (DefaultCADTool.modifySymbol instanceof ILineSymbol) {
-				((ILineSymbol) DefaultCADTool.modifySymbol).setLineColor(color.darker());
-			}
-		}
-
-		// Default modify color
-		if (xml.contains(DEFAULT_DRAWING_COLOR)) {
-			Color color=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_DRAWING_COLOR));
-			jccDefaultDrawingColor.setColor(color);
-			jccDefaultDrawingColor.setAlpha(color.getAlpha());
-			Color colorOutLine=StringUtilities.string2Color(xml.getStringProperty(DEFAULT_DRAWING_OUTLINE_COLOR));
-			jccDefaultDrawingOutLineColor.setColor(colorOutLine);
-			jccDefaultDrawingOutLineColor.setAlpha(color.getAlpha());
-			jsDefaultDrawingAlpha.setValue(color.getAlpha());
-			DefaultCADTool.drawingSymbol = SymbologyFactory.
-			createDefaultSymbolByShapeType(FShape.MULTI,color);
-			if (DefaultCADTool.drawingSymbol instanceof ILineSymbol) {
-				((ILineSymbol) DefaultCADTool.drawingSymbol).setLineColor(colorOutLine);
-			}
-		}else{
-			Color color=new Color(255, 0,0, 100);
-			jccDefaultDrawingColor.setColor(color);
-			jccDefaultDrawingColor.setAlpha(color.getAlpha());
-			jccDefaultDrawingOutLineColor.setColor(color.darker());
-			jccDefaultDrawingOutLineColor.setAlpha(color.getAlpha());
-			jsDefaultDrawingAlpha.setValue(color.getAlpha());
-			DefaultCADTool.drawingSymbol = SymbologyFactory.
-			createDefaultSymbolByShapeType(FShape.MULTI,color);
-			if (DefaultCADTool.drawingSymbol instanceof ILineSymbol) {
-				((ILineSymbol) DefaultCADTool.drawingSymbol).setLineColor(color.darker());
+			if (DefaultCADTool.handlerSymbol instanceof ILineSymbol) {
+				((ILineSymbol)DefaultCADTool.handlerSymbol).setLineColor(color.darker());
 			}
 		}
 	}
@@ -349,8 +372,8 @@ public class EditingPage extends AbstractPreferencePage {
 		selectionPanel.setLayout(new GridBagLayout());
 		selectionPanel.add(new JLabel(PluginServices.getText(this,"fill")));
 		selectionPanel.add(jccDefaultSelectionColor = new ColorChooserPanel());
-		selectionPanel.add(new JLabel(PluginServices.getText(this,"outline")));
-		selectionPanel.add(jccDefaultSelectionOutLineColor=new ColorChooserPanel());
+//		selectionPanel.add(new JLabel(PluginServices.getText(this,"outline")));
+//		selectionPanel.add(jccDefaultSelectionOutLineColor=new ColorChooserPanel());
 
 
 //		JPanel alphaSelectionPanel= new JPanel();
@@ -361,7 +384,7 @@ public class EditingPage extends AbstractPreferencePage {
 		jsDefaultSelectionAlpha.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent e) {
 				jccDefaultSelectionColor.setAlpha(((JSlider)e.getSource()).getValue());
-				jccDefaultSelectionOutLineColor.setAlpha(((JSlider)e.getSource()).getValue());
+//				jccDefaultSelectionOutLineColor.setAlpha(((JSlider)e.getSource()).getValue());
 
 			}});
 
@@ -370,23 +393,23 @@ public class EditingPage extends AbstractPreferencePage {
 
 		// default selection color chooser
 		JPanel modifyPanel = new JPanel();
-		modifyPanel.setBorder(new TitledBorder(PluginServices.getText(this, "options.editing.default_modify_color")));
+		modifyPanel.setBorder(new TitledBorder(PluginServices.getText(this, "options.editing.default_axis_references_color")));
 		modifyPanel.setLayout(new GridBagLayout());
 		modifyPanel.add(new JLabel(PluginServices.getText(this,"fill")));
-		modifyPanel.add(jccDefaultModifyColor = new ColorChooserPanel());
-		modifyPanel.add(new JLabel(PluginServices.getText(this,"outline")));
-		modifyPanel.add(jccDefaultModifyOutLineColor=new ColorChooserPanel());
+		modifyPanel.add(jccDefaultAxisReferencesColor = new ColorChooserPanel());
+//		modifyPanel.add(new JLabel(PluginServices.getText(this,"outline")));
+//		modifyPanel.add(jccDefaultAxisReferencesOutLineColor=new ColorChooserPanel());
 
 //		JPanel alphaModifyPanel= new JPanel();
 //		alphaModifyPanel.setPreferredSize(new Dimension(120,30));
 		modifyPanel.add(new JLabel(PluginServices.getText(this,"alpha")));
-		modifyPanel.add(jsDefaultModifyAlpha = new JSlider(0,255));
-		jsDefaultModifyAlpha.setPreferredSize(new Dimension(100,30));
+		modifyPanel.add(jsDefaultAxisReferencesAlpha = new JSlider(0,255));
+		jsDefaultAxisReferencesAlpha.setPreferredSize(new Dimension(100,30));
 
-		jsDefaultModifyAlpha.addChangeListener(new ChangeListener(){
+		jsDefaultAxisReferencesAlpha.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent e) {
-				jccDefaultModifyColor.setAlpha(((JSlider)e.getSource()).getValue());
-				jccDefaultModifyOutLineColor.setAlpha(((JSlider)e.getSource()).getValue());
+				jccDefaultAxisReferencesColor.setAlpha(((JSlider)e.getSource()).getValue());
+//				jccDefaultAxisReferencesOutLineColor.setAlpha(((JSlider)e.getSource()).getValue());
 
 			}});
 
@@ -395,29 +418,52 @@ public class EditingPage extends AbstractPreferencePage {
 
 		// default drawing color chooser
 		JPanel drawingPanel = new JPanel();
-		drawingPanel.setBorder(new TitledBorder(PluginServices.getText(this, "options.editing.default_drawing_color")));
+		drawingPanel.setBorder(new TitledBorder(PluginServices.getText(this, "options.editing.default_rectangle_selection_color")));
 		drawingPanel.setLayout(new GridBagLayout());
 		drawingPanel.add(new JLabel(PluginServices.getText(this,"fill")));
-		drawingPanel.add(jccDefaultDrawingColor = new ColorChooserPanel());
-		drawingPanel.add(new JLabel(PluginServices.getText(this,"outline")));
-		drawingPanel.add(jccDefaultDrawingOutLineColor=new ColorChooserPanel());
+		drawingPanel.add(jccDefaultGeometrySelectionColor = new ColorChooserPanel());
+//		drawingPanel.add(new JLabel(PluginServices.getText(this,"outline")));
+//		drawingPanel.add(jccDefaultGeometrySelectionOutLineColor=new ColorChooserPanel());
 
 //		JPanel alphaDrawingPanel= new JPanel();
 //		alphaDrawingPanel.setPreferredSize(new Dimension(120,30));
 		drawingPanel.add(new JLabel(PluginServices.getText(this,"alpha")));
-		drawingPanel.add(jsDefaultDrawingAlpha = new JSlider(0,255));
-		jsDefaultDrawingAlpha.setPreferredSize(new Dimension(100,30));
+		drawingPanel.add(jsDefaultGeometrySelectionAlpha = new JSlider(0,255));
+		jsDefaultGeometrySelectionAlpha.setPreferredSize(new Dimension(100,30));
 
-		jsDefaultDrawingAlpha.addChangeListener(new ChangeListener(){
+		jsDefaultGeometrySelectionAlpha.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent e) {
-				jccDefaultDrawingColor.setAlpha(((JSlider)e.getSource()).getValue());
-				jccDefaultDrawingOutLineColor.setAlpha(((JSlider)e.getSource()).getValue());
+				jccDefaultGeometrySelectionColor.setAlpha(((JSlider)e.getSource()).getValue());
+//				jccDefaultGeometrySelectionOutLineColor.setAlpha(((JSlider)e.getSource()).getValue());
 
 			}});
 
 		addComponent(drawingPanel);
+		addComponent(new JLabel(" "));
 
-		// just a separator
+		// default selection color chooser
+		JPanel handlerPanel = new JPanel();
+		handlerPanel.setBorder(new TitledBorder(PluginServices.getText(this, "options.editing.default_handler_color")));
+		handlerPanel.setLayout(new GridBagLayout());
+		handlerPanel.add(new JLabel(PluginServices.getText(this,"fill")));
+		handlerPanel.add(jccDefaultHandlerColor = new ColorChooserPanel());
+		handlerPanel.add(new JLabel(PluginServices.getText(this,"outline")));
+		handlerPanel.add(jccDefaultHandlerOutLineColor=new ColorChooserPanel());
+
+//		JPanel alphaModifyPanel= new JPanel();
+//		alphaModifyPanel.setPreferredSize(new Dimension(120,30));
+		handlerPanel.add(new JLabel(PluginServices.getText(this,"alpha")));
+		handlerPanel.add(jsDefaultHandlerAlpha = new JSlider(0,255));
+		jsDefaultHandlerAlpha.setPreferredSize(new Dimension(100,30));
+
+		jsDefaultHandlerAlpha.addChangeListener(new ChangeListener(){
+			public void stateChanged(ChangeEvent e) {
+				jccDefaultHandlerColor.setAlpha(((JSlider)e.getSource()).getValue());
+				jccDefaultHandlerOutLineColor.setAlpha(((JSlider)e.getSource()).getValue());
+
+			}});
+
+		addComponent(handlerPanel);
 		addComponent(new JLabel(" "));
 
 		initializeValues();
@@ -425,60 +471,73 @@ public class EditingPage extends AbstractPreferencePage {
 	}
 
 	public void storeValues() throws StoreException {
-		Color selectionColor, modifyColor, drawingColor, selectionOutLineColor, modifyOutLineColor, drawingOutLineColor;
+		Color selectionColor, modifyColor, drawingColor, handlerColor, handlerOutLineColor;// selectionOutLineColor, modifyOutLineColor, drawingOutLineColor;
 		selectionColor = jccDefaultSelectionColor.getColor();
-		selectionOutLineColor = jccDefaultSelectionOutLineColor.getColor();
-		modifyColor = jccDefaultModifyColor.getColor();
-		modifyOutLineColor = jccDefaultModifyOutLineColor.getColor();
-		drawingColor = jccDefaultDrawingColor.getColor();
-		drawingOutLineColor = jccDefaultDrawingOutLineColor.getColor();
+//		selectionOutLineColor = jccDefaultSelectionOutLineColor.getColor();
+		modifyColor = jccDefaultAxisReferencesColor.getColor();
+//		modifyOutLineColor = jccDefaultAxisReferencesOutLineColor.getColor();
+		drawingColor = jccDefaultGeometrySelectionColor.getColor();
+//		drawingOutLineColor = jccDefaultGeometrySelectionOutLineColor.getColor();
+
+		handlerColor = jccDefaultHandlerColor.getColor();
+		handlerOutLineColor = jccDefaultHandlerOutLineColor.getColor();
+
 
 		PluginServices ps = PluginServices.getPluginServices(this);
 		XMLEntity xml = ps.getPersistentXML();
 		xml.putProperty(DEFAULT_SELECTION_COLOR,
 			StringUtilities.color2String(selectionColor));
-		xml.putProperty(DEFAULT_SELECTION_OUTLINE_COLOR,
-				StringUtilities.color2String(selectionOutLineColor));
-		DefaultCADTool.selectSymbol = SymbologyFactory.
+//		xml.putProperty(DEFAULT_SELECTION_OUTLINE_COLOR,
+//				StringUtilities.color2String(selectionOutLineColor));
+		DefaultCADTool.selectionSymbol = SymbologyFactory.
 		createDefaultSymbolByShapeType(FShape.MULTI,selectionColor);
-		if (DefaultCADTool.selectSymbol instanceof ILineSymbol) {
-			((ILineSymbol) DefaultCADTool.selectSymbol).setLineColor(selectionOutLineColor);
-		}
+//		DefaultCADTool.selectionSymbol.setOutlineColor(selectionOutLineColor);
 
-		xml.putProperty(DEFAULT_MODIFY_COLOR,
+		xml.putProperty(DEFAULT_AXIS_REFERENCES_COLOR,
 			StringUtilities.color2String(modifyColor));
-		xml.putProperty(DEFAULT_MODIFY_OUTLINE_COLOR,
-				StringUtilities.color2String(modifyOutLineColor));
-		DefaultCADTool.modifySymbol = SymbologyFactory.
+//		xml.putProperty(DEFAULT_AXIS_REFERENCES_OUTLINE_COLOR,
+//				StringUtilities.color2String(modifyOutLineColor));
+		DefaultCADTool.axisReferencesSymbol = SymbologyFactory.
 		createDefaultSymbolByShapeType(FShape.MULTI,modifyColor);
-		if (DefaultCADTool.modifySymbol instanceof ILineSymbol) {
-			((ILineSymbol) DefaultCADTool.modifySymbol).setLineColor(modifyOutLineColor);
-		}
+//		DefaultCADTool.axisReferencesSymbol.setOutlineColor(modifyOutLineColor);
 
-		xml.putProperty(DEFAULT_DRAWING_COLOR,
+		xml.putProperty(DEFAULT_RECTANGLE_SELECTION_COLOR,
 				StringUtilities.color2String(drawingColor));
-		xml.putProperty(DEFAULT_DRAWING_OUTLINE_COLOR,
-				StringUtilities.color2String(drawingOutLineColor));
-		DefaultCADTool.drawingSymbol = SymbologyFactory.
+//		xml.putProperty(DEFAULT_GEOMETRY_SELECTION_OUTLINE_COLOR,
+//				StringUtilities.color2String(drawingOutLineColor));
+		DefaultCADTool.geometrySelectSymbol = SymbologyFactory.
 		createDefaultSymbolByShapeType(FShape.MULTI,drawingColor);
-		if (DefaultCADTool.drawingSymbol instanceof ILineSymbol) {
-			((ILineSymbol) DefaultCADTool.drawingSymbol).setLineColor(drawingOutLineColor);
+//		DefaultCADTool.geometrySelectSymbol.setOutlineColor(drawingOutLineColor);
+
+		xml.putProperty(DEFAULT_HANDLER_COLOR,
+				StringUtilities.color2String(handlerColor));
+		xml.putProperty(DEFAULT_HANDLER_OUTLINE_COLOR,
+				StringUtilities.color2String(handlerOutLineColor));
+		DefaultCADTool.handlerSymbol = SymbologyFactory.
+		createDefaultSymbolByShapeType(FShape.MULTI,handlerColor);
+		if (DefaultCADTool.handlerSymbol instanceof ILineSymbol) {
+			((ILineSymbol)DefaultCADTool.handlerSymbol).setLineColor(handlerOutLineColor);
 		}
 	}
 
 
 	public void initializeDefaults() {
 		jccDefaultSelectionColor.setColor(Color.ORANGE);
-		jccDefaultSelectionOutLineColor.setColor(Color.ORANGE.darker());
+//		jccDefaultSelectionOutLineColor.setColor(Color.ORANGE.darker());
 		jsDefaultSelectionAlpha.setValue(255);
 
-		jccDefaultModifyColor.setColor(new Color(100, 100, 100, 100));
-		jccDefaultModifyOutLineColor.setColor(new Color(100, 100, 100, 100).darker());
-		jsDefaultModifyAlpha.setValue(100);
+		jccDefaultAxisReferencesColor.setColor(new Color(100, 100, 100, 100));
+//		jccDefaultAxisReferencesOutLineColor.setColor(new Color(100, 100, 100, 100).darker());
+		jsDefaultAxisReferencesAlpha.setValue(100);
 
-		jccDefaultDrawingColor.setColor(new Color(255, 0,0, 100));
-		jccDefaultDrawingOutLineColor.setColor(new Color(255, 0, 0, 100).darker());
-		jsDefaultDrawingAlpha.setValue(100);
+		jccDefaultGeometrySelectionColor.setColor(new Color(255, 0,0, 100));
+//		jccDefaultGeometrySelectionOutLineColor.setColor(new Color(255, 0, 0, 100).darker());
+		jsDefaultGeometrySelectionAlpha.setValue(100);
+
+		jccDefaultHandlerColor.setColor(new Color(255, 0,0, 100));
+		jccDefaultHandlerOutLineColor.setColor(new Color(255, 0, 0, 100).darker());
+		jsDefaultHandlerAlpha.setValue(100);
+
 	}
 
 	public ImageIcon getIcon() {

@@ -221,7 +221,7 @@ public class RotateCADTool extends DefaultCADTool {
 
 			Image imgSel = vle.getSelectionImage();
             ((Graphics2D)g).drawImage(imgSel, at, null);
-            drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
+            drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y),DefaultCADTool.axisReferencesSymbol);
 			///AffineTransform at = AffineTransform.getRotateInstance(+Math.atan2(
 			///			w, h) - (Math.PI / 2), (int) point.getX(),
 			///		(int) point.getY());

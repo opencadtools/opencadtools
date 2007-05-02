@@ -142,7 +142,7 @@ public class EllipseCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status.equals("Ellipse.SecondPointAxis")) {
-            drawLine((Graphics2D) g, startAxis, new Point2D.Double(x, y));
+            drawLine((Graphics2D) g, startAxis, new Point2D.Double(x, y),DefaultCADTool.geometrySelectSymbol);
         } else if (status.equals("Ellipse.DistanceOtherAxis")) {
             Point2D middle = new Point2D.Double((startAxis.getX() +
                     endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
@@ -153,11 +153,11 @@ public class EllipseCADTool extends DefaultCADTool {
 
             ShapeFactory.createEllipse(startAxis, endAxis, distance).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                DefaultCADTool.modifySymbol);
+                DefaultCADTool.axisReferencesSymbol);
 
             Point2D mediop = new Point2D.Double((startAxis.getX() +
                     endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
-            drawLine((Graphics2D) g, mediop, third);
+            drawLine((Graphics2D) g, mediop, third,DefaultCADTool.geometrySelectSymbol);
         }
     }
 

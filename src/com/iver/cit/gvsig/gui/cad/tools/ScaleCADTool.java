@@ -233,7 +233,7 @@ public class ScaleCADTool extends DefaultCADTool {
 					.toMapDistance(
 							getCadToolAdapter().getMapControl().getWidth());
 			double scale = firstPoint.distance(currentPoint) / (size / 40);
-			drawLine((Graphics2D) g, firstPoint, currentPoint);
+			drawLine((Graphics2D) g, firstPoint, currentPoint,DefaultCADTool.axisReferencesSymbol);
 			if (selectedRow.size() < CADTool.TOPGEOMETRY) {
 				for (int i = 0; i < selectedRow.size(); i++) {
 					DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRow
@@ -243,7 +243,7 @@ public class ScaleCADTool extends DefaultCADTool {
 					UtilFunctions.scaleGeom(geometry, firstPoint, scale, scale);
 					geometry.draw((Graphics2D) g, getCadToolAdapter()
 							.getMapControl().getViewPort(),
-							DefaultCADTool.modifySymbol);
+							DefaultCADTool.axisReferencesSymbol);
 
 				}
 
@@ -278,7 +278,7 @@ public class ScaleCADTool extends DefaultCADTool {
 								escalado);
 						geometry.draw((Graphics2D) g, getCadToolAdapter()
 								.getMapControl().getViewPort(),
-								DefaultCADTool.modifySymbol);
+								DefaultCADTool.axisReferencesSymbol);
 
 					}
 				} else {
@@ -292,7 +292,7 @@ public class ScaleCADTool extends DefaultCADTool {
 					} catch (ImagingOpException e) {
 					}
 				}
-				drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
+				drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y),DefaultCADTool.axisReferencesSymbol);
 			}
 	}
 

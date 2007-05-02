@@ -174,7 +174,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 	GeneralPathX gpx=new GeneralPathX();
 	gpx.moveTo(firstPoint.getX(),firstPoint.getY());
 	gpx.lineTo(pAux.getX(),pAux.getY());
-	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D)g,vp,DefaultCADTool.modifySymbol);
+	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D)g,vp,DefaultCADTool.axisReferencesSymbol);
 	for (int i = 0; i < selectedRow.size(); i++) {
 		DefaultRowEdited row=(DefaultRowEdited) selectedRow.get(i);
 		DefaultFeature fea = (DefaultFeature) row.getLinkedRow();
@@ -196,7 +196,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 							inter.getY() + dif.getY());
 				}
 			}
-			geom.draw((Graphics2D)g,vp,DefaultCADTool.drawingSymbol);
+			geom.draw((Graphics2D)g,vp,DefaultCADTool.selectionSymbol);
 	}
 }
 

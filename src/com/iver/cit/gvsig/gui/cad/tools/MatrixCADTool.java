@@ -328,7 +328,7 @@ public class MatrixCADTool extends DefaultCADTool {
     	gpx.lineTo(x,y);
     	VectorialLayerEdited vle=getVLE();
     	ViewPort vp=vle.getLayer().getMapContext().getViewPort();
-    	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D)g,vp,DefaultCADTool.modifySymbol);
+    	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D)g,vp,DefaultCADTool.axisReferencesSymbol);
 
    }
 

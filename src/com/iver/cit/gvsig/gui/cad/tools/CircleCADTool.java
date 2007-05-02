@@ -149,7 +149,7 @@ public class CircleCADTool extends DefaultCADTool {
         if ((status == "Circle.CenterPointOr3p")) { // || (status == "5")) {
 
             if (firstPoint != null) {
-                drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
+                drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y),DefaultCADTool.geometrySelectSymbol);
             }
         }
 
@@ -157,9 +157,9 @@ public class CircleCADTool extends DefaultCADTool {
             Point2D currentPoint = new Point2D.Double(x, y);
             ShapeFactory.createCircle(center, currentPoint).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                DefaultCADTool.drawingSymbol);
+                   DefaultCADTool.axisReferencesSymbol);
         } else if (status == "Circle.SecondPoint") {
-            drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
+            drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y),DefaultCADTool.geometrySelectSymbol);
         } else if (status == "Circle.ThirdPoint") {
             Point2D currentPoint = new Point2D.Double(x, y);
             IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint,
@@ -168,7 +168,7 @@ public class CircleCADTool extends DefaultCADTool {
             if (geom != null) {
                 geom.draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    DefaultCADTool.drawingSymbol);
+                    DefaultCADTool.axisReferencesSymbol);
             }
         }
     }

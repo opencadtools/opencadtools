@@ -162,7 +162,7 @@ public class JoinCADTool extends DefaultCADTool {
          DefaultRowEdited[] dres=(DefaultRowEdited[])selectedRows.toArray(new DefaultRowEdited[0]);
          for (int i=0;i<dres.length;i++) {
         	 IGeometry geom=((IFeature)dres[i].getLinkedRow()).getGeometry().cloneGeometry();
-        	 geom.draw((Graphics2D)g,vp,DefaultCADTool.selectSymbol);
+        	 geom.draw((Graphics2D)g,vp,DefaultCADTool.geometrySelectSymbol);
          }
     }
   /**

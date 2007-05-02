@@ -142,10 +142,10 @@ public class MultiPointCADTool extends DefaultCADTool {
 		}
 		ShapeFactory.createMultipoint2D(xs,ys).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                DefaultCADTool.drawingSymbol);
+                DefaultCADTool.geometrySelectSymbol);
 		ShapeFactory.createPoint2D(x,y).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                DefaultCADTool.drawingSymbol);
+                DefaultCADTool.geometrySelectSymbol);
     }
 
     /**

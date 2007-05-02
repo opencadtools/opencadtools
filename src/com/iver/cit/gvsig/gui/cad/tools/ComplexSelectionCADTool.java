@@ -247,7 +247,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
 					vp,
-					DefaultCADTool.selectSymbol);
+					DefaultCADTool.geometrySelectSymbol);
 			Image img = vle.getSelectionImage();
 	        g.drawImage(img, 0, 0, null);
 	        return;
@@ -259,7 +259,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 			// Dibuja el círculo de selección
 			circleSel.draw((Graphics2D) g,
 					vp,
-					DefaultCADTool.selectSymbol);
+					DefaultCADTool.geometrySelectSymbol);
 			Image img = vle.getSelectionImage();
 	        g.drawImage(img, 0, 0, null);
 	        return;
@@ -268,7 +268,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 			IGeometry polygon=getGeometryPolygon(new Point2D.Double(x,y));
 			polygon.draw((Graphics2D) g,
 					vp,
-					DefaultCADTool.selectSymbol);
+					DefaultCADTool.geometrySelectSymbol);
 			Image img = vle.getSelectionImage();
 	        g.drawImage(img, 0, 0, null);
 	        return;
@@ -286,7 +286,7 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 				IGeometry geom = ((IFeature) rowEd.getLinkedRow())
 						.getGeometry().cloneGeometry();
 				g.setColor(Color.gray);
-				geom.draw((Graphics2D) g, vp, DefaultCADTool.modifySymbol);
+				geom.draw((Graphics2D) g, vp, DefaultCADTool.axisReferencesSymbol);
 			}
 			return;
 		}else{

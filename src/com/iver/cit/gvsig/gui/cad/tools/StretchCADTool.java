@@ -248,7 +248,7 @@ public class StretchCADTool extends DefaultCADTool {
 			elShape.lineTo(selfirstPoint.getX(), selfirstPoint.getY());
 			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
 				getCadToolAdapter().getMapControl().getViewPort(),
-				modifySymbol);
+				DefaultCADTool.axisReferencesSymbol);
 		} else if (status.equals("Stretch.MoveFirstPoint")) {
 			Handler[] handlers = null;
 			for (int i = 0;i<selectedRow.size();i++) {
@@ -261,7 +261,7 @@ public class StretchCADTool extends DefaultCADTool {
 
 				for (int j = 0; j < handlers.length; j++) {
 					if (rect.contains(handlers[j].getPoint())) {
-						FGraphicUtilities.DrawHandlers((Graphics2D) g,getCadToolAdapter().getMapControl().getViewPort().getAffineTransform(),new Handler[] {handlers[j]},DefaultCADTool.selectSymbol);
+							FGraphicUtilities.DrawHandlers((Graphics2D) g,getCadToolAdapter().getMapControl().getViewPort().getAffineTransform(),new Handler[] {handlers[j]},DefaultCADTool.handlerSymbol);
 					}
 				}
 			}
@@ -284,7 +284,7 @@ public class StretchCADTool extends DefaultCADTool {
 				}
 				geometry.draw((Graphics2D) g,
 					getCadToolAdapter().getMapControl().getViewPort(),
-					modifySymbol);
+					DefaultCADTool.axisReferencesSymbol);
 			}
 		}
 	}

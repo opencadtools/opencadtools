@@ -159,7 +159,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				if (geom.intersects(rect)) { // , 0.1)){
 					selection.set(feats[i].getIndex(), true);
 					addSelectionCache((DefaultRowEdited)feats[i]);
-					geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+					geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 					drawHandlers(geom.cloneGeometry(),gh,vp);
 				}
 			}
@@ -227,14 +227,14 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					if (rect.contains(geom.getBounds2D())) {
 						addSelectionCache((DefaultRowEdited)feats[i]);
 						selection.set(feats[i].getIndex(), true);
-						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
 					}
 				} else {
 					if (geom.intersects(rect)) { // , 0.1)){
 						addSelectionCache((DefaultRowEdited)feats[i]);
 						selection.set(feats[i].getIndex(), true);
-						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
 					}
 				}
@@ -280,7 +280,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					if (contains(polygon,geom)) {
 						addSelectionCache((DefaultRowEdited)feats[i]);
 						selection.set(feats[i].getIndex(), true);
-						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
 					}
 			}
@@ -324,7 +324,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					if (contains(polygon,geom) || intersects(polygon,geom)) {
 						addSelectionCache((DefaultRowEdited)feats[i]);
 						selection.set(feats[i].getIndex(), true);
-						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
 					}
 			}
@@ -364,7 +364,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					if (!contains(polygon,geom) && !intersects(polygon,geom)) {
 						addSelectionCache((DefaultRowEdited)rowEd);
 						selection.set(rowEd.getIndex(), true);
-						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
 					}
 			}
@@ -402,7 +402,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 						.getGeometry();
 				addSelectionCache((DefaultRowEdited)rowEd);
 				selection.set(rowEd.getIndex(), true);
-				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 				drawHandlers(geom.cloneGeometry(),gh,vp);
 			}
 			vea.setSelectionImage(selectionImage);
@@ -444,7 +444,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				IGeometry geom=feat.getGeometry();
 				handlers = geom.getHandlers(IGeometry.SELECTHANDLER);
 				addSelectionCache(dre);
-				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 				drawHandlers(geom.cloneGeometry(),gh,vp);
 				// y miramos los handlers de cada entidad seleccionada
 				min = cta.getMapControl().getViewPort()
@@ -472,7 +472,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	public void drawHandlers(IGeometry geom, Graphics2D gs, ViewPort vp) {
 		if (!(getLayer() instanceof FLyrAnnotation)){
 			Handler[] handlers = geom.getHandlers(IGeometry.SELECTHANDLER);
-			FGraphicUtilities.DrawHandlers(gs, vp.getAffineTransform(), handlers,DefaultCADTool.selectSymbol);
+			FGraphicUtilities.DrawHandlers(gs, vp.getAffineTransform(), handlers,DefaultCADTool.handlerSymbol);
 		}
 	}
 	public Image getSelectionImage(){
@@ -503,7 +503,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				IFeature feat = (IFeature) ((IRowEdited) selectedRow.get(i))
 						.getLinkedRow();
 				IGeometry geom = feat.getGeometry();
-				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 				drawHandlers(geom.cloneGeometry(), gh, vp);
 			}
 			vea.setSelectionImage(selectionImage);

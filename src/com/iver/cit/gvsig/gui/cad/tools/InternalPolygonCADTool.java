@@ -173,8 +173,8 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     	gpx1.closePath();
     	IGeometry geom=ShapeFactory.createPolygon2D(gpx);
     	IGeometry geom1=ShapeFactory.createPolygon2D(gpx1);
-    	geom1.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.drawingSymbol);
-    	geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.modifySymbol);
+    	geom1.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.selectionSymbol);
+    	geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.geometrySelectSymbol);
     	}
     }
 

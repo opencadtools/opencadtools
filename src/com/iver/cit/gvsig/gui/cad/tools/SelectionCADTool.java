@@ -308,7 +308,7 @@ public class SelectionCADTool extends DefaultCADTool {
 			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
 			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
 					vp,
-					DefaultCADTool.selectSymbol);
+					DefaultCADTool.geometrySelectSymbol);
 			Image img = vle.getSelectionImage();
 	        g.drawImage(img, 0, 0, null);
 	        return;
@@ -326,7 +326,7 @@ public class SelectionCADTool extends DefaultCADTool {
 				IGeometry geom = ((IFeature) rowEd.getLinkedRow())
 						.getGeometry().cloneGeometry();
 				g.setColor(Color.gray);
-				geom.draw((Graphics2D) g, vp, DefaultCADTool.modifySymbol);
+			geom.draw((Graphics2D) g, vp, DefaultCADTool.axisReferencesSymbol);
 			}
 			return;
 		}else{

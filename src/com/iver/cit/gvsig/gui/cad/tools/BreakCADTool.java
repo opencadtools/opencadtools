@@ -652,15 +652,15 @@ private Point2D getNearPoint(Point2D previous) {
              if (firstPoint!=null){
                  IGeometry g1=ShapeFactory.createCircle(firstPoint,vp.toMapDistance(3));
                  IGeometry g2=ShapeFactory.createCircle(firstPoint,vp.toMapDistance(5));
-                 g1.draw((Graphics2D)g,vp,DefaultCADTool.modifySymbol);
-                 g2.draw((Graphics2D)g,vp,DefaultCADTool.modifySymbol);
+                 g1.draw((Graphics2D)g,vp,DefaultCADTool.axisReferencesSymbol);
+                 g2.draw((Graphics2D)g,vp,DefaultCADTool.axisReferencesSymbol);
              }
              rowEdited = (DefaultRowEdited)selectedRows.get(0);
                  //.getLinkedRow()
                  //	.cloneRow();
              IGeometry geom=((DefaultFeature)rowEdited.getLinkedRow()).getGeometry().cloneGeometry();
              if (intersects(geom,new Point2D.Double(x,y))){
-                 geom.draw((Graphics2D)g,vp,DefaultCADTool.drawingSymbol);
+                 geom.draw((Graphics2D)g,vp,DefaultCADTool.geometrySelectSymbol);
              }
          }
     }

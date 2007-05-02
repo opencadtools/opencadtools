@@ -89,15 +89,17 @@ import com.iver.utiles.console.JConsole;
  * @author Vicente Caballero Navarro
  */
 public abstract class DefaultCADTool implements CADTool {
-	public static ISymbol drawingSymbol = SymbologyFactory.
+	public static ISymbol selectionSymbol = SymbologyFactory.
 	createDefaultSymbolByShapeType(FShape.MULTI, new Color(255, 0,0, 100)); // Le ponemos una transparencia
-	public static ISymbol modifySymbol = SymbologyFactory.
+	public static ISymbol axisReferencesSymbol = SymbologyFactory.
 	createDefaultSymbolByShapeType(FShape.MULTI, new Color(100, 100, 100, 100));
-	public static ISymbol selectSymbol = SymbologyFactory.
+	public static ISymbol geometrySelectSymbol = SymbologyFactory.
+	createDefaultSymbolByShapeType(FShape.MULTI, Color.RED);
+	public static ISymbol handlerSymbol = SymbologyFactory.
 	createDefaultSymbolByShapeType(FShape.MULTI, Color.ORANGE);
-
 	private static Logger logger = Logger.getLogger(DefaultCADTool.class
 			.getName());
+
 
 	private CADToolAdapter cadToolAdapter;
 
@@ -117,7 +119,7 @@ public abstract class DefaultCADTool implements CADTool {
 			BufferedImage img = getCadToolAdapter().getMapControl().getImage();
 			Graphics2D gImag = (Graphics2D) img.getGraphics();
 			ViewPort vp = getCadToolAdapter().getMapControl().getViewPort();
-			geometry.draw(gImag, vp, DefaultCADTool.drawingSymbol);
+			geometry.draw(gImag, vp, DefaultCADTool.selectionSymbol);
 		}
 	}
 
@@ -155,13 +157,13 @@ public abstract class DefaultCADTool implements CADTool {
 	 * @param endPoint
 	 *            DOCUMENT ME!
 	 */
-	public void drawLine(Graphics2D g, Point2D firstPoint, Point2D endPoint) {
+	public void drawLine(Graphics2D g, Point2D firstPoint, Point2D endPoint, ISymbol symbol) {
 		GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
 		elShape.moveTo(firstPoint.getX(), firstPoint.getY());
 		elShape.lineTo(endPoint.getX(), endPoint.getY());
 		ShapeFactory.createPolyline2D(elShape).draw(g,
 				getCadToolAdapter().getMapControl().getViewPort(),
-				DefaultCADTool.drawingSymbol);
+					symbol);
 	}
 
 	/**
@@ -202,7 +204,7 @@ public abstract class DefaultCADTool implements CADTool {
 						IRowEdited.STATUS_ADDED, inversedIndex ));
 				vea.getSelection().set(inversedIndex);
 				IGeometry geom = df.getGeometry();
-				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.drawingSymbol);
+					geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 				vle.drawHandlers(geom.cloneGeometry(), gs, vp);
 				vea.setSelectionImage(selectionImage);
 
@@ -327,7 +329,7 @@ public abstract class DefaultCADTool implements CADTool {
 			if (ig == null)
 				continue;
 			Handler[] handlers = ig.getHandlers(IGeometry.SELECTHANDLER);
-			FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers, DefaultCADTool.selectSymbol);
+			FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers,DefaultCADTool.handlerSymbol);
 		}
 	}
 

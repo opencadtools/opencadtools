@@ -163,7 +163,7 @@ public class LineCADTool extends DefaultCADTool {
         if ((status != "Line.FirstPoint")) { // || (status == "5")) {
 
             if (firstPoint != null) {
-                drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y));
+                drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y),DefaultCADTool.geometrySelectSymbol);
             }
         }
     }

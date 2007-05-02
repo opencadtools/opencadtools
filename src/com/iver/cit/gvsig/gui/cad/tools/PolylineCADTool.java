@@ -318,16 +318,16 @@ public class PolylineCADTool extends DefaultCADTool {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    DefaultCADTool.drawingSymbol);
+                     DefaultCADTool.geometrySelectSymbol);
             }
             if (antPoint!=null)
-            	drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
+            	drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y),DefaultCADTool.geometrySelectSymbol);
 
         } else if ((status.equals("Polyline.NextPointOrLineOrClose"))) {
             for (int i = 0; i < list.size(); i++) {
                 ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    DefaultCADTool.drawingSymbol);
+                     DefaultCADTool.geometrySelectSymbol);
             }
 
             Point2D point = new Point2D.Double(x, y);
@@ -414,14 +414,14 @@ public class PolylineCADTool extends DefaultCADTool {
 
             Point2D centerp = UtilFunctions.getPoint(interp, mediop, radio);
 
-            drawLine((Graphics2D) g, lastp, point);
+            drawLine((Graphics2D) g, lastp, point,DefaultCADTool.geometrySelectSymbol);
 
             IGeometry ig = ShapeFactory.createArc(lastp, centerp, point);
 
             if (ig != null) {
                 ig.draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    DefaultCADTool.modifySymbol);
+                      DefaultCADTool.axisReferencesSymbol);
             }
         }
     }

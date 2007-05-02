@@ -166,7 +166,7 @@ public class SplineCADTool extends DefaultCADTool {
         	points.add(new Point2D.Double(x,y));
         	IGeometry spline=ShapeFactory.createSpline2D((Point2D[])points.toArray(new Point2D[0]).clone());
         	ViewPort vp=getCadToolAdapter().getMapControl().getViewPort();
-        	spline.draw((Graphics2D)g,vp,DefaultCADTool.drawingSymbol);
+        	spline.draw((Graphics2D)g,vp,DefaultCADTool.selectionSymbol);
         }
     }
 

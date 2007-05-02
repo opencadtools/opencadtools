@@ -145,7 +145,7 @@ public class ArcCADTool extends DefaultCADTool {
         String status = actualState.getName();
 
         if (status.equals("Arc.SecondPoint")) {
-            drawLine((Graphics2D) g, p1, new Point2D.Double(x, y));
+            drawLine((Graphics2D) g, p1, new Point2D.Double(x, y),geometrySelectSymbol);
         } else if (status.equals("Arc.ThirdPoint")) {
             Point2D current = new Point2D.Double(x, y);
             IGeometry ig = ShapeFactory.createArc(p1, p2, current);
@@ -153,7 +153,7 @@ public class ArcCADTool extends DefaultCADTool {
             if (ig != null) {
                 ig.draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    DefaultCADTool.modifySymbol);
+                     DefaultCADTool.geometrySelectSymbol);
             }
 
             Point2D p = getCadToolAdapter().getMapControl().getViewPort()

@@ -183,7 +183,7 @@ public class RectangleCADTool extends DefaultCADTool {
             elShape.lineTo(firstPoint.getX(), firstPoint.getY());
             ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                DefaultCADTool.drawingSymbol);
+                DefaultCADTool.geometrySelectSymbol);
         } else if (status == "Rectangle.SecondPointSquare") {
             GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
                     4);
@@ -205,7 +205,7 @@ public class RectangleCADTool extends DefaultCADTool {
 
             ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                DefaultCADTool.drawingSymbol);
+                DefaultCADTool.geometrySelectSymbol);
         }
     }
 

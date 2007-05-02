@@ -153,21 +153,21 @@ public class PolygonCADTool extends DefaultCADTool {
         if (status.equals("Polygon.OptionOrRadiusOrPoint") ||
                 status.equals("Polygon.RadiusOrPoint")) {
             Point2D point = new Point2D.Double(x, y);
-            drawLine((Graphics2D) g, center, point);
+            drawLine((Graphics2D) g, center, point,DefaultCADTool.geometrySelectSymbol);
 
             if (isI) {
                 getIPolygon(point, point.distance(center)).draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    DefaultCADTool.drawingSymbol);
+                    DefaultCADTool.geometrySelectSymbol);
             } else {
                 getCPolygon(point, point.distance(center)).draw((Graphics2D) g,
                     getCadToolAdapter().getMapControl().getViewPort(),
-                    DefaultCADTool.drawingSymbol);
+                    DefaultCADTool.geometrySelectSymbol);
             }
 
             ShapeFactory.createCircle(center, point.distance(center)).draw((Graphics2D) g,
                 getCadToolAdapter().getMapControl().getViewPort(),
-                DefaultCADTool.modifySymbol);
+                DefaultCADTool.axisReferencesSymbol);
         }
     }
 
