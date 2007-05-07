@@ -9,6 +9,7 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.exceptions.layers.CancelEditingLayerException;
 import com.iver.cit.gvsig.exceptions.layers.LegendLayerException;
 import com.iver.cit.gvsig.exceptions.layers.StartEditionLayerException;
 import com.iver.cit.gvsig.exceptions.layers.StopEditionLayerException;
@@ -165,6 +166,8 @@ public class StopEditing extends Extension {
 			NotificationManager.addError(e);
 		} catch (StopWriterVisitorException e) {
 			NotificationManager.addError(e);
+		} catch (CancelEditingLayerException e) {
+			NotificationManager.addError(e);
 		}
 		return false;
 
@@ -204,9 +207,12 @@ public class StopEditing extends Extension {
 
 	}
 
-	private void cancelEdition(FLyrVect layer) throws CancelEditingTableException {
+	private void cancelEdition(FLyrVect layer) throws CancelEditingTableException, CancelEditingLayerException {
 		com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
 				.getMDIManager().getAllWindows();
+		VectorialEditableAdapter vea = (VectorialEditableAdapter) layer
+				.getSource();
+		vea.cancelEdition(EditionEvent.GRAPHIC);
 		for (int j = 0; j < views.length; j++) {
 			if (views[j] instanceof Table) {
 				Table table = (Table) views[j];
