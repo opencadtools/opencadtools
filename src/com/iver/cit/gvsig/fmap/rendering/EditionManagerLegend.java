@@ -9,11 +9,11 @@ import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 
 public class EditionManagerLegend implements EditionLegend{
 	private ArrayList rules=new ArrayList();
-	private VectorialLegend vectorialLegend;
-	private VectorialLegend originalVectorialLegend;
+	private IVectorialLegend vectorialLegend;
+	private IVectorialLegend originalVectorialLegend;
 	private LegendControl lc=new LegendControl();
 
-	public EditionManagerLegend(VectorialLegend vl) {
+	public EditionManagerLegend(IVectorialLegend vl) {
 		originalVectorialLegend=vl;
 		vectorialLegend=vl;//(VectorialLegend)vl.cloneLegend();
 	}
@@ -30,7 +30,7 @@ public class EditionManagerLegend implements EditionLegend{
 	}
 	public ISymbol getSymbol(int i) {
 		ISymbol symbol=null;
-			symbol=((UniqueValueLegend)vectorialLegend).getSymbolByValue(getValue(i));
+			symbol=((IUniqueValueLegend)vectorialLegend).getSymbolByValue(getValue(i));
 		return symbol;
 	}
 	public boolean isActived(int i) {
@@ -89,9 +89,9 @@ public class EditionManagerLegend implements EditionLegend{
 //	        clave = getValue(row);
 //	    	if (row==i)
 	    if (!value.equals(previousValue)) {
-	    	((UniqueValueLegend)vectorialLegend).delSymbol(previousValue);
+	    	((IUniqueValueLegend)vectorialLegend).delSymbol(previousValue);
 	    	clave=(Value)value;
-	        ((UniqueValueLegend)vectorialLegend).addSymbol(value, previousSymbol);
+	        ((IUniqueValueLegend)vectorialLegend).addSymbol(value, previousSymbol);
 	        System.out.println(value);
 //	    }
 	    }

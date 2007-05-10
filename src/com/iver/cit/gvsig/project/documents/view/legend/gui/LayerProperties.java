@@ -12,8 +12,8 @@ import com.iver.andami.ui.mdiManager.WindowInfo;
 import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.rendering.Legend;
-import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
+import com.iver.cit.gvsig.fmap.rendering.ILegend;
+import com.iver.cit.gvsig.fmap.rendering.IVectorialLegend;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.StatusListener;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.TableLayers;
 
@@ -27,7 +27,7 @@ public class LayerProperties extends JPanel implements IWindow {
 	private JPanel pWestCenter = null;
 	private TableLayers tableLayers = null;
 	private FLyrVect layer;
-	private VectorialLegend legend;
+	private IVectorialLegend legend;
 	private JButton bNewSubLayer = null;
 	private JButton bDelSubLayer = null;
 	private JButton bPresentSubLayer = null;
@@ -44,10 +44,10 @@ public class LayerProperties extends JPanel implements IWindow {
 	/**
 	 * This is the default constructor
 	 */
-	public LayerProperties(FLayer lyr, Legend l) {
+	public LayerProperties(FLayer lyr, ILegend l) {
 		super();
 		layer=(FLyrVect)lyr;
-		legend=(VectorialLegend)l;
+		legend=(IVectorialLegend)l;
 		initialize();
 	}
 
@@ -186,14 +186,14 @@ public class LayerProperties extends JPanel implements IWindow {
 		return tableLayers;
 	}
 
-	public void setLayer(FLayer lyr, Legend l) {
+	public void setLayer(FLayer lyr, ILegend l) {
 		layer=(FLyrVect)lyr;
-		legend=(VectorialLegend)l;
+		legend=(IVectorialLegend)l;
 		getTableLayers().setSource(layer.getSource());
 		getTableLayers().setLegend(legend);
 	}
 
-	public Legend getLegend() {
+	public ILegend getLegend() {
 		return legend;
 	}
 

@@ -22,7 +22,7 @@ import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.rendering.EditionManagerLegend;
-import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
+import com.iver.cit.gvsig.fmap.rendering.IVectorialLegend;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.ActivatedCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.BlockedCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.CellIconOptionRenderer;
@@ -67,7 +67,7 @@ public class TableLayers extends JPanel {
     private JTable table;
 	private ArrayList statusListeners=new ArrayList();
 
-    public TableLayers(ReadableVectorial source2, VectorialLegend legend2) {
+    public TableLayers(ReadableVectorial source2, IVectorialLegend legend2) {
         super(new GridLayout(1, 0));
         this.source = source2;
         this.eml = new EditionManagerLegend(legend2);
@@ -297,7 +297,7 @@ public class TableLayers extends JPanel {
      *
      * @param legend DOCUMENT ME!
      */
-    public void setLegend(VectorialLegend legend) {
+    public void setLegend(IVectorialLegend legend) {
         this.eml = new EditionManagerLegend(legend);
     }
 

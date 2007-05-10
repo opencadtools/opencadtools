@@ -35,7 +35,7 @@ import com.iver.cit.gvsig.fmap.layers.LayerDrawingListener;
 import com.iver.cit.gvsig.fmap.layers.LayerEvent;
 import com.iver.cit.gvsig.fmap.layers.SelectionEvent;
 import com.iver.cit.gvsig.fmap.layers.SelectionListener;
-import com.iver.cit.gvsig.fmap.rendering.Legend;
+import com.iver.cit.gvsig.fmap.rendering.ILegend;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
@@ -52,7 +52,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 	private ArrayList snappers = new ArrayList();
 	private ArrayList layersToSnap = new ArrayList();
-	private Legend legend;
+	private ILegend legend;
 	/** Selección previa**/
 	private ArrayList previousRowSelection=new ArrayList();
 	private ArrayList previousHandlerSelection=new ArrayList();
@@ -599,10 +599,10 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		}
     }
 
-	public void setLegend(Legend legend) {
+	public void setLegend(ILegend legend) {
 		this.legend=legend;
 	}
-	public Legend getLegend() {
+	public ILegend getLegend() {
 		return legend;
 	}
 

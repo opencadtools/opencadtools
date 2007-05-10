@@ -27,7 +27,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.rendering.VectorialLegend;
+import com.iver.cit.gvsig.fmap.rendering.IVectorialLegend;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
@@ -148,7 +148,7 @@ public class StopEditing extends Extension {
 					vea.getCommandRecord().removeCommandListener(mapControl);
 					if (!(layer.getSource().getDriver() instanceof IndexedShpDriver)){
 						VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(layer);
-						layer.setLegend((VectorialLegend)vle.getLegend());
+						layer.setLegend((IVectorialLegend)vle.getLegend());
 					}
 					layer.setEditing(false);
 					return true;
