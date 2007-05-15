@@ -206,6 +206,13 @@ public class ExportTo extends Extension {
 			}
 
 		}
+		/* (non-Javadoc)
+		 * @see com.iver.utiles.swing.threads.IMonitorableTask#finished()
+		 */
+		public void finished() {
+			// TODO Auto-generated method stub
+			
+		}
 
 	}
 	private class MultiWriterTask extends AbstractMonitorableTask{
@@ -218,6 +225,13 @@ public class ExportTo extends Extension {
 				((WriterTask)tasks.get(i)).run();
 			}
 			tasks.clear();
+		}
+		/* (non-Javadoc)
+		 * @see com.iver.utiles.swing.threads.IMonitorableTask#finished()
+		 */
+		public void finished() {
+			// TODO Auto-generated method stub
+			
 		}
 
 
