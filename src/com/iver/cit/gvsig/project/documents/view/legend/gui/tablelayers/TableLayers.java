@@ -23,14 +23,14 @@ import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.rendering.EditionManagerLegend;
 import com.iver.cit.gvsig.fmap.rendering.IVectorialLegend;
+import com.iver.cit.gvsig.project.documents.gui.SymbolCellEditor;
+import com.iver.cit.gvsig.project.documents.gui.TableSymbolCellRenderer;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.ActivatedCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.BlockedCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.CellIconOptionRenderer;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.DisabledCellEditor;
-import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.FCellSymbolRenderer;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.FilledCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.PresentCellEditor;
-import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.SymbolCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.ValueCellEditor;
 
 
@@ -142,7 +142,7 @@ public class TableLayers extends JPanel {
         ///SymbolCellEditor symboleditor = new SymbolCellEditor();
         ///column.setCellEditor(symboleditor);
 
-        FCellSymbolRenderer renderer = new FCellSymbolRenderer(true);
+        TableSymbolCellRenderer renderer = new TableSymbolCellRenderer(true);
         column.setCellRenderer(renderer);
     }
     public void setUpValueColumn(JTable table, TableColumn column) {

@@ -30,7 +30,7 @@ public class EditionManagerLegend implements EditionLegend{
 	}
 	public ISymbol getSymbol(int i) {
 		ISymbol symbol=null;
-			symbol=((IUniqueValueLegend)vectorialLegend).getSymbolByValue(getValue(i));
+			symbol=((IVectorialUniqueValueLegend)vectorialLegend).getSymbolByValue(getValue(i));
 		return symbol;
 	}
 	public boolean isActived(int i) {
@@ -89,9 +89,9 @@ public class EditionManagerLegend implements EditionLegend{
 //	        clave = getValue(row);
 //	    	if (row==i)
 	    if (!value.equals(previousValue)) {
-	    	((IUniqueValueLegend)vectorialLegend).delSymbol(previousValue);
+	    	((IVectorialUniqueValueLegend)vectorialLegend).delSymbol(previousValue);
 	    	clave=(Value)value;
-	        ((IUniqueValueLegend)vectorialLegend).addSymbol(value, previousSymbol);
+	        ((IVectorialUniqueValueLegend)vectorialLegend).addSymbol(value, previousSymbol);
 	        System.out.println(value);
 //	    }
 	    }
