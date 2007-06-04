@@ -24,13 +24,15 @@ import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ICanReproject;
 import com.iver.cit.gvsig.fmap.crs.CRSFactory;
+import com.iver.cit.gvsig.fmap.drivers.ConnectionFactory;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DXFLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
+import com.iver.cit.gvsig.fmap.drivers.IConnection;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
-import com.iver.cit.gvsig.fmap.drivers.VectorialJDBCDriver;
+import com.iver.cit.gvsig.fmap.drivers.IVectorialJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.rules.IRule;
@@ -44,8 +46,8 @@ import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
-import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.vectorialdb.ConnectionSettings;
 
 public class MyFinishAction extends FinishAction
 {
@@ -72,7 +74,11 @@ public class MyFinishAction extends FinishAction
 			if (actionComand.equals("SHP"))
 			{
 				FileBasedPanel shpPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(2);
-				File newFile = new File(shpPanel.getPath());
+				String path=shpPanel.getPath();
+				if (!path.toLowerCase().endsWith(".shp")){
+					path+=".shp";
+				}
+				File newFile = new File(path);
 				if( newFile.exists()){
 					int resp = JOptionPane.showConfirmDialog(
 							(Component) PluginServices.getMainFrame(),PluginServices.getText(this,"fichero_ya_existe_seguro_desea_guardarlo"),
@@ -113,7 +119,11 @@ public class MyFinishAction extends FinishAction
 			else if (actionComand.equals("DXF"))
 			{
 	    		FileBasedPanel dxfPanel = (FileBasedPanel) myWizardComponents.getWizardPanel(0);
-    		    File newFile = new File(dxfPanel.getPath());
+	    		String path=dxfPanel.getPath();
+				if (!path.toLowerCase().endsWith(".dxf")){
+					path+=".dxf";
+				}
+	    		File newFile = new File(path);
     		    if( newFile.exists()){
 					int resp = JOptionPane.showConfirmDialog(
 							(Component) PluginServices.getMainFrame(),PluginServices.getText(this,"fichero_ya_existe_seguro_desea_guardarlo"),
@@ -160,16 +170,17 @@ public class MyFinishAction extends FinishAction
 
 				Driver drv = LayerFactory.getDM().getDriver(selectedDriver);
 
-				VectorialJDBCDriver dbDriver = (VectorialJDBCDriver) drv;
+				IVectorialJDBCDriver dbDriver = (IVectorialJDBCDriver) drv;
 	    		PostGISpanel postgisPanel = (PostGISpanel) myWizardComponents.getWizardPanel(2);
 				ConnectionSettings cs = postgisPanel.getConnSettings();
 				if (cs == null)
 					return;
-				Connection conex = DriverManager.getConnection(cs.getConnectionString(),
+				IConnection conex = ConnectionFactory.createConnection(cs.getConnectionString(),
 						cs.getUser(), cs.getPassw());
 
 				DBLayerDefinition dbLayerDef = new DBLayerDefinition();
 				dbLayerDef.setCatalogName(cs.getDb());
+				dbLayerDef.setSchema(cs.getSchema());
 				dbLayerDef.setTableName(layerName);
 				dbLayerDef.setShapeType(geometryType);
 				dbLayerDef.setFieldsDesc(fieldsDesc);

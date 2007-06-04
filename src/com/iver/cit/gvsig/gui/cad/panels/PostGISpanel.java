@@ -3,9 +3,12 @@ package com.iver.cit.gvsig.gui.cad.panels;
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
 
-import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionPanel;
-import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
-
+import com.hardcode.driverManager.Driver;
+import com.hardcode.driverManager.DriverManager;
+import com.iver.cit.gvsig.fmap.layers.LayerChangeSupport;
+import com.iver.cit.gvsig.fmap.layers.LayerFactory;
+import com.iver.cit.gvsig.vectorialdb.ConnectionPanel;
+import com.iver.cit.gvsig.vectorialdb.ConnectionSettings;
 public class PostGISpanel extends JWizardPanel {
 
 	public PostGISpanel(JWizardComponents wizardComponents) {
@@ -13,27 +16,27 @@ public class PostGISpanel extends JWizardPanel {
 		initialize();
 
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private ConnectionPanel jPanelConex = null;
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 */
 	private void initialize() {
         this.setSize(new java.awt.Dimension(408,284));
         this.add(getJPanelConex(), null);
-			
+
 	}
 
 	/**
-	 * This method initializes jPanelConex	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jPanelConex
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private ConnectionPanel getJPanelConex() {
 		if (jPanelConex == null) {

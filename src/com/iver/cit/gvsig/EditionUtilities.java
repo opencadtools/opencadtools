@@ -1,13 +1,15 @@
 package com.iver.cit.gvsig;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.MapContext;
+import com.iver.cit.gvsig.fmap.drivers.DefaultJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.LayerDefinition;
-import com.iver.cit.gvsig.fmap.drivers.VectorialDatabaseDriver;
+import com.iver.cit.gvsig.fmap.drivers.IVectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -122,9 +124,9 @@ public class EditionUtilities {
 
 	public static ILayerDefinition createLayerDefinition(FLyrVect layer) throws ReadDriverException {
 		LayerDefinition lyrDef;
-		if (layer.getSource().getDriver() instanceof VectorialDatabaseDriver)
+		if (layer.getSource().getDriver() instanceof IVectorialDatabaseDriver)
 		{
-			VectorialDatabaseDriver dbDriver = (VectorialDatabaseDriver) layer.getSource().getDriver();
+			IVectorialDatabaseDriver dbDriver = (IVectorialDatabaseDriver) layer.getSource().getDriver();
 			return dbDriver.getLyrDef();
 		}
 		lyrDef = new LayerDefinition();

@@ -84,7 +84,7 @@ public class ChooseGeometryType extends JWizardPanel {
 		if (jPanelGeometryTypeOptions == null) {
 			jPanelGeometryTypeOptions = new JPanel();
 			jPanelGeometryTypeOptions.setLayout(null);
-			jPanelGeometryTypeOptions.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Geometry_types", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, null));
+			jPanelGeometryTypeOptions.setBorder(javax.swing.BorderFactory.createTitledBorder(null, PluginServices.getText(this,"Geometry_types"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, null));
 			jPanelGeometryTypeOptions.setPreferredSize(new java.awt.Dimension(300,400));
 			jPanelGeometryTypeOptions.setBounds(new java.awt.Rectangle(14,82,326,172));
 			jPanelGeometryTypeOptions.add(getJRadioButtonPoint(), null);

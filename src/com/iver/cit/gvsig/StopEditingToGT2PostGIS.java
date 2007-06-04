@@ -23,10 +23,10 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayersIterator;
-import com.iver.cit.gvsig.jdbc_spatial.DlgConnection;
-import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.vectorialdb.ConnectionSettings;
+import com.iver.cit.gvsig.vectorialdb.DlgConnection;
 import com.iver.cit.gvsig.writers.WriterGT2;
 
 

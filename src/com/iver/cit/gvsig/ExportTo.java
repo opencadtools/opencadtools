@@ -38,10 +38,13 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FLabel;
+import com.iver.cit.gvsig.fmap.drivers.ConnectionFactory;
+import com.iver.cit.gvsig.fmap.drivers.DBException;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DriverAttributes;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
+import com.iver.cit.gvsig.fmap.drivers.IConnection;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
@@ -65,10 +68,10 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
-import com.iver.cit.gvsig.jdbc_spatial.DlgConnection;
-import com.iver.cit.gvsig.jdbc_spatial.gui.jdbcwizard.ConnectionSettings;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.vectorialdb.ConnectionSettings;
+import com.iver.cit.gvsig.vectorialdb.DlgConnection;
 import com.iver.utiles.PostProcessSupport;
 import com.iver.utiles.SimpleFileFilter;
 import com.iver.utiles.swing.threads.AbstractMonitorableTask;
@@ -211,7 +214,7 @@ public class ExportTo extends Extension {
 		 */
 		public void finished() {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 	}
@@ -231,7 +234,7 @@ public class ExportTo extends Extension {
 		 */
 		public void finished() {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 
@@ -307,11 +310,18 @@ public class ExportTo extends Extension {
 			ConnectionSettings cs = dlg.getConnSettings();
 			if (cs == null)
 				return;
-			Connection conex = DriverManager.getConnection(cs
+			IConnection conex = ConnectionFactory.createConnection(cs
 					.getConnectionString(), cs.getUser(), cs.getPassw());
 
 			DBLayerDefinition dbLayerDef = new DBLayerDefinition();
-			dbLayerDef.setCatalogName(cs.getDb());
+			// Fjp:
+			// Cambio: En Postgis, el nombre de catálogo está siempre vacío. Es algo heredado de Oracle, que no se usa.
+			// dbLayerDef.setCatalogName(cs.getDb());
+			dbLayerDef.setCatalogName("");
+
+			// Añadimos el schema dentro del layer definition para poder tenerlo en cuenta.
+			dbLayerDef.setSchema(cs.getSchema());
+
 			dbLayerDef.setTableName(tableName);
 			dbLayerDef.setName(tableName);
 			dbLayerDef.setShapeType(layer.getShapeType());
@@ -377,7 +387,7 @@ public class ExportTo extends Extension {
 
 		} catch (DriverLoadException e) {
 			e.printStackTrace();
-		} catch (SQLException e) {
+		} catch (DBException e) {
 			e.printStackTrace();
 		} catch (InitializeWriterException e) {
 			// TODO Auto-generated catch block
