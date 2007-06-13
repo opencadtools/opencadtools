@@ -171,10 +171,18 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     	gpx.lineTo(x,y);
     	gpx.closePath();
     	gpx1.closePath();
+    	if (ps.length==1){
+    		IGeometry geom=ShapeFactory.createPolyline2D(gpx);
+        	geom.drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.geometrySelectSymbol);
+    	}
     	IGeometry geom=ShapeFactory.createPolygon2D(gpx);
     	IGeometry geom1=ShapeFactory.createPolygon2D(gpx1);
-    	geom1.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.selectionSymbol);
-    	geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.geometrySelectSymbol);
+    	geom1.drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.selectionSymbol);
+    	geom.drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.geometrySelectSymbol);
+    	}
+    	DefaultRowEdited[] rows=(DefaultRowEdited[])getSelectedRows().toArray(new DefaultRowEdited[0]);
+    	for (int i=0;i<rows.length;i++){
+    		((IFeature)rows[i].getLinkedRow()).getGeometry().drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.selectionSymbol);
     	}
     }
 

@@ -252,6 +252,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 						int index=addGeometry(geom,fea.getAttributes());
 						selectedRowAux.add(new DefaultRowEdited(fea,
 								IRowEdited.STATUS_ADDED, index));
+						getCadToolAdapter().getMapControl().drawMap(false);
 					}
 
 				}

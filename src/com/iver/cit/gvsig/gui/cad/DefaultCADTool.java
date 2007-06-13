@@ -55,6 +55,7 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
@@ -184,10 +185,8 @@ public abstract class DefaultCADTool implements CADTool {
 			for (int i = 0; i < numAttr; i++) {
 				values[i] = ValueFactory.createNullValue();
 			}
-			int num;
-				num = vea.getRowCount();
-				DefaultFeature df = new DefaultFeature(geometry, values, String
-						.valueOf(num));
+			String newFID = vea.getNewFID();
+				DefaultFeature df = new DefaultFeature(geometry, values, newFID);
 				int index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
 				VectorialLayerEdited vle = getVLE();
 				clearSelection();
@@ -261,19 +260,15 @@ public abstract class DefaultCADTool implements CADTool {
 		int index = 0;
 		VectorialEditableAdapter vea = getVLE().getVEA();
 		try {
-			int num = vea.getRowCount();
-			DefaultFeature df = new DefaultFeature(geometry, values, String
-					.valueOf(num));
+			String newFID = vea.getNewFID();
+			DefaultFeature df = new DefaultFeature(geometry, values, newFID);
 			index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
 		} catch (ValidateRowException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e);
 		} catch (ExpansionFileWriteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e);
 		}
 		return vea.getInversedIndex(index);
 	}
@@ -381,8 +376,8 @@ public abstract class DefaultCADTool implements CADTool {
 		VectorialEditableAdapter vea = vle.getVEA();
 		FBitSet selection = vea.getSelection();
 		selection.clear();
-//		vea.setSelectionImage(null);
-//		vea.setHandlersImage(null);
+		vea.setSelectionImage(null);
+		vea.setHandlersImage(null);
 
 	}
 

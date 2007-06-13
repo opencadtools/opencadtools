@@ -55,6 +55,7 @@ import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
+import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FPoint2D;
@@ -177,18 +178,7 @@ public class EditVertexCADTool extends DefaultCADTool {
      * @param y parámetro x del punto que se pase para dibujar.
      */
     public void drawOperation(Graphics g, double x, double y) {
-        //EditVertexCADToolState actualState = ((EditVertexCADToolContext) _fsm).getState();
-        //String status = actualState.getName();
-        //VectorialEditableAdapter vea = getCadToolAdapter().getVectorialAdapter();
-        //FBitSet selection = vea.getSelection();
-
-        try {
-            drawVertex(g,getCadToolAdapter().getMapControl().getViewPort()
-                    .getAffineTransform());
-        } catch (DriverIOException e) {
-            e.printStackTrace();
-        }
-
+        drawVertex(g,getCadToolAdapter().getMapControl().getViewPort());
     }
 
     /**
@@ -272,7 +262,7 @@ public class EditVertexCADTool extends DefaultCADTool {
             	}
         }
     }
-    private void drawVertex(Graphics g,AffineTransform at) throws DriverIOException{
+    private void drawVertex(Graphics g,ViewPort vp){
 		ArrayList selectedRows=getSelectedRows();
     	for (int i = 0; i<selectedRows.size();
 		 		i++) {
@@ -280,10 +270,11 @@ public class EditVertexCADTool extends DefaultCADTool {
 					.get(i)).getLinkedRow();
 			IGeometry ig = fea.getGeometry().cloneGeometry();
 			if (ig == null) continue;
-				Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
-				if (numSelect>=handlers.length)
-					numSelect=0;
-				FGraphicUtilities.DrawVertex((Graphics2D)g,at,handlers[numSelect]);
+			ig.drawInts((Graphics2D)g,vp,DefaultCADTool.geometrySelectSymbol);
+			Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
+			if (numSelect>=handlers.length)
+				numSelect=0;
+			FGraphicUtilities.DrawVertex((Graphics2D)g,vp.getAffineTransform(),handlers[numSelect]);
 		}
 	}
 

@@ -266,13 +266,13 @@ private Point2D[] startAndEndPoints(Handler[] handlers) {
 		VectorialEditableAdapter vea = vle.getVEA();
 		vea.startComplexRow();
 
-		int num = vea.getRowCount();
+		String newFID = vea.getNewFID();
 		GeneralPathX gpx = new GeneralPathX();
 		gpx.moveTo(points[0].getX(), points[0].getY());
 		gpx.lineTo(points[1].getX(), points[1].getY());
 
 		IGeometry geom = ShapeFactory.createPolyline2D(gpx);
-		DefaultFeature df1 = new DefaultFeature(geom, null, String.valueOf(num));
+		DefaultFeature df1 = new DefaultFeature(geom, null, newFID);
 
 		for (int i = rows.length - 1; i >= 0; i--) {
 			vea.removeRow(rows[i].getIndex(), getName(), EditionEvent.GRAPHIC);
