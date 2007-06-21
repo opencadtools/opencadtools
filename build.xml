@@ -21,6 +21,12 @@
 	<import file="../libFMap/compile-classpath.xml"/>
 	<import file="../_fwAndami/compile-classpath.xml"/>
 	<property name="compile-sourcepath" value="../appgvSIG/src"/>
+	<property name="JavaSourceVersion" value="1.4"/>
+	<property name="JavaTargetVersion" value="1.4"/>
+	<property name="encoding" value="ISO_8859_1"/>
+	<property name="debug" value="on"/>
+	<property name="debuglevel" value="lines, vars"/>
+
 	
   <target name="init">
     <!-- Create the time stamp -->
@@ -69,11 +75,12 @@
 			<mkdir dir="${build}" />
 			<javac  srcdir="${src}"
 				destdir="${build}"
-				source="1.4"
-				target="1.4"
+				source="${JavaSourceVersion}"
+				target="${JavaTargetVersion}"
 				debug="${debug}"
 				debuglevel="${debuglevel}"
-				sourcepath="${compile-sourcepath}">
+				sourcepath="${compile-sourcepath}"
+				encoding="${encoding}">
 		    	<classpath refid="extCAD.compile-classpath"/>
 	    		<classpath refid="libFMap.compile-classpath"/>
 	    		<classpath refid="_fwAndami.compile-classpath"/>
