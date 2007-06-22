@@ -23,12 +23,14 @@ import org.cresques.cts.IProjection;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.ui.mdiFrame.MainFrame;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
@@ -1007,5 +1009,16 @@ public class CADToolAdapter extends Behavior {
 		getGrid().setGridSizeX(dx);
 		getGrid().setGridSizeY(dy);
 	}
-
+	/**
+	* Returns the type of active layer.
+	**/
+	public int getActiveLayerType() {
+		int type=FShape.MULTI;
+		try {
+			type=((FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer()).getShapeType();
+		} catch (ReadDriverException e) {
+			NotificationManager.addError(e);
+		}
+		return type;
+	}
 }
