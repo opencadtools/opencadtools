@@ -1,6 +1,8 @@
 package com.iver.cit.gvsig;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.edition.AfterFieldEditEvent;
@@ -10,6 +12,7 @@ import com.iver.cit.gvsig.fmap.edition.BeforeRowEditEvent;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IEditionListener;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -57,7 +60,10 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  *
  * $Id$
  * $Log$
- * Revision 1.14  2007-03-21 12:25:41  caballero
+ * Revision 1.15  2007-06-22 10:48:00  caballero
+ * borrar selección
+ *
+ * Revision 1.14  2007/03/21 12:25:41  caballero
  * zoom remove cacheDrawing
  *
  * Revision 1.13  2007/02/13 17:10:06  caballero
@@ -144,22 +150,31 @@ public class EditionChangeManager implements IEditionListener{
 	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#afterRowEditEvent(com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent)
 	 */
 	public void afterRowEditEvent(IRow feat, AfterRowEditEvent e) {
-		IWindow[] views = (IWindow[]) PluginServices.getMDIManager().getAllWindows();
+		IWindow[] views = PluginServices.getMDIManager().getAllWindows();
 
 		for (int i=0 ; i<views.length ; i++){
 			if (views[i] instanceof Table){
-				Table table=(Table)views[i];
+//				Table table=(Table)views[i];
 				///VCN Creo que no hace falta refrescar la tabla aquí
 //				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(fLayer))
 //					table.refresh();
 			}else if (views[i] instanceof com.iver.cit.gvsig.project.documents.view.gui.View){
 				com.iver.cit.gvsig.project.documents.view.gui.View view=(com.iver.cit.gvsig.project.documents.view.gui.View)views[i];
 
-				if (e.getChangeType() == EditionEvent.CHANGE_TYPE_ADD)
+				if (e.getChangeType() == EditionEvent.CHANGE_TYPE_ADD) {
 					// No redraw, just image paint
 					view.getMapControl().repaint();
-				else
-				{
+				}else if (e.getChangeType() == EditionEvent.CHANGE_TYPE_DELETE){
+					EditionManager em=CADExtension.getEditionManager();
+					if (em.getActiveLayerEdited()!=null){
+						VectorialLayerEdited vle=(VectorialLayerEdited)em.getActiveLayerEdited();
+						try {
+							vle.clearSelection(false);
+						} catch (ReadDriverException e1) {
+							NotificationManager.addError(e1);
+						}
+					}
+				}else{
 					fLayer.setDirty(true);
 					view.getMapControl().rePaintDirtyLayers();
 				}
