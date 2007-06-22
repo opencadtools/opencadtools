@@ -117,7 +117,13 @@ public class PolylineCADTool extends DefaultCADTool {
 			e.printStackTrace();
 		}
 
-        IGeometry newGeom = ShapeFactory.createPolyline2D(gpx);
+        IGeometry newGeom = null;
+        int type=getCadToolAdapter().getActiveLayerType();
+        if (type==FShape.POLYGON){
+        	newGeom = ShapeFactory.createPolygon2D(gpx);
+        }else{
+        	newGeom = ShapeFactory.createPolyline2D(gpx);
+        }
         addGeometry(newGeom);
         _fsm = new PolylineCADToolContext(this);
         list.clear();

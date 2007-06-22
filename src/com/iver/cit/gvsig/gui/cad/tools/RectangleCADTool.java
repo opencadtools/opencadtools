@@ -128,7 +128,12 @@ public class RectangleCADTool extends DefaultCADTool {
             elShape.lineTo(firstPoint.getX(), lastPoint.getY());
             //elShape.lineTo(firstPoint.getX(), firstPoint.getY());
             elShape.closePath();
-            addGeometry(ShapeFactory.createPolyline2D(elShape));
+            int type=getCadToolAdapter().getActiveLayerType();
+            if (type==FShape.POLYGON){
+            	addGeometry(ShapeFactory.createPolygon2D(elShape));
+            }else{
+            	addGeometry(ShapeFactory.createPolyline2D(elShape));
+            }
             firstPoint = (Point2D) lastPoint.clone();
         } else if (status == "Rectangle.SecondPointSquare") {
             lastPoint = new Point2D.Double(x, y);
@@ -154,7 +159,12 @@ public class RectangleCADTool extends DefaultCADTool {
 
             //elShape.lineTo(firstPoint.getX(), firstPoint.getY());
             elShape.closePath();
-            addGeometry(ShapeFactory.createPolyline2D(elShape));
+            int type=getCadToolAdapter().getActiveLayerType();
+            if (type==FShape.POLYGON){
+            	addGeometry(ShapeFactory.createPolygon2D(elShape));
+            }else{
+            	addGeometry(ShapeFactory.createPolyline2D(elShape));
+            }
             firstPoint = (Point2D) lastPoint.clone();
         }
     }

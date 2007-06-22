@@ -46,6 +46,7 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.core.FPolygon2D;
 import com.iver.cit.gvsig.fmap.core.FPolyline2D;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
@@ -260,7 +261,14 @@ public class PolygonCADTool extends DefaultCADTool {
         }
         //elShape.lineTo(firstPoint.getX(),firstPoint.getY());
         elShape.closePath();
-        return ShapeFactory.createGeometry(new FPolyline2D(elShape));
+        int type=getCadToolAdapter().getActiveLayerType();
+        FShape shape=null;
+        if (type==FShape.POLYGON){
+        	shape=new FPolygon2D(elShape);
+        }else{
+        	shape=new FPolyline2D(elShape);
+        }
+        return ShapeFactory.createGeometry(shape);
     }
 
     /**
@@ -298,7 +306,14 @@ public class PolygonCADTool extends DefaultCADTool {
         }
         //elShape.lineTo(firstPoint.getX(),firstPoint.getY());
         elShape.closePath();
-        return ShapeFactory.createGeometry(new FPolyline2D(elShape));
+        int type=getCadToolAdapter().getActiveLayerType();
+        FShape shape=null;
+        if (type==FShape.POLYGON){
+        	shape=new FPolygon2D(elShape);
+        }else{
+        	shape=new FPolyline2D(elShape);
+        }
+        return ShapeFactory.createGeometry(shape);
     }
     /**
      * Devuelve la geometría con el poligono regular circunscrito a la
