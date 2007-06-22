@@ -120,7 +120,7 @@ public class StopEditing extends Extension {
 				resp = JOptionPane.showConfirmDialog((Component) PluginServices
 						.getMainFrame(), PluginServices.getText(this,
 						"realmente_desea_guardar_la_capa")
-						+ " : " + layer.getName(), PluginServices.getText(this,
+						+ " : " + layer.getName()+"?", PluginServices.getText(this,
 						"guardar"), JOptionPane.YES_NO_OPTION);
 				if (resp != JOptionPane.YES_OPTION) { // CANCEL EDITING
 					cancelEdition(layer);
