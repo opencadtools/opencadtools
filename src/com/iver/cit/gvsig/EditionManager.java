@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -206,15 +207,14 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 
 	public void layerRemoved(LayerCollectionEvent e) {
 		VectorialLayerEdited vle=(VectorialLayerEdited)getActiveLayerEdited();
-		if (vle!=null){
+		if (vle!=null && vle.getLayer().isActive()){
 			//FLayers layers=getMapControl().getMapContext().getLayers();
 			//if (layers.getLayersCount()>0)
 			//	layers.getLayer(0).setActive(true);
 			try {
 				vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
 			} catch (ReadDriverException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				NotificationManager.addError(e1);
 			}
 			editedLayers.remove(vle);
 			getMapControl().setTool("zoomIn");
@@ -228,9 +228,8 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 					view.repaint();
 				}
 			}
-			PluginServices.getMainFrame().enableControls();
 		}
-
+		PluginServices.getMainFrame().enableControls();
 	}
 
 	public void layerAdding(LayerCollectionEvent e) throws CancelationException {
