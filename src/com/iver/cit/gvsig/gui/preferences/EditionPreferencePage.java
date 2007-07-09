@@ -370,7 +370,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 				}
 
 		} // while
-		mapContext.redraw();
+		mapContext.invalidate();
 		try{
 			SelectionCADTool.tolerance = Integer.parseInt(getJTxtTolerance().getText());
 
