@@ -232,18 +232,21 @@ public class SelectionCADTool extends DefaultCADTool {
 			for (int i = 0; i < selectedRow.size(); i++) {
 				IRowEdited row = (IRowEdited) selectedRow.get(i);
 				IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
+				IGeometry ig = feat.getGeometry();
 				if (vea instanceof AnnotationEditableAdapter) {
-
-        			IGeometry ig = feat.getGeometry();
 					// Movemos la geometría
                     UtilFunctions.moveGeom(ig, x -
                             firstPoint.getX(), y - firstPoint.getY());
 				}else {
 					// Movemos los handlers que hemos seleccionado
 					// previamente dentro del método select()
+					Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
 					for (int k = 0; k < selectedHandler.size(); k++) {
-						Handler h = (Handler) selectedHandler.get(k);
-						h.set(x, y);
+						Handler h = (Handler)selectedHandler.get(k);
+						for (int j=0;j<handlers.length;j++) {
+							if (h.getPoint().equals(handlers[j].getPoint()))
+								handlers[j].set(x,y);
+						}
 					}
 				}
 				modifyFeature(row.getIndex(), feat);
@@ -315,8 +318,12 @@ public class SelectionCADTool extends DefaultCADTool {
 		}else if (status.equals("Selection.WithHandlers")) {
 			// Movemos los handlers que hemos seleccionado
 			// previamente dentro del método select()
+			double xPrev=0;
+			double yPrev=0;
 			for (int k = 0; k < selectedHandler.size(); k++) {
-				Handler h = (Handler) selectedHandler.get(k);
+				Handler h = (Handler)selectedHandler.get(k);
+				xPrev=h.getPoint().getX();
+				yPrev=h.getPoint().getY();
 				h.set(x, y);
 			}
 			// Y una vez movidos los vértices (handles)
@@ -326,7 +333,11 @@ public class SelectionCADTool extends DefaultCADTool {
 				IGeometry geom = ((IFeature) rowEd.getLinkedRow())
 						.getGeometry().cloneGeometry();
 				g.setColor(Color.gray);
-			geom.draw((Graphics2D) g, vp, DefaultCADTool.axisReferencesSymbol);
+				geom.draw((Graphics2D) g, vp, DefaultCADTool.axisReferencesSymbol);
+			}
+			for (int k = 0; k < selectedHandler.size(); k++) {
+				Handler h = (Handler)selectedHandler.get(k);
+				h.set(xPrev, yPrev);
 			}
 			return;
 		}else{
