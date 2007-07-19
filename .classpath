@@ -3,15 +3,15 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/Smc.jar"/>
-	<classpathentry sourcepath="/libGDBMS" kind="lib" path="/libFMap/lib/gdbms-0.8-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/libFMap/lib/gdbms-0.8-SNAPSHOT.jar" sourcepath="/libGDBMS"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libFMap"/>
 	<classpathentry kind="lib" path="lib/gt2-shapefile.jar"/>
 	<classpathentry kind="lib" path="lib/jdom-1.0b10.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/gt2-main.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/cms.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/jts-1.7.jar"/>
-	<classpathentry sourcepath="/Utiles/src" kind="lib" path="/_fwAndami/lib/iver-utiles.jar"/>
-	<classpathentry sourcepath="/libDriverManager" kind="lib" path="/libFMap/lib/driver-manager-1.1.jar"/>
+	<classpathentry kind="lib" path="/_fwAndami/lib/iver-utiles.jar" sourcepath="/libIverUtiles/src"/>
+	<classpathentry kind="lib" path="/libFMap/lib/driver-manager-1.1.jar" sourcepath="/libDriverManager"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/_fwAndami"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/appgvSIG"/>
 	<classpathentry kind="lib" path="lib/gt2-postgis.jar"/>
@@ -21,8 +21,8 @@
 	<classpathentry kind="lib" path="/_fwAndami/lib/JWizardComponent.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extScripting"/>
 	<classpathentry kind="lib" path="/extScripting/lib/bsf-2.3.0rc1.jar"/>
-	<classpathentry kind="lib" path="/extScripting/lib/bsh-2.0b1.jar"/>
 	<classpathentry kind="lib" path="/extScripting/lib/js-1.5r3.jar"/>
-	<classpathentry sourcepath="/libExceptions" kind="lib" path="/libFMap/lib/gvsig-exceptions.jar"/>
+	<classpathentry kind="lib" path="/libFMap/lib/gvsig-exceptions.jar" sourcepath="/libExceptions"/>
+	<classpathentry kind="lib" path="/extScripting/lib/bsh-2.0b1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
