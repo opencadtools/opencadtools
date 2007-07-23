@@ -46,8 +46,11 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import org.cresques.cts.ICoordTrans;
+
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
@@ -140,7 +143,8 @@ public class MoveCADTool extends DefaultCADTool {
         VectorialEditableAdapter vea = vle.getVEA();
         ArrayList selectedRow=getSelectedRows();
         ArrayList selectedRowAux=new ArrayList();
-    	if (status.equals("Move.FirstPointToMove")) {
+        ICoordTrans ct=getVLE().getLayer().getCoordTrans();
+        if (status.equals("Move.FirstPointToMove")) {
             firstPoint = new Point2D.Double(x, y);
         } else if (status.equals("Move.SecondPointToMove")) {
             PluginServices.getMDIManager().setWaitCursor();
@@ -154,9 +158,19 @@ public class MoveCADTool extends DefaultCADTool {
         			IGeometry ig = feat.getGeometry();
         			if (ig == null)
         				continue;
-        			 // Movemos la geometría
+        			if (ct!=null) {
+        				lastPoint=ct.getInverted().convert(lastPoint,null);
+        				firstPoint=ct.getInverted().convert(firstPoint,null);
+
+        			}
+//        			if (ct!=null)
+//        				ig.reProject(ct);
+        			// Movemos la geometría
                     UtilFunctions.moveGeom(ig, lastPoint.getX() -
                             firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
+
+//                  if (ct!=null)
+//                	ig.reProject(ct.getInverted());
 
                     vea.modifyRow(edRow.getIndex(),feat,getName(),EditionEvent.GRAPHIC);
                     selectedRowAux.add(new DefaultRowEdited(feat,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
@@ -167,17 +181,13 @@ public class MoveCADTool extends DefaultCADTool {
               	//selectedRow.addAll(selectedRowAux);
 
             } catch (ValidateRowException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+            	NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileWriteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileReadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
             PluginServices.getMDIManager().restoreCursor();
         }

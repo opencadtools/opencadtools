@@ -4,6 +4,7 @@ import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.ExpresionFieldExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -41,8 +42,7 @@ public class PointY extends GraphicOperator{
 		try {
 			type=adapter.getShapeType();
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 		return (getType()==IOperator.NUMBER && type==FShape.POINT);
 	}

@@ -25,6 +25,7 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.ui.mdiFrame.MainFrame;
+import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
@@ -698,11 +699,13 @@ public class CADToolAdapter extends Behavior {
 			try {
 				ct.transition(option);
 			} catch (Exception e) {
-				View vista = (View) PluginServices.getMDIManager()
-						.getActiveWindow();
-				vista.getConsolePanel().addText(
-						"\n" + PluginServices.getText(this, "incorrect_option")
-								+ " : " + option, JConsole.ERROR);
+				IWindow window = PluginServices.getMDIManager().getActiveWindow();
+
+				if (window instanceof View) {
+					((View)window).getConsolePanel().addText(
+							"\n" + PluginServices.getText(this, "incorrect_option")
+							+ " : " + option, JConsole.ERROR);
+				}
 			}
 			askQuestion();
 		}
@@ -873,11 +876,9 @@ public class CADToolAdapter extends Behavior {
 			selection.clear();
 			vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileReadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} finally {
 			String description=PluginServices.getText(this,"remove_geometry");
 			vea.endComplexRow(description);
@@ -923,8 +924,7 @@ public class CADToolAdapter extends Behavior {
 				try {
 					vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
 				} catch (ReadDriverException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				}
 
 				pushCadTool(selCad);

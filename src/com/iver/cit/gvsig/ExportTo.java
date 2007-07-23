@@ -290,8 +290,7 @@ public class ExportTo extends Extension {
 					} // actives[i]
 				} // for
 			} catch (ReadDriverException e) {
-				e.printStackTrace();
-				NotificationManager.addError(e.getMessage(), e);
+				NotificationManager.addError(e.getMessage(),e);
 			}
 
 		}
@@ -386,15 +385,13 @@ public class ExportTo extends Extension {
 			writeFeatures(mapContext, layer, writer, postGISDriver);
 
 		} catch (DriverLoadException e) {
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (DBException e) {
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (InitializeWriterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 
 	}
@@ -539,14 +536,11 @@ public class ExportTo extends Extension {
 			}
 
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (InitializeWriterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (DriverLoadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 
 	}
@@ -664,17 +658,13 @@ public class ExportTo extends Extension {
 				}
 			}
 		} catch (InitializeWriterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (OpenDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (DriverLoadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 
 	}
@@ -718,20 +708,15 @@ public class ExportTo extends Extension {
 			}
 
 		} catch (SchemaEditionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (InitializeWriterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileReadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (DriverLoadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 
 	}

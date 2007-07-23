@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
@@ -80,9 +81,9 @@ public class SnapConfigPage extends AbstractPreferencePage {
                 ISnapper snapper = (ISnapper) extensionPoint.create((String) iterator.next());
                 snappers.add(snapper);
             } catch (InstantiationException e) {
-                e.printStackTrace();
+            	NotificationManager.addError(e.getMessage(),e);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            	NotificationManager.addError(e.getMessage(),e);
             }
         }
 

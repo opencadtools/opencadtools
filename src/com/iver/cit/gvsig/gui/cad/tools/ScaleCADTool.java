@@ -52,6 +52,7 @@ import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
@@ -163,17 +164,13 @@ public class ScaleCADTool extends DefaultCADTool {
 				double size=getCadToolAdapter().getMapControl().getViewPort().toMapDistance(getCadToolAdapter().getMapControl().getWidth());
 				scale(firstPoint.distance(lastPoint)/(size/40));
 			} catch (ValidateRowException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileWriteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileReadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
 
 			PluginServices.getMDIManager().restoreCursor();
@@ -194,17 +191,13 @@ public class ScaleCADTool extends DefaultCADTool {
 			try {
 				scale(escalado);
 			} catch (ValidateRowException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileWriteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileReadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
 		}
 
@@ -329,17 +322,13 @@ public class ScaleCADTool extends DefaultCADTool {
     			try {
     				scale(d);
     			} catch (ValidateRowException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+    				NotificationManager.addError(e.getMessage(),e);
 				} catch (ExpansionFileWriteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				} catch (ReadDriverException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				} catch (ExpansionFileReadException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				}
 
     	}

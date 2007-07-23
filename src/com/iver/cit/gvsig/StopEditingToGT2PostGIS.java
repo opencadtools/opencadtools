@@ -12,6 +12,7 @@ import org.geotools.feature.SchemaException;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.exceptions.layers.StartEditionLayerException;
 import com.iver.cit.gvsig.exceptions.layers.StopEditionLayerException;
@@ -133,20 +134,15 @@ public class StopEditingToGT2PostGIS extends Extension {
 	            layer.setSource(vea.getOriginalAdapter());
 	            layer.setEditing(false);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (SchemaException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (StartEditionLayerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (StopWriterVisitorException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
 
     }

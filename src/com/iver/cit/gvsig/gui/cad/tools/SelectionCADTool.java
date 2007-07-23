@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -207,7 +208,7 @@ public class SelectionCADTool extends DefaultCADTool {
 			try {
 				pointDoubleClick((MapControl)event.getComponent());
 			} catch (ReadDriverException e) {
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
 			return;
 		}

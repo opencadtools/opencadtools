@@ -42,6 +42,7 @@ package com.iver.cit.gvsig;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -100,8 +101,7 @@ public class BreakExtension extends Extension {
 				}
 			}
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 		return false;
 	}

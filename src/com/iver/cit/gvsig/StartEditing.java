@@ -125,14 +125,11 @@ public class StartEditing extends Extension {
 					vista.repaintMap();
 
 				} catch (XMLException e) {
-					e.printStackTrace();
-					NotificationManager.addError(e);
+					NotificationManager.addError(e.getMessage(),e);
 				} catch (StartEditionLayerException e) {
-					e.printStackTrace();
-					NotificationManager.addError(e);
+					NotificationManager.addError(e.getMessage(),e);
 				} catch (ReadDriverException e) {
-					e.printStackTrace();
-					NotificationManager.addError(e);
+					NotificationManager.addError(e.getMessage(),e);
 				}
 
 //				return;
@@ -189,8 +186,7 @@ public class StartEditing extends Extension {
 					keywordMap.add(cadtools[i].toString(), Token.KEYWORD3);
 				}
 			} catch (ReadDriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
 
 		}

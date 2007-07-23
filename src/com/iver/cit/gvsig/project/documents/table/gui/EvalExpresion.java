@@ -11,6 +11,7 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.EditionUtilities;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
@@ -94,17 +95,13 @@ public class EvalExpresion {
 //			} catch (DriverIOException e) {
 //				e.printStackTrace();
 			} catch (ReadDriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileReadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ValidateRowException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileWriteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
 
 	    }

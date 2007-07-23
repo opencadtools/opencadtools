@@ -8,8 +8,11 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 
+import org.cresques.cts.ICoordTrans;
+
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.StartEditing;
@@ -69,7 +72,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		try {
 			((FLyrVect)lyr).getRecordset().addSelectionListener(this);
 		} catch (ReadDriverException e) {
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 	}
 
@@ -133,8 +136,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			clearSelection(SAVEPREVIOUS);
 		}
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 		// Se comprueba si se pincha en una gemometría
 		ViewPort vp=getLayer().getMapContext().getViewPort();
@@ -152,25 +154,26 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			Graphics2D gs = selectionImage.createGraphics();
 			BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gh = handlersImage.createGraphics();
+			ICoordTrans ct=getLayer().getCoordTrans();
 			for (int i = 0; i < feats.length; i++) {
 				IFeature feat = (IFeature) feats[i].getLinkedRow();
 				IGeometry geom = feat.getGeometry();
-
-				if (geom.intersects(rect)) { // , 0.1)){
+				IGeometry geomReproject=geom.cloneGeometry();
+				if (ct!=null)
+					geomReproject.reProject(ct);
+				if (geomReproject.intersects(rect)) { // , 0.1)){
 					selection.set(feats[i].getIndex(), true);
-					addSelectionCache((DefaultRowEdited)feats[i]);
-					geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
-					drawHandlers(geom.cloneGeometry(),gh,vp);
+					selectedRow.add(feats[i]);
+					geomReproject.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
+					drawHandlers(geomReproject.cloneGeometry(),gh,vp);
 				}
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileReadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 
 	}
@@ -184,8 +187,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		selection.clear();
 		clearSelection(SAVEPREVIOUS);
 		} catch (ReadDriverException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			NotificationManager.addError(e1.getMessage(),e1);
 		}
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 		double x1;
@@ -219,20 +221,24 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			Graphics2D gs = selectionImage.createGraphics();
 			BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gh = handlersImage.createGraphics();
+			ICoordTrans ct=getLayer().getCoordTrans();
 			for (int i = 0; i < feats.length; i++) {
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 						.getGeometry();
 
+				IGeometry geomReproject=geom.cloneGeometry();
+				if (ct!=null)
+					geomReproject.reProject(ct);
 				if (firstPoint.getX() < lastPoint.getX()) {
-					if (rect.contains(geom.getBounds2D())) {
-						addSelectionCache((DefaultRowEdited)feats[i]);
+					if (rect.contains(geomReproject.getBounds2D())) {
+						selectedRow.add(feats[i]);
 						selection.set(feats[i].getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
 					}
 				} else {
-					if (geom.intersects(rect)) { // , 0.1)){
-						addSelectionCache((DefaultRowEdited)feats[i]);
+					if (geomReproject.intersects(rect)) { // , 0.1)){
+						selectedRow.add(feats[i]);
 						selection.set(feats[i].getIndex(), true);
 						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 						drawHandlers(geom.cloneGeometry(),gh,vp);
@@ -242,11 +248,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileReadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 
 	}
@@ -259,8 +263,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		selection.clear();
 		clearSelection(SAVEPREVIOUS);
 		} catch (ReadDriverException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			NotificationManager.addError(e1.getMessage(),e1);
 		}
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 
@@ -274,24 +277,26 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			Graphics2D gs = selectionImage.createGraphics();
 			BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gh = handlersImage.createGraphics();
+			ICoordTrans ct=getLayer().getCoordTrans();
 			for (int i = 0; i < feats.length; i++) {
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 					.getGeometry();
-					if (contains(polygon,geom)) {
-						addSelectionCache((DefaultRowEdited)feats[i]);
-						selection.set(feats[i].getIndex(), true);
-						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
-						drawHandlers(geom.cloneGeometry(),gh,vp);
-					}
+				IGeometry geomReproject=geom.cloneGeometry();
+				if (ct!=null)
+					geomReproject.reProject(ct);
+				if (contains(polygon,geomReproject)) {
+					selectedRow.add(feats[i]);
+					selection.set(feats[i].getIndex(), true);
+					geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
+					drawHandlers(geom.cloneGeometry(),gh,vp);
+				}
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileReadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 	}
 
@@ -303,8 +308,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			selection.clear();
 		clearSelection(SAVEPREVIOUS);
 		} catch (ReadDriverException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			NotificationManager.addError(e1.getMessage(),e1);
 		}
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 
@@ -318,24 +322,26 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			Graphics2D gs = selectionImage.createGraphics();
 			BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gh = handlersImage.createGraphics();
+			ICoordTrans ct=getLayer().getCoordTrans();
 			for (int i = 0; i < feats.length; i++) {
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 					.getGeometry();
-					if (contains(polygon,geom) || intersects(polygon,geom)) {
-						addSelectionCache((DefaultRowEdited)feats[i]);
-						selection.set(feats[i].getIndex(), true);
-						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
-						drawHandlers(geom.cloneGeometry(),gh,vp);
-					}
+				IGeometry geomReproject=geom.cloneGeometry();
+				if (ct!=null)
+					geomReproject.reProject(ct);
+				if (contains(polygon,geomReproject) || intersects(polygon,geomReproject)) {
+					selectedRow.add(feats[i]);
+					selection.set(feats[i].getIndex(), true);
+					geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
+					drawHandlers(geom.cloneGeometry(),gh,vp);
+				}
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileReadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 	}
 
@@ -347,8 +353,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			selection.clear();
 			clearSelection(SAVEPREVIOUS);
 		} catch (ReadDriverException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			NotificationManager.addError(e1.getMessage(),e1);
 		}
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 
@@ -357,25 +362,27 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			Graphics2D gs = selectionImage.createGraphics();
 			BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gh = handlersImage.createGraphics();
+			ICoordTrans ct=getLayer().getCoordTrans();
 			for (int i = 0; i < vea.getRowCount(); i++) {
 				IRowEdited rowEd=vea.getRow(i);
 				IGeometry geom = ((IFeature)rowEd.getLinkedRow())
 						.getGeometry();
-					if (!contains(polygon,geom) && !intersects(polygon,geom)) {
-						addSelectionCache((DefaultRowEdited)rowEd);
-						selection.set(rowEd.getIndex(), true);
-						geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
-						drawHandlers(geom.cloneGeometry(),gh,vp);
-					}
+				IGeometry geomReproject=geom.cloneGeometry();
+				if (ct!=null)
+					geomReproject.reProject(ct);
+				if (!contains(polygon,geomReproject) && !intersects(polygon,geomReproject)) {
+					selectedRow.add(rowEd);
+					selection.set(rowEd.getIndex(), true);
+					geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
+					drawHandlers(geom.cloneGeometry(),gh,vp);
+				}
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileReadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 	}
 	public void selectAll() {
@@ -386,8 +393,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			selection.clear();
 			clearSelection(SAVEPREVIOUS);
 		} catch (ReadDriverException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			NotificationManager.addError(e1.getMessage(),e1);
 		}
 		ViewPort vp=getLayer().getMapContext().getViewPort();
 
@@ -396,10 +402,13 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			Graphics2D gs = selectionImage.createGraphics();
 			BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D gh = handlersImage.createGraphics();
+			ICoordTrans ct=getLayer().getCoordTrans();
 			for (int i = 0; i < vea.getRowCount(); i++) {
 				IRowEdited rowEd=vea.getRow(i);
 				IGeometry geom = ((IFeature)rowEd.getLinkedRow())
 						.getGeometry();
+				if (ct!=null)
+					geom.reProject(ct);
 				addSelectionCache((DefaultRowEdited)rowEd);
 				selection.set(rowEd.getIndex(), true);
 				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
@@ -408,11 +417,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileReadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 	}
 
@@ -424,8 +431,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			//		 Cogemos las entidades seleccionadas
 			clearSelection(SAVEPREVIOUS);
 		} catch (ReadDriverException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			NotificationManager.addError(e1.getMessage(),e1);
 		}
 		double min = java.lang.Double.MAX_VALUE;
 		ViewPort vp=getLayer().getMapContext().getViewPort();
@@ -458,11 +464,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					}
 				}
 			} catch (ReadDriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileReadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
 		}
 		vea.setSelectionImage(selectionImage);
@@ -594,8 +598,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			FLyrVect active = (FLyrVect)getLayer();
 			active.getRecordset().getSelectionSupport().fireSelectionEvents();
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
     }
 
@@ -619,8 +622,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			if (getVEA().getSelection().isEmpty())
 				clearSelection(NOTSAVEPREVIOUS);
 		} catch (ReadDriverException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			NotificationManager.addError(e1.getMessage(),e1);
 		}
 	}
 }

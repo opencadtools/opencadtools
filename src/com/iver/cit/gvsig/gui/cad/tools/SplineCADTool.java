@@ -50,6 +50,7 @@ import org.apache.log4j.Logger;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
@@ -93,7 +94,7 @@ public class SplineCADTool extends DefaultCADTool {
 				closeGeometry();
 			}
 		} catch (ReadDriverException e) {
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 
         // No queremos guardar FGeometryCollections:

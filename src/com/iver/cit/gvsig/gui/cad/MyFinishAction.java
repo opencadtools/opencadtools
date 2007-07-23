@@ -254,8 +254,7 @@ public class MyFinishAction extends FinishAction
 
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
         lyr.setVisible(true);
 
@@ -282,11 +281,9 @@ public class MyFinishAction extends FinishAction
 			// Para cerrar el cuadro de diálogo.
 			oldAction.performAction();
 		} catch (ReadDriverException e) {
-			e.printStackTrace();
-			NotificationManager.addError(e);
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (StartEditionLayerException e) {
-			e.printStackTrace();
-			NotificationManager.addError(e);
+			NotificationManager.addError(e.getMessage(),e);
 		}
 
 

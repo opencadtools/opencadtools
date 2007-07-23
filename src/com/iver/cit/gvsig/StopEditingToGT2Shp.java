@@ -12,6 +12,7 @@ import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.feature.FeatureType;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
@@ -55,12 +56,12 @@ public class StopEditingToGT2Shp extends Extension {
                 while (iter.hasNext()) {
                 	layer = iter.nextLayer();
                     if (layer instanceof FLyrVect &&
-                            layer.isEditing()) {                    
+                            layer.isEditing()) {
                         stopEditing((FLyrVect)layer);
 
                         return;
                     }
-                }            
+                }
             }
             PluginServices.getMainFrame().enableControls();
     }
@@ -119,7 +120,7 @@ public class StopEditingToGT2Shp extends Extension {
 		            layer.setEditing(false);
              }
         } catch (Exception e) {
-            e.printStackTrace();
+        	NotificationManager.addError(e.getMessage(),e);
         }
     }
 

@@ -209,13 +209,13 @@ public abstract class DefaultCADTool implements CADTool {
 
 
 		} catch (ReadDriverException e) {
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 			return;
 		} catch (ValidateRowException e) {
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 			return;
 		} catch (ExpansionFileWriteException e) {
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 			return;
 		}
 
@@ -233,17 +233,13 @@ public abstract class DefaultCADTool implements CADTool {
 			getVLE().getVEA().modifyRow(index, row, getName(),
 					EditionEvent.GRAPHIC);
 		} catch (ValidateRowException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileWriteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		} catch (ExpansionFileReadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 		draw(row.getGeometry().cloneGeometry());
 	}
@@ -399,7 +395,7 @@ public abstract class DefaultCADTool implements CADTool {
 				try {
 					type = ((FLyrVect) getVLE().getLayer()).getShapeType();
 				} catch (ReadDriverException e) {
-					e.printStackTrace();
+					throw new CommandException(e);
 				}
 				if (ct.isApplicable(type)) {
 					getCadToolAdapter().setCadTool(ct);

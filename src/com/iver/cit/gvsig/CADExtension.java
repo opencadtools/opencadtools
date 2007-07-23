@@ -306,7 +306,7 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 					if (!(e.getSource() instanceof JTable))
 						view.focusConsole("");
 				}
-				else if ((!e.isActionKey())) {
+				else if ((!e.isActionKey() && e.getKeyCode()!=KeyEvent.VK_TAB)) {
 						//if (Character.isLetterOrDigit(e.getKeyChar())) {
 							Character keyChar = new Character(e.getKeyChar());
 							if (e.getComponent().getName() != null) {

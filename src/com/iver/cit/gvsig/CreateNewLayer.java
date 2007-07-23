@@ -8,6 +8,7 @@ import com.hardcode.driverManager.Driver;
 import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.driverManager.DriverManager;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.andami.ui.wizard.WizardAndami;
 import com.iver.cit.gvsig.fmap.MapControl;
@@ -136,7 +137,7 @@ public void execute(String actionCommand) {
 				PluginServices.getMDIManager().addWindow(wizard);
 				// System.out.println("Salgo con " + panelChoose.getLayerName());
 			} catch (DriverLoadException e) {
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
 		}
 	}

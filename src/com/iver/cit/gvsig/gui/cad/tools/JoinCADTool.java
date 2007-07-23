@@ -48,6 +48,7 @@ import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
@@ -94,7 +95,7 @@ public class JoinCADTool extends DefaultCADTool {
         try {
 			clearSelection();
 		} catch (ReadDriverException e) {
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
         selectionCADTool=new SelectionCADTool();//(SelectionCADTool) CADExtension.getCADTool();
         selectionCADTool.init();
@@ -177,17 +178,13 @@ public class JoinCADTool extends DefaultCADTool {
     		try {
 				joinGeometries();
 			} catch (ReadDriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileReadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ValidateRowException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileWriteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
     	}
     }

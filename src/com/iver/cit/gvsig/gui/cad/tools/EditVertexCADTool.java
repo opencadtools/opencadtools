@@ -51,6 +51,7 @@ import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
@@ -204,9 +205,9 @@ public class EditVertexCADTool extends DefaultCADTool {
         		try {
 					vea.removeRow(row.getIndex(),getName(),EditionEvent.GRAPHIC);
 				} catch (ReadDriverException e) {
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				} catch (ExpansionFileReadException e) {
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				}
         	}
         }
@@ -241,13 +242,13 @@ public class EditVertexCADTool extends DefaultCADTool {
 						vea.modifyRow(row.getIndex(),newRow,getName(),EditionEvent.GRAPHIC);
 						clearSelection();
         			} catch (ValidateRowException e) {
-						e.printStackTrace();
+        				NotificationManager.addError(e.getMessage(),e);
 					} catch (ExpansionFileWriteException e) {
-						e.printStackTrace();
+						NotificationManager.addError(e.getMessage(),e);
 					} catch (ReadDriverException e) {
-						e.printStackTrace();
+						NotificationManager.addError(e.getMessage(),e);
 					} catch (ExpansionFileReadException e) {
-						e.printStackTrace();
+						NotificationManager.addError(e.getMessage(),e);
 					}
 
 					vle.addSelectionCache(new DefaultRowEdited(newRow,
@@ -714,13 +715,13 @@ public class EditVertexCADTool extends DefaultCADTool {
 							}
 						}
 					} catch (ValidateRowException e) {
-						e.printStackTrace();
+						NotificationManager.addError(e.getMessage(),e);
 					} catch (ExpansionFileWriteException e) {
-						e.printStackTrace();
+						NotificationManager.addError(e.getMessage(),e);
 					} catch (ReadDriverException e) {
-						e.printStackTrace();
+						NotificationManager.addError(e.getMessage(),e);
 					} catch (ExpansionFileReadException e) {
-						e.printStackTrace();
+						NotificationManager.addError(e.getMessage(),e);
 					}
 
 				}

@@ -30,7 +30,7 @@ public class ConsoleToken extends TokenMarker{
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(console);
 		frame.pack();
-		frame.show();
+		frame.setVisible(true);
 	}
 
 

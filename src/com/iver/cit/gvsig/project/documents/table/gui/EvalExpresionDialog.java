@@ -37,6 +37,7 @@ import bsh.EvalError;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
 import com.iver.cit.gvsig.ExpresionFieldExtension;
@@ -119,11 +120,11 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
                 operator.eval(interpreter);
                 operators.add(operator);
             } catch (InstantiationException e) {
-                e.printStackTrace();
+            	NotificationManager.addError(e.getMessage(),e);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            	NotificationManager.addError(e.getMessage(),e);
             } catch (ClassCastException e) {
-                e.printStackTrace();
+            	NotificationManager.addError(e.getMessage(),e);
             }
         }
 //        Operators operatos=new Operators();
@@ -145,10 +146,9 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
 			}
 	        evalExpresions();
         } catch (BSFException e) {
-			e.printStackTrace();
+        	NotificationManager.addError(e.getMessage(),e);
 		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 	    evalExpresion=new EvalExpresion();
 	    evalExpresion.setTable(table);
@@ -241,10 +241,9 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
 										.println("Tiempo evaluar expresiones = "
 												+ (t2 - t1));
 							} catch (BSFException e1) {
-								e1.printStackTrace();
+								NotificationManager.addError(e1.getMessage(),e1);
 							} catch (ReadDriverException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
+								NotificationManager.addError(e1.getMessage(),e1);
 							}
 							if (isAccepted)
 								PluginServices.getMDIManager().closeWindow(
@@ -528,8 +527,7 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
                 try {
                 	field.eval(interpreter);
                 } catch (BSFException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+                	NotificationManager.addError(e.getMessage(),e);
 				}
                 lm.addOperator(field);
             }
@@ -845,9 +843,9 @@ public class EvalExpresionDialog extends JPanel implements IWindow {
 					try {
 						interpreter.eval(ExpresionFieldExtension.BEANSHELL,null,-1,-1,readFile(file));
 					} catch (IOException e1) {
-						e1.printStackTrace();
+						NotificationManager.addError(e1.getMessage(),e1);
 					} catch (BSFException e1) {
-						e1.printStackTrace();
+						NotificationManager.addError(e1.getMessage(),e1);
 					}
 				}
 			});

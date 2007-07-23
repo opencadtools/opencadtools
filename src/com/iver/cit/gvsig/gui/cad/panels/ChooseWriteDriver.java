@@ -10,6 +10,7 @@ import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 
@@ -103,8 +104,7 @@ public class ChooseWriteDriver extends JWizardPanel {
 				panel.setDriver(writer);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			NotificationManager.addError(e.getMessage(),e);
 		}
 	}
 

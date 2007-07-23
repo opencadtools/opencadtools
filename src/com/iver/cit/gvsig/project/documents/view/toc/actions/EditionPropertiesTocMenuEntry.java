@@ -3,6 +3,7 @@ package com.iver.cit.gvsig.project.documents.view.toc.actions;
 import java.util.Iterator;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.GenericDlgPreferences;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -76,11 +77,11 @@ public class EditionPropertiesTocMenuEntry extends AbstractTocContextMenuAction 
 	            	app.setParentID(pref.getID());
 	            	dlg.addPreferencePage(app);
 	            } catch (InstantiationException e) {
-	                e.printStackTrace();
+	            	NotificationManager.addError(e.getMessage(),e);
 	            } catch (IllegalAccessException e) {
-	                e.printStackTrace();
+	            	NotificationManager.addError(e.getMessage(),e);
 	            } catch (ClassCastException e) {
-	                e.printStackTrace();
+	            	NotificationManager.addError(e.getMessage(),e);
 	            }
 	        }
 

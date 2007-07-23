@@ -49,6 +49,7 @@ import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
@@ -213,17 +214,13 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     			try {
 					vea.modifyRow(dre.getIndex(),dre.getLinkedRow(),getName(),EditionEvent.GRAPHIC);
 				} catch (ValidateRowException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				} catch (ExpansionFileWriteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				} catch (ReadDriverException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				} catch (ExpansionFileReadException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					NotificationManager.addError(e.getMessage(),e);
 				}
 				ArrayList rows=new ArrayList();
 				rows.add(dre);

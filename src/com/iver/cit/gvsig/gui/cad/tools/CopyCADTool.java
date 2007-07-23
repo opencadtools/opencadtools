@@ -48,6 +48,7 @@ import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
@@ -162,11 +163,11 @@ public class CopyCADTool extends DefaultCADTool {
                 //selectedRow.addAll(selectedRowAux);
                 vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowAux);
             } catch (ValidateRowException e) {
-				e.printStackTrace();
+            	NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			} catch (ExpansionFileWriteException e) {
-				e.printStackTrace();
+				NotificationManager.addError(e.getMessage(),e);
 			}
 
             PluginServices.getMDIManager().restoreCursor();
