@@ -128,8 +128,7 @@ public class CADToolAdapter extends Behavior {
 		super.paintComponent(g);
 		if (CADExtension.getCADToolAdapter()!=this)
 			return;
-		drawCursor(g);
-		getGrid().drawGrid(g);
+
 		if (adjustedPoint != null) {
 			Point2D p = null;
 			if (mapAdjustedPoint != null) {
@@ -141,6 +140,8 @@ public class CADToolAdapter extends Behavior {
 			((CADTool) cadToolStack.peek())
 					.drawOperation(g, p.getX(), p.getY());
 		}
+		drawCursor(g);
+		getGrid().drawGrid(g);
 	}
 
 	/**

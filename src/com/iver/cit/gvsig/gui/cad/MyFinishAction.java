@@ -242,7 +242,7 @@ public class MyFinishAction extends FinishAction
     	        IProjection proj = null;
     	        if (drv instanceof ICanReproject)
     	        {
-    	            proj = CRSFactory.getCRS("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection());
+    	        	 proj = CRSFactory.getCRS("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection(null,null));
     	        }
 
     			lyr = (FLyrVect) LayerFactory.createDBLayer(dbDriver, layerName, proj);
