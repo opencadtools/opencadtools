@@ -383,7 +383,7 @@ public class CADToolAdapter extends Behavior {
 	 *            DOCUMENT ME!
 	 */
 	private void drawCursor(Graphics g) {
-
+		g.setColor(Color.black);
 		Point2D p = adjustedPoint;
 
 		if (p == null) {
