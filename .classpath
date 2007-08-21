@@ -20,9 +20,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/extScripting"/>
 	<classpathentry kind="lib" path="/extScripting/lib/bsf-2.3.0rc1.jar"/>
 	<classpathentry kind="lib" path="/extScripting/lib/js-1.5r3.jar"/>
-	<classpathentry kind="lib" path="/libFMap/lib/gvsig-exceptions.jar" sourcepath="/libExceptions"/>
 	<classpathentry kind="lib" path="/extScripting/lib/bsh-2.0b1.jar"/>
-	<classpathentry kind="lib" path="/libFMap/lib/libproj.jar"/>
-	<classpathentry kind="lib" path="/_fwAndami/lib/gvsig-ui.jar" sourcepath="/libUIComponent"/>
+	<classpathentry kind="lib" path="/libFMap/lib/org.cresques.cts.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
