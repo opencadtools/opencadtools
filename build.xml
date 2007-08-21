@@ -75,7 +75,8 @@
 			<!-- Compile the Java code from ${src} to ${build} -->
 			<mkdir dir="${build}" />
 			<loadEclipseClasspath project="${basedir}"/>
-			<defaultJavac/>
+			<defaultJavac
+				classpath="${eclipseClasspath}"/>
 			<!--<javac  srcdir="${src}"
 				destdir="${build}"
 				source="${JavaSourceVersion}"
