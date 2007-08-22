@@ -21,7 +21,7 @@
 	<import file="../libFMap/compile-classpath.xml"/>
 	<import file="../_fwAndami/compile-classpath.xml"/>
 	<property name="compile-sourcepath" value="../appgvSIG/src"/>-->
-	<import file="../binaries/ant/utils.xml"/>
+	<import file="../binaries/ant/utilities.xml"/>
 	<property name="JavaSourceVersion" value="1.5"/>
 	<property name="JavaTargetVersion" value="1.5"/>
 	<property name="encoding" value="ISO_8859_1"/>
