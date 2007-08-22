@@ -22,5 +22,7 @@
 	<classpathentry kind="lib" path="/extScripting/lib/js-1.5r3.jar"/>
 	<classpathentry kind="lib" path="/extScripting/lib/bsh-2.0b1.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/org.cresques.cts.jar"/>
+	<classpathentry kind="lib" path="/_fwAndami/lib/org.gvsig.ui.jar"/>
+	<classpathentry kind="lib" path="/libFMap/lib/org.gvsig.exceptions.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
