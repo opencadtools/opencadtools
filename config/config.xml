@@ -248,17 +248,6 @@
 			active="true" >
 			<menu text="Capa/Propiedades" action-command="PROPERTIES"/>
 		</extension>
-		<extension class-name="com.iver.cit.gvsig.ExpresionFieldExtension"
-			description="Extension that evaluate the expresion to a column."
-			active="true">
-			<menu text="field/expresion" tooltip="expresion"
-				action-command="EXPRESION"
-				icon="images/expresion.png" />
-			<tool-bar name="field_toolbar">
-				<action-tool icon="images/expresion.png"
-					action-command="EXPRESION" tooltip="expresion"
-					last="true"/>
-			</tool-bar>
-		</extension>
+
 	</extensions>
 </plugin-config>
