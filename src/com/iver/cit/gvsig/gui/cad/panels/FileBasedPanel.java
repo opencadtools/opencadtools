@@ -14,8 +14,8 @@ import jwizardcomponent.JWizardPanel;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
+import com.iver.cit.gvsig.addlayer.AddLayerDialog;
 import com.iver.cit.gvsig.gui.panels.CRSSelectPanel;
-import com.iver.cit.gvsig.project.documents.gui.FOpenDialog;
 import com.iver.utiles.SimpleFileFilter;
 
 public class FileBasedPanel extends JWizardPanel {
@@ -141,7 +141,7 @@ public class FileBasedPanel extends JWizardPanel {
 	 */
 	private CRSSelectPanel getChooserPanel() {
 		if (crsSelectPanel == null) {
-			crsSelectPanel = CRSSelectPanel.getPanel(FOpenDialog.getLastProjection());
+			crsSelectPanel = CRSSelectPanel.getPanel(AddLayerDialog.getLastProjection());
 			crsSelectPanel.setBounds(new java.awt.Rectangle(16,98,348,44));
 			IWindow view= PluginServices.getMDIManager().getActiveWindow();
 			if (view instanceof com.iver.cit.gvsig.project.documents.view.gui.View){
@@ -152,7 +152,7 @@ public class FileBasedPanel extends JWizardPanel {
 			crsSelectPanel.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 			        if (crsSelectPanel.isOkPressed()) {
-			        	FOpenDialog.setLastProjection(crsSelectPanel.getCurProj());
+			        	AddLayerDialog.setLastProjection(crsSelectPanel.getCurProj());
 			        }
 				}
 			});
