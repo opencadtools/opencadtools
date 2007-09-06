@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -79,6 +80,7 @@ import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.SpatialCache;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
@@ -100,8 +102,6 @@ public abstract class DefaultCADTool implements CADTool {
 	createDefaultSymbolByShapeType(FShape.MULTI, Color.ORANGE);
 	private static Logger logger = Logger.getLogger(DefaultCADTool.class
 			.getName());
-
-
 	private CADToolAdapter cadToolAdapter;
 
 	private String question;
@@ -112,6 +112,41 @@ public abstract class DefaultCADTool implements CADTool {
 
 	private DefaultCADTool previousTool;
 
+	private ArrayList temporalCache = new ArrayList();
+
+	public void addTemporalCache(IGeometry geom) {
+		temporalCache.add(geom);
+		insertSpatialCache(geom);
+	}
+	public void clearTemporalCache() {
+		IGeometry[] geoms=(IGeometry[])temporalCache.toArray(new IGeometry[0]);
+		for (int i=0;i<geoms.length;i++) {
+			removeSpatialCache(geoms[i]);
+		}
+		temporalCache.clear();
+	}
+	private void insertSpatialCache(IGeometry geom) {
+		VectorialLayerEdited vle = getVLE();
+		SpatialCache spatialCache=((FLyrVect)vle.getLayer()).getSpatialCache();
+		Rectangle2D r=geom.getBounds2D();
+		if (geom.getGeometryType()==FShape.POINT) {
+			r = new Rectangle2D.Double(r.getX(),r.getY(),1,1);
+		}
+		spatialCache.insert(r,geom);
+
+	}
+	private void removeSpatialCache(IGeometry geom) {
+		VectorialLayerEdited vle = getVLE();
+		SpatialCache spatialCache=((FLyrVect)vle.getLayer()).getSpatialCache();
+		Rectangle2D r=null;
+		if (geom.getGeometryType()==FShape.POINT) {
+			r = new Rectangle2D.Double(r.getX(),r.getY(),1,1);
+		}else {
+			r=geom.getBounds2D();
+		}
+		spatialCache.remove(r,geom);
+
+	}
 	/**
 	 * DOCUMENT ME!
 	 */
@@ -206,8 +241,7 @@ public abstract class DefaultCADTool implements CADTool {
 					geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 				vle.drawHandlers(geom.cloneGeometry(), gs, vp);
 				vea.setSelectionImage(selectionImage);
-
-
+				insertSpatialCache(geom);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
 			return;
@@ -221,6 +255,8 @@ public abstract class DefaultCADTool implements CADTool {
 
 		draw(geometry.cloneGeometry());
 	}
+
+
 
 	/**
 	 * DOCUMENT ME!
@@ -259,6 +295,7 @@ public abstract class DefaultCADTool implements CADTool {
 			String newFID = vea.getNewFID();
 			DefaultFeature df = new DefaultFeature(geometry, values, newFID);
 			index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
+			insertSpatialCache(geometry);
 		} catch (ValidateRowException e) {
 			NotificationManager.addError(e);
 		} catch (ReadDriverException e) {

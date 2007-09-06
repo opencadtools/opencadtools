@@ -97,7 +97,7 @@ public class IntersectionPointSnapper extends AbstractSnapper
 //                        continue;
 //                    }
                     Coordinate intersects = segmentLine.intersection(lines[i]);
-                    if (intersects == null) {
+                    if (intersects == null || lines[i].equals(segmentLine)) {
                         continue;
                     }
 

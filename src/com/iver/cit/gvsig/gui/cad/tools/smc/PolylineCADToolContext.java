@@ -5,10 +5,9 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import java.awt.event.InputEvent;
-
-import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
+import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class PolylineCADToolContext
     extends statemap.FSMContext
@@ -430,7 +429,7 @@ public final class PolylineCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate")))
+                else if ((s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate"))) && ctxt.getLinesCount()!=0 )
                 {
 
                     (context.getState()).Exit(context);
@@ -446,6 +445,11 @@ public final class PolylineCADToolContext
                         context.setState(Polyline.FirstPoint);
                         (context.getState()).Entry(context);
                     }
+                }
+                else if (!s.equals(PluginServices.getText(this,"cancel")))
+                {
+
+                    // No actions.
                 }                else
                 {
                     super.addOption(context, s);
@@ -544,7 +548,7 @@ public final class PolylineCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate")))
+                else if ((s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate"))) && ctxt.getLinesCount()!=0)
                 {
 
                     (context.getState()).Exit(context);
@@ -560,6 +564,11 @@ public final class PolylineCADToolContext
                         context.setState(Polyline.FirstPoint);
                         (context.getState()).Entry(context);
                     }
+                }
+                else if (!s.equals(PluginServices.getText(this,"cancel")))
+                {
+
+                    // No actions.
                 }                else
                 {
                     super.addOption(context, s);

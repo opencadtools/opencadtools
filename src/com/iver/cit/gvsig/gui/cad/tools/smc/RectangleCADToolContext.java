@@ -5,10 +5,9 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import java.awt.event.InputEvent;
-
-import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
+import java.awt.event.InputEvent;
+import com.iver.andami.PluginServices;
 
 public final class RectangleCADToolContext
     extends statemap.FSMContext

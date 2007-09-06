@@ -101,6 +101,9 @@ public class PolylineCADTool extends DefaultCADTool {
 		IGeometry newGeom = ShapeFactory.createPolyline2D(gp);
 		return newGeom;
 	}
+    public int getLinesCount() {
+    	return list.size();
+    }
     public void endGeometry() {
     	if (gpx==null) {
     		gpx=new GeneralPathX();
@@ -127,6 +130,7 @@ public class PolylineCADTool extends DefaultCADTool {
         addGeometry(newGeom);
         _fsm = new PolylineCADToolContext(this);
         list.clear();
+        clearTemporalCache();
         close=false;
         gpx=null;
         antantPoint=antCenter=antInter=antPoint=firstPoint=null;
@@ -188,8 +192,9 @@ public class PolylineCADTool extends DefaultCADTool {
                         2);
                 elShape.moveTo(antPoint.getX(), antPoint.getY());
                 elShape.lineTo(point.getX(), point.getY());
-                list.add(ShapeFactory.createPolyline2D(elShape));
-
+                IGeometry geom=ShapeFactory.createPolyline2D(elShape);
+                list.add(geom);
+                addTemporalCache(geom);
             }
             if (antPoint==null)
          	   antPoint = (Point2D)firstPoint.clone();
@@ -256,6 +261,7 @@ public class PolylineCADTool extends DefaultCADTool {
 
                     if (ig != null) {
                         list.add(ig);
+                        addTemporalCache(ig);
                     }
                 } else {
                     Point2D[] ps1 = UtilFunctions.getPerpendicular(lastp,
@@ -297,7 +303,9 @@ public class PolylineCADTool extends DefaultCADTool {
                     Point2D centerp = UtilFunctions.getPoint(interp, mediop,
                             radio);
                     antCenter = centerp;
-                    list.add(ShapeFactory.createArc(lastp, centerp, point));
+                    IGeometry geom=ShapeFactory.createArc(lastp, centerp, point);
+                    list.add(geom);
+                    addTemporalCache(geom);
                 }
 
                 antantPoint = antPoint;
@@ -475,6 +483,7 @@ public class PolylineCADTool extends DefaultCADTool {
     public void cancel(){
         //endGeometry();
         list.clear();
+        clearTemporalCache();
         antantPoint=antCenter=antInter=antPoint=firstPoint=null;
     }
 

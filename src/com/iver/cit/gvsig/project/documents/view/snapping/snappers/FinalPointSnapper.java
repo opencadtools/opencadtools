@@ -12,10 +12,24 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
 public class FinalPointSnapper extends AbstractSnapper implements ISnapperVectorial {
 	public Point2D getSnapPoint(Point2D point, IGeometry geom, double tolerance, Point2D lastPointEntered) {
 		Point2D resul = null;
-
 		Handler[] handlers = geom.getHandlers(IGeometry.SELECTHANDLER);
+//		Point2D initPoint=handlers[0].getPoint();
+//		Point2D endPoint=handlers[handlers.length-1].getPoint();
+//		if (initPoint.equals(endPoint))
+//			return resul;
 
 		double minDist = tolerance;
+//		double dist = initPoint.distance(point);
+//		if (dist < minDist) {
+//			resul = initPoint;
+//			minDist = dist;
+//		}
+//
+//		dist = endPoint.distance(point);
+//		if (dist < minDist) {
+//			resul = endPoint;
+//		}
+
 		for (int j = 0; j < handlers.length; j++) {
 			Point2D handlerPoint = handlers[j].getPoint();
 			double dist = handlerPoint.distance(point);

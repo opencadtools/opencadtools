@@ -68,12 +68,16 @@ NextPointOrArcOrClose{
 			end();
 			}
 	addOption(s:String)
-		[s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate"))]
+		[(s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate"))) && ctxt.getLinesCount()!=0 ]
 		FirstPoint {
 			addOption(s);
 			endGeometry();
 			end();
 			}
+	addOption(s:String)
+		[!s.equals(PluginServices.getText(this,"cancel"))]
+		NextPointOrArcOrClose {
+		}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NextPointOrArcOrClose {
 			setQuestion(
@@ -128,13 +132,16 @@ NextPointOrLineOrClose{
 			end();
 			}
 	addOption(s:String)
-		[s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate"))]
+		[(s.equalsIgnoreCase(PluginServices.getText(this,"PolylineCADTool.end")) || s.equals(PluginServices.getText(this,"terminate"))) && ctxt.getLinesCount()!=0]
 		FirstPoint {
 			addOption(s);
 			endGeometry();
 			end();
 			}
-
+	addOption(s:String)
+		[!s.equals(PluginServices.getText(this,"cancel"))]
+		NextPointOrLineOrClose {
+		}
 }
 
 Default

@@ -52,6 +52,7 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.ViewPort;
+import com.iver.cit.gvsig.fmap.core.FPoint2D;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
@@ -102,6 +103,7 @@ public class SplineCADTool extends DefaultCADTool {
         addGeometry(newGeom);
         _fsm = new SplineCADToolContext(this);
         list.clear();
+        clearTemporalCache();
         close=false;
     }
     public void closeGeometry(){
@@ -145,6 +147,8 @@ public class SplineCADTool extends DefaultCADTool {
         String status = actualState.getName();
         if (status.equals("Spline.NextPoint") || status.equals("Spline.FirstPoint")) {
            list.add(new Point2D.Double(x,y));
+           IGeometry spline=ShapeFactory.createSpline2D((Point2D[])list.toArray(new Point2D[0]));
+           addTemporalCache(spline);
         }
     }
 
@@ -231,6 +235,7 @@ public class SplineCADTool extends DefaultCADTool {
 
     public void cancel(){
         list.clear();
+        clearTemporalCache();
         close=false;
     }
 
