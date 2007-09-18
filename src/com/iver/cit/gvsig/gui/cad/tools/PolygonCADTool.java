@@ -290,7 +290,7 @@ public class PolygonCADTool extends DefaultCADTool {
         GeneralPathX elShape = new GeneralPathX();
         boolean firstTime=true;
 
-        for (int i = numLines-1; i >= 1; i--) {
+        for (int i = numLines-1; i > 0; i--) {
             Point2D p2 = UtilFunctions.getPoint(center, (an * i) + initangle,
                     radio);
 

@@ -233,7 +233,7 @@ public class EditVertexCADTool extends DefaultCADTool {
         			if (ig instanceof FGeometryCollection) {
         				newGeometry=removeVertexGC((FGeometryCollection)ig,handlers[numSelect]);
         			}else {
-        				newGeometry=removeVertex(ig,handlers[numSelect]);
+        				newGeometry=removeVertex(ig,handlers,numSelect);
         			}
         			//numSelect=0;
 
@@ -284,7 +284,7 @@ public class EditVertexCADTool extends DefaultCADTool {
      */
     public void addValue(double d) {
     }
-    private IGeometry removeVertex(IGeometry gp,Handler handler) {
+    private IGeometry removeVertex(IGeometry gp,Handler[] handlers,int numHandler) {
         GeneralPathX newGp = new GeneralPathX();
         double[] theData = new double[6];
 
@@ -311,7 +311,7 @@ public class EditVertexCADTool extends DefaultCADTool {
                 case PathIterator.SEG_MOVETO:
                     numParts++;
                     ptSrc.setLocation(theData[0], theData[1]);
-                    if (ptSrc.equals(handler.getPoint())){
+                    if (ptSrc.equals(handlers[numHandler].getPoint())){
                     	numParts--;
                     	bFirst=true;
                     	break;
@@ -323,7 +323,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 
                 case PathIterator.SEG_LINETO:
                     ptSrc.setLocation(theData[0], theData[1]);
-                    if (ptSrc.equals(handler.getPoint())){
+                    if (ptSrc.equals(handlers[numHandler].getPoint())){
                     	break;
                     }
                     newGp.lineTo(ptSrc.getX(), ptSrc.getY());
