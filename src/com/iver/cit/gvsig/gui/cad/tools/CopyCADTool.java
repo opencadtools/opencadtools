@@ -50,7 +50,6 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
@@ -166,10 +165,7 @@ public class CopyCADTool extends DefaultCADTool {
             	NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileWriteException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
-
+			} 
             PluginServices.getMDIManager().restoreCursor();
         }
     }

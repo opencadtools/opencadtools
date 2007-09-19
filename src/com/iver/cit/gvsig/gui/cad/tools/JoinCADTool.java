@@ -179,13 +179,9 @@ public class JoinCADTool extends DefaultCADTool {
 				joinGeometries();
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileReadException e) {
-				NotificationManager.addError(e.getMessage(),e);
 			} catch (ValidateRowException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileWriteException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
+			} 
     	}
     }
     private Handler[] getHandlers(DefaultRowEdited[] selectedRows) {
