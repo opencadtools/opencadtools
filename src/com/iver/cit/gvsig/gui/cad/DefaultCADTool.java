@@ -51,14 +51,12 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -71,9 +69,7 @@ import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
-import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
-import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
@@ -248,11 +244,7 @@ public abstract class DefaultCADTool implements CADTool {
 		} catch (ValidateRowException e) {
 			NotificationManager.addError(e.getMessage(),e);
 			return;
-		} catch (ExpansionFileWriteException e) {
-			NotificationManager.addError(e.getMessage(),e);
-			return;
-		}
-
+		} 
 		draw(geometry.cloneGeometry());
 	}
 
@@ -274,9 +266,7 @@ public abstract class DefaultCADTool implements CADTool {
 			NotificationManager.addError(e.getMessage(),e);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
+		} 
 		draw(row.getGeometry().cloneGeometry());
 	}
 
@@ -300,9 +290,7 @@ public abstract class DefaultCADTool implements CADTool {
 			NotificationManager.addError(e);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e);
-		} catch (ExpansionFileWriteException e) {
-			NotificationManager.addError(e);
-		}
+		} 
 		return vea.getInversedIndex(index);
 	}
 

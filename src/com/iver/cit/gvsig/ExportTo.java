@@ -4,9 +4,6 @@ import java.awt.Component;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Vector;
 
@@ -712,8 +709,6 @@ public class ExportTo extends Extension {
 		} catch (InitializeWriterException e) {
 			NotificationManager.addError(e.getMessage(),e);
 		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
 			NotificationManager.addError(e.getMessage(),e);
 		} catch (DriverLoadException e) {
 			NotificationManager.addError(e.getMessage(),e);

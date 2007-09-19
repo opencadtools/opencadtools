@@ -169,10 +169,8 @@ public class ScaleCADTool extends DefaultCADTool {
 				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileReadException e) {
-				NotificationManager.addError(e.getMessage(),e);
 			}
-
+			
 			PluginServices.getMDIManager().restoreCursor();
 		} else if (status.equals("Scale.PointOriginOrScaleFactor")) {
 			orr = new Point2D.Double(x, y);
@@ -196,9 +194,7 @@ public class ScaleCADTool extends DefaultCADTool {
 				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileReadException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
+			} 
 		}
 
     }
@@ -297,9 +293,9 @@ public class ScaleCADTool extends DefaultCADTool {
 	 */
     public void addOption(String s) {
     	ScaleCADToolState actualState = (ScaleCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
-       if (status.equals("Scale.ScaleFactorOrReference")) {
-		/*	try {
+    	String status = actualState.getName();
+    	if (status.equals("Scale.ScaleFactorOrReference")) {
+    		/*	try {
 				scale(2);
 			} catch (DriverIOException e) {
 				// TODO Auto-generated catch block
@@ -308,29 +304,26 @@ public class ScaleCADTool extends DefaultCADTool {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		*/
-		}
-	}
+    		 */
+    	}
+    }
 
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
     public void addValue(double d) {
     	ScaleCADToolState actualState = (ScaleCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
-        if (status.equals("Scale.ScaleFactorOrReference")) {
-    			try {
-    				scale(d);
-    			} catch (ValidateRowException e) {
-    				NotificationManager.addError(e.getMessage(),e);
-				} catch (ExpansionFileWriteException e) {
-					NotificationManager.addError(e.getMessage(),e);
-				} catch (ReadDriverException e) {
-					NotificationManager.addError(e.getMessage(),e);
-				} catch (ExpansionFileReadException e) {
-					NotificationManager.addError(e.getMessage(),e);
-				}
-
+    	String status = actualState.getName();
+    	if (status.equals("Scale.ScaleFactorOrReference")) {
+    		try {
+    			scale(d);
+    		} catch (ValidateRowException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} catch (ExpansionFileWriteException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} catch (ReadDriverException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} 
     	}
     }
     private void scale(double scaleFactor) throws ValidateRowException, ExpansionFileWriteException, ReadDriverException, ExpansionFileReadException{

@@ -9,11 +9,11 @@ import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 
 public class EditionManagerLegend implements EditionLegend{
 	private ArrayList rules=new ArrayList();
-	private IVectorialLegend vectorialLegend;
-	private IVectorialLegend originalVectorialLegend;
+	private IVectorLegend vectorialLegend;
+	private IVectorLegend originalVectorialLegend;
 	private LegendControl lc=new LegendControl();
 
-	public EditionManagerLegend(IVectorialLegend vl) {
+	public EditionManagerLegend(IVectorLegend vl) {
 		originalVectorialLegend=vl;
 		vectorialLegend=vl;//(VectorialLegend)vl.cloneLegend();
 	}

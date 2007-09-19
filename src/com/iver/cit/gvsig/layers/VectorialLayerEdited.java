@@ -17,7 +17,6 @@ import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.StartEditing;
 import com.iver.cit.gvsig.ViewCommandStackExtension;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.Handler;
@@ -172,10 +171,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
-
+		} 
 	}
 	public void selectWithSecondPoint(double x, double y) {
 		VectorialEditableAdapter vea = getVEA();
@@ -249,10 +245,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
-
+		} 
 	}
 	public void selectInsidePolygon(IGeometry polygon) {
 		VectorialEditableAdapter vea = getVEA();
@@ -295,9 +288,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
+		} 
 	}
 
 	public void selectCrossPolygon(IGeometry polygon) {
@@ -340,9 +331,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
+		} 
 	}
 
 	public void selectOutPolygon(IGeometry polygon) {
@@ -381,9 +370,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
+		} 
 	}
 	public void selectAll() {
 		VectorialEditableAdapter vea = getVEA();
@@ -418,9 +405,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
+		} 
 	}
 
 	public void refreshSelectionCache(Point2D firstPoint,CADToolAdapter cta){
@@ -465,9 +450,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				}
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileReadException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
+			} 
 		}
 		vea.setSelectionImage(selectionImage);
 		vea.setHandlersImage(handlersImage);

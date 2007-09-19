@@ -28,7 +28,6 @@ import com.iver.andami.ui.mdiFrame.MainFrame;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -36,7 +35,6 @@ import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
-import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -877,8 +875,6 @@ public class CADToolAdapter extends Behavior {
 			selection.clear();
 			vle.clearSelection(VectorialLayerEdited.NOTSAVEPREVIOUS);
 		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
 			NotificationManager.addError(e.getMessage(),e);
 		} finally {
 			String description=PluginServices.getText(this,"remove_geometry");

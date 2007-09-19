@@ -43,7 +43,6 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -53,7 +52,6 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -71,7 +69,6 @@ import com.iver.cit.gvsig.fmap.core.IRow;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
@@ -206,9 +203,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 					vea.removeRow(row.getIndex(),getName(),EditionEvent.GRAPHIC);
 				} catch (ReadDriverException e) {
 					NotificationManager.addError(e.getMessage(),e);
-				} catch (ExpansionFileReadException e) {
-					NotificationManager.addError(e.getMessage(),e);
-				}
+				} 
         	}
         }
         int dif=1;//En el caso de ser polígono.
@@ -247,10 +242,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 						NotificationManager.addError(e.getMessage(),e);
 					} catch (ReadDriverException e) {
 						NotificationManager.addError(e.getMessage(),e);
-					} catch (ExpansionFileReadException e) {
-						NotificationManager.addError(e.getMessage(),e);
-					}
-
+					} 
 					vle.addSelectionCache(new DefaultRowEdited(newRow,
 							IRowEdited.STATUS_MODIFIED, row.getIndex()));
 
@@ -720,10 +712,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 						NotificationManager.addError(e.getMessage(),e);
 					} catch (ReadDriverException e) {
 						NotificationManager.addError(e.getMessage(),e);
-					} catch (ExpansionFileReadException e) {
-						NotificationManager.addError(e.getMessage(),e);
-					}
-
+					} 
 				}
 			}
 		}
