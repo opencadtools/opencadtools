@@ -51,7 +51,6 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
@@ -142,84 +141,82 @@ public class StretchCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(double x, double y,InputEvent event) {
-        StretchCADToolState actualState = (StretchCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
+    	StretchCADToolState actualState = (StretchCADToolState) _fsm.getPreviousState();
+    	String status = actualState.getName();
 
-        if (status.equals("Stretch.SelFirstPoint")) {
-        	selfirstPoint = new Point2D.Double(x, y);
-		} else if (status.equals("Stretch.SelLastPoint")) {
-			sellastPoint = new Point2D.Double(x,y);
+    	if (status.equals("Stretch.SelFirstPoint")) {
+    		selfirstPoint = new Point2D.Double(x, y);
+    	} else if (status.equals("Stretch.SelLastPoint")) {
+    		sellastPoint = new Point2D.Double(x,y);
 
-			double x1;
-			double y1;
-			double w1;
-			double h1;
+    		double x1;
+    		double y1;
+    		double w1;
+    		double h1;
 
-			if (selfirstPoint.getX() < sellastPoint.getX()) {
-				x1 = selfirstPoint.getX();
-				w1 = sellastPoint.getX() - selfirstPoint.getX();
-			} else {
-				x1 = sellastPoint.getX();
-				w1 = selfirstPoint.getX() - sellastPoint.getX();
-			}
+    		if (selfirstPoint.getX() < sellastPoint.getX()) {
+    			x1 = selfirstPoint.getX();
+    			w1 = sellastPoint.getX() - selfirstPoint.getX();
+    		} else {
+    			x1 = sellastPoint.getX();
+    			w1 = selfirstPoint.getX() - sellastPoint.getX();
+    		}
 
-			if (selfirstPoint.getY() < sellastPoint.getY()) {
-				y1 = selfirstPoint.getY();
-				h1 = sellastPoint.getY() - selfirstPoint.getY();
-			} else {
-				y1 = sellastPoint.getY();
-				h1 = selfirstPoint.getY() - sellastPoint.getY();
-			}
+    		if (selfirstPoint.getY() < sellastPoint.getY()) {
+    			y1 = selfirstPoint.getY();
+    			h1 = sellastPoint.getY() - selfirstPoint.getY();
+    		} else {
+    			y1 = sellastPoint.getY();
+    			h1 = selfirstPoint.getY() - sellastPoint.getY();
+    		}
 
-			rect = new Rectangle2D.Double(x1, y1, w1, h1);
-		} else if (status.equals("Stretch.MoveFirstPoint")) {
-			movefirstPoint = new Point2D.Double(x, y);
-		} else if (status.equals("Stretch.MoveLastPoint")) {
-			VectorialLayerEdited vle=getVLE();
-	    	VectorialEditableAdapter vea=vle.getVEA();
-	    	vea.startComplexRow();
-	    	ArrayList selectedRow=getSelectedRows();
-	    	ArrayList selectedRowAux=new ArrayList();
-	    	PluginServices.getMDIManager().setWaitCursor();
-			movelastPoint = new Point2D.Double(x, y);
+    		rect = new Rectangle2D.Double(x1, y1, w1, h1);
+    	} else if (status.equals("Stretch.MoveFirstPoint")) {
+    		movefirstPoint = new Point2D.Double(x, y);
+    	} else if (status.equals("Stretch.MoveLastPoint")) {
+    		VectorialLayerEdited vle=getVLE();
+    		VectorialEditableAdapter vea=vle.getVEA();
+    		vea.startComplexRow();
+    		ArrayList selectedRow=getSelectedRows();
+    		ArrayList selectedRowAux=new ArrayList();
+    		PluginServices.getMDIManager().setWaitCursor();
+    		movelastPoint = new Point2D.Double(x, y);
 
-			Handler[] handlers = null;
+    		Handler[] handlers = null;
 
-			//for (int i = selectedGeometries.nextSetBit(0); i >= 0;
-			//		i = selectedGeometries.nextSetBit(i + 1)) {
-			try {
-			for (int i =0;i<selectedRow.size(); i++) {
-				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
-	    		DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
-				IGeometry geometry = null;
-				geometry = fea.getGeometry();
+    		//for (int i = selectedGeometries.nextSetBit(0); i >= 0;
+    		//		i = selectedGeometries.nextSetBit(i + 1)) {
+    		try {
+    			for (int i =0;i<selectedRow.size(); i++) {
+    				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+    				DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
+    				IGeometry geometry = null;
+    				geometry = fea.getGeometry();
 
-				handlers = geometry.getHandlers(IGeometry.STRETCHINGHANDLER);
+    				handlers = geometry.getHandlers(IGeometry.STRETCHINGHANDLER);
 
-				for (int j = 0; j < handlers.length; j++) {
-					if (rect.contains(handlers[j].getPoint())) {
-						handlers[j].move(movelastPoint.getX() -
-							movefirstPoint.getX(),
-							movelastPoint.getY() - movefirstPoint.getY());
-					}
-				}
-				vea.modifyRow(edRow.getIndex(),fea,getName(),EditionEvent.GRAPHIC);
-				selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
-			}
-			vea.endComplexRow(getName());
-	    	vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
+    				for (int j = 0; j < handlers.length; j++) {
+    					if (rect.contains(handlers[j].getPoint())) {
+    						handlers[j].move(movelastPoint.getX() -
+    								movefirstPoint.getX(),
+    								movelastPoint.getY() - movefirstPoint.getY());
+    					}
+    				}
+    				vea.modifyRow(edRow.getIndex(),fea,getName(),EditionEvent.GRAPHIC);
+    				selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
+    			}
+    			vea.endComplexRow(getName());
+    			vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
 
-			PluginServices.getMDIManager().restoreCursor();
-		} catch (ValidateRowException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileWriteException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
-		}
+    			PluginServices.getMDIManager().restoreCursor();
+    		} catch (ValidateRowException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} catch (ExpansionFileWriteException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} catch (ReadDriverException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} 
+    	}
     }
 
     /**

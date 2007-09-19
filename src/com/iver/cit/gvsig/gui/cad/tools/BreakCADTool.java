@@ -140,30 +140,28 @@ public class BreakCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(double x, double y,InputEvent event) {
-         BreakCADToolState actualState = (BreakCADToolState) _fsm.getPreviousState();
-         String status = actualState.getName();
+    	BreakCADToolState actualState = (BreakCADToolState) _fsm.getPreviousState();
+    	String status = actualState.getName();
 
-         if (status.equals("Break.FirstPoint")) {
-            // if (rowEdited!=null && intersects(((DefaultFeature)rowEdited.getLinkedRow()).getGeometry(),new Point2D.Double(x,y)))
-                 firstPoint=new Point2D.Double(x,y);
+    	if (status.equals("Break.FirstPoint")) {
+    		// if (rowEdited!=null && intersects(((DefaultFeature)rowEdited.getLinkedRow()).getGeometry(),new Point2D.Double(x,y)))
+    		firstPoint=new Point2D.Double(x,y);
 
-         } else if (status.equals("Break.SecondPoint")) {
-          // if (rowEdited !=null && intersects(((DefaultFeature)rowEdited.getLinkedRow()).getGeometry(),new Point2D.Double(x,y))){
-               secondPoint=new Point2D.Double(x,y);
-               try {
-//        		   IGeometry geom=((DefaultFeature)rowEdited.getLinkedRow()).getGeometry();
-//        		   if (geom instanceof FGeometryCollection) {
-//        		     breakGeometryGC(rowEdited);
-//        		}else {
-                    breakGeometry(rowEdited);
-//				}
-            } catch (ReadDriverException e) {
-            	NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileReadException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
-           }
-         //}
+    	} else if (status.equals("Break.SecondPoint")) {
+    		// if (rowEdited !=null && intersects(((DefaultFeature)rowEdited.getLinkedRow()).getGeometry(),new Point2D.Double(x,y))){
+    		secondPoint=new Point2D.Double(x,y);
+    		try {
+//  			IGeometry geom=((DefaultFeature)rowEdited.getLinkedRow()).getGeometry();
+//  			if (geom instanceof FGeometryCollection) {
+//  			breakGeometryGC(rowEdited);
+//  			}else {
+    			breakGeometry(rowEdited);
+//  			}
+    		} catch (ReadDriverException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} 
+    	}
+    	//}
     }
   /*  private void breakGeometryGC(DefaultRowEdited dre) throws IOException, DriverIOException {
         GeneralPathX newGp1 = new GeneralPathX();

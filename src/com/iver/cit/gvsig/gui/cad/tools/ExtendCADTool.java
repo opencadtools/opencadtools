@@ -50,7 +50,6 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
@@ -136,57 +135,55 @@ public class ExtendCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(double x, double y,InputEvent event) {
-        ExtendCADToolState actualState = (ExtendCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
+    	ExtendCADToolState actualState = (ExtendCADToolState) _fsm.getPreviousState();
+    	String status = actualState.getName();
 
 
-        if (status.equals("Extend.SelectGeometryToExtend")) {
+    	if (status.equals("Extend.SelectGeometryToExtend")) {
 
-        	VectorialLayerEdited vle=getVLE();
-	    	VectorialEditableAdapter vea=vle.getVEA();
-	    	vea.startComplexRow();
-	    	ArrayList selectedRow=getSelectedRows();
-	    	ArrayList selectedRowAux=new ArrayList();
-	    	//for (int i=0;i<selectedRow.size();i++) {
-	    		selectedRowAux.addAll(selectedRow);
-	    	//}
-	    	//selection();
-	    	vle.selectWithPoint(x,y,false);
-	    	ArrayList newSelectedRow=getSelectedRows();
-	    	try {
-	    	for (int i=0;i<selectedRowAux.size();i++) {
-	    	IRowEdited edRow1 = (IRowEdited) selectedRowAux.get(i);
-    		DefaultFeature fea1 = (DefaultFeature) edRow1.getLinkedRow().cloneRow();
-			IGeometry geometry1 = null;
-			geometry1 = fea1.getGeometry();
+    		VectorialLayerEdited vle=getVLE();
+    		VectorialEditableAdapter vea=vle.getVEA();
+    		vea.startComplexRow();
+    		ArrayList selectedRow=getSelectedRows();
+    		ArrayList selectedRowAux=new ArrayList();
+    		//for (int i=0;i<selectedRow.size();i++) {
+    		selectedRowAux.addAll(selectedRow);
+    		//}
+    		//selection();
+    		vle.selectWithPoint(x,y,false);
+    		ArrayList newSelectedRow=getSelectedRows();
+    		try {
+    			for (int i=0;i<selectedRowAux.size();i++) {
+    				IRowEdited edRow1 = (IRowEdited) selectedRowAux.get(i);
+    				DefaultFeature fea1 = (DefaultFeature) edRow1.getLinkedRow().cloneRow();
+    				IGeometry geometry1 = null;
+    				geometry1 = fea1.getGeometry();
 
-			IRowEdited edRow2 = (IRowEdited) newSelectedRow.get(i);
-    		DefaultFeature fea2 = (DefaultFeature) edRow2.getLinkedRow().cloneRow();
-			IGeometry geometry2 = null;
-			geometry2 = fea2.getGeometry();
-	    	//for (int j=0;j<newSelectedRow.size();j++) {
-	    		//if (geometry1 instanceof FPolygon2D) {
-	    			fea2.setGeometry(intersectsGeometry(geometry2,geometry1));
-	    		//}
-	    	//}
+    				IRowEdited edRow2 = (IRowEdited) newSelectedRow.get(i);
+    				DefaultFeature fea2 = (DefaultFeature) edRow2.getLinkedRow().cloneRow();
+    				IGeometry geometry2 = null;
+    				geometry2 = fea2.getGeometry();
+    				//for (int j=0;j<newSelectedRow.size();j++) {
+    				//if (geometry1 instanceof FPolygon2D) {
+    				fea2.setGeometry(intersectsGeometry(geometry2,geometry1));
+    				//}
+    				//}
 
-				vea.modifyRow(edRow2.getIndex(),fea2,getName(),EditionEvent.GRAPHIC);
-			clearSelection();
-			newSelectedRow.add(new DefaultRowEdited(fea2,IRowEdited.STATUS_MODIFIED,edRow2.getIndex()));
-	    	}
+    				vea.modifyRow(edRow2.getIndex(),fea2,getName(),EditionEvent.GRAPHIC);
+    				clearSelection();
+    				newSelectedRow.add(new DefaultRowEdited(fea2,IRowEdited.STATUS_MODIFIED,edRow2.getIndex()));
+    			}
 
-			vea.endComplexRow(getName());
-			vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, newSelectedRow);
-        } catch (ValidateRowException e) {
-        	NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileWriteException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
-        }
+    			vea.endComplexRow(getName());
+    			vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, newSelectedRow);
+    		} catch (ValidateRowException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} catch (ExpansionFileWriteException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} catch (ReadDriverException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		}
+    	}
     }
 
     private IGeometry intersectsGeometry(IGeometry geometry1, IGeometry geometry2) {

@@ -52,7 +52,6 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -136,55 +135,52 @@ public class RotateCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(double x, double y,InputEvent event) {
-        RotateCADToolState actualState = (RotateCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
-        ArrayList selectedRow=getSelectedRows();
-        ArrayList selectedRowAux=new ArrayList();
-        VectorialLayerEdited vle=getVLE();
-        VectorialEditableAdapter vea = vle.getVEA();
-        if (status.equals("Rotate.PointMain")) {
-        	firstPoint = new Point2D.Double(x, y);
-    		} else if (status.equals("Rotate.AngleOrPoint")) {
-    			PluginServices.getMDIManager().setWaitCursor();
-    			lastPoint = new Point2D.Double(x,y);
+    	RotateCADToolState actualState = (RotateCADToolState) _fsm.getPreviousState();
+    	String status = actualState.getName();
+    	ArrayList selectedRow=getSelectedRows();
+    	ArrayList selectedRowAux=new ArrayList();
+    	VectorialLayerEdited vle=getVLE();
+    	VectorialEditableAdapter vea = vle.getVEA();
+    	if (status.equals("Rotate.PointMain")) {
+    		firstPoint = new Point2D.Double(x, y);
+    	} else if (status.equals("Rotate.AngleOrPoint")) {
+    		PluginServices.getMDIManager().setWaitCursor();
+    		lastPoint = new Point2D.Double(x,y);
 
-    			double w;
-    			double h;
-    			w = lastPoint.getX() - firstPoint.getX();
-    			h = lastPoint.getY() - firstPoint.getY();
+    		double w;
+    		double h;
+    		w = lastPoint.getX() - firstPoint.getX();
+    		h = lastPoint.getY() - firstPoint.getY();
 
-    			try {
-    				vea.startComplexRow();
+    		try {
+    			vea.startComplexRow();
     			for (int i = 0; i < selectedRow.size(); i++) {
-					DefaultRowEdited row=(DefaultRowEdited) selectedRow.get(i);
-					DefaultFeature fea = (DefaultFeature) row.getLinkedRow().cloneRow();
-					// Rotamos la geometry
-					UtilFunctions.rotateGeom(fea.getGeometry(), -Math.atan2(w,
-							h)
-							+ (Math.PI / 2), firstPoint.getX(), firstPoint
-							.getY());
+    				DefaultRowEdited row=(DefaultRowEdited) selectedRow.get(i);
+    				DefaultFeature fea = (DefaultFeature) row.getLinkedRow().cloneRow();
+    				// Rotamos la geometry
+    				UtilFunctions.rotateGeom(fea.getGeometry(), -Math.atan2(w,
+    						h)
+    						+ (Math.PI / 2), firstPoint.getX(), firstPoint
+    						.getY());
 
-					vea.modifyRow(row.getIndex(), fea,
-							getName(),EditionEvent.GRAPHIC);
-					selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,row.getIndex()));
-				}
+    				vea.modifyRow(row.getIndex(), fea,
+    						getName(),EditionEvent.GRAPHIC);
+    				selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,row.getIndex()));
+    			}
 
-				vea.endComplexRow(getName());
-				vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
-				//clearSelection();
-				//selectedRow.addAll(selectedRowAux);
-			} catch (ValidateRowException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileWriteException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			} catch (ReadDriverException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileReadException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
-
-    			PluginServices.getMDIManager().restoreCursor();
-    		}
+    			vea.endComplexRow(getName());
+    			vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
+    			//clearSelection();
+    			//selectedRow.addAll(selectedRowAux);
+    		} catch (ValidateRowException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} catch (ExpansionFileWriteException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} catch (ReadDriverException e) {
+    			NotificationManager.addError(e.getMessage(),e);
+    		} 
+    		PluginServices.getMDIManager().restoreCursor();
+    	}
     }
 
     /**
@@ -308,10 +304,7 @@ public class RotateCADTool extends DefaultCADTool {
 				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileReadException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
-
+			} 
 		}
     }
 
