@@ -1,16 +1,14 @@
 package com.iver.cit.gvsig;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
-import com.iver.cit.gvsig.fmap.drivers.DefaultJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
-import com.iver.cit.gvsig.fmap.drivers.LayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.IVectorialDatabaseDriver;
+import com.iver.cit.gvsig.fmap.drivers.LayerDefinition;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;

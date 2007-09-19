@@ -3,10 +3,6 @@ package com.iver.cit.gvsig.gui.cad.panels;
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
 
-import com.hardcode.driverManager.Driver;
-import com.hardcode.driverManager.DriverManager;
-import com.iver.cit.gvsig.fmap.layers.LayerChangeSupport;
-import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.vectorialdb.ConnectionPanel;
 import com.iver.cit.gvsig.vectorialdb.ConnectionSettings;
 public class PostGISpanel extends JWizardPanel {

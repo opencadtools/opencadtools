@@ -50,7 +50,6 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -268,9 +267,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileReadException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
+			} 
 			PluginServices.getMDIManager().restoreCursor();
 		}
     }

@@ -2,8 +2,6 @@ package com.iver.cit.gvsig.gui.cad;
 
 import java.awt.Component;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Types;
 
 import javax.swing.JOptionPane;
@@ -30,9 +28,9 @@ import com.iver.cit.gvsig.fmap.drivers.DXFLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.IConnection;
 import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
+import com.iver.cit.gvsig.fmap.drivers.IVectorialJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
-import com.iver.cit.gvsig.fmap.drivers.IVectorialJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.rules.IRule;

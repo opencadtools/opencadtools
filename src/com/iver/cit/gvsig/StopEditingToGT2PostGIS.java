@@ -15,7 +15,6 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.exceptions.layers.StartEditionLayerException;
-import com.iver.cit.gvsig.exceptions.layers.StopEditionLayerException;
 import com.iver.cit.gvsig.exceptions.visitors.StopWriterVisitorException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;

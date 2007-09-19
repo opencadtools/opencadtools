@@ -43,7 +43,10 @@
 *
 * $Id$
 * $Log$
-* Revision 1.3  2007-05-02 16:55:13  caballero
+* Revision 1.4  2007-09-19 16:01:06  jaume
+* removed unnecessary imports
+*
+* Revision 1.3  2007/05/02 16:55:13  caballero
 * Editing colors
 *
 * Revision 1.1.2.2  2007/05/02 15:49:56  caballero
@@ -187,10 +190,7 @@ import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
-import com.iver.cit.gvsig.fmap.core.symbols.IFillSymbol;
 import com.iver.cit.gvsig.fmap.core.symbols.ILineSymbol;
-import com.iver.cit.gvsig.fmap.core.v02.FConstant;
-import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.panels.ColorChooserPanel;
 import com.iver.utiles.StringUtilities;

@@ -14,7 +14,6 @@ import com.iver.cit.gvsig.fmap.edition.IEditionListener;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
  *
@@ -60,7 +59,10 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  *
  * $Id$
  * $Log$
- * Revision 1.15  2007-06-22 10:48:00  caballero
+ * Revision 1.16  2007-09-19 15:55:42  jaume
+ * removed unnecessary imports
+ *
+ * Revision 1.15  2007/06/22 10:48:00  caballero
  * borrar selección
  *
  * Revision 1.14  2007/03/21 12:25:41  caballero
