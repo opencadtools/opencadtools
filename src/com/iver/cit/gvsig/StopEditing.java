@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 
 import com.hardcode.gdbms.driver.exceptions.InitializeWriterException;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
@@ -19,12 +18,10 @@ import com.iver.andami.plugins.status.UnsavedData;
 import com.iver.cit.gvsig.exceptions.layers.CancelEditingLayerException;
 import com.iver.cit.gvsig.exceptions.layers.LegendLayerException;
 import com.iver.cit.gvsig.exceptions.layers.StartEditionLayerException;
-import com.iver.cit.gvsig.exceptions.layers.StopEditionLayerException;
 import com.iver.cit.gvsig.exceptions.table.CancelEditingTableException;
 import com.iver.cit.gvsig.exceptions.visitors.StopWriterVisitorException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
@@ -36,7 +33,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayersIterator;
-import com.iver.cit.gvsig.fmap.rendering.IVectorialLegend;
+import com.iver.cit.gvsig.fmap.rendering.IVectorLegend;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
@@ -171,7 +168,7 @@ public class StopEditing extends Extension {
 					vea.getCommandRecord().removeCommandListener(mapControl);
 					if (!(layer.getSource().getDriver() instanceof IndexedShpDriver)){
 						VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(layer);
-						layer.setLegend((IVectorialLegend)vle.getLegend());
+						layer.setLegend((IVectorLegend)vle.getLegend());
 					}
 					layer.setEditing(false);
 					return true;
@@ -304,7 +301,7 @@ public class StopEditing extends Extension {
 					layer.setEditing(false);
 				if (!(layer.getSource().getDriver() instanceof IndexedShpDriver)){
 					VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(layer);
-					layer.setLegend((IVectorialLegend)vle.getLegend());
+					layer.setLegend((IVectorLegend)vle.getLegend());
 				}
 				} catch (CancelEditingTableException e) {
 					PluginServices.getLogger().error(e.getMessage(),e);

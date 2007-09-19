@@ -19,11 +19,9 @@ import javax.swing.table.TableColumn;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
-import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.rendering.EditionManagerLegend;
-import com.iver.cit.gvsig.fmap.rendering.IVectorialLegend;
-import com.iver.cit.gvsig.project.documents.gui.SymbolCellEditor;
+import com.iver.cit.gvsig.fmap.rendering.IVectorLegend;
 import com.iver.cit.gvsig.project.documents.gui.TableSymbolCellRenderer;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.ActivatedCellEditor;
 import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.BlockedCellEditor;
@@ -67,7 +65,7 @@ public class TableLayers extends JPanel {
     private JTable table;
 	private ArrayList statusListeners=new ArrayList();
 
-    public TableLayers(ReadableVectorial source2, IVectorialLegend legend2) {
+    public TableLayers(ReadableVectorial source2, IVectorLegend legend2) {
         super(new GridLayout(1, 0));
         this.source = source2;
         this.eml = new EditionManagerLegend(legend2);
@@ -297,7 +295,7 @@ public class TableLayers extends JPanel {
      *
      * @param legend DOCUMENT ME!
      */
-    public void setLegend(IVectorialLegend legend) {
+    public void setLegend(IVectorLegend legend) {
         this.eml = new EditionManagerLegend(legend);
     }
 

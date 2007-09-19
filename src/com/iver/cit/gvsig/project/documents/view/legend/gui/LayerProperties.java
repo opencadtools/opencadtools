@@ -13,7 +13,7 @@ import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.rendering.ILegend;
-import com.iver.cit.gvsig.fmap.rendering.IVectorialLegend;
+import com.iver.cit.gvsig.fmap.rendering.IVectorLegend;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.StatusListener;
 import com.iver.cit.gvsig.project.documents.view.legend.gui.tablelayers.TableLayers;
 
@@ -27,7 +27,7 @@ public class LayerProperties extends JPanel implements IWindow {
 	private JPanel pWestCenter = null;
 	private TableLayers tableLayers = null;
 	private FLyrVect layer;
-	private IVectorialLegend legend;
+	private IVectorLegend legend;
 	private JButton bNewSubLayer = null;
 	private JButton bDelSubLayer = null;
 	private JButton bPresentSubLayer = null;
@@ -47,7 +47,7 @@ public class LayerProperties extends JPanel implements IWindow {
 	public LayerProperties(FLayer lyr, ILegend l) {
 		super();
 		layer=(FLyrVect)lyr;
-		legend=(IVectorialLegend)l;
+		legend=(IVectorLegend)l;
 		initialize();
 	}
 
@@ -188,7 +188,7 @@ public class LayerProperties extends JPanel implements IWindow {
 
 	public void setLayer(FLayer lyr, ILegend l) {
 		layer=(FLyrVect)lyr;
-		legend=(IVectorialLegend)l;
+		legend=(IVectorLegend)l;
 		getTableLayers().setSource(layer.getSource());
 		getTableLayers().setLegend(legend);
 	}
