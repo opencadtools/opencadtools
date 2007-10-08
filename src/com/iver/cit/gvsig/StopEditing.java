@@ -82,7 +82,7 @@ public class StopEditing extends Extension {
 				if (actives[i] instanceof FLyrVect && actives[i].isEditing()) {
 					FLyrVect lv = (FLyrVect) actives[i];
 					MapControl mapControl = vista.getMapControl();
-					VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getActiveLayerEdited();
+//					VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getActiveLayerEdited();
 					//lyrEd.clearSelection();
 					isStop=stopEditing(lv, mapControl);
 					if (isStop){
@@ -97,7 +97,7 @@ public class StopEditing extends Extension {
 			if (isStop) {
 				vista.getMapControl().setTool("zoomIn");
 				vista.hideConsole();
-//				vista.repaintMap();
+				vista.repaintMap();
 				CADExtension.clearView();
 
 			}
