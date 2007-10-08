@@ -34,7 +34,7 @@ public class StartEditingTocMenuEntry extends AbstractTocContextMenuAction {
 	}
 
 	public boolean isVisible(ITocItem item, FLayer[] selectedItems) {
-		return (isTocItemBranch(item)) && (selectedItems.length == 1 && selectedItems[0] instanceof FLyrVect) && !((FLyrVect)selectedItems[0]).isEditing();
+		return (isTocItemBranch(item)) && (selectedItems.length == 1 && selectedItems[0].isAvailable() && selectedItems[0] instanceof FLyrVect) && !((FLyrVect)selectedItems[0]).isEditing();
 	}
 
 	public void execute(ITocItem item, FLayer[] selectedItems) {
