@@ -34,6 +34,7 @@ import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayersIterator;
 import com.iver.cit.gvsig.fmap.rendering.IVectorLegend;
+import com.iver.cit.gvsig.fmap.spatialindex.IPersistentSpatialIndex;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
@@ -96,7 +97,7 @@ public class StopEditing extends Extension {
 			if (isStop) {
 				vista.getMapControl().setTool("zoomIn");
 				vista.hideConsole();
-				vista.repaintMap();
+//				vista.repaintMap();
 				CADExtension.clearView();
 
 			}
@@ -142,13 +143,20 @@ public class StopEditing extends Extension {
 				layer.setEditing(false);
 				if (layer.isSpatiallyIndexed())
 	            {
-	            	if(layer.getISpatialIndex() != null)
+	            	if(vea.getSpatialIndex() != null)
 	                {
-	                	PluginServices.
-								cancelableBackgroundExecution(new CreateSpatialIndexMonitorableTask(layer));
+	            		layer.setISpatialIndex(vea.getSpatialIndex());
+	            		if(layer.getISpatialIndex() instanceof IPersistentSpatialIndex)
+	                        ((IPersistentSpatialIndex) layer.getISpatialIndex()).flush();
+//	            		PluginServices.
+//								cancelableBackgroundExecution(new FlushSpatialIndexMonitorableTask(layer));
 
+	                }else {
+	            		PluginServices.
+						cancelableBackgroundExecution(new CreateSpatialIndexMonitorableTask(layer));
 	                }
 	            }
+
 				return true;
 			}
 			// Si no existe writer para la capa que tenemos en edición

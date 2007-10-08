@@ -122,7 +122,7 @@ public class StartEditing extends Extension {
 					}
 
 					startCommandsApplicable(vista,lv);
-					vista.repaintMap();
+//					vista.repaintMap();
 
 				} catch (XMLException e) {
 					NotificationManager.addError(e.getMessage(),e);
