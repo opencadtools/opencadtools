@@ -43,7 +43,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	private JButton jButtonAddField = null;
 	private JButton jButtonDeleteField = null;
 	private int MAX_FIELD_LENGTH = 254;
-	
+
 	private IWriter writer = null;
 
 
@@ -88,19 +88,21 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			}
 			fieldNames.add(tm.getValueAt(i, 0));
 		}
-		
+
 		if (valid)
 			super.next();
-		if (!((FileBasedPanel)getWizardComponents().getWizardPanel(2)).getPath().equals(""))
-			setFinishButtonEnabled(true);
-		else
-			setFinishButtonEnabled(false);
+		if (getWizardComponents().getWizardPanel(2) instanceof  FileBasedPanel) {
+			if (!((FileBasedPanel)getWizardComponents().getWizardPanel(2)).getPath().equals(""))
+				setFinishButtonEnabled(true);
+			else
+				setFinishButtonEnabled(false);
+		}
 	}
 
 	public void setWriter(IWriter writer) {
 		this.writer = writer;
 	}
-	
+
 	public IWriter getWriter() {
 		return this.writer;
 	}
@@ -125,7 +127,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		if (s.equals("")) {
 			valid=false;
 			JOptionPane.showMessageDialog((Component)PluginServices.getMainFrame(),
-					PluginServices.getText(this,"no_puede_continuar")+"\n"+					
+					PluginServices.getText(this,"no_puede_continuar")+"\n"+
 					PluginServices.getText(this,"the_field_name_is_required"));
 		}
 		if (s.indexOf(" ")!=-1) {
@@ -150,7 +152,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 						PluginServices.getText(this,"field")+" : "+s+"\n"+
 						PluginServices.getText(this,"too_long_name")+"\n"+
 						PluginServices.getText(this,"maximun_name_size")+" : "+intValue+"\n"
-						);				
+						);
 			}
 		}
 		return valid;
@@ -289,7 +291,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 						}
 					}
 					String newFieldName = newField+(++index);
-					
+
 
 					// Add a new row
 					Object[] newRow = new Object[tm.getColumnCount()];
