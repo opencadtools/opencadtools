@@ -133,6 +133,9 @@ public class ExportTo extends Extension {
 				rowCount = va.getShapeCount();
 				for (int i = 0; i < rowCount; i++) {
 					IGeometry geom = va.getShape(i);
+					if (geom == null) {
+						continue;
+					}
 					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
 						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
 						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
@@ -160,6 +163,9 @@ public class ExportTo extends Extension {
 				for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
 						.nextSetBit(i + 1)) {
 					IGeometry geom = va.getShape(i);
+					if (geom == null) {
+						continue;
+					}
 					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
 						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
 						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());

@@ -157,6 +157,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			for (int i = 0; i < feats.length; i++) {
 				IFeature feat = (IFeature) feats[i].getLinkedRow();
 				IGeometry geom = feat.getGeometry();
+				if (geom == null) {
+					continue;
+				}
 				IGeometry geomReproject=geom.cloneGeometry();
 				if (ct!=null)
 					geomReproject.reProject(ct);
@@ -171,7 +174,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} 
+		}
 	}
 	public void selectWithSecondPoint(double x, double y) {
 		VectorialEditableAdapter vea = getVEA();
@@ -222,6 +225,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 						.getGeometry();
 
+				if (geom == null) {
+					continue;
+				}
 				IGeometry geomReproject=geom.cloneGeometry();
 				if (ct!=null)
 					geomReproject.reProject(ct);
@@ -245,7 +251,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} 
+		}
 	}
 	public void selectInsidePolygon(IGeometry polygon) {
 		VectorialEditableAdapter vea = getVEA();
@@ -274,6 +280,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			for (int i = 0; i < feats.length; i++) {
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 					.getGeometry();
+				if (geom == null) {
+					continue;
+				}
 				IGeometry geomReproject=geom.cloneGeometry();
 				if (ct!=null)
 					geomReproject.reProject(ct);
@@ -288,7 +297,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} 
+		}
 	}
 
 	public void selectCrossPolygon(IGeometry polygon) {
@@ -317,6 +326,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			for (int i = 0; i < feats.length; i++) {
 				IGeometry geom = ((IFeature) feats[i].getLinkedRow())
 					.getGeometry();
+				if (geom == null) {
+					continue;
+				}
 				IGeometry geomReproject=geom.cloneGeometry();
 				if (ct!=null)
 					geomReproject.reProject(ct);
@@ -331,7 +343,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} 
+		}
 	}
 
 	public void selectOutPolygon(IGeometry polygon) {
@@ -356,6 +368,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				IRowEdited rowEd=vea.getRow(i);
 				IGeometry geom = ((IFeature)rowEd.getLinkedRow())
 						.getGeometry();
+				if (geom == null) {
+					continue;
+				}
 				IGeometry geomReproject=geom.cloneGeometry();
 				if (ct!=null)
 					geomReproject.reProject(ct);
@@ -370,7 +385,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} 
+		}
 	}
 	public void selectAll() {
 		VectorialEditableAdapter vea = getVEA();
@@ -405,7 +420,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 			vea.setHandlersImage(handlersImage);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} 
+		}
 	}
 
 	public void refreshSelectionCache(Point2D firstPoint,CADToolAdapter cta){
@@ -450,7 +465,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				}
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} 
+			}
 		}
 		vea.setSelectionImage(selectionImage);
 		vea.setHandlersImage(handlersImage);
