@@ -66,8 +66,17 @@ public class EquidistanceExtension extends Extension {
 	public void initialize() {
 		equidistanceCADTool=new EquidistanceCADTool();
 		CADExtension.addCADTool("_equidistance",equidistanceCADTool);
+		
+		registerIcons();
 	}
 
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-geometry-equidistance",
+				this.getClass().getClassLoader().getResource("images/Equidistance.png")
+			);
+	}
+	
 	/**
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */

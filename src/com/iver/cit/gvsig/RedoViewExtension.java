@@ -63,6 +63,10 @@ public class RedoViewExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
+		PluginServices.getIconTheme().register(
+				"view-redo",
+				this.getClass().getClassLoader().getResource("images/Redo.png")
+			);
 	}
 
 	/**

@@ -25,6 +25,10 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
+		PluginServices.getIconTheme().register(
+				"commands-stack",
+				this.getClass().getClassLoader().getResource("images/commandstack.png")
+			);
 	}
 
 	/**

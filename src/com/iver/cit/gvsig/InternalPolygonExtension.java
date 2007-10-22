@@ -69,8 +69,18 @@ public class InternalPolygonExtension extends Extension {
 	public void initialize() {
 		internalpolygon=new InternalPolygonCADTool();
        CADExtension.addCADTool("_internalpolygon",internalpolygon);
+       
+       registerIcons();
 	}
 
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-modify-geometry-internalpolygon",
+				this.getClass().getClassLoader().getResource("images/InternalPolygon.png")
+			);
+		
+	}
+	
 	/**
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */

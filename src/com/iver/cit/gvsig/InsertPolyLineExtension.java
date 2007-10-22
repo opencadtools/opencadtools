@@ -70,8 +70,21 @@ public class InsertPolyLineExtension extends Extension {
 		spline = new SplineCADTool();
 		CADExtension.addCADTool("_polyline", polyline);
 		CADExtension.addCADTool("_spline", spline);
+		
+		registerIcons();
 	}
 
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-insert-geometry-polyline",
+				this.getClass().getClassLoader().getResource("images/Line.png")
+			);
+		
+		PluginServices.getIconTheme().register(
+				"edition-insert-geometry-spline",
+				this.getClass().getClassLoader().getResource("images/Spline.png")
+			);
+	}
 	/**
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */

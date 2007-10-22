@@ -78,6 +78,35 @@ public class InsertPolygonExtension extends Extension {
 	    CADExtension.addCADTool("_rectangle", rectangle);
 	    CADExtension.addCADTool("_ellipse", ellipse);
 	    CADExtension.addCADTool("_editvertex",editvertex);
+	    
+	    registerIcons();
+	}
+	
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-insert-geometry-poligon",
+				this.getClass().getClassLoader().getResource("images/Poligon.png")
+			);
+		
+		PluginServices.getIconTheme().register(
+				"edition-insert-geometry-rectangle",
+				this.getClass().getClassLoader().getResource("images/Rectangle.png")
+			);
+		
+		PluginServices.getIconTheme().register(
+				"edition-insert-geometry-circle",
+				this.getClass().getClassLoader().getResource("images/Circle.png")
+			);
+		
+		PluginServices.getIconTheme().register(
+				"edition-insert-geometry-ellipse",
+				this.getClass().getClassLoader().getResource("images/Ellipse.png")
+			);	
+		
+		PluginServices.getIconTheme().register(
+				"edition-geometry-edit-vertex",
+				this.getClass().getClassLoader().getResource("images/EditVertex.png")
+			);	
 	}
 
 	/**

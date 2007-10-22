@@ -69,6 +69,16 @@ public class ExtendExtension extends Extension {
 	public void initialize() {
 		extend=new ExtendCADTool();
 		CADExtension.addCADTool("_extend",extend);
+		
+		registerIcons();
+	}
+	
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-modify-geometry-extend",
+				this.getClass().getClassLoader().getResource("images/Extend.png")
+			);
+		
 	}
 
 	/**

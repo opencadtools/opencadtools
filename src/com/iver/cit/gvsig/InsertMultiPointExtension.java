@@ -64,8 +64,17 @@ public class InsertMultiPointExtension extends Extension {
     public void initialize() {
         multipoint = new MultiPointCADTool();
         CADExtension.addCADTool("_multipoint", multipoint);
+        
+        registerIcons();
     }
 
+    private void registerIcons(){
+    	PluginServices.getIconTheme().register(
+				"edition-insert-geometry-multipoint",
+				this.getClass().getClassLoader().getResource("images/MultiPoint.png")
+			);
+    	
+    }
     /**
      * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
      */

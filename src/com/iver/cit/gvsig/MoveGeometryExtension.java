@@ -41,6 +41,7 @@
 package com.iver.cit.gvsig;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
@@ -62,8 +63,16 @@ public class MoveGeometryExtension extends Extension {
 	public void initialize() {
 		move=new MoveCADTool();
 		CADExtension.addCADTool("_move",move);
+		
+		registerIcons();
 	}
 
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-geometry-move",
+				this.getClass().getClassLoader().getResource("images/Move.png")
+			);
+	}
 	/**
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */

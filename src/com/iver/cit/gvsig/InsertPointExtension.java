@@ -64,8 +64,18 @@ public class InsertPointExtension extends Extension {
     public void initialize() {
         point = new PointCADTool();
         CADExtension.addCADTool("_point", point);
+    
+        registerIcons();
     }
 
+    private void registerIcons(){
+    	PluginServices.getIconTheme().register(
+				"edition-insert-geometry-point",
+				this.getClass().getClassLoader().getResource("images/Point.png")
+			);
+    	
+    }
+    
     /**
      * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
      */

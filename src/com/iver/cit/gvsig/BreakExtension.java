@@ -66,6 +66,16 @@ public class BreakExtension extends Extension {
 	public void initialize() {
 		breakCADTool=new BreakCADTool();
 		CADExtension.addCADTool("_break",breakCADTool);
+		
+		registerIcons();
+	}
+	
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-geometry-break",
+				this.getClass().getClassLoader().getResource("images/Break.png")
+			);
+		
 	}
 
 	/**

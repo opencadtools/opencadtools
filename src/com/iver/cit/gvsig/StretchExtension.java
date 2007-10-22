@@ -69,7 +69,18 @@ public class StretchExtension extends Extension {
 	public void initialize() {
 		stretch=new StretchCADTool();
 		CADExtension.addCADTool("_stretch",stretch);
+		
+		registerIcons();
 	}
+	
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-geometry-stretch",
+				this.getClass().getClassLoader().getResource("images/Stretch.png")
+			);
+		
+	}
+	
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)

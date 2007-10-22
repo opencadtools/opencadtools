@@ -66,6 +66,15 @@ public class MatrixExtension extends Extension {
 	public void initialize() {
 		matrixCADTool=new MatrixCADTool();
 		CADExtension.addCADTool("_matrix",matrixCADTool);
+		
+		registerIcons();
+	}
+	
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-geometry-matrix",
+				this.getClass().getClassLoader().getResource("images/Matriz.png")
+			);
 	}
 
 	/**

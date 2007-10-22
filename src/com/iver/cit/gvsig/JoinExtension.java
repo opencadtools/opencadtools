@@ -66,8 +66,17 @@ public class JoinExtension extends Extension {
 	public void initialize() {
 		joinCADTool=new JoinCADTool();
 		CADExtension.addCADTool("_join",joinCADTool);
+		
+		registerIcons();
 	}
 
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-geometry-Join",
+				this.getClass().getClassLoader().getResource("images/Join.png")
+			);
+		
+	}
 	/**
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */

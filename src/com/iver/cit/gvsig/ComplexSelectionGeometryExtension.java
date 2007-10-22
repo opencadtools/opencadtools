@@ -41,6 +41,7 @@
 package com.iver.cit.gvsig;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
@@ -63,6 +64,15 @@ public class ComplexSelectionGeometryExtension extends Extension {
 	public void initialize() {
 		selection=new ComplexSelectionCADTool();
 		CADExtension.addCADTool("_complex_selection", selection);
+		
+		registerIcons();
+	}
+	
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-complex-selection",
+				this.getClass().getClassLoader().getResource("images/ComplexSelCAD.png")
+			);
 	}
 
 	/**

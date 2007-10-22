@@ -41,6 +41,7 @@
 package com.iver.cit.gvsig;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -59,6 +60,10 @@ public class PreviousSelectionExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
+		PluginServices.getIconTheme().register(
+				"previous-selection",
+				this.getClass().getClassLoader().getResource("images/previousSel.png")
+			);
 	}
 
 	/**

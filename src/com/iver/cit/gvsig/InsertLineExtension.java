@@ -68,8 +68,22 @@ public class InsertLineExtension extends Extension {
 		CADExtension.addCADTool("_line", line);
 		ArcCADTool arc=new ArcCADTool();
 		CADExtension.addCADTool("_arc", arc);
+		
+		registerIcons();
 	}
 
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"edition-insert-geometry-line",
+				this.getClass().getClassLoader().getResource("images/Rect.png")
+			);
+		
+		PluginServices.getIconTheme().register(
+				"edition-insert-geometry-arc",
+				this.getClass().getClassLoader().getResource("images/Arc.png")
+			);
+	}
+	
 	/**
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
