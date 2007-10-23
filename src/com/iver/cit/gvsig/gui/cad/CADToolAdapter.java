@@ -621,7 +621,7 @@ public class CADToolAdapter extends Behavior {
 				ct.transition(values[0], values[1], event);
 				previousPoint = values;
 				break;
-			case POLAR_SCU:
+			case POLAR_SCU://Relativo
 				// Comprobar que tenemos almacenado el punto anterior
 				// y crear nuevo con coordenadas relativas a él.
 				double[] auxPolarSCU = values;
@@ -641,12 +641,12 @@ public class CADToolAdapter extends Behavior {
 				}
 				previousPoint = auxPolarSCU;
 				break;
-			case POLAR_SCP:
+			case POLAR_SCP://Absoluto
 				double[] auxPolarSCP = values;
 				if (previousPoint != null) {
 					Point2D point = UtilFunctions.getPoint(new Point2D.Double(
-							previousPoint[0], previousPoint[1]), values[1],
-							values[0]);
+							0, 0),  Math
+							.toRadians(values[1]), values[0]);
 					auxPolarSCP[0] = point.getX();
 					auxPolarSCP[1] = point.getY();
 					ct.transition(auxPolarSCP[0], auxPolarSCP[1], event);
