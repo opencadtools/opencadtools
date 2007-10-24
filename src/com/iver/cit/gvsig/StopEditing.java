@@ -82,8 +82,12 @@ public class StopEditing extends Extension {
 				if (actives[i] instanceof FLyrVect && actives[i].isEditing()) {
 					FLyrVect lv = (FLyrVect) actives[i];
 					MapControl mapControl = vista.getMapControl();
-//					VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getActiveLayerEdited();
-					//lyrEd.clearSelection();
+					VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getActiveLayerEdited();
+					try {
+						lv.getRecordset().removeSelectionListener(lyrEd);
+					} catch (ReadDriverException e) {
+						NotificationManager.addError("Remove Selection Listener",e);
+					}
 					isStop=stopEditing(lv, mapControl);
 					if (isStop){
 						lv.removeLayerListener(edMan);
