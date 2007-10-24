@@ -178,7 +178,6 @@ public class StopEditing extends Extension {
 						VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(layer);
 						layer.setLegend((IVectorLegend)vle.getLegend());
 					}
-					layer.setEditing(false);
 					return true;
 				}
 
