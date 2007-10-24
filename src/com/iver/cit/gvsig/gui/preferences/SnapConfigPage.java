@@ -1,9 +1,8 @@
 package com.iver.cit.gvsig.gui.preferences;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
 import javax.swing.ImageIcon;
@@ -29,26 +28,10 @@ public class SnapConfigPage extends AbstractPreferencePage {
     private static Preferences prefs = Preferences.userRoot().node("snappers");
     private ImageIcon icon;
     private SnapConfig snapConfig;
-    private ArrayList snappers = new ArrayList();
+    private ArrayList<ISnapper> snappers = new ArrayList<ISnapper>();
 	private static boolean applySnappers=true;
-    private static TreeMap selected = new TreeMap(new Comparator() {
-        public int compare(Object o1, Object o2) {
-            if ((o1 != null) && (o2 != null)) {
-                ISnapper v2 = (ISnapper) o2;
-                ISnapper v1 = (ISnapper) o1;
-                if (v1.getPriority()>v2.getPriority())
-                	return -1;
-                else if (v1.getPriority()<v2.getPriority())
-            		return 1;
-                else if (v1.getClass() == v2.getClass()) {
-                	return 0;
-                }else
-                	return -1;
-            }
-            return 0;
-        }
-    }); // Para poder ordenar
-
+    @SuppressWarnings("unchecked")
+	private static HashMap<ISnapper,Boolean> selected = new HashMap<ISnapper,Boolean>();
     static {
     	new SnapConfigPage().initializeValues();
     }
@@ -68,8 +51,8 @@ public class SnapConfigPage extends AbstractPreferencePage {
      *
      * @return DOCUMENT ME!
      */
-    private static ArrayList getSnappers() {
-        ArrayList snappers = new ArrayList();
+    private static ArrayList<ISnapper> getSnappers() {
+        ArrayList<ISnapper> snappers = new ArrayList<ISnapper>();
         ExtensionPoints extensionPoints = ExtensionPointsSingleton.getInstance();
 
         ExtensionPoint extensionPoint = (ExtensionPoint) extensionPoints.get(
@@ -94,10 +77,10 @@ public class SnapConfigPage extends AbstractPreferencePage {
      *
      * @return DOCUMENT ME!
      */
-    public static ArrayList getActivesSnappers() {
+    public static ArrayList<ISnapper> getActivesSnappers() {
        if (!applySnappers)
-    	   return new ArrayList();
-       return new ArrayList(selected.keySet());
+    	   return new ArrayList<ISnapper>();
+       return new ArrayList<ISnapper>(selected.keySet());
     }
 
     /**
@@ -180,7 +163,27 @@ public class SnapConfigPage extends AbstractPreferencePage {
      * DOCUMENT ME!
      */
     public void initializeDefaults() {
-        initializeValues();
+    	for (int n = 0; n < snappers.size(); n++) {
+            ISnapper snp = (ISnapper) snappers.get(n);
+            String nameClass=snp.getClass().getName();
+            nameClass=nameClass.substring(nameClass.lastIndexOf('.'));
+            if (nameClass.equals(".FinalPointSnapper")){
+            	selected.put(snp, new Boolean(true));
+            	int priority = 1;
+                snp.setPriority(priority);
+            }else if (nameClass.equals(".NearestPointSnapper")){
+            	selected.put(snp, new Boolean(true));
+            	int priority = 2;
+                snp.setPriority(priority);
+            }else{
+            	selected.put(snp, new Boolean(false));
+            	int priority = 3;
+                snp.setPriority(priority);
+            }
+        }
+        applySnappers = true;
+        snapConfig.setApplySnappers(applySnappers);
+        snapConfig.selectSnappers(selected);
     }
 
     /**
