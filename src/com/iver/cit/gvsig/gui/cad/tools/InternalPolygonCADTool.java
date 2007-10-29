@@ -40,12 +40,15 @@
  */
 package com.iver.cit.gvsig.gui.cad.tools;
 
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
@@ -78,7 +81,8 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  */
 public class InternalPolygonCADTool extends DefaultCADTool {
     private InternalPolygonCADToolContext _fsm;
-   private ArrayList points=new ArrayList();
+    private ArrayList<Point2D> points=new ArrayList<Point2D>();
+    private IGeometry geometry=null;
     /**
      * Crea un nuevo PolylineCADTool.
      */
@@ -140,7 +144,16 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     	VectorialLayerEdited vle=getVLE();
         ArrayList selectedRows=vle.getSelectedRow();
         if (selectedRows.size()==1){
-			points.add(new Point2D.Double(x,y));
+//        	if (geometry==null){
+        		IRowEdited row =  (DefaultRowEdited) selectedRows.get(0);
+    			IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
+    			geometry=feat.getGeometry();
+//        	}
+        	if (geometry.contains(x,y)){
+        		points.add(new Point2D.Double(x,y));
+        	}else{
+        		JOptionPane.showMessageDialog(((Component)PluginServices.getMainFrame()),PluginServices.getText(this,"debe_insertar_el_punto_dentro_de_los_limites_de_la_geometria"));
+        	}
         }
 	}
 
@@ -201,7 +214,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     			row =  (DefaultRowEdited) selectedRows.get(0);
     			IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
 
-    			IGeometry geometry=feat.getGeometry();
+    			geometry=feat.getGeometry();
     			if (geometry instanceof FGeometryCollection) {
     				FGeometryCollection gc=(FGeometryCollection)geometry;
     				geometry=createNewPolygonGC(gc,(Point2D[])points.toArray(new Point2D[0]));
@@ -218,7 +231,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
 					NotificationManager.addError(e.getMessage(),e);
 				} catch (ReadDriverException e) {
 					NotificationManager.addError(e.getMessage(),e);
-				} 
+				}
 				ArrayList rows=new ArrayList();
 				rows.add(dre);
 				vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, rows);
