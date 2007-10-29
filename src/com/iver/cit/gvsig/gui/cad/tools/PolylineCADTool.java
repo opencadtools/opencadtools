@@ -52,6 +52,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.Handler;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
@@ -382,6 +383,20 @@ public class PolylineCADTool extends DefaultCADTool {
                 }
             }
         }
+        try {
+			if (getVLE().getVEA().getShapeType()==FShape.POLYGON && !list.isEmpty()){
+				Handler handler1=((IGeometry) list.get(0)).getHandlers(IGeometry.SELECTHANDLER)[0];
+				GeneralPathX gpx=new GeneralPathX();
+				gpx.moveTo(x,y);
+				Point2D p1=handler1.getPoint();
+				gpx.lineTo(p1.getX(),p1.getY());
+				ShapeFactory.createPolyline2D(gpx).draw((Graphics2D) g,
+			            getCadToolAdapter().getMapControl().getViewPort(),
+			             DefaultCADTool.geometrySelectSymbol);
+			}
+		} catch (ReadDriverException e) {
+			e.printStackTrace();
+		}
     }
 
     /**
