@@ -243,11 +243,11 @@
 		</extension>
 
 
-		<extension class-name="com.iver.cit.gvsig.LayerPropertiesExtension"
+		<!--extension class-name="com.iver.cit.gvsig.LayerPropertiesExtension"
 			description="Abre el diálogo de propiedades de la capa."
 			active="true" >
 			<menu text="Capa/Propiedades" action-command="PROPERTIES"/>
-		</extension>
+		</extension-->
 
 	</extensions>
 </plugin-config>
