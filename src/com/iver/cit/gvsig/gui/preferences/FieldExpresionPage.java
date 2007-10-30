@@ -67,7 +67,7 @@ public class FieldExpresionPage extends AbstractPreferencePage {
 
 	public FieldExpresionPage() {
 		super();
-		icon = new ImageIcon(this.getClass().getClassLoader().getResource("images/FieldExpresion.png"));
+		icon = PluginServices.getIconTheme().get("field-expresion");
 		addComponent(getJTextArea());
 
 		addComponent(PluginServices.getText(this, "limit_rows_in_memory") + ":",

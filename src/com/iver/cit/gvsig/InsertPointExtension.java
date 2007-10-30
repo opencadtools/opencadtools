@@ -69,7 +69,7 @@ public class InsertPointExtension extends Extension {
     }
 
     private void registerIcons(){
-    	PluginServices.getIconTheme().register(
+    	PluginServices.getIconTheme().registerDefault(
 				"edition-insert-geometry-point",
 				this.getClass().getClassLoader().getResource("images/Point.png")
 			);

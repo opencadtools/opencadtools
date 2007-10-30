@@ -69,7 +69,7 @@ public class SelectionGeometryExtension extends Extension {
 	}
 
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-select",
 				this.getClass().getClassLoader().getResource("images/SelCAD.png")
 			);

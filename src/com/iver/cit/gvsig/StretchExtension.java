@@ -74,7 +74,7 @@ public class StretchExtension extends Extension {
 	}
 	
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-stretch",
 				this.getClass().getClassLoader().getResource("images/Stretch.png")
 			);

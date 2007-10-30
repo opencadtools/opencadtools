@@ -243,7 +243,7 @@ public class EditingPage extends AbstractPreferencePage {
 	public EditingPage() {
 		super();
 		id = this.getClass().getName();
-		icon = new ImageIcon(this.getClass().getClassLoader().getResource("images/EditingProperties.png"));
+		icon = PluginServices.getIconTheme().get("edition-properties");
 	}
 
 	public void initializeValues() {

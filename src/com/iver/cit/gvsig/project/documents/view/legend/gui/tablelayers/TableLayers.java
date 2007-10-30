@@ -17,6 +17,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import com.iver.andami.PluginServices;
+import com.iver.andami.config.generate.Plugin;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
@@ -38,27 +39,16 @@ import com.iver.cit.gvsig.project.documents.view.legend.edition.gui.ValueCellEdi
  * @author Vicente Caballero Navarro
  */
 public class TableLayers extends JPanel {
-    private ImageIcon selected = new ImageIcon(this.getClass().getClassLoader()
-                                                   .getResource("images/selected.png"));
-    private ImageIcon notselected = new ImageIcon(this.getClass()
-                                                      .getClassLoader()
-                                                      .getResource("images/notSelected.png"));
-    private ImageIcon blocked = new ImageIcon(this.getClass().getClassLoader()
-                                                  .getResource("images/blocked.png"));
-    private ImageIcon unblocked = new ImageIcon(this.getClass().getClassLoader()
-                                                    .getResource("images/unblocked.png"));
-    private ImageIcon active = new ImageIcon(this.getClass().getClassLoader()
-                                                 .getResource("images/active.png"));
-    private ImageIcon defuse = new ImageIcon(this.getClass().getClassLoader()
-                                                 .getResource("images/defuse.png"));
-    private ImageIcon disable = new ImageIcon(this.getClass().getClassLoader()
-                                                  .getResource("images/disabled.png"));
-    private ImageIcon notdisable = new ImageIcon(this.getClass().getClassLoader()
-                                                     .getResource("images/notdisabled.png"));
-    private ImageIcon fill = new ImageIcon(this.getClass().getClassLoader()
-                                               .getResource("images/fill.png"));
-    private ImageIcon notfill = new ImageIcon(this.getClass().getClassLoader()
-                                                  .getResource("images/notfill.png"));
+    private ImageIcon selected = PluginServices.getIconTheme().get("images-selected-icon");
+    private ImageIcon notselected = PluginServices.getIconTheme().get("images-notselected-icon");
+    private ImageIcon blocked = PluginServices.getIconTheme().get("images-blocked-icon");
+    private ImageIcon unblocked = PluginServices.getIconTheme().get("images-unblocked-icon");
+    private ImageIcon active = PluginServices.getIconTheme().get("images-active-icon");
+    private ImageIcon defuse = PluginServices.getIconTheme().get("images-defuse-icon");
+    private ImageIcon disable = PluginServices.getIconTheme().get("images-disabled-icon");
+    private ImageIcon notdisable =PluginServices.getIconTheme().get("images-notdisabled-icon");
+    private ImageIcon fill = PluginServices.getIconTheme().get("images-fill-icon");
+    private ImageIcon notfill = PluginServices.getIconTheme().get("images-notfill-icon");
     private boolean DEBUG = false;
     private ReadableVectorial source;
     private EditionManagerLegend eml;

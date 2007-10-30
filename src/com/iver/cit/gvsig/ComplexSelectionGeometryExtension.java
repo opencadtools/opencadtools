@@ -69,7 +69,7 @@ public class ComplexSelectionGeometryExtension extends Extension {
 	}
 	
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-complex-selection",
 				this.getClass().getClassLoader().getResource("images/ComplexSelCAD.png")
 			);

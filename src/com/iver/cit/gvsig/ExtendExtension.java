@@ -74,7 +74,7 @@ public class ExtendExtension extends Extension {
 	}
 	
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-modify-geometry-extend",
 				this.getClass().getClassLoader().getResource("images/Extend.png")
 			);

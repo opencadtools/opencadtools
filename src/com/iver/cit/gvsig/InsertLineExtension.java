@@ -73,12 +73,12 @@ public class InsertLineExtension extends Extension {
 	}
 
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-insert-geometry-line",
 				this.getClass().getClassLoader().getResource("images/Rect.png")
 			);
 		
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-insert-geometry-arc",
 				this.getClass().getClassLoader().getResource("images/Arc.png")
 			);

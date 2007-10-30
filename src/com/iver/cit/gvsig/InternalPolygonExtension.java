@@ -74,7 +74,7 @@ public class InternalPolygonExtension extends Extension {
 	}
 
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-modify-geometry-internalpolygon",
 				this.getClass().getClassLoader().getResource("images/InternalPolygon.png")
 			);

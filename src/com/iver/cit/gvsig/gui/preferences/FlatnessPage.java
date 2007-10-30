@@ -125,7 +125,7 @@ public class FlatnessPage extends AbstractPreferencePage {
 
 	public FlatnessPage() {
 		super();
-		icon = new ImageIcon(this.getClass().getClassLoader().getResource("images/Flatness.png"));
+		icon = PluginServices.getIconTheme().get("flatness-icon");
 		addComponent(getJTextArea());
 
 		addComponent(PluginServices.getText(this, "densityfication") + ":",

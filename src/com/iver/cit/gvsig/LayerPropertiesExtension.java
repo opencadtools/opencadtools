@@ -1,5 +1,7 @@
 package com.iver.cit.gvsig;
 
+import javax.swing.ImageIcon;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapContext;
@@ -14,7 +16,50 @@ public class LayerPropertiesExtension extends Extension{
 
 	public void initialize() {
 		// TODO Auto-generated method stub
-
+		registerIcons();
+	}
+	
+	private void registerIcons(){
+		PluginServices.getIconTheme().register(
+				"images-selected-icon",
+				this.getClass().getClassLoader().getResource("images/selected.png")
+		);
+		PluginServices.getIconTheme().register(
+				"images-notselected-icon",
+				this.getClass().getClassLoader().getResource("images/notSelected.png")
+		);
+		PluginServices.getIconTheme().register(
+				"images-blocked-icon",
+				this.getClass().getClassLoader().getResource("images/blocked.png")
+		);
+		PluginServices.getIconTheme().register(
+				"images-unblocked-icon",
+				this.getClass().getClassLoader().getResource("images/unblocked.png")
+		);
+		PluginServices.getIconTheme().register(
+				"images-defuse-icon",
+				this.getClass().getClassLoader().getResource("images/defuse.png")
+		);
+		PluginServices.getIconTheme().register(
+				"images-active-icon",
+				this.getClass().getClassLoader().getResource("images/active.png")
+		);
+		PluginServices.getIconTheme().register(
+				"images-disabled-icon",
+				this.getClass().getClassLoader().getResource("images/disabled.png")
+		);
+		PluginServices.getIconTheme().register(
+				"images-notdisabled-icon",
+				this.getClass().getClassLoader().getResource("images/notdisabled.png")
+		);
+		PluginServices.getIconTheme().register(
+				"images-fill-icon",
+				this.getClass().getClassLoader().getResource("images/fill.png")
+		);
+		PluginServices.getIconTheme().register(
+				"images-notfill-icon",
+				this.getClass().getClassLoader().getResource("images/notfill.png")
+		);
 	}
 
 	public void execute(String actionCommand) {

@@ -133,7 +133,7 @@ public class GridPage extends AbstractPreferencePage {
 
 	public GridPage() {
 		super();
-		icon = new ImageIcon(this.getClass().getClassLoader().getResource("images/Grid.png"));
+		icon = PluginServices.getIconTheme().get("grid-icon");
 		chkShowGrid=new JCheckBox(PluginServices.getText(this,"mostrar_rejilla"));
 		addComponent(chkShowGrid);
 		chkAdjustGrid=new JCheckBox(PluginServices.getText(this,"ajustar_rejilla"));

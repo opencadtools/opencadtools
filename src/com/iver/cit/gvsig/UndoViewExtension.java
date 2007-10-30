@@ -63,7 +63,7 @@ public class UndoViewExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"view-undo",
 				this.getClass().getClassLoader().getResource("images/Undo.png")
 			);

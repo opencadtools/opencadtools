@@ -69,7 +69,7 @@ public class InsertMultiPointExtension extends Extension {
     }
 
     private void registerIcons(){
-    	PluginServices.getIconTheme().register(
+    	PluginServices.getIconTheme().registerDefault(
 				"edition-insert-geometry-multipoint",
 				this.getClass().getClassLoader().getResource("images/MultiPoint.png")
 			);

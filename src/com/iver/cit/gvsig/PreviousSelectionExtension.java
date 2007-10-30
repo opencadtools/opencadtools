@@ -60,7 +60,7 @@ public class PreviousSelectionExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"previous-selection",
 				this.getClass().getClassLoader().getResource("images/previousSel.png")
 			);

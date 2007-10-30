@@ -71,10 +71,11 @@ public class MatrixExtension extends Extension {
 	}
 	
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-matrix",
 				this.getClass().getClassLoader().getResource("images/Matriz.png")
 			);
+		
 	}
 
 	/**

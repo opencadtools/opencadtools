@@ -68,7 +68,7 @@ public class MoveGeometryExtension extends Extension {
 	}
 
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-move",
 				this.getClass().getClassLoader().getResource("images/Move.png")
 			);

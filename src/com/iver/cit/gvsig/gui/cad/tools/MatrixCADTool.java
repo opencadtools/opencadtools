@@ -80,7 +80,11 @@ public class MatrixCADTool extends DefaultCADTool {
     private MatrixProperty matrixProperty=new MatrixProperty();
     private MatrixOperations operations=new MatrixOperations();
 	private String option;
-    /**
+	static{
+		DefaultCADTool.registerIcon("lagxy-icon","images/lagxy.png");
+		DefaultCADTool.registerIcon("addpoint-matrix","images/addpoint.png");
+	}
+	/**
      * Crea un nuevo MatrixCADTool.
      */
     public MatrixCADTool() {

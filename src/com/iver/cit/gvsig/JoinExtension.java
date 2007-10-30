@@ -71,7 +71,7 @@ public class JoinExtension extends Extension {
 	}
 
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-Join",
 				this.getClass().getClassLoader().getResource("images/Join.png")
 			);

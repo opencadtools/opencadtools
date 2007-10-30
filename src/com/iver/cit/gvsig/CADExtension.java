@@ -158,34 +158,36 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 		KeyboardFocusManager kfm = KeyboardFocusManager
 				.getCurrentKeyboardFocusManager();
 		kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
-		
+
 		registerIcons();
 	}
 
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-copy",
 				this.getClass().getClassLoader().getResource("images/Copy.png")
 			);
-		
-		PluginServices.getIconTheme().register(
+
+		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-symmetry",
 				this.getClass().getClassLoader().getResource("images/Symmetry.png")
 			);
-			
-		PluginServices.getIconTheme().register(
+
+		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-rotate",
 				this.getClass().getClassLoader().getResource("images/Rotation.png")
 			);
-		
-		PluginServices.getIconTheme().register(
+
+		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-scale",
 				this.getClass().getClassLoader().getResource("images/Scale.png")
 			);
 		
 		
-	} 
-	
+
+
+	}
+
 	/**
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */

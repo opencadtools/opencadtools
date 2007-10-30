@@ -75,12 +75,12 @@ public class InsertPolyLineExtension extends Extension {
 	}
 
 	private void registerIcons(){
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-insert-geometry-polyline",
 				this.getClass().getClassLoader().getResource("images/Line.png")
 			);
 		
-		PluginServices.getIconTheme().register(
+		PluginServices.getIconTheme().registerDefault(
 				"edition-insert-geometry-spline",
 				this.getClass().getClassLoader().getResource("images/Spline.png")
 			);

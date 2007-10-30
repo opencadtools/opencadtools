@@ -49,6 +49,7 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.ImageIcon;
 
+import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.GraphicLayer;
@@ -58,8 +59,9 @@ import com.iver.cit.gvsig.fmap.tools.Listeners.PointListener;
 
 public class ToolSelectGraphic implements PointListener{
 	
-	private final Image img = new ImageIcon(MapControl.class.getResource(
-	"images/PointSelectCursor.gif")).getImage();
+//	private final Image img = new ImageIcon(MapControl.class.getResource(
+//	"images/PointSelectCursor.gif")).getImage();
+	private final Image img = PluginServices.getIconTheme().get("rect-select-cursor").getImage();
 private Cursor cur = Toolkit.getDefaultToolkit().createCustomCursor(img,
 new Point(16, 16), "");
 protected MapControl mapCtrl;
