@@ -143,7 +143,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() - tam,
 				firstPoint.getY() - tam, tam * 2, tam * 2);
 
-		String strEPSG = vp.getProjection().getAbrev().substring(5);
+		String strEPSG = vp.getProjection().getAbrev();
 		IRowEdited[] feats;
 
 		try {
@@ -212,7 +212,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 		Rectangle2D rect = new Rectangle2D.Double(x1, y1, w1, h1);
 
-		String strEPSG = vp.getProjection().getAbrev().substring(5);
+		String strEPSG = vp.getProjection().getAbrev();
 		IRowEdited[] feats;
 		try {
 			feats = vea.getFeatures(rect, strEPSG);
@@ -268,7 +268,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 		Rectangle2D rect = polygon.getBounds2D();
 
-		String strEPSG = vp.getProjection().getAbrev().substring(5);
+		String strEPSG = vp.getProjection().getAbrev();
 		IRowEdited[] feats;
 		try {
 			feats = vea.getFeatures(rect, strEPSG);
@@ -314,7 +314,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 		Rectangle2D rect = polygon.getBounds2D();
 
-		String strEPSG = vp.getProjection().getAbrev().substring(5);
+		String strEPSG = vp.getProjection().getAbrev();
 		IRowEdited[] feats;
 		try {
 			feats = vea.getFeatures(rect, strEPSG);
