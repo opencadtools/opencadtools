@@ -40,6 +40,7 @@
  */
 package com.iver.cit.gvsig.gui.cad.tools;
 
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
@@ -47,6 +48,8 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
@@ -203,8 +206,10 @@ public class EditVertexCADTool extends DefaultCADTool {
 					vea.removeRow(row.getIndex(),getName(),EditionEvent.GRAPHIC);
 				} catch (ReadDriverException e) {
 					NotificationManager.addError(e.getMessage(),e);
-				} 
+				}
         	}
+        }else{
+        	JOptionPane.showMessageDialog((Component)PluginServices.getMainFrame(),PluginServices.getText(this,"hay_mas_de_una_geometria_seleccionada"));
         }
         int dif=1;//En el caso de ser polígono.
         if (ig instanceof FGeometryCollection){
@@ -242,7 +247,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 						NotificationManager.addError(e.getMessage(),e);
 					} catch (ReadDriverException e) {
 						NotificationManager.addError(e.getMessage(),e);
-					} 
+					}
 					vle.addSelectionCache(new DefaultRowEdited(newRow,
 							IRowEdited.STATUS_MODIFIED, row.getIndex()));
 
@@ -712,7 +717,7 @@ public class EditVertexCADTool extends DefaultCADTool {
 						NotificationManager.addError(e.getMessage(),e);
 					} catch (ReadDriverException e) {
 						NotificationManager.addError(e.getMessage(),e);
-					} 
+					}
 				}
 			}
 		}
