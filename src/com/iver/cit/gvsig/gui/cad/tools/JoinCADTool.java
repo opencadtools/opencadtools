@@ -40,11 +40,14 @@
  */
 package com.iver.cit.gvsig.gui.cad.tools;
 
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
@@ -181,7 +184,7 @@ public class JoinCADTool extends DefaultCADTool {
 				NotificationManager.addError(e.getMessage(),e);
 			} catch (ValidateRowException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} 
+			}
     	}
     }
     private Handler[] getHandlers(DefaultRowEdited[] selectedRows) {
@@ -252,8 +255,10 @@ private Point2D[] startAndEndPoints(Handler[] handlers) {
 		}
 		Point2D[] points = startAndEndPoints(handlers);
 
-		if (!isIntoRect(points[0], handlers))
+		if (!isIntoRect(points[0], handlers)){
+			JOptionPane.showMessageDialog((Component)PluginServices.getMainFrame(),PluginServices.getText(this,"no_se_pueden_unir_las_geometrias_al_no_estar_en_la_misma_linea"));
 			return;
+		}
 
 		VectorialLayerEdited vle = getVLE();
 		VectorialEditableAdapter vea = vle.getVEA();

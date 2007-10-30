@@ -161,22 +161,22 @@
 				<selectable-tool icon="edition-geometry-edit-vertex" action-command="_editvertex" tooltip="edit_vertex" group="vista" position="8"/>
 			</tool-bar>
 		</extension>
-		<extension class-name="com.iver.cit.gvsig.BreakExtension"
+		<!--extension class-name="com.iver.cit.gvsig.BreakExtension"
 			description="Extensión encargada de partir una geomtría en edición."
 			active="true">
 			<menu text="geometry/modify/break" action-command="_break" icon="edition-geometry-break"/>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="edition-geometry-break" action-command="_break" tooltip="break" group="vista" position="9"/>
 			</tool-bar>
-		</extension>
-		<extension class-name="com.iver.cit.gvsig.JoinExtension"
+		</extension-->
+		<!--extension class-name="com.iver.cit.gvsig.JoinExtension"
 			description="Extensión encargada de unir varias geometría en edición."
 			active="true">
 			<menu text="geometry/modify/join" action-command="_join" icon="edition-geometry-Join"/>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="edition-geometry-Join" action-command="_join" tooltip="join" group="vista" position="10"/>
 			</tool-bar>
-		</extension>
+		</extension-->
 		<extension class-name="com.iver.cit.gvsig.InternalPolygonExtension"
 			description="Extensión encargada de insertar poligonos internos en una capa en edición."
 			active="true">
@@ -193,14 +193,14 @@
 				<selectable-tool icon="edition-geometry-stretch" action-command="_stretch" tooltip="stretch" group="vista" position="12"/>
 			</tool-bar>
 		</extension>
-		<extension class-name="com.iver.cit.gvsig.ExtendExtension"
+		<!--extension class-name="com.iver.cit.gvsig.ExtendExtension"
 			description="Extensión encargada de alargar geometrías en una capa en edición."
 			active="true">
 			<menu text="geometry/modify/extend" action-command="_extend" icon="edition-modify-geometry-extend"/>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="edition-modify-geometry-extend" action-command="_extend" tooltip="extend" group="vista" position="13"/>
 			</tool-bar>
-		</extension>
+		</extension-->
 		<extension class-name="com.iver.cit.gvsig.ComplexSelectionGeometryExtension"
 			description="Extensión encargada de la selección compleja de geometrías."
 			active="true">
@@ -225,14 +225,14 @@
 				<selectable-tool icon="edition-geometry-matrix" action-command="_matrix" tooltip="matrix" group="vista" position="17"/>
 			</tool-bar>
 		</extension>
-		<extension class-name="com.iver.cit.gvsig.EquidistanceExtension"
+		<!--extension class-name="com.iver.cit.gvsig.EquidistanceExtension"
 			description="Extensión encargada de crear una geometría equidistante a otra."
 			active="true">
 			<menu text="geometry/modify/equidistance" action-command="_equidistance" icon="edition-geometry-equidistance"/>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="edition-geometry-equidistance" action-command="_equidistance" tooltip="equidistance" group="vista" position="18"/>
 			</tool-bar>
-		</extension>
+		</extension-->
 		<extension class-name="com.iver.cit.gvsig.PreviousSelectionExtension"
 			description="Extensión encargada de restablecer la selección anterior."
 			active="true">
