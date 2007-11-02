@@ -176,12 +176,13 @@ public class StopEditing extends Extension {
 								JOptionPane.YES_NO_OPTION);
 				if (resp == JOptionPane.YES_OPTION) { // CANCEL EDITING
 					cancelEdition(layer);
-					layer.setEditing(false);
+
 					vea.getCommandRecord().removeCommandListener(mapControl);
 					if (!(layer.getSource().getDriver() instanceof IndexedShpDriver)){
 						VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(layer);
 						layer.setLegend((IVectorLegend)vle.getLegend());
 					}
+					layer.setEditing(false);
 					return true;
 				}
 
