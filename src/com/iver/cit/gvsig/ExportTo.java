@@ -43,6 +43,7 @@ import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.drivers.IConnection;
 import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
+import com.iver.cit.gvsig.fmap.drivers.IVectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.dxf.DXFMemoryDriver;
@@ -315,6 +316,13 @@ public class ExportTo extends Extension {
 			IConnection conex = ConnectionFactory.createConnection(cs
 					.getConnectionString(), cs.getUser(), cs.getPassw());
 
+
+			DBLayerDefinition originalDef = null;
+			if (layer.getSource().getDriver() instanceof IVectorialDatabaseDriver) {
+				originalDef=((IVectorialDatabaseDriver) layer.getSource().getDriver()).getLyrDef();
+			}
+
+
 			DBLayerDefinition dbLayerDef = new DBLayerDefinition();
 			// Fjp:
 			// Cambio: En Postgis, el nombre de catálogo está siempre vacío. Es algo heredado de Oracle, que no se usa.
@@ -328,24 +336,40 @@ public class ExportTo extends Extension {
 			dbLayerDef.setName(tableName);
 			dbLayerDef.setShapeType(layer.getShapeType());
 			SelectableDataSource sds = layer.getRecordset();
+
 			FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 			dbLayerDef.setFieldsDesc(fieldsDescrip);
 	        // Creamos el driver. OJO: Hay que añadir el campo ID a la
 	        // definición de campos.
 
-	        boolean bFound = false;
-	        for (int i=0; i < fieldsDescrip.length; i++)
-	        {
-	        	FieldDescription f = fieldsDescrip[i];
-	        	if (f.getFieldName().equalsIgnoreCase("gid"))
-	        	{
-	        		bFound = true;
-	        		break;
-	        	}
-	        }
-	        // Si no está, lo añadimos
-	        if (!bFound)
-	        {
+			if (originalDef != null){
+				dbLayerDef.setFieldID(originalDef.getFieldID());
+				dbLayerDef.setFieldGeometry(originalDef.getFieldGeometry());
+
+			}else{
+				// Search for id field name
+				int index=0;
+				String fieldName="gid";
+				while (findFileByName(fieldsDescrip,fieldName) != -1){
+					index++;
+					fieldName="gid"+index;
+				}
+				dbLayerDef.setFieldID(fieldName);
+
+				// search for geom field name
+				index=0;
+				fieldName="the_geom";
+				while (findFileByName(fieldsDescrip,fieldName) != -1){
+					index++;
+					fieldName="the_geom"+index;
+				}
+				dbLayerDef.setFieldGeometry(fieldName);
+
+			}
+
+			// if id field dosen't exist we add it
+			if (findFileByName(fieldsDescrip,dbLayerDef.getFieldID()) == -1)
+			{
 	        	int numFieldsAnt = fieldsDescrip.length;
 	        	FieldDescription[] newFields = new FieldDescription[dbLayerDef.getFieldsDesc().length + 1];
 	            for (int i=0; i < numFieldsAnt; i++)
@@ -361,10 +385,6 @@ public class ExportTo extends Extension {
 
 	        }
 
-
-
-			dbLayerDef.setFieldGeometry("the_geom");
-			dbLayerDef.setFieldID("gid");
 
 			dbLayerDef.setWhereClause("");
 			String strSRID = layer.getProjection().getAbrev().substring(5);
@@ -764,6 +784,20 @@ public class ExportTo extends Extension {
 		if (f instanceof View)
 			return true;
 		return false;
+	}
+
+	private int findFileByName(FieldDescription[] fields, String fieldName){
+        for (int i=0; i < fields.length; i++)
+        {
+        	FieldDescription f = fields[i];
+        	if (f.getFieldName().equalsIgnoreCase(fieldName))
+        	{
+        		return i;
+        	}
+        }
+
+		return -1;
+
 	}
 
 }
