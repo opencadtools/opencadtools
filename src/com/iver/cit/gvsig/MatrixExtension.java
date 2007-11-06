@@ -46,6 +46,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.MatrixCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -64,18 +65,26 @@ public class MatrixExtension extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
+		registerIcons();
 		matrixCADTool=new MatrixCADTool();
 		CADExtension.addCADTool("_matrix",matrixCADTool);
-		
-		registerIcons();
+
+
 	}
-	
+
 	private void registerIcons(){
 		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-matrix",
 				this.getClass().getClassLoader().getResource("images/Matriz.png")
 			);
-		
+		PluginServices.getIconTheme().registerDefault(
+				"edition-geometrymatrix-lagxy",
+				this.getClass().getClassLoader().getResource("images/lagxy.png")
+			);
+		PluginServices.getIconTheme().registerDefault(
+				"edition-geometrymatrix-addpoint",
+				this.getClass().getClassLoader().getResource("images/addpoint.png")
+			);
 	}
 
 	/**

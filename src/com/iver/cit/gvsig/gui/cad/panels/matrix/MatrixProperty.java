@@ -57,8 +57,8 @@ public class MatrixProperty extends JPanel implements IWindow{
 	private JButton bLagX = null;
 	private JButton bRotation = null;
 	private MatrixCADTool matrixCADTool;
-	private static final ImageIcon ilagXY = PluginServices.getIconTheme().get("lagxy-icon");
-	private static final ImageIcon iaddpoint = PluginServices.getIconTheme().get("addpoint-matrix");
+	private static ImageIcon ilagXY = null;
+	private static ImageIcon iaddpoint = null;
 
 	/**
 	 * This is the default constructor
@@ -75,11 +75,14 @@ public class MatrixProperty extends JPanel implements IWindow{
 	 * @return void
 	 */
 	private void initialize() {
+		ilagXY = PluginServices.getIconTheme().get("edition-geometrymatrix-lagxy");
+		iaddpoint = PluginServices.getIconTheme().get("edition-geometrymatrix-addpoint");
 		this.setLayout(new BorderLayout());
 		this.setSize(369, 275);
 		this.add(getJTabbedPane(), java.awt.BorderLayout.CENTER);
 		this.add(getJPanel(), java.awt.BorderLayout.EAST);
 		this.add(getJPanel1(), java.awt.BorderLayout.SOUTH);
+
 	}
 
 	/**

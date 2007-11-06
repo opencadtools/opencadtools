@@ -180,12 +180,30 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 
 		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-scale",
-				this.getClass().getClassLoader().getResource("images/Scale.png")
-			);
-		
-		
+				this.getClass().getClassLoader()
+						.getResource("images/Scale.png"));
 
+		PluginServices.getIconTheme().registerDefault(
+				"edition-properties",
+				CADExtension.class.getClassLoader().getResource(
+						"images/EditingProperties.png"));
 
+		PluginServices.getIconTheme().registerDefault(
+				"field-expresion",
+				CADExtension.class.getClassLoader().getResource(
+						"images/FieldExpresion.png"));
+		PluginServices.getIconTheme().registerDefault(
+				"flatness-icon",
+				CADExtension.class.getClassLoader().getResource(
+						"images/Flatness.png"));
+		PluginServices.getIconTheme().registerDefault(
+				"grid-icon",
+				CADExtension.class.getClassLoader().getResource(
+						"images/Grid.png"));
+		PluginServices.getIconTheme().registerDefault(
+				"snapper-icon",
+				CADExtension.class.getClassLoader().getResource(
+						"images/Snapper.png"));
 	}
 
 	/**

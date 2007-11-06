@@ -77,17 +77,16 @@ public class MatrixCADTool extends DefaultCADTool {
     private MatrixCADToolContext _fsm;
     private Point2D firstPoint;
     private Point2D secondPoint;
-    private MatrixProperty matrixProperty=new MatrixProperty();
-    private MatrixOperations operations=new MatrixOperations();
+    private MatrixProperty matrixProperty=null;
+    private MatrixOperations operations=null;
 	private String option;
-	static{
-		DefaultCADTool.registerIcon("lagxy-icon","images/lagxy.png");
-		DefaultCADTool.registerIcon("addpoint-matrix","images/addpoint.png");
-	}
+
 	/**
      * Crea un nuevo MatrixCADTool.
      */
     public MatrixCADTool() {
+    	  matrixProperty=new MatrixProperty();
+    	  operations=new MatrixOperations();
     }
 
     /**

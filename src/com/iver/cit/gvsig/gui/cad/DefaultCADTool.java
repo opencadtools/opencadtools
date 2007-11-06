@@ -469,31 +469,5 @@ public abstract class DefaultCADTool implements CADTool {
 		CADExtension.setCADTool(previousTool.toString(), true);
 		PluginServices.getMainFrame().setSelectedTool(previousTool.toString());
 	}
-	public static void registerIcon(String key,String path){
-		PluginServices.getIconTheme().registerDefault(
-				key,
-				CADExtension.class.getClassLoader().getResource(path)
-			);
-		PluginServices.getIconTheme().registerDefault(
-				"edition-properties",
-				CADExtension.class.getClassLoader().getResource("images/EditingProperties.png")
-			);
 
-		PluginServices.getIconTheme().registerDefault(
-				"field-expresion",
-				CADExtension.class.getClassLoader().getResource("images/FieldExpresion.png")
-			);
-		PluginServices.getIconTheme().registerDefault(
-				"flatness-icon",
-				CADExtension.class.getClassLoader().getResource("images/Flatness.png")
-			);
-		PluginServices.getIconTheme().registerDefault(
-				"grid-icon",
-				CADExtension.class.getClassLoader().getResource("images/Grid.png")
-			);
-		PluginServices.getIconTheme().registerDefault(
-				"snapper-icon",
-				CADExtension.class.getClassLoader().getResource("images/Snapper.png")
-			);
-	}
 }
