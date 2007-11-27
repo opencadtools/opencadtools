@@ -387,7 +387,7 @@ public class ExportTo extends Extension {
 
 
 			dbLayerDef.setWhereClause("");
-			String strSRID = layer.getProjection().getAbrev().substring(5);
+			String strSRID = layer.getProjection().getAbrev();
 			dbLayerDef.setSRID_EPSG(strSRID);
 			dbLayerDef.setConnection(conex);
 
