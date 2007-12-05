@@ -252,7 +252,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 						int index=addGeometry(geom,fea.getAttributes());
 						selectedRowAux.add(new DefaultRowEdited(fea,
 								IRowEdited.STATUS_ADDED, index));
-						getCadToolAdapter().getMapControl().drawMap(false);
+						refresh();
 					}
 
 				}
@@ -267,7 +267,7 @@ private void drawSymmetry(Graphics g,Point2D pAux) {
 				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} 
+			}
 			PluginServices.getMDIManager().restoreCursor();
 		}
     }
