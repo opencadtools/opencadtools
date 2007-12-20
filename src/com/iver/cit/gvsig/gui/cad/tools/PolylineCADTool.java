@@ -105,6 +105,13 @@ public class PolylineCADTool extends DefaultCADTool {
     public int getLinesCount() {
     	return list.size();
     }
+    public boolean isPolygonLayer(){
+    	try {
+			return (getVLE().getVEA().getShapeType()==FShape.POLYGON);
+		} catch (ReadDriverException e) {
+			return false;
+		}
+    }
     public void endGeometry() {
     	if (gpx==null) {
     		gpx=new GeneralPathX();
