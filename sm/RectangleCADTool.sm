@@ -44,7 +44,6 @@ SecondPointOrSquare{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPoint {
 			addPoint(pointX,pointY,event);
-			end();
 			}
 	addOption(s:String)
 		[s.equalsIgnoreCase(PluginServices.getText(this,"RectangleCADTool.square")) || s.equals(PluginServices.getText(this,"square"))]
@@ -59,7 +58,6 @@ SecondPointSquare{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPoint {
 			addPoint( pointX,pointY,event);
-			end();
 			}
 }
 

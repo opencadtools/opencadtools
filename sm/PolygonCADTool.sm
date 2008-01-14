@@ -76,24 +76,20 @@ OptionOrRadiusOrPoint{
 	addValue(d:double)
 		NumberOrCenterPoint{
 			addValue(d);
-			end();
 			}
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NumberOrCenterPoint {
 			addPoint( pointX,pointY,event);
-			end();
 			}
 }
 RadiusOrPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		NumberOrCenterPoint {
 			addPoint( pointX,pointY,event);
-			end();
 			}
 	addValue(d:double)
 		NumberOrCenterPoint{
 			addValue(d);
-			end();
 			}
 }
 

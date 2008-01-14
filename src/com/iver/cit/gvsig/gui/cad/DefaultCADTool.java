@@ -43,6 +43,7 @@ package com.iver.cit.gvsig.gui.cad;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -468,6 +469,10 @@ public abstract class DefaultCADTool implements CADTool {
 	public void restorePreviousTool() {
 		CADExtension.setCADTool(previousTool.toString(), true);
 		PluginServices.getMainFrame().setSelectedTool(previousTool.toString());
+	}
+	public void endTransition(double x, double y, MouseEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -46,12 +46,10 @@ PointOrRadius{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		CenterPointOr3p {
 			addPoint( pointX,pointY,event);
-			end();
 			}
 	addValue( d:double)
 		CenterPointOr3p {
 			addValue( d);
-			end();
 			}
 }
 SecondPoint{
@@ -66,7 +64,6 @@ ThirdPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		CenterPointOr3p {
 			addPoint( pointX,pointY,event);
-			end();
 			}
 }
 

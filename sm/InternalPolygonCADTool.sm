@@ -72,5 +72,10 @@ Default
 		AddNextPoint{
 			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
 			}
+	endPoint(pointX:double,pointY:double,event:InputEvent)
+		AddNextPoint{
+			addPoint( pointX,pointY,event);
+			addOption(PluginServices.getText(this,"InternalPolygonCADTool.end"));
+			}
 }
 %%

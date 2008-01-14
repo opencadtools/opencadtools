@@ -48,12 +48,10 @@ DistanceOtherAxis{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPointAxis {
 			addPoint( pointX,pointY,event);
-			end();
 			}
 	addValue( d:double)
 		FirstPointAxis {
 			addValue( d);
-			end();
 			}
 }
 

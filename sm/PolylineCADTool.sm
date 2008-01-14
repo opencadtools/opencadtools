@@ -232,6 +232,11 @@ Default
 		FirstPoint{
 			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
 			}
+	endPoint(pointX:double,pointY:double,event:InputEvent)
+		FirstPoint{
+			addPoint( pointX,pointY,event);
+			endGeometry();
+			}
 
 }
 %%

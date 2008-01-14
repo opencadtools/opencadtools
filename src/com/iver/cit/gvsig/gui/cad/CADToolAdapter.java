@@ -148,6 +148,21 @@ public class CADToolAdapter extends Behavior {
 	public void mouseClicked(MouseEvent e) throws BehaviorException {
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			CADExtension.showPopup(e);
+		}else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2){
+			questionAsked = true;
+			if (!cadToolStack.isEmpty()) {
+				CADTool ct = (CADTool) cadToolStack.peek();
+				ViewPort vp = getMapControl().getMapContext().getViewPort();
+				Point2D p;
+
+				if (mapAdjustedPoint != null) {
+					p = mapAdjustedPoint;
+				} else {
+					p = vp.toMapPoint(adjustedPoint);
+				}
+				ct.endTransition(p.getX(), p.getY(), e);
+				previousPoint = new double[]{p.getX(),p.getY()};
+			}
 		}
 	}
 

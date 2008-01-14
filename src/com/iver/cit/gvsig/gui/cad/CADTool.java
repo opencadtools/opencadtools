@@ -41,6 +41,7 @@
 package com.iver.cit.gvsig.gui.cad;
 import java.awt.Graphics;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
@@ -53,7 +54,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * @author $author$
  */
 public interface CADTool {
-	
+
 
 	public static int TOPGEOMETRY = 2000;
 
@@ -115,4 +116,5 @@ public interface CADTool {
 	public boolean isApplicable(int shapeType);
 	public void setPreviosTool(DefaultCADTool tool);
 	public void restorePreviousTool();
+	public void endTransition(double x, double y, MouseEvent e);
 }

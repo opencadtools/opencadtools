@@ -43,6 +43,7 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -529,4 +530,8 @@ public class PolylineCADTool extends DefaultCADTool {
         }
         return true;
     }
+
+	public void endTransition(double x, double y, MouseEvent event) {
+		_fsm.endPoint(x, y, event);
+	}
 }

@@ -47,7 +47,6 @@ ThirdPoint{
 	addPoint( pointX:double,pointY:double,event:InputEvent)
 		FirstPoint {
 			addPoint( pointX,pointY,event);
-			end();
 			}
 }
 
