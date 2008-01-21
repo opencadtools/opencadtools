@@ -152,12 +152,9 @@ public class StopEditing extends Extension {
 	            		layer.setISpatialIndex(vea.getSpatialIndex());
 	            		if(layer.getISpatialIndex() instanceof IPersistentSpatialIndex)
 	                        ((IPersistentSpatialIndex) layer.getISpatialIndex()).flush();
-//	            		PluginServices.
-//								cancelableBackgroundExecution(new FlushSpatialIndexMonitorableTask(layer));
-
-	                }else {
 	            		PluginServices.
-						cancelableBackgroundExecution(new CreateSpatialIndexMonitorableTask(layer));
+								cancelableBackgroundExecution(new CreateSpatialIndexMonitorableTask(layer));
+
 	                }
 	            }
 
