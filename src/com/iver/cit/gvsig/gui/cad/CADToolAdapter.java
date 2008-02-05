@@ -856,7 +856,7 @@ public class CADToolAdapter extends Behavior {
 	/**
 	 * Elimina las geometrías seleccionadas actualmente
 	 */
-	private void delete() {
+	public void delete() {
 		ILayerEdited aux = CADExtension.getEditionManager().getActiveLayerEdited();
 		if (!(aux instanceof VectorialLayerEdited))
 			return;

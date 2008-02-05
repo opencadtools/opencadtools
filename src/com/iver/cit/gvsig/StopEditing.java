@@ -75,6 +75,7 @@ public class StopEditing extends Extension {
 		FLayers layers = mapa.getLayers();
 		EditionManager edMan = CADExtension.getEditionManager();
 		if (s.equals("STOPEDITING")) {
+			vista.getMapControl().getCanceldraw().setCanceled(true);
 			FLayer[] actives = layers.getActives();
 			// TODO: Comprobar que solo hay una activa, o al menos
 			// que solo hay una en edición que esté activa, etc, etc
