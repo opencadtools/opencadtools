@@ -252,7 +252,8 @@ public class MyFinishAction extends FinishAction
 
 			}
 		} catch (Exception e) {
-			NotificationManager.addError(e.getMessage(),e);
+			NotificationManager.showMessageError(e.getMessage(),e);
+			return;
 		}
         lyr.setVisible(true);
 
@@ -279,9 +280,9 @@ public class MyFinishAction extends FinishAction
 			// Para cerrar el cuadro de diálogo.
 			oldAction.performAction();
 		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
+			NotificationManager.showMessageError(e.getMessage(),e);
 		} catch (StartEditionLayerException e) {
-			NotificationManager.addError(e.getMessage(),e);
+			NotificationManager.showMessageError(e.getMessage(),e);
 		}
 
 

@@ -294,7 +294,7 @@ public class ExportTo extends Extension {
 					} // actives[i]
 				} // for
 			} catch (ReadDriverException e) {
-				NotificationManager.addError(e.getMessage(),e);
+				NotificationManager.showMessageError(e.getMessage(),e);
 			}
 
 		}
