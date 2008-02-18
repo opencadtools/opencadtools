@@ -153,7 +153,7 @@ public class DialogEditionPreferences  {
 
 		}
 
-		FLayers layers = new FLayers(null, null);
+		FLayers layers = new FLayers();//(null,null);
 		FLyrVect lyrVect = new FLyrVect();
 		lyrVect.setName("Hola");
 		layers.addLayer(lyrVect);
