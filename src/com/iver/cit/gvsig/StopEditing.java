@@ -233,6 +233,7 @@ public class StopEditing extends Extension {
 		}
 		System.err.println("Escribiendo la capa " + lyrDef.getName() +
 				" con los campos " + aux);
+		lyrDef.setShapeType(layer.getShapeType());
 		writer.initialize(lyrDef);
 		vea.stopEdition(writer, EditionEvent.GRAPHIC);
 		layer.setProperty("stoppingEditing",new Boolean(false));
