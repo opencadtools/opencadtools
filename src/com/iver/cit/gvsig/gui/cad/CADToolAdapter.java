@@ -59,66 +59,222 @@ import com.iver.cit.gvsig.project.documents.view.toolListeners.StatusBarListener
 import com.iver.utiles.console.JConsole;
 import com.vividsolutions.jts.geom.Envelope;
 
+/**
+ * <p>Allows user interact with different CAD tools, on a layer being edited.</p>
+ * 
+ * <p>There are two ways of interacting:
+ *  <ul>
+ *   <li><b>With the mouse</b> : user selects any {@link CADTool CADTool} that produces mouse events as consequence
+ *    of the actions working with the layer being edited.
+ *   </li>
+ *   <li><b>Writing commands in the edition console</b> : most of the {@link CADTool CADTool} mouse actions can also
+ *    be called writing a command or a command's parameter in the associated edition console, and pressing the key <code>Enter</code>.
+ *    If the command isn't valid, will notify it.
+ *   </li>
+ *  </ul>
+ * </p>
+ * 
+ * <p>The edition has been implemented as a <i>finite machine</i>, with three kind of transitions between states according
+ *  the parameters introduced:
+ *  <ul>
+ *   <li><i>First transition type: <b>Point</i></b>: if <code>text</code> matches with any pattern of
+ *    parameters needed for any kind of point coordinates.<br>
+ *    There are eight ways of introducing point 2D coordinates:
+ *    <ul>
+ *    <li><i>X,Y</i> : absolute cardinal 2D coordinate from the center <i>(0,0)</i> of the CCS <i>Current Coordinate System</i>.</li>
+ *    <li><i>@X,Y</i> : relative cardinal 2D distances from the last point added of the CCS. If it's the first point of the geometry,
+ *     works like <i>X,Y</i>.</li>
+ *    <li><i>length< angle</i> : absolute polar 2D coordinate from the center <i>(0,0)</i> of the CCS <i>Current Coordinate System</i>, using
+ *     <i>angle</i> from the <i>X</i> axis of CCS, and <i>length</i> far away.</li>
+ *    <li><i>@length< angle</i> : relative polar 2D coordinate from the last point added of the CCS <i>Current Coordinate System</i>, using
+ *     <i>angle</i> from the <i>X</i> axis of CCS, and <i>length</i> far away. If it's the first point of the geometry,
+ *     works like <i>length< angle</i>.</li>
+ *    <li><i>*X,Y</i> : like <i>X,Y</i> but using UCS <i>Universal Coordinate System</i> as reference.</li>
+ *    <li><i>@*X,Y</i> : like <i>@X,Y</i> but using UCS <i>Universal Coordinate System</i> as reference.
+ *      If it's the first point of the geometry, works like <i>*X,Y</i>.</li>
+ *    <li><i>*length< angle</i> : like <i>length< angle</i> but using UCS <i>Universal Coordinate System</i> as reference.</li>
+ *    <li><i>@*length< angle</i> : like <i>@length< angle</i> but using UCS <i>Universal Coordinate System</i> as reference.
+ *      If it's the first point of the geometry, works like <i>*length< angle</i>.</li>
+ *    </ul>
+ *   </li>
+ *   <li><i>Second transition type: <b>Value</i></b>: if recognizes it as a single number.</li>
+ *   <li><i>Third transition type: <b>Option</i></b>: by default, if can't classify the information as a single number
+ *    neither as a point. This information will be an <code>String</code> and dealt as an option of the current
+ *    tool state. Ultimately, if isn't valid, <code>text</code> will be rewritten in the console notifying the user
+ *    that isn't correct.</li>
+ *  </ul>
+ * </p>
+ * 
+ * @see Behavior
+ * @see MapControl
+ */
 public class CADToolAdapter extends Behavior {
+	/**
+	 * Stores the CAD tools to edit the layers of the associated <code>MapControl</code>.
+	 * 
+	 * @see #addCADTool(String, CADTool)
+	 * @see #getCadTool()
+	 * @see #getCADTool(String) 
+	 */
 	private static HashMap namesCadTools = new HashMap();
 
+	/**
+	 * Reference to the object used to manage the edition of the layers of the associated <code>MapControl</code>.
+	 * 
+	 * @see EditionManager
+	 * @see #getEditionManager()
+	 */
 	private EditionManager editionManager = new EditionManager();
 
+	/**
+	 * Identifies that the data are absolute coordinates of the new point from the (0, 0) position.
+	 */
 	public static final int ABSOLUTE = 0;
 
+	/**
+	 * Equivalent to {@link CADToolAdapter#ABSOLUTE CADToolAdapter#ABSOLUTE}.
+	 */
 	public static final int RELATIVE_SCP = 1;
 
+	/**
+	 * Identifies that the data are relative distances of the new point from the previous introduced.
+	 */
 	public static final int RELATIVE_SCU = 2;
 
+	/**
+	 * Identifies that the data are relative polar distances (longitude of the line and angle given in degrees)
+	 *  of the new point from the previous introduced.
+	 */
 	public static final int POLAR_SCP = 3;
 
+	/**
+	 * Identifies that the data are relative polar distances (longitude of the line and angle given in radians)
+	 *  of the new point from the previous introduced.
+	 */
 	public static final int POLAR_SCU = 4;
 
+	/**
+	 * Stores the 2D map coordinates of the last point added.
+	 */
 	private double[] previousPoint = null;
 
+	/**
+	 * <i>Stack with CAD tools.</i>
+	 * 
+	 * <i>For each CAD tool we use, the last item added in this stack will
+	 *  display a different icon according to the current operation and its status.</i> 
+	 */
 	private Stack cadToolStack = new Stack();
 
-	// Para pasarle las coordenadas cuando se produce un evento textEntered
+	/**
+	 * X coordinate of the last dragging or moving mouse event.
+	 */
 	private int lastX;
 
+	/**
+	 * Y coordinate of the last dragging or moving mouse event.
+	 */
 	private int lastY;
 
+	/**
+	 * Unused attribute.
+	 */
 	private ISymbol symbol = SymbologyFactory.createDefaultSymbolByShapeType(FConstant.SYMBOL_TYPE_POINT, Color.RED);
 
+	/**
+	 * Represents the cursor's point selected in <i>map coordinates</i>.
+	 * 
+	 * @see MapControl#toMapPoint
+	 */
 	private Point2D mapAdjustedPoint;
 
+	/**
+	 * Kind of geometry drawn to identify the kind of control point selected by the cursor's mouse.
+	 */
 	private ISnapper usedSnap = null;
 
+	/**
+	 * Determines if has displayed at the edition console, the question for the operations that can do
+	 *  the user with the current CAD tool, in its current state.
+	 */
 	private boolean questionAsked = false;
 
+	/**
+	 * Represents the cursor's point selected in <i>screen coordinates</i>.
+	 *
+	 * @see ViewPort#fromMapPoint(Point2D)
+	 */
 	private Point2D adjustedPoint;
 
+	/**
+	 * Determines if the snap tools are enabled or disabled.
+	 * 
+	 * @see #isRefentEnabled()
+	 * @see #setRefentEnabled(boolean)
+	 */
 	private boolean bRefent = true;
 
+	/**
+	 * <p>Determines if the position of the snap of the mouse's cursor on the <code>MapControl</code>
+	 * is within the area around a control point of a geometry.</p>
+	 * 
+	 * <p>The area is calculated as a circle centered at the control point and with radius the pixels tolerance
+	 *  defined in the preferences.</p>
+	 */
 	private boolean bForceCoord = false;
 
+	/**
+	 * Optional grid that could be applied on the <code>MapControl</code>'s view port.
+	 * 
+	 * @see #getGrid()
+	 * @see #setAdjustGrid(boolean)
+	 */
 	private CADGrid cadgrid = new CADGrid();
 
+	/**
+	 * Determines is is enabled or not the <i>Orto</i> mode.
+	 */
 	private boolean bOrtoMode;
 
+	/**
+	 * A light yellow color for the tool tip text box associated to the point indicated by the mouse's cursor.
+	 */
 	private Color theTipColor = new Color(255, 255, 155);
 
+	/**
+	 * Last question asked to the user in the CAD console.
+	 */
 	private Object lastQuestion;
 
+	/**
+	 * Maximum tolerance in the approximation of a curved line by a polyline.
+	 * 
+	 * @see #initializeFlatness()
+	 */
 	private static boolean flatnessInitialized=false;
+
+	/**
+	 * Edition preferences.
+	 */
 	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
+	
+	/**
+	 * Listener to display the coordinates in the current application's status bar.
+	 */
 	private StatusBarListener sbl=null;
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.IBehavior#setMapControl(com.iver.cit.gvsig.fmap.MapControl)
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#setMapControl(com.iver.cit.gvsig.fmap.MapControl)
 	 */
 	public void setMapControl(MapControl mc) {
 		super.setMapControl(mc);
 		sbl=new StatusBarListener(getMapControl());
 	}
+
 	/**
-	 * Pinta de alguna manera especial las geometrias seleccionadas para la
-	 * edición. En caso de que el snapping esté activado, pintará el efecto del
-	 * mismo.
+	 * <p>Draws the selected geometries to edit. And, if the <i>snapping</i> is enabled,
+	 *  draws also its effect over them.</p>
 	 *
 	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#paintComponent(java.awt.Graphics)
 	 */
@@ -143,7 +299,17 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+	 * <p>Responds two kind of mouse click events:
+	 *  <ul>
+	 *   <li><b><i>One click of the third mouse's button</i></b>: displays a popup with edition options.</li>
+	 *   <li><b><i>Two clicks of the first mouse's button</i></b>: ends the last cad tool setting as end transition
+	 *    point the event's one.</li>
+	 *  </ul>
+	 * </p>
+	 * 
+	 * 
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mouseClicked(java.awt.event.MouseEvent)
+	 * @see CADExtension#showPopup(MouseEvent)
 	 */
 	public void mouseClicked(MouseEvent e) throws BehaviorException {
 		if (e.getButton() == MouseEvent.BUTTON3) {
@@ -166,21 +332,26 @@ public class CADToolAdapter extends Behavior {
 		}
 	}
 
-	/**
-	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mouseEntered(java.awt.event.MouseEvent)
 	 */
 	public void mouseEntered(MouseEvent e) throws BehaviorException {
 		clearMouseImage();
 	}
 
-	/**
-	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mouseExited(java.awt.event.MouseEvent)
 	 */
 	public void mouseExited(MouseEvent e) throws BehaviorException {
 	}
 
 	/**
-	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 * Selects the vertex of a geometry at the point selected on the <code>MapControl</code> 
+	 * by pressing the first mouse's button.
+	 * 
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mousePressed(java.awt.event.MouseEvent)
 	 */
 	public void mousePressed(MouseEvent e) throws BehaviorException {
 		if (e.getButton() == MouseEvent.BUTTON1) {
@@ -197,16 +368,17 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * Ajusta un punto de la imagen que se pasa como parámetro al grid si éste
-	 * está activo y devuelve la distancia de un punto al punto ajustado
+	 * <p>Adjusts the <code>point</code> to the grid if its enabled, and 
+	 *  sets <code>mapHandlerAdjustedPoint</code> with that new value.</p>
+	 * 
+	 * <p>The value returned is the distance between those points: the original and
+	 *  the adjusted one.</p>
 	 *
-	 * @param point
-	 * @param mapHandlerAdjustedPoint
-	 *            DOCUMENT ME!
+	 * @param point point to adjust
+	 * @param mapHandlerAdjustedPoint <code>point</code> adjusted
 	 *
-	 * @return Distancia del punto que se pasa como
-	 *  parámetro al punto ajustado. Si no hay ajuste,
-	 *  devuelve Double.MAX_VALUE
+	 * @return distance from <code>point</code> to the adjusted one. If there is no
+	 *  adjustment, returns <code>Double.MAX_VALUE</code>.
 	 */
 	private double adjustToHandler(Point2D point,
 			Point2D mapHandlerAdjustedPoint) {
@@ -300,15 +472,17 @@ public class CADToolAdapter extends Behavior {
 
 	}
 
-	/**
-	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mouseReleased(java.awt.event.MouseEvent)
 	 */
 	public void mouseReleased(MouseEvent e) throws BehaviorException {
 		getMapControl().repaint();
 	}
 
-	/**
-	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mouseDragged(java.awt.event.MouseEvent)
 	 */
 	public void mouseDragged(MouseEvent e) throws BehaviorException {
 		lastX = e.getX();
@@ -317,8 +491,9 @@ public class CADToolAdapter extends Behavior {
 		calculateSnapPoint(e.getPoint());
 	}
 
-	/**
-	 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mouseMoved(java.awt.event.MouseEvent)
 	 */
 	public void mouseMoved(MouseEvent e) throws BehaviorException {
 
@@ -332,6 +507,12 @@ public class CADToolAdapter extends Behavior {
 		getMapControl().repaint();
 	}
 
+	/**
+	 * Displays the current coordinates of the mouse's cursor on the associated <code>MapControl</code>
+	 *  object, at the status bar of the application's main frame.
+	 * 
+	 * @param pPix current 2D mouse's cursor coordinates on the <code>MapControl</code>
+	 */
 	private void showCoords(Point2D pPix)
 	{
 		String[] axisText = new String[2];
@@ -379,6 +560,9 @@ public class CADToolAdapter extends Behavior {
 		}
 	}
 
+	/**
+	 * Hides the mouse's cursor.
+	 */
 	private void clearMouseImage() {
 		int[] pixels = new int[16 * 16];
 		Image image = Toolkit.getDefaultToolkit().createImage(
@@ -390,10 +574,16 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * <p>Draws a 31x31 pixels cross round the mouse's cursor with an small geometry centered:
+	 *  <ul>
+	 *   <li><i>an square centered</i>: if isn't over a <i>control point</i>.
+	 *   <li><i>an small geometry centered according to the kind of control point</i>: if it's over a control
+	 *    point. In this case, the small geometry is drawn by a {@link ISnapper ISnapper} type object.<br>
+	 *    On the other hand, a light-yellowed background tool tip text with the type of <i>control point</i> will
+	 *     be displayed.</li>
+	 * </p> 
 	 *
-	 * @param g
-	 *            DOCUMENT ME!
+	 * @param g <code>MapControl</code>'s graphics where the data will be drawn
 	 */
 	private void drawCursor(Graphics g) {
 		g.setColor(Color.black);
@@ -453,9 +643,14 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * <p>Tries to find the nearest geometry or grid control point by the position of the current snap tool.</p>
+	 * 
+	 * <p>Prioritizes the grid control points than the geometries ones.</p>
+	 * 
+	 * <p>If finds any near, stores the <i>map</i> and <i>pixel</i> coordinates for the snap, and enables
+	 *  the <code>bForceCoord</code> attribute for the next draw of the mouse's cursor.</p>
 	 *
-	 * @param point
+	 * @param point current mouse 2D position
 	 */
 	private void calculateSnapPoint(Point point) {
 		// Se comprueba el ajuste a rejilla
@@ -508,18 +703,49 @@ public class CADToolAdapter extends Behavior {
 
 	}
 
-	/**
-	 * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mouseWheelMoved(java.awt.event.MouseWheelEvent)
 	 */
 	public void mouseWheelMoved(MouseWheelEvent e) throws BehaviorException {
 	}
 
 	/**
-	 * Método que realiza las transiciones en las herramientas en función de un
-	 * texto introducido en la consola
+	 * <p>Process the information written by the user about the next point coordinate, determining
+	 *  the kind of <i>transition</i> according the parameters written.</p>
+	 * 
+	 * <p>After, invokes one of the three possible <i>transition</i> methods of the <i>finite machine</i> of
+	 *  edition:
+	 *  <ul>
+	 *   <li><i>First transition type: <b>Point</i></b>: if <code>text</code> matches with any pattern of
+	 *    parameters needed for any kind of point coordinates.<br>
+	 *    There are eight ways of introducing point 2D coordinates:
+	 *    <ul>
+	 *    <li><i>X,Y</i> : absolute cardinal 2D coordinate from the center <i>(0,0)</i> of the CCS <i>Current Coordinate System</i>.</li>
+	 *    <li><i>@X,Y</i> : relative cardinal 2D distances from the last point added of the CCS. If it's the first point of the geometry,
+	 *     works like <i>X,Y</i>.</li>
+	 *    <li><i>length< angle</i> : absolute polar 2D coordinate from the center <i>(0,0)</i> of the CCS <i>Current Coordinate System</i>, using
+	 *     <i>angle</i> from the <i>X</i> axis of CCS, and <i>length</i> far away.</li>
+	 *    <li><i>@length< angle</i> : relative polar 2D coordinate from the last point added of the CCS <i>Current Coordinate System</i>, using
+	 *     <i>angle</i> from the <i>X</i> axis of CCS, and <i>length</i> far away. If it's the first point of the geometry,
+	 *     works like <i>length< angle</i>.</li>
+	 *    <li><i>*X,Y</i> : like <i>X,Y</i> but using UCS <i>Universal Coordinate System</i> as reference.</li>
+	 *    <li><i>@*X,Y</i> : like <i>@X,Y</i> but using UCS <i>Universal Coordinate System</i> as reference.
+	 *      If it's the first point of the geometry, works like <i>*X,Y</i>.</li>
+	 *    <li><i>*length< angle</i> : like <i>length< angle</i> but using UCS <i>Universal Coordinate System</i> as reference.</li>
+	 *    <li><i>@*length< angle</i> : like <i>@length< angle</i> but using UCS <i>Universal Coordinate System</i> as reference.
+	 *      If it's the first point of the geometry, works like <i>*length< angle</i>.</li>
+	 *    </ul>
+	 *   </li>
+	 *   <li><i>Second transition type: <b>Value</i></b>: if recognizes it as a single number.</li>
+	 *   <li><i>Third transition type: <b>Option</i></b>: by default, if can't classify the information as a single number
+	 *    neither as a point. This information will be an <code>String</code> and dealt as an option of the current
+	 *    tool state. Ultimately, if isn't valid, <code>text</code> will be rewritten in the console notifying the user
+	 *    that isn't correct.</li>
+	 *  </ul>
+	 * </p>
 	 *
-	 * @param text
-	 *            DOCUMENT ME!
+	 * @param text command written by user in the edition's console
 	 */
 	public void textEntered(String text) {
 		if (text == null) {
@@ -582,7 +808,8 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * If there are options related with the <code>CADTool</code> at the peek of the CAD tool stack,
+	 *  displays them as a popup.
 	 */
 	public void configureMenu() {
 		String[] desc = ((CADTool) cadToolStack.peek()).getDescriptions();
@@ -601,13 +828,25 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * Recibe los valores de la transición (normalmente un punto) y el evento
-	 * con el que se generó (si fue de ratón será MouseEvent, el que viene en el
-	 * pressed) y si es de teclado, será un KeyEvent. Del evento se puede sacar
-	 * información acerca de si estaba pulsada la tecla CTRL, o Alt, etc.
+	 * <p>One of the three kind of transaction methods of the <i>finite machine</i> of
+	 *  edition.</p>
+	 * 
+	 * <p>This one deals <code>values</code> as two numbers that, according <code>type</code>
+	 *  calculate a new point 2D in the current layer edited in the associated <code>MapControl</code>.</p>
 	 *
-	 * @param values
-	 * @param event
+	 * <p>There are different ways of calculating the new point 2D coordinates, according the value of <code>type</code>, see 
+	 *  {@link #textEntered(String) #textEntered(String)}.</p>
+	 *    
+	 * <p>After applying the changes, updates the controls available for managing the current data.</p>
+	 * 
+	 * @param values numbers needed to calculate the new point coordinates according <code>type</code>
+	 * @param event event which generated this invocation (a <code>MouseEvent</code> or a <code>KeyEvent</code>)
+	 * @param type kind of information that is <code>values</code>. According this parameter, will calculate the
+	 *  new point in a different way
+	 * 
+	 * @see CADTool#transition(double, double, InputEvent)
+	 * @see #transition(double)
+	 * @see #transition(String)
 	 */
 	private void transition(double[] values, InputEvent event, int type) {
 		questionAsked = true;
@@ -684,16 +923,20 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param text
-	 *            DOCUMENT ME!
-	 * @param source
-	 *            DOCUMENT ME!
-	 * @param sel
-	 *            DOCUMENT ME!
-	 * @param values
-	 *            DOCUMENT ME!
+	 * <p>One of the three kind of transaction methods of the <i>finite machine</i> of
+	 *  edition.</p>
+	 * 
+	 * <p>This one deals <code>value</code> as a single number used as a parameter for the current
+	 *    tool state. Ultimately, if isn't valid, <code>number</code> will be rewritten in the
+	 *    console notifying the user that isn't correct.</p>
+	 *    
+	 * <p>After applying the changes, updates the controls available for managing the current data.</p>
+	 * 
+	 * @param value value for the current tool state
+	 * 
+	 * @see CADTool#transition(double)
+	 * @see #transition(double[], InputEvent, int)
+	 * @see #transition(String)
 	 */
 	private void transition(double value) {
 		questionAsked = true;
@@ -706,6 +949,20 @@ public class CADToolAdapter extends Behavior {
 		PluginServices.getMainFrame().enableControls();
 	}
 
+	/**
+	 * <p>One of the three kind of transaction methods of the <i>finite machine</i> of
+	 *  edition.</p>
+	 * 
+	 * <p>This one deals <code>option</code> as an option of the current
+	 *    tool state. Ultimately, if isn't valid, <code>option</code> will be rewritten in the
+	 *    console notifying the user that isn't correct.</p>
+	 * 
+	 * @param option option for the current tool state
+	 * 
+	 * @see CADTool#transition(String)
+	 * @see #transition(double[], InputEvent, int)
+	 * @see #transition(double)
+	 */
 	public void transition(String option) {
 		questionAsked = true;
 		if (!cadToolStack.isEmpty()) {
@@ -728,10 +985,9 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * Shows or hides a grid on the <code>ViewPort</code> of the associated <code>MapControl</code>.
 	 *
-	 * @param value
-	 *            DOCUMENT ME!
+	 * @param value <code>true</code> to make the grid visible; <code>false</code> to make it invisible
 	 */
 	public void setGridVisibility(boolean value) {
 		getGrid().setShowGrid(value);
@@ -739,16 +995,31 @@ public class CADToolAdapter extends Behavior {
 		getMapControl().repaint();
 	}
 
+	/**
+	 * Sets the snap tools enabled or disabled.
+	 * 
+	 * @param activated <code>true</code> to enable the snap tools; <code>false</code> to disable them
+	 * 
+	 * @see #isRefentEnabled()
+	 */
 	public void setRefentEnabled(boolean activated) {
 		bRefent = activated;
 	}
 
+	/**
+	 * Determines if snap tools are enabled or disabled.
+	 * 
+	 * @return <code>true</code> to enable the snap tools; <code>false</code> to disable them
+	 * 
+	 * @see #setRefentEnabled(boolean)
+	 */
 	public boolean isRefentEnabled()
 	{
 		return bRefent;
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#getListener()
 	 */
 	public ToolListener getListener() {
@@ -770,19 +1041,26 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return DOCUMENT ME!
+	 * Returns the {@link CADTool CADTool} at the top of the stack without removing it from the CAD tool stack.
+	 * 
+	 * @return the {@link CADTool CADTool} at the top of the stack
+	 * 
+	 * @see #pushCadTool(CADTool)
+	 * @see #popCadTool()
+	 * @see #setCadTool(CADTool)
 	 */
 	public CADTool getCadTool() {
 		return (CADTool) cadToolStack.peek();
 	}
 
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param cadTool
-	 *            DOCUMENT ME!
+	 * <p>Pushes a {@link CADTool CADTool} onto the top of the CAD tool stack, and sets it as current.</p>
+	 * 
+	 * @param cadTool CAD tool to enable as current
+	 *            
+	 * @see #getCadTool()
+	 * @see #popCadTool()
+	 * @see #setCadTool(CADTool)
 	 */
 	public void pushCadTool(CADTool cadTool) {
 		cadToolStack.push(cadTool);
@@ -808,14 +1086,23 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * Removes the peek of the CAD tool stack.
+	 * 
+	 * @see #pushCadTool(CADTool)
+	 * @see #getCadTool()
+	 * @see #setCadTool(CADTool)
 	 */
 	public void popCadTool() {
 		cadToolStack.pop();
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * <p>Displays at the console associated to the current active view that's being edited, the question of the following
+	 *  operation that user can do with the current <code>CADTool</code>, only if it hasn't just answered.</p>
+	 * 
+	 * <p>The format of the question will be according the following pattern:<br>
+	 *   "\n#"<i>{cadtool at CAD tool stack peek}</i>.getQuestion()">"
+	 * </p>
 	 */
 	public void askQuestion() {
 		CADTool cadtool = (CADTool) cadToolStack.peek();
@@ -841,10 +1128,13 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param cadTool
-	 *            DOCUMENT ME!
+	 * Empties the CAD tools stack and pushes <code>cadTool</code> in it.
+	 * 
+	 * @param cadTool CAD tool to set at the peek of the stack
+	 * 
+	 * @see #pushCadTool(CADTool)
+	 * @see #popCadTool()
+	 * @see #getCadTool()
 	 */
 	public void setCadTool(CADTool cadTool) {
 		cadToolStack.clear();
@@ -852,9 +1142,8 @@ public class CADToolAdapter extends Behavior {
 		// askQuestion();
 	}
 
-
 	/**
-	 * Elimina las geometrías seleccionadas actualmente
+	 * <p>Removes all geometries selected in the associated <code>MapControl</code>.
 	 */
 	public void delete() {
 		ILayerEdited aux = CADExtension.getEditionManager().getActiveLayerEdited();
@@ -905,18 +1194,33 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param b
+	 * @see CADGrid#setAdjustGrid(boolean)
 	 */
 	public void setAdjustGrid(boolean b) {
 		getGrid().setAdjustGrid(b);
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * <p>Responds to actions of writing common key commands for all kind of CAD operations, enabling/disabling after
+	 *  the controls to manage the available information according the tool selected:
+	 *  <ul>
+	 *   <li><i>eliminar</i>: removes the geometries that are now selected.</li>
+	 *   <li><i>escape</i>: executes different actions according to the current CAD tool of the associated <code>MapControl</code>:
+	 *    <ul>
+	 *     <li>If the tool enabled is identified by <i>cadtooladapter</i>: empties the CAD tools stack, changing the current tool by
+	 *      a {@link SelectionCADTool SelectionCADTool}, which is identified by <i>_selection</i> and allows select features of the
+	 *      active vector layer of the associated <code>MapControl</code> instance. </li>
+	 *     <li>Otherwise, that means current associated <code>MapControl</code> instance isn't identified by "<i>cadtooladapter</i>",
+	 *      changes the enabled tool by the previous.</li>
+	 *    </ul>
+	 *   </li>
+	 *  </ul>
+	 * </p>
 	 *
-	 * @param actionCommand
+	 * @param actionCommand identifier of the key action command executed by the user
+	 * 
+	 * @see SelectionCADTool
+	 * @see MapControl#setPrevTool()
 	 */
 	public void keyPressed(String actionCommand) {
 		if (CADExtension.getEditionManager().getActiveLayerEdited()== null) {
@@ -957,10 +1261,11 @@ public class CADToolAdapter extends Behavior {
 	}
 
 	/**
-	 * Provoca un repintado "soft" de la capa activa en edición.
-	 * Las capas por debajo de ella no se dibujan de verdad, solo
-	 * se dibuja la que está en edición y las que están por encima
-	 * de ella en el TOC.
+	 * <p>Applies a lightweight repaint of the active layer being edited.</p>
+	 * 
+	 * <p>All layers under it won't be drawn, only the upper one and whose are over that layer in the TOC.</p>
+	 * 
+	 * @see MapControl#rePaintDirtyLayers()
 	 */
 	public void refreshEditedLayer()
 	{
@@ -973,34 +1278,101 @@ public class CADToolAdapter extends Behavior {
 
 	}
 
+	/**
+	 * Gets the {@link CADGrid CADGrid} that can be drawn on the <code>ViewPort</code> of the associated <code>MapControl</code>.
+	 * 
+	 * @return reference to the <i>grid</i> that can be applied on the <code>ViewPort</code>
+	 * 
+	 * @see #setGridVisibility(boolean)
+	 */
 	public CADGrid getGrid() {
 		return cadgrid;
 	}
 
+	/**
+	 * Determines if is enabled or not the <i>orto</i> mode.
+	 * 
+	 * @return <code>true</code> if is enabled the <i>orto</i> mode; otherwise <code>false</code> 
+	 * 
+	 * @see #setOrtoMode(boolean)
+	 */
 	public boolean isOrtoMode() {
 		return bOrtoMode;
 	}
 
+	/**
+	 * Enables / disables the <i>orto</i> mode.
+	 * 
+	 * @param b the desired value
+	 * 
+	 * @see #isOrtoMode()
+	 */
 	public void setOrtoMode(boolean b) {
 		bOrtoMode = b;
 	}
 
+	/**
+	 * Associates and stores the specified name with the specified {@link CADTool CADTool}.
+	 * 
+	 * @param name name of the tool
+	 * @param c CAD tool to interactuate editing the layers
+	 * 
+	 * @see #getCADTools()
+	 * @see #getCADTool(String)
+	 */
 	public static void addCADTool(String name, CADTool c) {
 		namesCadTools.put(name, c);
 
 	}
+
+	/**
+	 * Gets all CAD tools available to edit layers with this tool listener.
+	 * 
+	 * @return CAD tools available to edit layers with this tool listener
+	 *
+	 * @see #addCADTool(String, CADTool)
+	 * @see #getCADTool(String)
+	 */
 	public static CADTool[] getCADTools() {
 		return (CADTool[]) CADToolAdapter.namesCadTools.values().toArray(new CADTool[0]);
 	}
+
+	/**
+	 * Returns the {@link CADTool CADTool} to which the specified name is mapped.
+	 * 
+	 * @param text name of the tool
+	 * @return the CAD tool whose associated name is to be returned
+	 * 
+	 * @see #addCADTool(String, CADTool)
+	 * @see #getCADTools()
+	 */
 	public CADTool getCADTool(String text) {
 		CADTool ct = (CADTool) namesCadTools.get(text);
 		return ct;
 	}
 
+	/**
+	 * Gets the object used to manage the edition of the layers of the associated <code>MapControl</code>.
+	 * 
+	 * @see EditionManager
+	 * 
+	 * @return object used to manage the edition of the layers
+	 */
 	public EditionManager getEditionManager() {
 		return editionManager;
 	}
 
+	/**
+	 * <p>Initializes the <i>flatness</i> with the defined in preferences.</p>
+	 *
+	 * <p>The <i>flatness</i> is the maximum tolerance used to approximate curved lines in a <i>shape</i> by polylines.</p>
+	 * <p>The shapes doesn't support primitive like arcs neither other curved lines to draw their geometries, then for drawing any
+	 *  kind of this geometries the curved lines are drawn approximately by a polyline. And for doing more realistic that curves,
+	 *  is used the <i>flatness</i> parameter, that indicates that the difference between each arc and the straight segment that
+	 *  approximates it must be in the worse case, like the <i>flatness</i>.</p>
+	 *  
+	 * @see FConverter#FLATNESS
+	 */
 	public void initializeFlatness() {
 		if (!flatnessInitialized){
 			flatnessInitialized=true;
@@ -1009,6 +1381,20 @@ public class CADToolAdapter extends Behavior {
 			FConverter.FLATNESS=flatness;
 		}
 	}
+
+	/**
+	 * <p>Updates the grid on the <code>ViewPort</code> of the associated <code>MapControl</code>
+	 *  object according the values in the {@link com.iver.cit.gvsig.gui.cad.CADToolAdapter.prefs.Preferences com.iver.cit.gvsig.gui.cad.CADToolAdapter.prefs.Preferences}.</p>
+	 * 
+	 * <p>The preferences are:
+	 *  <ul>
+	 *   <li>Show/hide the grid.</li>
+	 *   <li>Adjust or not the grid.</li>
+	 *   <li>Horizontal ( X ) line separation.</li>
+	 *   <li>Vertical ( Y ) line separation.</li>
+	 *  </ul>
+	 * </p>
+	 */
 	public void initializeGrid(){
 		boolean showGrid = prefs.getBoolean("grid.showgrid",getGrid().isShowGrid());
 		boolean adjustGrid = prefs.getBoolean("grid.adjustgrid",getGrid().isAdjustGrid());
@@ -1021,9 +1407,14 @@ public class CADToolAdapter extends Behavior {
 		getGrid().setGridSizeX(dx);
 		getGrid().setGridSizeY(dy);
 	}
+
 	/**
-	* Returns the type of active layer.
-	**/
+	 * <p>Returns the type of the shape that's the current active and vector layer being edited.</p>
+	 * 
+	 * @see FLyrVect#getShapeType()
+	 * 
+	 * @return type of the shape that's the current active and vector layer being edited
+	 */
 	public int getActiveLayerType() {
 		int type=FShape.MULTI;
 		try {

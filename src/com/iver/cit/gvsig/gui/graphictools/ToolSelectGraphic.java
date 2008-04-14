@@ -57,25 +57,47 @@ import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Events.PointEvent;
 import com.iver.cit.gvsig.fmap.tools.Listeners.PointListener;
 
+/**
+ * <p>Listener that selects the items of a {@link GraphicLayer GraphicLayer} that their area
+ *  intersects with the point selected on the associated <code>MapControl</code>.</p>
+ *
+ * <p>Listens a single click of any mouse's button.</p>
+ */
 public class ToolSelectGraphic implements PointListener{
 	
 //	private final Image img = new ImageIcon(MapControl.class.getResource(
 //	"images/PointSelectCursor.gif")).getImage();
+	/**
+	 * The image to display when the cursor is active.
+	 */	
 	private final Image img = PluginServices.getIconTheme().get("rect-select-cursor").getImage();
-private Cursor cur = Toolkit.getDefaultToolkit().createCustomCursor(img,
-new Point(16, 16), "");
-protected MapControl mapCtrl;
 
-/**
-* Crea un nuevo AreaListenerImpl.
-*
-* @param mc MapControl.
-*/
-public ToolSelectGraphic(MapControl mc) {
-this.mapCtrl = mc;
-}
+	/**
+	 * The cursor used to work with this tool listener.
+	 * 
+	 * @see #getCursor()
+	 */
+	private Cursor cur = Toolkit.getDefaultToolkit().createCustomCursor(img,
+	new Point(16, 16), "");
 
+	/**
+	 * Reference to the <code>MapControl</code> object that uses.
+	 */
+	protected MapControl mapCtrl;
 
+	/**
+	 * <p>Creates a new <code>ToolSelectGraphic</code> object.</p>
+	 * 
+	 * @param mc the <code>MapControl</code> where will be applied the changes
+	 */
+	public ToolSelectGraphic(MapControl mc) {
+	this.mapCtrl = mc;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Listeners.PointListener#point(com.iver.cit.gvsig.fmap.tools.Events.PointEvent)
+	 */
 	public void point(PointEvent event) throws BehaviorException {
         Point2D p = event.getPoint();
         Point2D mapPoint = mapCtrl.getViewPort().toMapPoint((int) p.getX(), (int) p.getY());
@@ -96,19 +118,30 @@ this.mapCtrl = mc;
 		mapCtrl.drawGraphics();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Listeners.PointListener#pointDoubleClick(com.iver.cit.gvsig.fmap.tools.Events.PointEvent)
+	 */
 	public void pointDoubleClick(PointEvent event) throws BehaviorException {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener#getCursor()
+	 */
 	public Cursor getCursor() {
 		return cur;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener#cancelDrawing()
+	 */
 	public boolean cancelDrawing() {
 		return false;
 	}
-
 }
 
 
