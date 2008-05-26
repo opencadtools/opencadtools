@@ -75,9 +75,9 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * @author Vicente Caballero Navarro
  */
 public class MoveCADTool extends DefaultCADTool {
-    private MoveCADToolContext _fsm;
-    private Point2D firstPoint;
-    private Point2D lastPoint;
+    protected MoveCADToolContext _fsm;
+    protected Point2D firstPoint;
+    protected Point2D lastPoint;
 
     /**
      * Crea un nuevo PolylineCADTool.
@@ -185,7 +185,7 @@ public class MoveCADTool extends DefaultCADTool {
 				NotificationManager.addError(e.getMessage(),e);
 			} catch (ReadDriverException e) {
 				NotificationManager.addError(e.getMessage(),e);
-			} 
+			}
             PluginServices.getMDIManager().restoreCursor();
         }
     }
