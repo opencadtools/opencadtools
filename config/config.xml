@@ -124,11 +124,11 @@
 		<extension class-name="com.iver.cit.gvsig.InsertLineExtension"
 			description="Extensión encargada de insertar líneas en una capa en edición."
 			active="true">
-			<menu text="geometry/insert/line" action-command="_line" icon="edition-insert-geometry-line"/>
+			<menu text="geometry/insert/line" action-command="_line" icon="edition-geometry-insert-line"/>
 			<menu text="geometry/insert/arc" action-command="_arc" icon="edition-insert-geometry-arc"/>
 
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-line" action-command="_line" tooltip="line" group="vista" position="3"/>
+				<selectable-tool icon="edition-geometry-insert-line" action-command="_line" tooltip="line" group="vista" position="3"/>
 				<selectable-tool icon="edition-insert-geometry-arc" action-command="_arc" tooltip="arc" group="vista" position="4"/>
 			</tool-bar>
 		</extension>
@@ -146,13 +146,13 @@
 		<extension class-name="com.iver.cit.gvsig.InsertPolygonExtension"
 			description="Extensión encargada de insertar poligonos en una capa en edición."
 			active="true">
-			<menu text="geometry/insert/polygon" action-command="_polygon" icon="edition-insert-geometry-poligon"/>
+			<menu text="geometry/insert/polygon" action-command="_polygon" icon="edition-insert-geometry-polygon"/>
 			<menu text="geometry/insert/rectangle" action-command="_rectangle" icon="edition-insert-geometry-rectangle"/>
 			<menu text="geometry/insert/circle" action-command="_circle" icon="edition-insert-geometry-circle"/>
 			<menu text="geometry/insert/ellipse" action-command="_ellipse" icon="edition-insert-geometry-ellipse"/>
 			<menu text="geometry/modify/edit_vertex" action-command="_editvertex" icon="edition-geometry-edit-vertex"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-poligon" action-command="_polygon" tooltip="polygon" group="vista" position="6"/>
+				<selectable-tool icon="edition-insert-geometry-polygon" action-command="_polygon" tooltip="polygon" group="vista" position="6"/>
 				<selectable-tool icon="edition-insert-geometry-rectangle" action-command="_rectangle" tooltip="rectangle" group="vista" position="7"/>
 				<selectable-tool icon="edition-insert-geometry-circle" action-command="_circle" tooltip="circle" group="vista" position="8"/>
 				<selectable-tool icon="edition-insert-geometry-ellipse" action-command="_ellipse" tooltip="ellipse" group="vista" position="9"/>
