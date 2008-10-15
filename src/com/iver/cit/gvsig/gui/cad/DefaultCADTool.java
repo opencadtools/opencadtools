@@ -122,7 +122,7 @@ public abstract class DefaultCADTool implements CADTool {
 		}
 		temporalCache.clear();
 	}
-	private void insertSpatialCache(IGeometry geom) {
+	protected void insertSpatialCache(IGeometry geom) {
 		VectorialLayerEdited vle = getVLE();
 		SpatialCache spatialCache=((FLyrVect)vle.getLayer()).getSpatialCache();
 		Rectangle2D r=geom.getBounds2D();
@@ -211,34 +211,34 @@ public abstract class DefaultCADTool implements CADTool {
 			// Deberíamos comprobar que lo que escribimos es correcto:
 			// Lo hacemos en el VectorialAdapter, justo antes de
 			// añadir, borrar o modificar una feature
-
+			
 			int numAttr = vea.getRecordset().getFieldCount();
 			Value[] values = new Value[numAttr];
 			for (int i = 0; i < numAttr; i++) {
 				values[i] = ValueFactory.createNullValue();
 			}
 			String newFID = vea.getNewFID();
-				DefaultFeature df = new DefaultFeature(geometry, values, newFID);
-				int index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
-				VectorialLayerEdited vle = getVLE();
-				clearSelection();
-				//ArrayList selectedRow = vle.getSelectedRow();
-
-
-				ViewPort vp = vle.getLayer().getMapContext().getViewPort();
-				BufferedImage selectionImage = new BufferedImage(vp
-						.getImageWidth(), vp.getImageHeight(),
-						BufferedImage.TYPE_INT_ARGB);
-				Graphics2D gs = selectionImage.createGraphics();
-				int inversedIndex=vea.getInversedIndex(index);
-				vle.addSelectionCache(new DefaultRowEdited(df,
-						IRowEdited.STATUS_ADDED, inversedIndex ));
-				vea.getSelection().set(inversedIndex);
-				IGeometry geom = df.getGeometry();
-					geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
-				vle.drawHandlers(geom.cloneGeometry(), gs, vp);
-				vea.setSelectionImage(selectionImage);
-				insertSpatialCache(geom);
+			DefaultFeature df = new DefaultFeature(geometry, values, newFID);
+			int index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
+			VectorialLayerEdited vle = getVLE();
+			clearSelection();
+			//ArrayList selectedRow = vle.getSelectedRow();
+			
+			
+			ViewPort vp = vle.getLayer().getMapContext().getViewPort();
+			BufferedImage selectionImage = new BufferedImage(vp
+					.getImageWidth(), vp.getImageHeight(),
+					BufferedImage.TYPE_INT_ARGB);
+			Graphics2D gs = selectionImage.createGraphics();
+			int inversedIndex=vea.getInversedIndex(index);
+			vle.addSelectionCache(new DefaultRowEdited(df,
+					IRowEdited.STATUS_ADDED, inversedIndex ));
+			vea.getSelection().set(inversedIndex);
+			IGeometry geom = df.getGeometry();
+			geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
+			vle.drawHandlers(geom.cloneGeometry(), gs, vp);
+			vea.setSelectionImage(selectionImage);
+			insertSpatialCache(geom);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
 			return;

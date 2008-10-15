@@ -75,10 +75,10 @@ import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
  * @author Vicente Caballero Navarro
  */
 public class EquidistanceCADTool extends DefaultCADTool {
-    private EquidistanceCADToolContext _fsm;
-    private Point2D firstPoint=new Point2D.Double(800000,4500000);
-    private Point2D secondPoint=new Point2D.Double(810000,4500000);
-	private double distance=10;
+    protected EquidistanceCADToolContext _fsm;
+    protected Point2D firstPoint=new Point2D.Double(800000,4500000);
+    protected Point2D secondPoint=new Point2D.Double(810000,4500000);
+	protected double distance=10;
 	private double distancePos=java.lang.Double.MAX_VALUE;
 	private LineString distanceLine;
 	/**
@@ -149,39 +149,39 @@ public class EquidistanceCADTool extends DefaultCADTool {
      * @param y parámetro y del punto que se pase en esta transición.
      */
     public void addPoint(double x, double y,InputEvent event) {
-        EquidistanceCADToolState actualState = (EquidistanceCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
-        if (status.equals("Equidistance.Distance")) {
-        	firstPoint = new Point2D.Double(x, y);
+    	EquidistanceCADToolState actualState = (EquidistanceCADToolState) _fsm.getPreviousState();
+    	String status = actualState.getName();
+    	if (status.equals("Equidistance.Distance")) {
+    		firstPoint = new Point2D.Double(x, y);
     	} else if (status.equals("Equidistance.SecondPointDistance")) {
     		secondPoint = new Point2D.Double(x,y);
     		distance=secondPoint.distance(firstPoint);
     	} else if (status.equals("Equidistance.Position")) {
     		ArrayList selectedRow = getSelectedRows();
-            ArrayList selectedRowAux=new ArrayList();
-            VectorialLayerEdited vle = getVLE();
-            VectorialEditableAdapter vea = vle.getVEA();
-            PluginServices.getMDIManager().setWaitCursor();
-    			vea.startComplexRow();
-    			for (int i = 0; i < selectedRow.size(); i++) {
-    				DefaultRowEdited row = (DefaultRowEdited) selectedRow
-    						.get(i);
-    				DefaultFeature fea = (DefaultFeature) row.getLinkedRow()
-    						.cloneRow();
-
-    				IGeometry geometry=compute(fea,new Point2D.Double(x,y));
-    				addGeometry(geometry);
-    			}
-
-    			vea.endComplexRow(getName());
-    			vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowAux);
-    			//clearSelection();
-    			//selectedRow.addAll(selectedRowAux);
+    		ArrayList selectedRowAux=new ArrayList();
+    		VectorialLayerEdited vle = getVLE();
+    		VectorialEditableAdapter vea = vle.getVEA();
+    		PluginServices.getMDIManager().setWaitCursor();
+    		vea.startComplexRow();
+    		for (int i = 0; i < selectedRow.size(); i++) {
+    			DefaultRowEdited row = (DefaultRowEdited) selectedRow
+    			.get(i);
+    			DefaultFeature fea = (DefaultFeature) row.getLinkedRow()
+    			.cloneRow();
+    			
+    			IGeometry geometry=compute(fea,new Point2D.Double(x,y));
+    			addGeometry(geometry);
+    		}
+    		
+    		vea.endComplexRow(getName());
+    		vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowAux);
+    		//clearSelection();
+    		//selectedRow.addAll(selectedRowAux);
     		PluginServices.getMDIManager().restoreCursor();
     	}
     }
 
-    private IGeometry compute(DefaultFeature fea, Point2D position){
+    protected IGeometry compute(DefaultFeature fea, Point2D position){
 		IGeometry geometry = fea.getGeometry();
 		int typeGeometry = geometry.getGeometryType();
 		Geometry g = geometry.toJTSGeometry();

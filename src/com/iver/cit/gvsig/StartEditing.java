@@ -195,7 +195,7 @@ public class StartEditing extends Extension {
 
 	}
 
-	private void changeModelTable(ProjectTable pt, VectorialEditableAdapter vea){
+	protected void changeModelTable(ProjectTable pt, VectorialEditableAdapter vea){
    	 com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices.getMDIManager().getAllWindows();
 
 		for (int i=0 ; i<views.length ; i++){

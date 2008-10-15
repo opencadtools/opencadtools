@@ -61,9 +61,9 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.RectangleCADToolContext.RectangleCAD
  * @author Vicente Caballero Navarro
  */
 public class RectangleCADTool extends DefaultCADTool {
-    private RectangleCADToolContext _fsm;
-    private Point2D firstPoint;
-    private Point2D lastPoint;
+    protected RectangleCADToolContext _fsm;
+    protected Point2D firstPoint;
+    protected Point2D lastPoint;
 
     /**
      * Crea un nuevo LineCADTool.

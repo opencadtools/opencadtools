@@ -70,15 +70,15 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADTo
  * @author Vicente Caballero Navarro
  */
 public class PolylineCADTool extends DefaultCADTool {
-	private PolylineCADToolContext _fsm;
-    private Point2D firstPoint;
-    private Point2D antPoint;
-    private Point2D antantPoint;
-    private Point2D antCenter;
-    private Point2D antInter;
-    private ArrayList list = new ArrayList();
-	private boolean close=false;
-	private GeneralPathX gpx = null;
+	protected PolylineCADToolContext _fsm;
+    protected Point2D firstPoint;
+    protected Point2D antPoint;
+    protected Point2D antantPoint;
+    protected Point2D antCenter;
+    protected Point2D antInter;
+    protected ArrayList list = new ArrayList();
+	protected boolean close=false;
+	protected GeneralPathX gpx = null;
 
     /**
      * Crea un nuevo PolylineCADTool.

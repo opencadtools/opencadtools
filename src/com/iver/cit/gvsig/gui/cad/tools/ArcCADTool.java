@@ -61,10 +61,10 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext.ArcCADToolState;
  * @author Vicente Caballero Navarro
  */
 public class ArcCADTool extends DefaultCADTool {
-    private ArcCADToolContext _fsm;
-    private Point2D p1;
-    private Point2D p2;
-    private Point2D p3;
+    protected ArcCADToolContext _fsm;
+    protected Point2D p1;
+    protected Point2D p2;
+    protected Point2D p3;
 
     /**
      * Crea un nuevo LineCADTool.

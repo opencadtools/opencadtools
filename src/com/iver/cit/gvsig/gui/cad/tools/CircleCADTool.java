@@ -61,11 +61,11 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext.CircleCADToolSt
  * @author Vicente Caballero Navarro
  */
 public class CircleCADTool extends DefaultCADTool {
-    private CircleCADToolContext _fsm;
-    private Point2D center;
-    private Point2D firstPoint;
-    private Point2D secondPoint;
-    private Point2D thirdPoint;
+    protected CircleCADToolContext _fsm;
+    protected Point2D center;
+    protected Point2D firstPoint;
+    protected Point2D secondPoint;
+    protected Point2D thirdPoint;
 
     /**
      * Crea un nuevo LineCADTool.

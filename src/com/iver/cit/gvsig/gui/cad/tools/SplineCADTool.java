@@ -69,9 +69,9 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.SplineCADToolContext.SplineCADToolSt
  */
 public class SplineCADTool extends DefaultCADTool {
 	private static Logger logger = Logger.getLogger(SplineCADTool.class.getName());
-    private SplineCADToolContext _fsm;
-    private ArrayList list = new ArrayList();
-	private boolean close=false;
+    protected SplineCADToolContext _fsm;
+    protected ArrayList list = new ArrayList();
+	protected boolean close=false;
 
     /**
      * Crea un nuevo SplineCADTool.

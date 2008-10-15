@@ -61,7 +61,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.MultiPointCADToolContext.MultiPointC
  */
 public class MultiPointCADTool extends DefaultCADTool {
     private MultiPointCADToolContext _fsm;
-    private ArrayList points=new ArrayList();
+    protected ArrayList points=new ArrayList();
     /**
      * Crea un nuevo PointCADTool.
      */

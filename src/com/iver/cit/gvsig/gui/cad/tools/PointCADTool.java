@@ -58,7 +58,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolStat
  * @author Vicente Caballero Navarro
  */
 public class PointCADTool extends DefaultCADTool {
-    private PointCADToolContext _fsm;
+    protected PointCADToolContext _fsm;
 
     /**
      * Crea un nuevo PointCADTool.

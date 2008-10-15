@@ -61,11 +61,11 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext.LineCADToolState;
  * @author Vicente Caballero Navarro
  */
 public class LineCADTool extends DefaultCADTool {
-    private LineCADToolContext _fsm;
-    private Point2D firstPoint;
-    private Point2D lastPoint;
-    private double angle;
-    private double length;
+    protected LineCADToolContext _fsm;
+    protected Point2D firstPoint;
+    protected Point2D lastPoint;
+    protected double angle;
+    protected double length;
 
     /**
      * Crea un nuevo LineCADTool.

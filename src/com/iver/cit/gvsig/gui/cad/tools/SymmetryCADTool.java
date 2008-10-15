@@ -77,9 +77,9 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * @author Vicente Caballero Navarro
  */
 public class SymmetryCADTool extends DefaultCADTool {
-    private SymmetryCADToolContext _fsm;
-    private Point2D firstPoint;
-    private Point2D secondPoint;
+    protected SymmetryCADToolContext _fsm;
+    protected Point2D firstPoint;
+    protected Point2D secondPoint;
 
     /**
      * Crea un nuevo SymmetryCADTool.

@@ -66,10 +66,10 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PolygonCADToolContext.PolygonCADTool
  * @author Vicente Caballero Navarro
  */
 public class PolygonCADTool extends DefaultCADTool {
-    private PolygonCADToolContext _fsm;
-    private Point2D center;
-    private int numLines = 5;
-    private boolean isI = true;
+    protected PolygonCADToolContext _fsm;
+    protected Point2D center;
+    protected int numLines = 5;
+    protected boolean isI = true;
 
     /**
      * Crea un nuevo PolygonCADTool.
@@ -226,7 +226,7 @@ public class PolygonCADTool extends DefaultCADTool {
      *
      * @return GeometryCollection con las geometrías del polígono.
      */
-    private IGeometry getCPolygon(Point2D point, double radio) {
+    protected IGeometry getCPolygon(Point2D point, double radio) {
         Point2D p1 = UtilFunctions.getPoint(center, point, radio);
 
         double initangle = UtilFunctions.getAngle(center, point);
@@ -281,7 +281,7 @@ public class PolygonCADTool extends DefaultCADTool {
      * @return GeometryCollection con las geometrías del polígono.
      * @throws ValueException
      */
-    private IGeometry getIPolygon(Point2D point, double radio){
+    protected IGeometry getIPolygon(Point2D point, double radio){
     	Point2D p1 = UtilFunctions.getPoint(center, point, radio);
         double initangle = UtilFunctions.getAngle(center, point);
         Point2D antPoint = p1;
