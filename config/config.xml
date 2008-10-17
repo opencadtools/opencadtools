@@ -44,7 +44,7 @@
 			active="true">
 			<menu text="Capa/redo" action-command="REDO" icon="view-redo"/>
 		<tool-bar name="modificar" position="31">
-				<action-tool name="redo" icon="view-redo" action-command="REDO" tooltip="redo" group="vista" position="2"/>
+				<action-tool name="redo" icon="view-redo" action-command="REDO" tooltip="redo" position="2"/>
 		</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.UndoViewExtension"
@@ -52,7 +52,7 @@
 			active="true" >
 			<menu text="Capa/undo" action-command="UNDO" icon="view-undo"/>
 		<tool-bar name="modificar" position="31">
-				<action-tool name="deshacer" icon="view-undo" action-command="UNDO" tooltip="undo" group="vista" position="1"/>
+				<action-tool name="deshacer" icon="view-undo" action-command="UNDO" tooltip="undo" position="1"/>
 		</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.ViewCommandStackExtension"
@@ -60,7 +60,7 @@
 			active="true">
 			<menu text="Archivo/commands_stack" action-command="COMMANDSTACK" icon="commands-stack"/>
 		<tool-bar name="gvsig" position="32">
-			<action-tool name="commands_stack" icon="commands-stack" action-command="COMMANDSTACK" tooltip="commands_stack" group="vista" position="1"/>
+			<action-tool name="commands_stack" icon="commands-stack" action-command="COMMANDSTACK" tooltip="commands_stack" position="1"/>
 		</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.TableCommandStackExtension"
@@ -68,7 +68,7 @@
 			active="true">
 			<menu text="Archivo/commands_stack" action-command="COMMANDSTACK" icon="commands-stack"/>
 		<tool-bar name="gvsig">
-			<action-tool name="commands_stack" icon="commands-stack" action-command="COMMANDSTACK" tooltip="commands_stack" group="tabla" position="1"/>
+			<action-tool name="commands_stack" icon="commands-stack" action-command="COMMANDSTACK" tooltip="commands_stack" position="1"/>
 		</tool-bar>
 		</extension>
 
@@ -81,10 +81,10 @@
 			<menu text="geometry/modify/scale" action-command="_scale" icon="edition-geometry-scale"/>
 
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-copy" action-command="_copy" tooltip="copy" group="vista" position="4"/>
-				<selectable-tool icon="edition-geometry-symmetry" action-command="_symmetry" tooltip="symmetry" group="vista" position="5"/>
-				<selectable-tool icon="edition-geometry-rotate" action-command="_rotate" tooltip="rotate" group="vista" position="7"/>
-				<selectable-tool icon="edition-geometry-scale" action-command="_scale" tooltip="scale" group="vista" position="8"/>
+				<selectable-tool icon="edition-geometry-copy" action-command="_copy" tooltip="copy" position="4"/>
+				<selectable-tool icon="edition-geometry-symmetry" action-command="_symmetry" tooltip="symmetry" position="5"/>
+				<selectable-tool icon="edition-geometry-rotate" action-command="_rotate" tooltip="rotate" position="7"/>
+				<selectable-tool icon="edition-geometry-scale" action-command="_scale" tooltip="scale" position="8"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.ExploitExtension"
@@ -92,7 +92,7 @@
 			active="true">
 			<menu text="geometry/modify/exploit" action-command="_exploit" icon="edition-geometry-exploit"/>
 			<tool-bar name="modificar" position="31">
-				<action-tool icon="edition-geometry-exploit" action-command="_exploit" tooltip="exploit" group="vista" position="14"/>
+				<action-tool icon="edition-geometry-exploit" action-command="_exploit" tooltip="exploit" position="14"/>
 			</tool-bar>
 		</extension>
 
@@ -101,7 +101,7 @@
 			active="true">
 			<menu text="geometry/modify/move" action-command="_move" icon="edition-geometry-move"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-move" action-command="_move" tooltip="move" group="vista" position="3"/>
+				<selectable-tool icon="edition-geometry-move" action-command="_move" tooltip="move" position="3"/>
 			</tool-bar>
 		</extension>
 
@@ -110,7 +110,7 @@
 			active="true">
 			<menu text="geometry/insert/point" action-command="_point" icon="edition-insert-geometry-point"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-point" action-command="_point" tooltip="point" group="vista" position="1"/>
+				<selectable-tool icon="edition-insert-geometry-point" action-command="_point" tooltip="point" position="1"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertMultiPointExtension"
@@ -118,7 +118,7 @@
 			active="true">
 			<menu text="geometry/insert/multipoint" action-command="_multipoint" icon="edition-insert-geometry-multipoint"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-multipoint" action-command="_multipoint" tooltip="multipoint" group="vista" position="2"/>
+				<selectable-tool icon="edition-insert-geometry-multipoint" action-command="_multipoint" tooltip="multipoint" position="2"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertLineExtension"
@@ -128,8 +128,8 @@
 			<menu text="geometry/insert/arc" action-command="_arc" icon="edition-insert-geometry-arc"/>
 
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-geometry-insert-line" action-command="_line" tooltip="line" group="vista" position="3"/>
-				<selectable-tool icon="edition-insert-geometry-arc" action-command="_arc" tooltip="arc" group="vista" position="4"/>
+				<selectable-tool icon="edition-geometry-insert-line" action-command="_line" tooltip="line" position="3"/>
+				<selectable-tool icon="edition-insert-geometry-arc" action-command="_arc" tooltip="arc" position="4"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertPolyLineExtension"
@@ -139,8 +139,8 @@
 			<menu text="geometry/insert/spline" action-command="_spline" icon="edition-insert-geometry-spline"/>
 
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-polyline" action-command="_polyline" tooltip="polyline" group="vista" position="5"/>
-				<selectable-tool icon="edition-insert-geometry-spline" action-command="_spline" tooltip="spline" group="vista" position="5"/>
+				<selectable-tool icon="edition-insert-geometry-polyline" action-command="_polyline" tooltip="polyline" position="5"/>
+				<selectable-tool icon="edition-insert-geometry-spline" action-command="_spline" tooltip="spline" position="5"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertPolygonExtension"
@@ -152,13 +152,13 @@
 			<menu text="geometry/insert/ellipse" action-command="_ellipse" icon="edition-insert-geometry-ellipse"/>
 			<menu text="geometry/modify/edit_vertex" action-command="_editvertex" icon="edition-geometry-edit-vertex"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-polygon" action-command="_polygon" tooltip="polygon" group="vista" position="6"/>
-				<selectable-tool icon="edition-insert-geometry-rectangle" action-command="_rectangle" tooltip="rectangle" group="vista" position="7"/>
-				<selectable-tool icon="edition-insert-geometry-circle" action-command="_circle" tooltip="circle" group="vista" position="8"/>
-				<selectable-tool icon="edition-insert-geometry-ellipse" action-command="_ellipse" tooltip="ellipse" group="vista" position="9"/>
+				<selectable-tool icon="edition-insert-geometry-polygon" action-command="_polygon" tooltip="polygon" position="6"/>
+				<selectable-tool icon="edition-insert-geometry-rectangle" action-command="_rectangle" tooltip="rectangle" position="7"/>
+				<selectable-tool icon="edition-insert-geometry-circle" action-command="_circle" tooltip="circle" position="8"/>
+				<selectable-tool icon="edition-insert-geometry-ellipse" action-command="_ellipse" tooltip="ellipse" position="9"/>
 			</tool-bar>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-edit-vertex" action-command="_editvertex" tooltip="edit_vertex" group="vista" position="8"/>
+				<selectable-tool icon="edition-geometry-edit-vertex" action-command="_editvertex" tooltip="edit_vertex" position="8"/>
 			</tool-bar>
 		</extension>
 		<!--extension class-name="com.iver.cit.gvsig.BreakExtension"
@@ -166,7 +166,7 @@
 			active="true">
 			<menu text="geometry/modify/break" action-command="_break" icon="edition-geometry-break"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-break" action-command="_break" tooltip="break" group="vista" position="9"/>
+				<selectable-tool icon="edition-geometry-break" action-command="_break" tooltip="break" position="9"/>
 			</tool-bar>
 		</extension-->
 		<!--extension class-name="com.iver.cit.gvsig.JoinExtension"
@@ -174,7 +174,7 @@
 			active="true">
 			<menu text="geometry/modify/join" action-command="_join" icon="edition-geometry-Join"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-Join" action-command="_join" tooltip="join" group="vista" position="10"/>
+				<selectable-tool icon="edition-geometry-Join" action-command="_join" tooltip="join" position="10"/>
 			</tool-bar>
 		</extension-->
 		<extension class-name="com.iver.cit.gvsig.InternalPolygonExtension"
@@ -182,7 +182,7 @@
 			active="true">
 			<menu text="geometry/modify/internal_polygon" action-command="_internalpolygon" icon="edition-modify-geometry-internalpolygon"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-modify-geometry-internalpolygon" action-command="_internalpolygon" tooltip="internal_polygon" group="vista" position="11"/>
+				<selectable-tool icon="edition-modify-geometry-internalpolygon" action-command="_internalpolygon" tooltip="internal_polygon" position="11"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.StretchExtension"
@@ -190,7 +190,7 @@
 			active="true">
 			<menu text="geometry/modify/stretch" action-command="_stretch" icon="edition-geometry-stretch"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-stretch" action-command="_stretch" tooltip="stretch" group="vista" position="12"/>
+				<selectable-tool icon="edition-geometry-stretch" action-command="_stretch" tooltip="stretch" position="12"/>
 			</tool-bar>
 		</extension>
 		<!--extension class-name="com.iver.cit.gvsig.ExtendExtension"
@@ -198,7 +198,7 @@
 			active="true">
 			<menu text="geometry/modify/extend" action-command="_extend" icon="edition-modify-geometry-extend"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-modify-geometry-extend" action-command="_extend" tooltip="extend" group="vista" position="13"/>
+				<selectable-tool icon="edition-modify-geometry-extend" action-command="_extend" tooltip="extend" position="13"/>
 			</tool-bar>
 		</extension-->
 		<extension class-name="com.iver.cit.gvsig.ComplexSelectionGeometryExtension"
@@ -206,7 +206,7 @@
 			active="true">
 			<menu text="geometry/seleccion_compleja" action-command="_complex_selection" icon="edition-complex-selection"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-complex-selection" action-command="_complex_selection" tooltip="complex_selection" group="vista" position="16"/>
+				<selectable-tool icon="edition-complex-selection" action-command="_complex_selection" tooltip="complex_selection" position="16"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.SelectionGeometryExtension"
@@ -214,7 +214,7 @@
 			active="true">
 			<menu text="geometry/seleccionar" action-command="_selection" icon="edition-geometry-select"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-select" action-command="_selection" tooltip="selection" group="vista" position="15"/>
+				<selectable-tool icon="edition-geometry-select" action-command="_selection" tooltip="selection" position="15"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.MatrixExtension"
@@ -222,7 +222,7 @@
 			active="true">
 			<menu text="geometry/modify/matrix" action-command="_matrix" icon="edition-geometry-matrix"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-matrix" action-command="_matrix" tooltip="matrix" group="vista" position="17"/>
+				<selectable-tool icon="edition-geometry-matrix" action-command="_matrix" tooltip="matrix" position="17"/>
 			</tool-bar>
 		</extension>
 		<!--extension class-name="com.iver.cit.gvsig.EquidistanceExtension"
@@ -230,7 +230,7 @@
 			active="true">
 			<menu text="geometry/modify/equidistance" action-command="_equidistance" icon="edition-geometry-equidistance"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-equidistance" action-command="_equidistance" tooltip="equidistance" group="vista" position="18"/>
+				<selectable-tool icon="edition-geometry-equidistance" action-command="_equidistance" tooltip="equidistance" position="18"/>
 			</tool-bar>
 		</extension-->
 		<extension class-name="com.iver.cit.gvsig.PreviousSelectionExtension"
@@ -238,7 +238,7 @@
 			active="true">
 			<menu text="geometry/modify/previous_selection" action-command="previous_selection" icon="previous-selection"/>
 			<tool-bar name="modificar" position="31">
-				<action-tool icon="previous-selection" action-command="previous_selection" tooltip="previous_selection" group="vista" position="19"/>
+				<action-tool icon="previous-selection" action-command="previous_selection" tooltip="previous_selection" position="19"/>
 			</tool-bar>
 		</extension>
 		<!--extension class-name="com.iver.cit.gvsig.AutoCompletePolygonExtension"
@@ -246,7 +246,7 @@
 			active="true">
 			<menu text="geometry/insert/autopolygon" action-command="AUTOCOMPLETE_POLYGON" icon="edition-geometry-autocompletepolygon"/>
 			<tool-bar name="insert" position="30">
-				<action-tool icon="edition-geometry-autocompletepolygon" action-command="AUTOCOMPLETE_POLYGON" tooltip="autocomplete-polygon" group="vista" position="20"/>
+				<action-tool icon="edition-geometry-autocompletepolygon" action-command="AUTOCOMPLETE_POLYGON" tooltip="autocomplete-polygon" position="20"/>
 			</tool-bar>
 		</extension-->
 
