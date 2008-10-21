@@ -257,6 +257,14 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.fmap.layers.LayerListener#drawValueChanged(com.iver.cit.gvsig.fmap.layers.LayerEvent)
+	 */
+	public void drawValueChanged(LayerEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
 
 
 }

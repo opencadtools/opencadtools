@@ -74,7 +74,7 @@ public class StartEditing extends Extension {
 				vista.showConsole();
 				EditionManager editionManager=CADExtension.getEditionManager();
 				editionManager.setMapControl(mapControl);
-				mapControl.getMapContext().clearAllCachingImageDrawnLayers();
+//				mapControl.getMapContext().clearAllCachingImageDrawnLayers();
 				/*
 				 * for (int j = 0; j < i; j++) {
 				 * layers.getLayer(j).setVisible(false); }

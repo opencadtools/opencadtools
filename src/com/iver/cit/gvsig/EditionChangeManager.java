@@ -177,7 +177,7 @@ public class EditionChangeManager implements IEditionListener{
 						}
 					}
 				}else{
-					fLayer.setDirty(true);
+//					fLayer.setDirty(true);
 					view.getMapControl().rePaintDirtyLayers();
 				}
 

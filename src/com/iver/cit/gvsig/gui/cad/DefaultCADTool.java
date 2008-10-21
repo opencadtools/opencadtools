@@ -211,7 +211,7 @@ public abstract class DefaultCADTool implements CADTool {
 			// Deberíamos comprobar que lo que escribimos es correcto:
 			// Lo hacemos en el VectorialAdapter, justo antes de
 			// añadir, borrar o modificar una feature
-			
+
 			int numAttr = vea.getRecordset().getFieldCount();
 			Value[] values = new Value[numAttr];
 			for (int i = 0; i < numAttr; i++) {
@@ -223,8 +223,8 @@ public abstract class DefaultCADTool implements CADTool {
 			VectorialLayerEdited vle = getVLE();
 			clearSelection();
 			//ArrayList selectedRow = vle.getSelectedRow();
-			
-			
+
+
 			ViewPort vp = vle.getLayer().getMapContext().getViewPort();
 			BufferedImage selectionImage = new BufferedImage(vp
 					.getImageWidth(), vp.getImageHeight(),
@@ -322,7 +322,7 @@ public abstract class DefaultCADTool implements CADTool {
 	 */
 	public void refresh() {
 		// getCadToolAdapter().getMapControl().drawMap(false);
-		getVLE().getLayer().setDirty(true);
+//		getVLE().getLayer().setDirty(true);
 
 		getCadToolAdapter().getMapControl().rePaintDirtyLayers();
 	}
