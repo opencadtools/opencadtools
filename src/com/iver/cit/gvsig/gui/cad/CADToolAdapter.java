@@ -28,6 +28,7 @@ import com.iver.andami.ui.mdiFrame.MainFrame;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -548,7 +549,7 @@ public class CADToolAdapter extends Behavior {
 		if (mF != null)
 		{
             mF.getStatusBar().setMessage("units",
-            		PluginServices.getText(this, FConstant.NAMES[vp.getDistanceUnits()]));
+            		PluginServices.getText(this, MapContext.getDistanceNames()[vp.getDistanceUnits()]));
             mF.getStatusBar().setControlValue("scale",String.valueOf(mapControl.getMapContext().getScaleView()));
 			mF.getStatusBar().setMessage("projection", iProj.getAbrev());
 
