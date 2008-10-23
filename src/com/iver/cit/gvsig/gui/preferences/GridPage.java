@@ -116,6 +116,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.gui.cad.CADGrid;
@@ -163,7 +164,7 @@ public class GridPage extends AbstractPreferencePage {
 		chkAdjustGrid.setSelected(cg.isAdjustGrid());
 		txtDistanceX.setText(String.valueOf(cg.getGridSizeX()));
 		txtDistanceY.setText(String.valueOf(cg.getGridSizeY()));
-		lblUnits.setText(PluginServices.getText(this,"Unidades")+ "           "+PluginServices.getText(this,FConstant.NAMES[vp.getDistanceUnits()]));
+		lblUnits.setText(PluginServices.getText(this,"Unidades")+ "           "+PluginServices.getText(this,MapContext.getDistanceNames()[vp.getDistanceUnits()]));
 
 //		cta.setGridVisibility(showGrid);
 //		cta.setAdjustGrid(adjustGrid);
@@ -214,7 +215,7 @@ public class GridPage extends AbstractPreferencePage {
 		chkShowGrid.setSelected(cta.getGrid().isShowGrid());
 		chkAdjustGrid.setSelected(cta.getGrid().isAdjustGrid());
 		ViewPort vp=cta.getMapControl().getViewPort();
-		lblUnits.setText(PluginServices.getText(this,"Unidades")+ "           "+PluginServices.getText(this,FConstant.NAMES[vp.getDistanceUnits()]));
+		lblUnits.setText(PluginServices.getText(this,"Unidades")+ "           "+PluginServices.getText(this,MapContext.getDistanceNames()[vp.getDistanceUnits()]));
 		txtDistanceX.setText(String.valueOf(cta.getGrid().getGridSizeX()));
 		txtDistanceY.setText(String.valueOf(cta.getGrid().getGridSizeY()));
 	}
