@@ -123,7 +123,7 @@ import com.iver.cit.gvsig.gui.cad.CADGrid;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
 public class GridPage extends AbstractPreferencePage {
-	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
+	public static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 	private CADToolAdapter cta;
 	private JCheckBox chkShowGrid;
 	private JCheckBox chkAdjustGrid;

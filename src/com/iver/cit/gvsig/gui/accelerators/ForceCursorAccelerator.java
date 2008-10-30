@@ -42,11 +42,13 @@ package com.iver.cit.gvsig.gui.accelerators;
 
 import java.awt.KeyEventDispatcher;
 import java.awt.event.KeyEvent;
+import java.util.prefs.Preferences;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
+import com.iver.cit.gvsig.gui.preferences.GridPage;
 
 /**
  * @author fjp
@@ -66,7 +68,8 @@ public class ForceCursorAccelerator implements KeyEventDispatcher {
 		toolAdap.setAdjustGrid(!toolAdap.getGrid().isAdjustGrid());
 
 		System.err.println("Ponemos ForceCursor a " + toolAdap.getGrid().isAdjustGrid());
-
+		Preferences prefs=GridPage.prefs;
+		prefs.putBoolean("grid.adjustgrid",toolAdap.getGrid().isAdjustGrid());
 		return false;
 	}
 
