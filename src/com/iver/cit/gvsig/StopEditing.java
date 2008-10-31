@@ -35,6 +35,7 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayersIterator;
 import com.iver.cit.gvsig.fmap.rendering.IVectorLegend;
 import com.iver.cit.gvsig.fmap.spatialindex.IPersistentSpatialIndex;
+import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
@@ -274,7 +275,9 @@ public class StopEditing extends Extension {
 	 * @param layer Layer to save.
 	 */
 	public boolean executeSaveLayer(FLyrVect layer ) {
-		EditionManager edMan = CADExtension.getEditionManager();
+//		EditionManager edMan = CADExtension.getEditionManager();
+		CADToolAdapter cadtoolAdapter=CADExtension.getCADToolAdapter(layer);
+		EditionManager edMan =cadtoolAdapter.getEditionManager();
 		VectorialLayerEdited lyrEd = (VectorialLayerEdited)	edMan.getLayerEdited(layer);
 		boolean isStop=false;
 		try {
@@ -342,7 +345,8 @@ public class StopEditing extends Extension {
 			.getActiveWindow();
 			if (f instanceof View) {
 				vista = (View) f;
-				if (vista.getMapControl().getMapContext().getLayers().getLayer(layer.getName()).equals(layer)) {
+				FLayer auxLayer=vista.getMapControl().getMapContext().getLayers().getLayer(layer.getName());
+				if (auxLayer!=null && auxLayer.equals(layer)) {
 					vista.getMapControl().setTool("zoomIn");
 					vista.hideConsole();
 					vista.repaintMap();

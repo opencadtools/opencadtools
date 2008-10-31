@@ -59,6 +59,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.andami.preferences.IPreference;
 import com.iver.andami.preferences.IPreferenceExtension;
+import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
@@ -95,6 +96,22 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 	private static CADToolAdapter adapter=null;
 	private EditingPage editingPage=new EditingPage();
 
+	public static CADToolAdapter getCADToolAdapter(FLayer layer) {
+		IWindow[] windows=PluginServices.getMDIManager().getAllWindows();
+		for (int i = 0; i < windows.length; i++) {
+			IWindow window=windows[i];
+			if (window instanceof View){
+				View v=(View)window;
+				if (v.getModel().getMapContext().equals(layer.getMapContext())){
+					if (!adapters.containsKey(v.getModel())) {
+						adapters.put(v.getModel(),new CADToolAdapter());
+					}
+					return (CADToolAdapter)adapters.get(v.getModel());
+				}
+			}
+		}
+		return null;
+	}
 	public static CADToolAdapter getCADToolAdapter() {
 		com.iver.andami.ui.mdiManager.IWindow view=PluginServices.getMDIManager().getActiveWindow();
 		if (view instanceof View) {
