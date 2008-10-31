@@ -992,8 +992,10 @@ public class CADToolAdapter extends Behavior {
 	 */
 	public void setGridVisibility(boolean value) {
 		getGrid().setShowGrid(value);
-		getGrid().setViewPort(getMapControl().getViewPort());
-		getMapControl().repaint();
+		if (getMapControl()!=null){
+			getGrid().setViewPort(getMapControl().getViewPort());
+			getMapControl().repaint();
+		}
 	}
 
 	/**
