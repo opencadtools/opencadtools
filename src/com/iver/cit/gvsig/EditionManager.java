@@ -229,7 +229,7 @@ public class EditionManager implements LayerListener,LayerCollectionListener {
 				}
 			}
 		}
-		PluginServices.getMainFrame().enableControls();
+//		PluginServices.getMainFrame().enableControls();
 	}
 
 	public void layerAdding(LayerCollectionEvent e) throws CancelationException {
