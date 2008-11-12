@@ -331,7 +331,6 @@ public class LayerProperties extends JPanel implements IWindow {
 
 	}
 
-	@Override
 	public Object getWindowProfile() {
 		return WindowInfo.DIALOG_PROFILE;
 	}
