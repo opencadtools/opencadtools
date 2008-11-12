@@ -98,4 +98,9 @@ public class DefaultConfigurePanel extends JPanel implements IWindow {
 		return wi;
 	}
 
+	@Override
+	public Object getWindowProfile() {
+		return WindowInfo.DIALOG_PROFILE;
+	}
+
 }  //  @jve:decl-index=0:visual-constraint="10,10"

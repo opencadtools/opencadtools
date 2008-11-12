@@ -317,6 +317,10 @@ public class MatrixProperty extends JPanel implements IWindow{
    		 m_viewinfo.setWidth(this.getWidth());
         return m_viewinfo;
 	}
+	
+	public Object getWindowProfile() {
+		return WindowInfo.DIALOG_PROFILE;
+	}
 
 	public void setMatrixCADTool(MatrixCADTool tool) {
 		operations=tool.getOperations();
