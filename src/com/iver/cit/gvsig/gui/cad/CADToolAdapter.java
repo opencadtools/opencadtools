@@ -291,7 +291,7 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				p = getMapControl().getViewPort().toMapPoint(adjustedPoint);
 			}
-
+			if (!cadToolStack.isEmpty())
 			((CADTool) cadToolStack.peek())
 					.drawOperation(g, p.getX(), p.getY());
 		}
@@ -659,6 +659,7 @@ public class CADToolAdapter extends Behavior {
 		Point2D gridAdjustedPoint = getMapControl().getViewPort().toMapPoint(
 				point);
 		double minDistance = Double.MAX_VALUE;
+		if (!cadToolStack.isEmpty()){
 		CADTool ct = (CADTool) cadToolStack.peek();
 		if (ct instanceof SelectionCADTool
 				&& ((SelectionCADTool) ct).getStatus().equals(
@@ -675,6 +676,7 @@ public class CADToolAdapter extends Behavior {
 			} else {
 				mapAdjustedPoint = null;
 			}
+		}
 		}
 		Point2D handlerAdjustedPoint = null;
 

@@ -56,7 +56,7 @@ public class StartEditing extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
 	 */
 	public void execute(String actionCommand) {
-		CADExtension.initFocus();
+
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
 		.getActiveWindow();
 
@@ -70,7 +70,11 @@ public class StartEditing extends Extension {
 
 			boolean bEditingStarted = false;
 			if (actives.length == 1 &&	actives[0] instanceof FLyrVect) {
-
+				if (!mapControl.getProjection().getAbrev().equals(actives[0].getProjection().getAbrev())){
+					NotificationManager.showMessageInfo(PluginServices.getText(this,"no_es_posible_editar_capa_reproyectada"),null);
+					return;
+				}
+				CADExtension.initFocus();
 				vista.showConsole();
 				EditionManager editionManager=CADExtension.getEditionManager();
 				editionManager.setMapControl(mapControl);
