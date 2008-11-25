@@ -10,6 +10,7 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.commands.CommandListener;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.command.CommandStackDialog;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
@@ -83,7 +84,10 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 
 	public void commandRepaint() {
 		try {
-			CADExtension.getCADTool().clearSelection();
+			CADTool cadTool=CADExtension.getCADTool();
+			if (cadTool!=null){
+				cadTool.clearSelection();
+			}
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
 		}
@@ -92,7 +96,10 @@ public class ViewCommandStackExtension extends Extension implements CommandListe
 
 	public void commandRefresh() {
 		try {
-			CADExtension.getCADTool().clearSelection();
+			CADTool cadTool=CADExtension.getCADTool();
+			if (cadTool!=null){
+				cadTool.clearSelection();
+			}
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
 		}

@@ -1055,6 +1055,8 @@ public class CADToolAdapter extends Behavior {
 	 * @see #setCadTool(CADTool)
 	 */
 	public CADTool getCadTool() {
+		if (cadToolStack.isEmpty())
+			return null;
 		return (CADTool) cadToolStack.peek();
 	}
 

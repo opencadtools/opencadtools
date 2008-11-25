@@ -49,6 +49,7 @@ import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 
@@ -85,7 +86,9 @@ public class RedoViewExtension extends Extension {
 							vea.redo();
 							vea.getCommandRecord().fireCommandsRepaint(null);
 							vea.getSelection().clear();
-							CADExtension.getCADTool().clearSelection();
+							CADTool cadTool=CADExtension.getCADTool();
+							if (cadTool!=null)
+								cadTool.clearSelection();
 						}
 
 					}

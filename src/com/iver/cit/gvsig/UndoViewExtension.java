@@ -49,6 +49,7 @@ import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 
@@ -91,7 +92,10 @@ public class UndoViewExtension extends Extension {
 					VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
 					vea.undo();
 					vea.getCommandRecord().fireCommandsRepaint(null);
-					CADExtension.getCADTool().clearSelection();
+					vea.getSelection().clear();
+					CADTool cadTool=CADExtension.getCADTool();
+					if (cadTool!=null)
+						cadTool.clearSelection();
 				}
 			}
 		} catch (EditionCommandException e) {
