@@ -70,6 +70,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 public class EditionPreferencePage extends AbstractPreferencePage {
 	private JLabel jLabel = null;
+	private ImageIcon icon;
 
 	private JTextField jTxtTolerance = null;
 
@@ -197,6 +198,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	 */
 	public EditionPreferencePage() {
 		super();
+		icon = PluginServices.getIconTheme().get("edition-properties");
 		initialize();
 	}
 
@@ -394,7 +396,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	}
 
 	public ImageIcon getIcon() {
-		return null;
+		return icon;
 	}
 
 	public void setMapContext(MapContext mc) {
