@@ -45,10 +45,16 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.andami.messages.NotificationManager;
+import com.iver.cit.gvsig.fmap.core.FPolyline2D;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.ShapeMFactory;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.LineCADToolContext;
@@ -126,7 +132,17 @@ public class LineCADTool extends DefaultCADTool {
                     2);
             elShape.moveTo(firstPoint.getX(), firstPoint.getY());
             elShape.lineTo(lastPoint.getX(), lastPoint.getY());
-            addGeometry(ShapeFactory.createPolyline2D(elShape));
+            //Mcoord
+            IGeometry geom = ShapeFactory.createPolyline2D(elShape);
+            try {
+            	if (((FLyrVect)getVLE().getLayer()).getShapeType() == (FShape.LINE|FShape.M)){
+            		geom = ShapeMFactory.createPolyline2DM(elShape,
+            				new double[((FPolyline2D)geom.getInternalShape()).getSelectHandlers().length]);				
+            	}
+            } catch (ReadDriverException e) {
+            	NotificationManager.addError(e);
+            }            
+            addGeometry(geom);
             firstPoint = (Point2D) lastPoint.clone();
         } else if (status == "Line.LenghtOrPoint") {
             length = firstPoint.distance(x, y);
@@ -140,7 +156,17 @@ public class LineCADTool extends DefaultCADTool {
                     2);
             elShape.moveTo(firstPoint.getX(), firstPoint.getY());
             elShape.lineTo(lastPoint.getX(), lastPoint.getY());
-            addGeometry(ShapeFactory.createPolyline2D(elShape));
+            //Mcoord
+            IGeometry geom = ShapeFactory.createPolyline2D(elShape);
+            try {
+            	if (((FLyrVect)getVLE().getLayer()).getShapeType() == (FShape.LINE|FShape.M)){
+            		geom = ShapeMFactory.createPolyline2DM(elShape,
+            				new double[((FPolyline2D)geom.getInternalShape()).getSelectHandlers().length]);				
+            	}
+            } catch (ReadDriverException e) {
+            	NotificationManager.addError(e);
+            }
+            addGeometry(geom);
 
             firstPoint = (Point2D) lastPoint.clone();
         }
