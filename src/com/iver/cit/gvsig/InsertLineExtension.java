@@ -56,9 +56,9 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class InsertLineExtension extends Extension {
-	private View view;
-	private LineCADTool line;
-	private MapControl mapControl;
+	protected View view;
+	protected LineCADTool line;
+	protected MapControl mapControl;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()

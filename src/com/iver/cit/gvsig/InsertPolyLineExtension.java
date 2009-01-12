@@ -56,11 +56,11 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class InsertPolyLineExtension extends Extension {
-	private View view;
+	protected View view;
 
-	private MapControl mapControl;
-	private PolylineCADTool polyline;
-	private SplineCADTool spline;
+	protected MapControl mapControl;
+	protected PolylineCADTool polyline;
+	protected SplineCADTool spline;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()

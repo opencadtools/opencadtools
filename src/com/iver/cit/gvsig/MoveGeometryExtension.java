@@ -55,8 +55,8 @@ import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool;
  */
 public class MoveGeometryExtension extends Extension {
 
-	private MapControl mapControl;
-	private MoveCADTool move;
+	protected MapControl mapControl;
+	protected MoveCADTool move;
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
