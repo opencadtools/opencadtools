@@ -59,10 +59,10 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class InsertPolygonExtension extends Extension {
-	private View view;
+	protected View view;
 
-	private MapControl mapControl;
-	private PolygonCADTool polygon;
+	protected MapControl mapControl;
+	protected PolygonCADTool polygon;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
