@@ -38,7 +38,15 @@ public class AutoCompletePolygon extends PolylineCADTool {
     public void drawOperation(Graphics g, double x,
         double y) {
         IGeometry geom=getGeometry();
-        if (geom.getHandlers(IGeometry.SELECTHANDLER).length > 2) {
+        if (geom.getHandlers(IGeometry.SELECTHANDLER).length ==0 && firstPoint!=null) {
+        	GeneralPathX gpx = new GeneralPathX();
+        	gpx.moveTo(firstPoint.getX(), firstPoint.getY());
+        	gpx.lineTo(x, y);
+        	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D) g,
+        			getCadToolAdapter().getMapControl().getViewPort(),
+        			DefaultCADTool.geometrySelectSymbol);
+        }
+        else if (geom.getHandlers(IGeometry.SELECTHANDLER).length > 1) {
         	GeneralPathX gpxGeom=new GeneralPathX();
         	gpxGeom.moveTo(x,y);
         	gpxGeom.append(geom.getPathIterator(null,FConverter.FLATNESS), true);
@@ -46,15 +54,6 @@ public class AutoCompletePolygon extends PolylineCADTool {
         	gpxGeom.closePath();
         	IGeometry newGeom = autoComplete(ShapeFactory.createPolygon2D(gpxGeom));
         	newGeom.draw((Graphics2D) g,
-        			getCadToolAdapter().getMapControl().getViewPort(),
-        			DefaultCADTool.geometrySelectSymbol);
-
-        	Handler handler1 = geom.getHandlers(IGeometry.SELECTHANDLER)[0];
-        	GeneralPathX gpx = new GeneralPathX();
-        	gpx.moveTo(x, y);
-        	Point2D p1 = handler1.getPoint();
-        	gpx.lineTo(p1.getX(), p1.getY());
-        	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D) g,
         			getCadToolAdapter().getMapControl().getViewPort(),
         			DefaultCADTool.geometrySelectSymbol);
         }
