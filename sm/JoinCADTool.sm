@@ -5,7 +5,7 @@
 // Vicente Caballero Navarro
 %}
 
-%start Join::FirstPoint
+%start Join::Execute
 %class JoinCADTool
 %package com.iver.cit.gvsig.gui.cad.tools.smc
 %import com.iver.cit.gvsig.gui.cad.tools.JoinCADTool
@@ -16,56 +16,35 @@
 %%
 // A task begins life in suspended animation.
 
-FirstPoint
-	Entry {
-		setQuestion(
-		PluginServices.getText(this,"select_geometry"));
-		setDescription(new String[]{"cancel"});
+Execute
+    Entry {
+        join();
+        end();
+        }
+    Exit{
+        }
 
-		}
-	Exit{
-		}
-
-	{
-		addPoint( pointX:double,pointY:double,event:InputEvent)
-			FirstPoint {
-				setQuestion(
-					PluginServices.getText(this,"select_other_geometry")+" "+
-		    		PluginServices.getText(this,"cad.or")+" "+
-		    		PluginServices.getText(this,"end")+
-		    		"["+PluginServices.getText(this,"JoinCADTool.end")+"]");
-				setDescription(new String[]{"cancel","end"});
-				addPoint( pointX,pointY,event);
-				}
-		addOption(s:String)
-			[s.equalsIgnoreCase(PluginServices.getText(this,"JoinCADTool.end")) || s.equals(PluginServices.getText(this,"end"))]
-			FirstPoint {
-				setQuestion(PluginServices.getText(this,"select_geometry"));
-				setDescription(new String[]{"cancel"});
-				addOption(s);
-				end();
-				}
-	}
-
+    {
+    }
 
 Default
 {
-	addOption(s:String)
-		[s.equals(PluginServices.getText(this,"cancel"))]
-		FirstPoint{
-			end();
-			}
-	addOption(s:String)
-		FirstPoint{
-			throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
-			}
-	addValue(d:double)
-		FirstPoint{
-			throwValueException(PluginServices.getText(this,"incorrect_value"),d);
-			}
-	addPoint(pointX:double,pointY:double,event:InputEvent)
-		FirstPoint{
-			throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
-			}
+    addOption(s:String)
+        [s.equals(PluginServices.getText(this,"cancel"))]
+        Execute{
+            end();
+            }
+    addOption(s:String)
+        Execute{
+            throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+            }
+    addValue(d:double)
+        Execute{
+            throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+            }
+    addPoint(pointX:double,pointY:double,event:InputEvent)
+        Execute{
+            throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+            }
 }
 %%

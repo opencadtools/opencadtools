@@ -133,6 +133,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 		if (!multipleSelection) {
 			clearSelection(SAVEPREVIOUS);
+			selection.clear();
 		}
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
@@ -148,10 +149,18 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 		try {
 			feats = vea.getFeatures(rect, strEPSG);
-			selection.clear();
-			BufferedImage selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
+
+			BufferedImage selectionImage = null;
+			BufferedImage handlersImage = null;
+			if (multipleSelection && vea.getSelectionImage()!=null && vea.getHandlersImage()!=null) {
+				selectionImage=(BufferedImage)vea.getSelectionImage();
+				handlersImage = (BufferedImage)vea.getHandlersImage();
+			}else{
+				selectionImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
+				handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
+			}
 			Graphics2D gs = selectionImage.createGraphics();
-			BufferedImage handlersImage = new BufferedImage(vp.getImageWidth(), vp.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
+
 			Graphics2D gh = handlersImage.createGraphics();
 			ICoordTrans ct=getLayer().getCoordTrans();
 			for (int i = 0; i < feats.length; i++) {

@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -129,6 +130,7 @@ public class SelectionCADTool extends DefaultCADTool {
 		_fsm.addPoint(x, y, event);
 		}catch (Exception e) {
 			init();
+			PluginServices.getMDIManager().restoreCursor();
 		}
 		System.out.println("ESTADO ACTUAL: " + getStatus());
 
@@ -421,12 +423,12 @@ public class SelectionCADTool extends DefaultCADTool {
 
 		String status = actualState.getName();
 		VectorialLayerEdited vle = getVLE();
-
-
+		multipleSelection=event.isControlDown();
 		if ((status.equals("Selection.FirstPoint"))
 				|| (status.equals("Selection.WithSelectedFeatures"))) {
 			PluginServices.getMDIManager().setWaitCursor();
 			firstPoint = new Point2D.Double(x, y);
+
 			vle.selectWithPoint(x,y,multipleSelection);
 			PluginServices.getMDIManager().restoreCursor();
 		}
