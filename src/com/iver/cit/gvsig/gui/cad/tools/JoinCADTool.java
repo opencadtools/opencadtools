@@ -51,6 +51,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
@@ -214,6 +215,10 @@ public class JoinCADTool extends DefaultCADTool {
 		return "_join";
 	}
 	public boolean isApplicable(int shapeType) {
+		switch (shapeType) {
+			case FShape.POINT:
+				return false;
+		}
 		return true;
 	}
 }
