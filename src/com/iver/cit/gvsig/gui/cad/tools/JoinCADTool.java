@@ -144,6 +144,9 @@ public class JoinCADTool extends DefaultCADTool {
     }
     public void join() {
     	ArrayList selectedRow = getSelectedRows();
+    	if (selectedRow.size()<2) {
+    		return;
+    	}
     	ArrayList selectedRowAux = new ArrayList();
     	VectorialLayerEdited vle = getVLE();
     	VectorialEditableAdapter vea = vle.getVEA();

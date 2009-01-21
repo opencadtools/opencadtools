@@ -47,6 +47,7 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.JoinCADTool;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
@@ -100,8 +101,9 @@ public class JoinExtension extends Extension {
 				mapControl = view.getMapControl();
 				if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
 					return false;
-				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-				if (joinCADTool.isApplicable(lv.getShapeType()) && lv.getRecordset().getSelection().cardinality()>1){
+				VectorialLayerEdited editedLayer = (VectorialLayerEdited) CADExtension.getEditionManager().getActiveLayerEdited();
+				FLyrVect lv=(FLyrVect)editedLayer.getLayer();
+				if (joinCADTool.isApplicable(lv.getShapeType()) && editedLayer.getSelectedRow().size()>=2){
 					return true;
 				}
 			}
