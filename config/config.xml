@@ -246,7 +246,7 @@
 			active="true">
 			<menu text="geometry/insert/autopolygon" action-command="AUTOCOMPLETE_POLYGON" icon="edition-geometry-autocompletepolygon"/>
 			<tool-bar name="insert" position="30">
-				<action-tool icon="edition-geometry-autocompletepolygon" action-command="AUTOCOMPLETE_POLYGON" tooltip="autocomplete-polygon" position="20"/>
+				<selectable-tool icon="edition-geometry-autocompletepolygon" action-command="AUTOCOMPLETE_POLYGON" tooltip="autocomplete-polygon" position="20"/>
 			</tool-bar>
 		</extension>
 
