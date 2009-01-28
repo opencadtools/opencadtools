@@ -1,0 +1,65 @@
+<assembly>
+	<id>distribution</id>
+	<formats>
+		<format>dir</format>
+	</formats>
+	<fileSets>
+	<!-- Extructure for the extension -->
+		<fileSet>
+			<directory>config</directory>
+			<outputDirectory>${extension-distribution}
+			</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>data</directory>
+			<outputDirectory>${extension-distribution}/data
+			</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>images</directory>
+			<outputDirectory>/${extension-distribution}/images
+			</outputDirectory>
+		</fileSet>
+	<!-- Extructure for the native libraries -->
+<!--	<fileSet>-->
+<!--      <directory>${basedir}/../binaries/linux/3D/</directory>-->
+<!--	  <outputDirectory>/linux/lib</outputDirectory>-->
+<!--    </fileSet>-->
+	</fileSets>
+	<files>
+		<file>
+			<source>build.number</source>
+			<outputDirectory>${extension-distribution}
+			</outputDirectory>
+		</file>
+	</files>
+	<!--
+		***********************************************************************
+	-->
+  <!-- *													   *-->
+	<!--
+		***********************************************************************
+	-->
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>${extension-distribution}/${library-dir}
+			</outputDirectory>
+			<includes>
+				<include>org.gvsig:extCad</include>
+			</includes>
+		</dependencySet>
+		<!-- dependencySet>
+			<outputDirectory>${gvsig-extension-distribution}/lib
+			</outputDirectory>
+			<includes>
+				<include>org.gvsig.legacy:jGridShiftApi</include>
+				<include>org.gvsig.legacy:db_epsg</include>
+				<include>org.gvsig.legacy:db_esri</include>
+				<include>org.gvsig.legacy:db_iau2000</include>
+				<include>org.gvsig.legacy:db_usr</include>
+				<include>org.gvsig:libJCRS</include>
+				<include>org.gvsig.legacy:units</include>
+			</includes>
+		</dependencySet-->
+	</dependencySets>
+</assembly>
