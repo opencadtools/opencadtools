@@ -244,6 +244,7 @@ public class MyFinishAction extends FinishAction
     	        }
 
     			lyr = (FLyrVect) LayerFactory.createDBLayer(dbDriver, layerName, proj);
+    			postgisPanel.saveConnectionSettings();
 
 			}
 			else // Si no es ni lo uno ni lo otro,
