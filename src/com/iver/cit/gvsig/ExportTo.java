@@ -662,7 +662,7 @@ public class ExportTo extends Extension {
 					lyrDef.setFieldsDesc(fieldsDescrip);
 					lyrDef.setFile(newFile);
 					lyrDef.setName(newFile.getName());
-					lyrDef.setShapeType(layer.getShapeType());
+					lyrDef.setShapeType(layer.getTypeIntVectorLayer());
 					writer.setFile(newFile);
 					writer.initialize(lyrDef);
 					// CODIGO PARA EXPORTAR UN SHP A UN CHARSET DETERMINADO
