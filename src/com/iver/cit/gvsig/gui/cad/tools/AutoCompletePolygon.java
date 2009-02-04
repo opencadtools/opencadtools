@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.exceptions.visitors.VisitorException;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
@@ -52,7 +53,7 @@ public class AutoCompletePolygon extends PolylineCADTool {
         	gpxGeom.append(geom.getPathIterator(null,FConverter.FLATNESS), true);
 
         	gpxGeom.closePath();
-        	IGeometry newGeom = autoComplete(ShapeFactory.createPolygon2D(gpxGeom));
+        	IGeometry newGeom = ShapeFactory.createPolygon2D(gpxGeom);
         	newGeom.draw((Graphics2D) g,
         			getCadToolAdapter().getMapControl().getViewPort(),
         			DefaultCADTool.geometrySelectSymbol);
@@ -60,8 +61,7 @@ public class AutoCompletePolygon extends PolylineCADTool {
     }
 
 
-	private IGeometry autoComplete(IGeometry geom) {
-		IGeometry digitizedGeom = geom;
+	private IGeometry autoComplete(IGeometry digitizedGeom) {
 		Geometry jtsGeom = digitizedGeom.toJTSGeometry();
 		FLyrVect lyrVect = (FLyrVect) getVLE().getLayer();
 		// Se supone que debe ser rápido, ya que está indexado
@@ -76,14 +76,27 @@ public class AutoCompletePolygon extends PolylineCADTool {
 			}
 
 		} catch (ReadDriverException e) {
-			e.printStackTrace();
-			NotificationManager.addError(e);
+			NotificationManager.showMessageError(
+					PluginServices.getText(this, "Error_in_Autocomplete_Polygon_Tool_")
+					+ " " + e.getLocalizedMessage(),
+					e);
 		} catch (VisitorException e) {
-			e.printStackTrace();
-			NotificationManager.addError(e);
+			NotificationManager.showMessageError(
+					PluginServices.getText(this, "Error_in_Autocomplete_Polygon_Tool_")
+					+ " " + e.getLocalizedMessage(),
+					e);
+		} catch (com.vividsolutions.jts.geom.TopologyException e) {
+			NotificationManager.showMessageError(
+					PluginServices.getText(this, "Error_in_Autocomplete_Polygon_Tool_")
+					+ " " + e.getLocalizedMessage(),
+					e);
 		} catch (Exception e) {
-
+			NotificationManager.showMessageError(
+					PluginServices.getText(this, "Error_in_Autocomplete_Polygon_Tool_")
+					+ " " + e.getLocalizedMessage(),
+					e);
 		}
+		
 		return FConverter.jts_to_igeometry(jtsGeom);
 	}
 
