@@ -56,10 +56,10 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class JoinExtension extends Extension {
-	private View view;
+	protected View view;
 
-	private MapControl mapControl;
-	private JoinCADTool joinCADTool;
+	protected MapControl mapControl;
+	protected JoinCADTool joinCADTool;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
@@ -71,7 +71,7 @@ public class JoinExtension extends Extension {
 		registerIcons();
 	}
 
-	private void registerIcons(){
+	protected void registerIcons(){
 		PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-Join",
 				this.getClass().getClassLoader().getResource("images/Join.png")
