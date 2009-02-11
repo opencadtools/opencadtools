@@ -78,7 +78,7 @@
 			<groupId>org.gvsig.legacy</groupId>
 			<artifactId>jdom</artifactId>
 			<version>gvsig</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>org.gvsig.legacy</groupId>
 			<artifactId>js</artifactId>
@@ -114,7 +114,7 @@
 			<artifactId>libUIComponent</artifactId>
 			<version>1.9-SNAPSHOT</version>
 		</dependency>
-		
+
 	</dependencies>
 	<properties>
 		<extension-distribution> gvSIG/extensiones/com.iver.cit.gvsig.cad/
@@ -125,17 +125,17 @@
 		</extension-appgvsig-lib-dir>
 		<build-dir>${basedir}/../build</build-dir>
 		<library-dir>.</library-dir>
-		
+
 		<!--		 Path to the output directory for the distribution -->
 		<extension-distribution-output-directory>target/
 		</extension-distribution-output-directory>
 		<distribution-output-directory>distribution/
 		</distribution-output-directory>
-		
+
 		<!-- Path to the file descriptor to generate the extension-->
 		<extension-distribution-file>distribution/distribution.xml
 		</extension-distribution-file>
-		
+
 		<!-- Final name of the output directory for the distribution -->
 		<distribution-final-name>cad</distribution-final-name>
 		<application-name>cad</application-name>
@@ -144,7 +144,21 @@
 	</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-<!--		<testSourceDirectory>src-test</testSourceDirectory>-->
+		<!--		<testSourceDirectory>src-test</testSourceDirectory>-->
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<includes>
+					<include>**/*.gif</include>
+					<include>**/*.png</include>
+					<include>**/*.PNG</include>
+					<include> **/*.bmp</include>
+					<include> **/*.jpg</include>
+					<include> **/*.jpeg</include>
+					<include> **/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>

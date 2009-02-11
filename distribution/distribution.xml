@@ -48,5 +48,15 @@
 				<include>org.gvsig:extCAD</include>
 			</includes>
 		</dependencySet>
+		<dependencySet>
+			<outputDirectory>${gvsig-extension-distribution}/lib
+			</outputDirectory>
+			<includes>
+				<include>org.gvsig.legacy:gt2-postgis</include>
+				<include>org.gvsig.legacy:gt2-shapefile</include>
+				<include>org.gvsig.legacy:jdom</include>
+				<include>org.gvsig.legacy:smc</include>
+			</includes>
+		</dependencySet>
 	</dependencySets>
 </assembly>
