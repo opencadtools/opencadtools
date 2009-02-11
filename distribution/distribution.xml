@@ -45,7 +45,7 @@
 			<outputDirectory>${extension-distribution}/${library-dir}
 			</outputDirectory>
 			<includes>
-				<include>org.gvsig:extCad</include>
+				<include>org.gvsig:extCAD</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>
