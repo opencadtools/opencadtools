@@ -48,18 +48,5 @@
 				<include>org.gvsig:extCad</include>
 			</includes>
 		</dependencySet>
-		<!-- dependencySet>
-			<outputDirectory>${gvsig-extension-distribution}/lib
-			</outputDirectory>
-			<includes>
-				<include>org.gvsig.legacy:jGridShiftApi</include>
-				<include>org.gvsig.legacy:db_epsg</include>
-				<include>org.gvsig.legacy:db_esri</include>
-				<include>org.gvsig.legacy:db_iau2000</include>
-				<include>org.gvsig.legacy:db_usr</include>
-				<include>org.gvsig:libJCRS</include>
-				<include>org.gvsig.legacy:units</include>
-			</includes>
-		</dependencySet-->
 	</dependencySets>
 </assembly>
