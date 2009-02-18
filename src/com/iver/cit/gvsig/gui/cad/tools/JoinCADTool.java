@@ -71,7 +71,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Vicente Caballero Navarro
  */
 public class JoinCADTool extends DefaultCADTool {
-    private JoinCADToolContext _fsm;
+    protected JoinCADToolContext _fsm;
 
     /**
      * Crea un nuevo JoinCADTool.
