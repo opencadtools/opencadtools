@@ -307,7 +307,8 @@ public class ExportTo extends Extension {
 			if (tableName == null)
 				return;
 			tableName = tableName.toLowerCase();
-			DlgConnection dlg = new DlgConnection();
+
+			DlgConnection dlg = new DlgConnection(new String[]{"PostGIS JDBC Driver"});
 			dlg.setModal(true);
 			dlg.setVisible(true);
 			ConnectionSettings cs = dlg.getConnSettings();
