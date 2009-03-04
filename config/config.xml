@@ -31,7 +31,6 @@
 			<menu text="Capa/export_to/shp" action-command="SHP"/>
 			<menu text="Capa/export_to/dxf" action-command="DXF"/>
 			<menu text="Capa/export_to/postgis" action-command="POSTGIS"/>
-			<menu text="Capa/export_to/gml" action-command="GML"/>
 		</extension>
 
 		<!-- <extension class-name="com.iver.cit.gvsig.StopEditingToGT2Shp"

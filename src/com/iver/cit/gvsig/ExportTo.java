@@ -20,7 +20,6 @@ import com.hardcode.gdbms.driver.exceptions.FileNotFoundDriverException;
 import com.hardcode.gdbms.driver.exceptions.InitializeWriterException;
 import com.hardcode.gdbms.driver.exceptions.OpenDriverException;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.hardcode.gdbms.driver.exceptions.SchemaEditionException;
 import com.hardcode.gdbms.engine.data.driver.DriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.iver.andami.PluginServices;
@@ -47,7 +46,6 @@ import com.iver.cit.gvsig.fmap.drivers.IVectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.dxf.DXFMemoryDriver;
-import com.iver.cit.gvsig.fmap.drivers.gml.GMLDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGisDriver;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
@@ -56,7 +54,6 @@ import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfFieldsMapping;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfWriter;
-import com.iver.cit.gvsig.fmap.edition.writers.gml.GMLWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -287,10 +284,7 @@ public class ExportTo extends Extension {
 						}
 						if (actionCommand.equals("POSTGIS")) {
 							saveToPostGIS(mapa, lv);
-						}
-						if (actionCommand.equals("GML")) {
-							saveToGml(mapa, lv);
-						}
+						}						
 					} // actives[i]
 				} // for
 			} catch (ReadDriverException e) {
@@ -692,56 +686,7 @@ public class ExportTo extends Extension {
 		}
 
 	}
-	/**
-	 * This method saves a layer to GML
-	 * @param mapContext
-	 * @param layer
-	 * @throws EditionException
-	 * @throws DriverIOException
-	 */
-	public void saveToGml(MapContext mapContext, FLyrVect layer)  {
-		try {
-			JFileChooser jfc = new JFileChooser();
-			SimpleFileFilter filterShp = new SimpleFileFilter("gml",
-					PluginServices.getText(this, "gml_files"));
-			jfc.setFileFilter(filterShp);
-			if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
-				File newFile = jfc.getSelectedFile();
-				String path = newFile.getAbsolutePath();
-				if (!(path.toLowerCase().endsWith(".gml"))) {
-					path = path + ".gml";
-				}
-				newFile = new File(path);
-
-				GMLWriter writer = (GMLWriter)LayerFactory.getWM().getWriter("GML Writer");
-
-				SHPLayerDefinition lyrDef = new SHPLayerDefinition();
-				SelectableDataSource sds = layer.getRecordset();
-				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
-				lyrDef.setFieldsDesc(fieldsDescrip);
-				lyrDef.setName(newFile.getName());
-				lyrDef.setShapeType(layer.getShapeType());
-
-				writer.setFile(newFile);
-				writer.setSchema(lyrDef);
-				writer.setBoundedBy(layer.getFullExtent(),layer.getProjection());
-				writer.initialize(lyrDef);
-				GMLDriver gmlDriver=new GMLDriver();
-				gmlDriver.open(newFile);
-				writeFeatures(mapContext, layer, writer, gmlDriver);
-			}
-
-		} catch (SchemaEditionException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (InitializeWriterException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (DriverLoadException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
-
-	}
+	
 	private IndexedShpDriver getOpenShpDriver(File fileShp) throws OpenDriverException {
 		IndexedShpDriver drv = new IndexedShpDriver();
 		if (!fileShp.exists()) {
