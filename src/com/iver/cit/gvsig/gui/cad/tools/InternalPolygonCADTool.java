@@ -169,35 +169,36 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     public void drawOperation(Graphics g, double x, double y) {
     	Point2D[] ps=(Point2D[])points.toArray(new Point2D[0]);
     	GeneralPathX gpx=new GeneralPathX();
-    	GeneralPathX gpx1=new GeneralPathX();
+//    	GeneralPathX gpx1=new GeneralPathX();
 
     	if (ps.length>0){
     	for (int i=0;i<ps.length;i++){
     		if (i==0){
     			gpx.moveTo(ps[i].getX(),ps[i].getY());
-    			gpx1.moveTo(ps[i].getX(),ps[i].getY());
+//    			gpx1.moveTo(ps[i].getX(),ps[i].getY());
     		}else{
     			gpx.lineTo(ps[i].getX(),ps[i].getY());
-    			gpx1.lineTo(ps[i].getX(),ps[i].getY());
+//    			gpx1.lineTo(ps[i].getX(),ps[i].getY());
     		}
 
-    	}
-    	gpx.lineTo(x,y);
-    	gpx.closePath();
-    	gpx1.closePath();
-    	if (ps.length==1){
-    		IGeometry geom=ShapeFactory.createPolyline2D(gpx);
-        	geom.drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.geometrySelectSymbol);
-    	}
-    	IGeometry geom=ShapeFactory.createPolygon2D(gpx);
-    	IGeometry geom1=ShapeFactory.createPolygon2D(gpx1);
-    	geom1.drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.selectionSymbol);
-    	geom.drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.geometrySelectSymbol);
     	}
     	DefaultRowEdited[] rows=(DefaultRowEdited[])getSelectedRows().toArray(new DefaultRowEdited[0]);
     	for (int i=0;i<rows.length;i++){
     		((IFeature)rows[i].getLinkedRow()).getGeometry().drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.selectionSymbol);
     	}
+    	gpx.lineTo(x,y);
+    	gpx.closePath();
+//    	gpx1.closePath();
+    	if (ps.length==1){
+    		IGeometry geom=ShapeFactory.createPolyline2D(gpx);
+        	geom.drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.geometrySelectSymbol);
+    	}
+    	IGeometry geom=ShapeFactory.createPolygon2D(gpx);
+//    	IGeometry geom1=ShapeFactory.createPolygon2D(gpx1);
+//    	geom1.drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.selectionSymbol);
+    	geom.drawInts((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.geometrySelectSymbol);
+    	}
+
     }
 
     /**
@@ -243,6 +244,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
     	}else if (s.equals(PluginServices.getText(this,"cancel"))){
     		points.clear();
     	}
+    	PluginServices.getMainFrame().enableControls();
     }
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
