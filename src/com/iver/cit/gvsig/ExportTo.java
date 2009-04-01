@@ -284,7 +284,7 @@ public class ExportTo extends Extension {
 						}
 						if (actionCommand.equals("POSTGIS")) {
 							saveToPostGIS(mapa, lv);
-						}						
+						}
 					} // actives[i]
 				} // for
 			} catch (ReadDriverException e) {
@@ -599,7 +599,7 @@ public class ExportTo extends Extension {
 					ShpWriter[] writers=new ShpWriter[3];
 
 					// puntos
-					String auxPoint = path.replaceFirst(".shp", "_points.shp");
+					String auxPoint = path.replaceFirst("\\.shp", "_points.shp");
 
 					SHPLayerDefinition lyrDefPoint = new SHPLayerDefinition();
 					lyrDefPoint.setFieldsDesc(fieldsDescrip);
@@ -618,7 +618,7 @@ public class ExportTo extends Extension {
 					ShpWriter writer2 = (ShpWriter) LayerFactory.getWM().getWriter(
 					"Shape Writer");
 					// Lineas
-					String auxLine = path.replaceFirst(".shp", "_line.shp");
+					String auxLine = path.replaceFirst("\\.shp", "_line.shp");
 					SHPLayerDefinition lyrDefLine = new SHPLayerDefinition();
 					lyrDefLine.setFieldsDesc(fieldsDescrip);
 
@@ -635,7 +635,7 @@ public class ExportTo extends Extension {
 					ShpWriter writer3 = (ShpWriter) LayerFactory.getWM().getWriter(
 					"Shape Writer");
 					// Polígonos
-					String auxPolygon = path.replaceFirst(".shp", "_polygons.shp");
+					String auxPolygon = path.replaceFirst("\\.shp", "_polygons.shp");
 					SHPLayerDefinition lyrDefPolygon = new SHPLayerDefinition();
 					lyrDefPolygon.setFieldsDesc(fieldsDescrip);
 					File filePolygons = new File(auxPolygon);
@@ -686,7 +686,7 @@ public class ExportTo extends Extension {
 		}
 
 	}
-	
+
 	private IndexedShpDriver getOpenShpDriver(File fileShp) throws OpenDriverException {
 		IndexedShpDriver drv = new IndexedShpDriver();
 		if (!fileShp.exists()) {
