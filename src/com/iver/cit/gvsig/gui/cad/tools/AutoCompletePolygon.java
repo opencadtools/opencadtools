@@ -96,7 +96,7 @@ public class AutoCompletePolygon extends PolylineCADTool {
 					+ " " + e.getLocalizedMessage(),
 					e);
 		}
-		
+
 		return FConverter.jts_to_igeometry(jtsGeom);
 	}
 
@@ -105,4 +105,11 @@ public class AutoCompletePolygon extends PolylineCADTool {
 		IGeometry newGeom = autoComplete(geometry);
 		super.addGeometry(newGeom);
 	}
+	 public boolean isApplicable(int shapeType) {
+	        switch (shapeType) {
+	        case FShape.POLYGON:
+	            return true;
+	        }
+	        return false;
+	    }
 }
