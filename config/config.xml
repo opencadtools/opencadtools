@@ -135,11 +135,11 @@
 			description="Extensión encargada de insertar polilíneas en una capa en edición."
 			active="true">
 			<menu text="geometry/insert/polyline" action-command="_polyline" icon="edition-insert-geometry-polyline"/>
-			<menu text="geometry/insert/spline" action-command="_spline" icon="edition-insert-geometry-spline"/>
+			<!--menu text="geometry/insert/spline" action-command="_spline" icon="edition-insert-geometry-spline"/-->
 
 			<tool-bar name="insert" position="30">
 				<selectable-tool icon="edition-insert-geometry-polyline" action-command="_polyline" tooltip="polyline" position="5"/>
-				<selectable-tool icon="edition-insert-geometry-spline" action-command="_spline" tooltip="spline" position="5"/>
+				<!--selectable-tool icon="edition-insert-geometry-spline" action-command="_spline" tooltip="spline" position="5"/-->
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertPolygonExtension"
