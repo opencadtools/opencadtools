@@ -380,6 +380,14 @@ public class ExportTo extends Extension {
 
 	        }
 
+			// all fields to lowerCase
+			FieldDescription field;
+			for (int i=0;i<dbLayerDef.getFieldsDesc().length;i++){
+				field = dbLayerDef.getFieldsDesc()[i];
+				field.setFieldName(field.getFieldName().toLowerCase());
+			}
+			dbLayerDef.setFieldID(dbLayerDef.getFieldID().toLowerCase());
+			dbLayerDef.setFieldGeometry(dbLayerDef.getFieldGeometry().toLowerCase());
 
 			dbLayerDef.setWhereClause("");
 			String strSRID = layer.getProjection().getAbrev();
