@@ -1,0 +1,106 @@
+%{
+/**
+ Finite state machine, generated with fsm tool
+ (http://smc.sourceforge.net)
+ @author Alvaro Zabala
+*/
+%}
+
+%start SplitGeometry::FirstPoint
+%class SplitGeometryCADTool
+%package com.iver.cit.gvsig.gui.cad.tools.smc
+%import com.iver.cit.gvsig.gui.cad.tools.SplitGeometryCADTool
+%import java.awt.event.InputEvent
+%import com.iver.andami.PluginServices
+
+
+%map SplitGeometry
+%%
+
+
+
+FirstPoint
+
+  Entry {
+    setQuestion(PluginServices.getText(this,"insert_first_point"));
+    setDescription(new String[]{"cancel"});
+  }
+
+  Exit{}
+
+  {
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+      DigitizingLine{
+        setQuestion(PluginServices.getText(this,"insert_more_points_or_finish"));
+        setDescription(new String[]{"cancel"});
+        addPoint( pointX,pointY,event);
+      }
+  }
+
+
+DigitizingLine{
+  /**
+  addPoint( pointX:double,pointY:double,event:InputEvent)
+  [ctxt.isDigitingFinished()]
+  FirstPoint{
+   			finishDigitizedLine();
+   			splitSelectedGeometryWithDigitizedLine();
+   			end();
+   }
+   */
+
+   addOption(s:String)
+   [s.equalsIgnoreCase(PluginServices.getText(this,"SplitGeometryCADTool.end")) || s.equalsIgnoreCase(PluginServices.getText(this,"terminate"))]
+	FirstPoint {
+		finishDigitizedLine();
+   		splitSelectedGeometryWithDigitizedLine();
+   		end();
+	}
+
+
+   addPoint( pointX:double,pointY:double,event:InputEvent)
+   DigitizingLine{
+   		setQuestion(
+				PluginServices.getText(this,"insert_next_point")+
+				PluginServices.getText(this,"cad.or")+" "+
+				PluginServices.getText(this,"end")+
+				"["+PluginServices.getText(this,"PolylineCADTool.end")+"]"
+		);
+		setDescription(new String[]{"inter_arc","terminate","cancel"});
+		addPoint( pointX,pointY,event);
+   }
+}
+
+Default{
+
+  addOption(s:String)
+  [s.equals("")]
+  FirstPoint{
+    restorePreviousTool();
+    setQuestion(PluginServices.getText(this,"insert_first_point"));
+    setDescription(new String[]{"cancel"});
+    end();
+   }
+
+  addOption(s:String)
+  [s.equals(PluginServices.getText(this,"cancel"))]
+  FirstPoint{
+      end();
+  }
+
+addOption(s:String)
+	FirstPoint{
+		throwOptionException(PluginServices.getText(this,"incorrect_option"),s);
+		}
+
+addValue(d:double)
+	FirstPoint{
+		throwValueException(PluginServices.getText(this,"incorrect_value"),d);
+		}
+
+addPoint(pointX:double,pointY:double,event:InputEvent)
+	FirstPoint{
+		throwPointException(PluginServices.getText(this,"incorrect_point"),pointX,pointY);
+		}
+}
+%%
