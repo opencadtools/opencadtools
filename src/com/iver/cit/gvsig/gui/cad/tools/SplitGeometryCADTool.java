@@ -237,7 +237,7 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 					if (j==0){
 						newIdx=editedRow.getIndex();
 						try {
-							vle.getVEA().modifyRow(newIdx, df, getName(),
+							vea.modifyRow(newIdx, df, getName(),
 									EditionEvent.GRAPHIC);
 						} catch (ValidateRowException e) {
 							NotificationManager.addError(e.getMessage(),e);

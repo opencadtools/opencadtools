@@ -254,7 +254,7 @@
 
 
 			<tool-bar name="Topology">
-				<action-tool icon="split-geometry"
+				<selectable-tool icon="split-geometry"
 							 action-command="_split_geometry"
 							 tooltip="split_geometry"
 							 enable-text="select_geometry_to_split"
