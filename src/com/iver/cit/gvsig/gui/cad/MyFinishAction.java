@@ -236,6 +236,15 @@ public class MyFinishAction extends FinishAction
 
     	        }
 
+                // all fields to lowerCase
+    	     	FieldDescription field;
+    	     	for (int i=0;i<dbLayerDef.getFieldsDesc().length;i++){
+    	     		field = dbLayerDef.getFieldsDesc()[i];
+    	     		field.setFieldName(field.getFieldName().toLowerCase());
+    	     	}
+    	     	dbLayerDef.setFieldID(dbLayerDef.getFieldID().toLowerCase());
+    	     	dbLayerDef.setFieldGeometry(dbLayerDef.getFieldGeometry().toLowerCase());
+
     	        dbDriver.setData(conex, dbLayerDef);
     	        IProjection proj = null;
     	        if (drv instanceof ICanReproject)
@@ -253,7 +262,7 @@ public class MyFinishAction extends FinishAction
 
 			}
 		} catch (Exception e) {
-			NotificationManager.showMessageError(e.getMessage(),e);
+			NotificationManager.addError(e);
 			return;
 		}
         lyr.setVisible(true);
@@ -281,9 +290,9 @@ public class MyFinishAction extends FinishAction
 			// Para cerrar el cuadro de diálogo.
 			oldAction.performAction();
 		} catch (ReadDriverException e) {
-			NotificationManager.showMessageError(e.getMessage(),e);
+			NotificationManager.addError(e);
 		} catch (StartEditionLayerException e) {
-			NotificationManager.showMessageError(e.getMessage(),e);
+			NotificationManager.addError(e);
 		}
 
 
