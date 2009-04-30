@@ -143,6 +143,9 @@ public class SnapConfigPage extends AbstractPreferencePage {
      * DOCUMENT ME!
      */
     public void initializeValues() {
+    	if (prefs.get("apply-snappers", null) == null){
+    		initializeDefaults();
+    	}
         for (int n = 0; n < snappers.size(); n++) {
             ISnapper snp = (ISnapper) snappers.get(n);
             String nameClass=snp.getClass().getName();
@@ -170,14 +173,17 @@ public class SnapConfigPage extends AbstractPreferencePage {
             if (nameClass.equals(".FinalPointSnapper")){
             	selected.put(snp, new Boolean(true));
             	int priority = 1;
+            	prefs.putInt("snapper_priority" + nameClass, priority);
                 snp.setPriority(priority);
             }else if (nameClass.equals(".NearestPointSnapper")){
             	selected.put(snp, new Boolean(true));
             	int priority = 2;
+            	prefs.putInt("snapper_priority" + nameClass, priority);
                 snp.setPriority(priority);
             }else{
             	selected.put(snp, new Boolean(false));
             	int priority = 3;
+            	prefs.putInt("snapper_priority" + nameClass, priority);
                 snp.setPriority(priority);
             }
         }

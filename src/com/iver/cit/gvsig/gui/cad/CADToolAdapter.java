@@ -16,6 +16,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.MemoryImageSource;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 import java.util.prefs.Preferences;
 
@@ -32,6 +33,7 @@ import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
 import com.iver.cit.gvsig.fmap.core.FShape;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
@@ -50,14 +52,15 @@ import com.iver.cit.gvsig.gui.preferences.SnapConfigPage;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
-import com.iver.cit.gvsig.project.documents.view.snapping.GeometriesSnappingVisitor;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
-import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperGeometriesVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.SnappingVisitor;
+import com.iver.cit.gvsig.project.documents.view.snapping.snappers.FinalPointSnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.snappers.NearestPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
+import com.iver.utiles.swing.threads.Cancellable;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
@@ -382,97 +385,105 @@ public class CADToolAdapter extends Behavior {
 	 *  adjustment, returns <code>Double.MAX_VALUE</code>.
 	 */
 	private double adjustToHandler(Point2D point,
-			Point2D mapHandlerAdjustedPoint) {
+            Point2D mapHandlerAdjustedPoint) {
 
-		if (!isRefentEnabled())
-			return Double.MAX_VALUE;
+        if (!isRefentEnabled())
+            return Double.MAX_VALUE;
 
-		ILayerEdited aux = CADExtension.getEditionManager().getActiveLayerEdited();
-		if (!(aux instanceof VectorialLayerEdited))
-			return Double.MAX_VALUE;
-		VectorialLayerEdited vle = (VectorialLayerEdited) aux;
+        ILayerEdited aux = CADExtension.getEditionManager().getActiveLayerEdited();
+        if (!(aux instanceof VectorialLayerEdited))
+            return Double.MAX_VALUE;
+        VectorialLayerEdited vle = (VectorialLayerEdited) aux;
 
-		ArrayList snappers = vle.getSnappers();
-		ArrayList layersToSnap = vle.getLayersToSnap();
-
-
-		ViewPort vp = getMapControl().getViewPort();
-
-		snappers=SnapConfigPage.getActivesSnappers();
-
-		double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
-		double minDist = mapTolerance;
-//		double rw = getMapControl().getViewPort().toMapDistance(5);
-		Point2D mapPoint = point;
-		Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - mapTolerance / 2,
-				mapPoint.getY() - mapTolerance / 2, mapTolerance, mapTolerance);
-
-		Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
-
-		usedSnap = null;
-		Point2D lastPoint = null;
-		if (previousPoint != null)
-		{
-			lastPoint = new Point2D.Double(previousPoint[0], previousPoint[1]);
-		}
-		for (int j = 0; j < layersToSnap.size(); j++)
-		{
-			FLyrVect lyrVect = (FLyrVect) layersToSnap.get(j);
-			SpatialCache cache = lyrVect.getSpatialCache();
-			if (lyrVect.isVisible())
-			{
-				// La lista de snappers está siempre ordenada por prioridad. Los de mayor
-				// prioridad están primero.
-				for (int i = 0; i < snappers.size(); i++)
-				{
-					ISnapper theSnapper = (ISnapper) snappers.get(i);
-
-					if (usedSnap != null)
-					{
-						// Si ya tenemos un snap y es de alta prioridad, cogemos ese. (A no ser que en otra capa encontremos un snapper mejor)
-						if (theSnapper.getPriority() < usedSnap.getPriority())
-							break;
-					}
-					SnappingVisitor snapVisitor = null;
-					Point2D theSnappedPoint = null;
-
-					if (theSnapper instanceof ISnapperVectorial)
-					{
-						if (theSnapper instanceof ISnapperGeometriesVectorial) {
-							snapVisitor=new GeometriesSnappingVisitor((ISnapperGeometriesVectorial) theSnapper,point,mapTolerance,lastPoint);
-						}else {
-							snapVisitor = new SnappingVisitor((ISnapperVectorial) theSnapper, point, mapTolerance, lastPoint);
-						}
-						// System.out.println("Cache size = " + cache.size());
-						cache.query(e, snapVisitor);
-						theSnappedPoint = snapVisitor.getSnapPoint();
-
-					}
-					if (theSnapper instanceof ISnapperRaster)
-					{
-						ISnapperRaster snapRaster = (ISnapperRaster) theSnapper;
-						theSnappedPoint = snapRaster.getSnapPoint(getMapControl(), point, mapTolerance, lastPoint);
-					}
+        ArrayList snappers = SnapConfigPage.getActivesSnappers();
+        ArrayList layersToSnap = vle.getLayersToSnap();
 
 
-					if (theSnappedPoint != null) {
-						double distAux = theSnappedPoint.distance(point);
-						if (minDist > distAux)
-						{
-							minDist = distAux;
-							usedSnap = theSnapper;
-							mapHandlerAdjustedPoint.setLocation(theSnappedPoint);
-						}
-					}
-				}
-			} // visible
-		}
-		if (usedSnap != null)
-			return minDist;
-		return Double.MAX_VALUE;
+        ViewPort vp = getMapControl().getViewPort();
 
-	}
+//        // TODO: PROVISIONAL. PONER ALGO COMO ESTO EN UN CUADRO DE DIALOGO
+//        // DE CONFIGURACIÓN DEL SNAPPING
+//        FinalPointSnapper defaultSnap = new FinalPointSnapper();
+//        NearestPointSnapper nearestSnap = new NearestPointSnapper();
+//        // PixelSnapper pixSnap = new PixelSnapper();
+//        snappers.clear();
+//        snappers.add(defaultSnap);
+//        snappers.add(nearestSnap);
+//        // snappers.add(pixSnap);
 
+        double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
+        double minDist = mapTolerance;
+//        double rw = getMapControl().getViewPort().toMapDistance(5);
+        Point2D mapPoint = point;
+        Rectangle2D r = new Rectangle2D.Double(mapPoint.getX() - mapTolerance / 2,
+                mapPoint.getY() - mapTolerance / 2, mapTolerance, mapTolerance);
+
+        Envelope e = FConverter.convertRectangle2DtoEnvelope(r);
+
+        usedSnap = null;
+        Point2D lastPoint = null;
+        if (previousPoint != null)
+        {
+            lastPoint = new Point2D.Double(previousPoint[0], previousPoint[1]);
+        }
+        for (int j = 0; j < layersToSnap.size(); j++)
+        {
+            FLyrVect lyrVect = (FLyrVect) layersToSnap.get(j);
+            SpatialCache cache = lyrVect.getSpatialCache();
+            if (lyrVect.isVisible())
+            {
+                // La lista de snappers está siempre ordenada por prioridad. Los de mayor
+                // prioridad están primero.
+                List geoms = cache.query(e);
+                for (int n=0; n < geoms.size(); n++) {
+                    IGeometry geom = (IGeometry) geoms.get(n);
+                    for (int i = 0; i < snappers.size(); i++)
+                    {
+//                        if (cancel.isCanceled())
+//                            return Double.MAX_VALUE;
+                        ISnapper theSnapper = (ISnapper) snappers.get(i);
+
+                        if (usedSnap != null)
+                        {
+                            // Si ya tenemos un snap y es de alta prioridad, cogemos ese. (A no ser que en otra capa encontremos un snapper mejor)
+                            if (theSnapper.getPriority() > usedSnap.getPriority())
+                                break;
+                        }
+//                        SnappingVisitor snapVisitor = null;
+                        Point2D theSnappedPoint = null;
+                        if (theSnapper instanceof ISnapperVectorial)
+                        {
+//                            snapVisitor = new SnappingVisitor((ISnapperVectorial) theSnapper, point, mapTolerance, lastPoint);
+//                            // System.out.println("Cache size = " + cache.size());
+//                            cache.query(e, snapVisitor);
+//                            theSnappedPoint = snapVisitor.getSnapPoint();
+                            theSnappedPoint = ((ISnapperVectorial) theSnapper).getSnapPoint(point, geom, mapTolerance, lastPoint);
+                        }
+                        if (theSnapper instanceof ISnapperRaster)
+                        {
+                            ISnapperRaster snapRaster = (ISnapperRaster) theSnapper;
+                            theSnappedPoint = snapRaster.getSnapPoint(getMapControl(), point, mapTolerance, lastPoint);
+                        }
+
+
+                        if (theSnappedPoint != null) {
+                            double distAux = theSnappedPoint.distance(point);
+                            if (minDist > distAux)
+                            {
+                                minDist = distAux;
+                                usedSnap = theSnapper;
+                                mapHandlerAdjustedPoint.setLocation(theSnappedPoint);
+                            }
+                        }
+                    }
+                } // for n
+            } // visible
+        }
+        if (usedSnap != null)
+            return minDist;
+        return Double.MAX_VALUE;
+
+    }
 	/*
 	 * (non-Javadoc)
 	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mouseReleased(java.awt.event.MouseEvent)
