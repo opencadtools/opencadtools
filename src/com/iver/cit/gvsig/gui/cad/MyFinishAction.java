@@ -262,7 +262,7 @@ public class MyFinishAction extends FinishAction
 
 			}
 		} catch (Exception e) {
-			NotificationManager.addError(e);
+			NotificationManager.showMessageError(e.getLocalizedMessage(),e);
 			return;
 		}
         lyr.setVisible(true);
