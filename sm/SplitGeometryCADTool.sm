@@ -64,7 +64,7 @@ DigitizingLine{
 				PluginServices.getText(this,"insert_next_point")+
 				PluginServices.getText(this,"cad.or")+" "+
 				PluginServices.getText(this,"end")+
-				"["+PluginServices.getText(this,"PolylineCADTool.end")+"]"
+				"["+PluginServices.getText(this,"SplitGeometryCADTool.end")+"]"
 		);
 		setDescription(new String[]{"inter_arc","terminate","cancel"});
 		addPoint( pointX,pointY,event);
