@@ -42,6 +42,7 @@ import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.selection.SelectRowPanel;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -178,6 +179,11 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					geomReproject.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
 					drawHandlers(geomReproject.cloneGeometry(),gh,vp);
 				}
+			}
+			if (!multipleSelection && selectedRow.size()>1){
+
+				SelectRowPanel selectionPanel=new SelectRowPanel(selectedRow, this);
+				PluginServices.getMDIManager().addCentredWindow(selectionPanel);
 			}
 			vea.setSelectionImage(selectionImage);
 			vea.setHandlersImage(handlersImage);
