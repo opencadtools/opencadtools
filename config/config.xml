@@ -192,14 +192,6 @@
 				<selectable-tool icon="edition-geometry-stretch" action-command="_stretch" tooltip="stretch" position="12"/>
 			</tool-bar>
 		</extension>
-		<!--extension class-name="com.iver.cit.gvsig.ExtendExtension"
-			description="Extensión encargada de alargar geometrías en una capa en edición."
-			active="true">
-			<menu text="geometry/modify/extend" action-command="_extend" icon="edition-modify-geometry-extend"/>
-			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-modify-geometry-extend" action-command="_extend" tooltip="extend" position="13"/>
-			</tool-bar>
-		</extension-->
 		<extension class-name="com.iver.cit.gvsig.ComplexSelectionGeometryExtension"
 			description="Extensión encargada de la selección compleja de geometrías."
 			active="true">
