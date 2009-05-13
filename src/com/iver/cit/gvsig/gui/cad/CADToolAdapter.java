@@ -1,5 +1,6 @@
 package com.iver.cit.gvsig.gui.cad;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.FontMetrics;
@@ -598,6 +599,7 @@ public class CADToolAdapter extends Behavior {
 	 * @param g <code>MapControl</code>'s graphics where the data will be drawn
 	 */
 	private void drawCursor(Graphics g) {
+		((Graphics2D)g).setStroke(new BasicStroke(1));
 		g.setColor(Color.black);
 		Point2D p = adjustedPoint;
 
