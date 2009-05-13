@@ -415,7 +415,7 @@ public class ExportTo extends Extension {
 		} catch (DBException e) {
 			NotificationManager.showMessageError(e.getLocalizedMessage(),e);
 		} catch (InitializeWriterException e) {
-			NotificationManager.addError(e.getMessage(),e);
+			NotificationManager.showMessageError(e.getMessage(),e);
 		} catch (ReadDriverException e) {
 			NotificationManager.addError(e.getMessage(),e);
 		}
