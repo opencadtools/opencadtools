@@ -231,12 +231,13 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 				for(int j = 0; j < gc.getNumGeometries(); j++){
 					Geometry g = gc.getGeometryN(j);
 					IGeometry fmapGeo = FConverter.jts_to_igeometry(g);
-					String newFID = vea.getNewFID();
-					DefaultFeature df = new DefaultFeature(fmapGeo, feat.getAttributes(), newFID);
+					DefaultFeature df = null;
 					int newIdx = 0;
 					if (j==0){
 						newIdx=editedRow.getIndex();
 						try {
+							String newFID = vea.getNewFID();
+							df = new DefaultFeature(fmapGeo, feat.getAttributes(),feat.getID());
 							vea.modifyRow(newIdx, df, getName(),
 									EditionEvent.GRAPHIC);
 						} catch (ValidateRowException e) {
@@ -250,7 +251,8 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 					}else{
 
 						try {
-
+							String newFID = vea.getNewFID();
+							df = new DefaultFeature(fmapGeo, feat.getAttributes(),newFID);
 							newIdx = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
 							SpatialCache spatialCache=((FLyrVect)vle.getLayer()).getSpatialCache();
 							IGeometry geometry = df.getGeometry();
