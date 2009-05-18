@@ -266,38 +266,18 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	 * @see com.iver.cit.gvsig.gui.preferences.IPreference#initializeValues()
 	 */
 	public void initializeValues() {
-		// /* Vamos a usar esto por ahora así:
-		// * Al abrir el dialogo, miramos las capas que hay
-		// * en edición y las capas activas.
-		// * Las capas en edición nos las guardamos para
-		// * fijarles las propiedades, y las que están activas
-		// * las metemos en la tabla de configuración de
-		// * snapping.
-		// */
-		// FLyrVect firstLyrVect = null;
-		// for (int i=0; i<layers.getLayersCount(); i++)
-		// {
-		// FLayer aux = layers.getLayer(i);
-		// if (aux.isActive())
-		// if (aux instanceof FLyrVect)
-		// {
-		// firstLyrVect = (FLyrVect) aux;
-		// }
-		// }
-		//
-		// TableModel tm = getJTableSnapping().getModel();
-		// for (int i=0; i < tm.getRowCount(); i++)
-		// {
-		// String layerName = (String) tm.getValueAt(i, 1);
-		// FLayer layer = layers.getLayer(layerName);
-		// FLyrVect lyr = (FLyrVect) layers.getLayer(layerName);
-		// Boolean bUseCache = (Boolean) tm.getValueAt(i,0);
-		// Integer maxFeat = (Integer) tm.getValueAt(i,2);
-		// lyr.setSpatialCacheEnabled(bUseCache.booleanValue());
-		// lyr.setMaxFeaturesInEditionCache(maxFeat.intValue());
-		// }
-		//
-
+		TableModel tm = getJTableSnapping().getModel();
+		EditionManager edManager = CADExtension.getEditionManager();
+		FLayer layerActive=layers.getActives()[0];
+		VectorialLayerEdited lyrEd = (VectorialLayerEdited) edManager
+			.getLayerEdited(layerActive);
+		ArrayList layersToSnap=lyrEd.getLayersToSnap();
+		for (int i = 0; i < layers.getLayersCount(); i++) {
+			FLyrVect layer=(FLyrVect)layers.getLayer(i);
+			tm.setValueAt(layer.getName(), i, 1);
+			tm.setValueAt(layersToSnap.contains(layer), i, 0);
+			tm.setValueAt(layer.getSpatialCache().getMaxFeatures(), i, 2);
+		}
 	}
 
 	public void storeValues() throws StoreException {
