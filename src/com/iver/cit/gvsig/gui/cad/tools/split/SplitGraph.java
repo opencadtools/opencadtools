@@ -1,16 +1,16 @@
 /* Spatial Operations & Editing Tools for uDig
- * 
- * Axios Engineering under a funding contract with: 
- *      Diputación Foral de Gipuzkoa, Ordenación Territorial 
+ *
+ * Axios Engineering under a funding contract with:
+ *      Diputación Foral de Gipuzkoa, Ordenación Territorial
  *
  *      http://b5m.gipuzkoa.net
- *      http://www.axios.es 
+ *      http://www.axios.es
  *
- * (C) 2006, Diputación Foral de Gipuzkoa, Ordenación Territorial (DFG-OT). 
+ * (C) 2006, Diputación Foral de Gipuzkoa, Ordenación Territorial (DFG-OT).
  * DFG-OT agrees to licence under Lesser General Public License (LGPL).
- * 
- * You can redistribute it and/or modify it under the terms of the 
- * GNU Lesser General Public License as published by the Free Software 
+ *
+ * You can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software
  * Foundation; version 2.1 of the License.
  *
  * This library is distributed in the hope that it will be useful,
@@ -22,6 +22,8 @@ package com.iver.cit.gvsig.gui.cad.tools.split;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateArrays;
@@ -58,7 +60,7 @@ import com.vividsolutions.jts.geomgraph.Quadrant;
  * which is called in order to ensure propper orientation of the shell and holes.
  * </p>
  * </p>
- * 
+ *
  * @author Gabriel Roldán, Axios Engineering
  * @author Mauricio Pazos, Axios Engineering
  * @since 1.1.0
@@ -108,7 +110,7 @@ class SplitGraph extends PlanarGraph {
 
     /**
      * Removes the given edge and its related {@link DirectedEdge}'s from this graph
-     * 
+     *
      * @param edge the edge to remove
      * @throws IllegalArgumentException if no enclosing DirectedEdge is found for <code>edge</code>
      * @see #remove(DirectedEdge)
@@ -124,7 +126,7 @@ class SplitGraph extends PlanarGraph {
     /**
      * Removes a DirectedEdge, its sym and its {@link SplitEdge} from this graph. May lead to the
      * graph containing dangling nodes.
-     * 
+     *
      * @param edgeEnd
      */
     public void remove( final DirectedEdge edgeEnd ) {
@@ -150,7 +152,7 @@ class SplitGraph extends PlanarGraph {
 
     /**
      * Builds a linestrnig from splitter such that it contains no endpoints lying inside the polygon
-     * 
+     *
      * @param polygon
      * @param splitter
      * @return
@@ -188,7 +190,7 @@ class SplitGraph extends PlanarGraph {
     /**
      * <pre>
      * <code>
-     *                             
+     *
      *                  +----------o-----------+
      *                  |          |           |
      *                  |          |           |
@@ -199,12 +201,12 @@ class SplitGraph extends PlanarGraph {
      *                  |    o__\__o_____|     |
      *                  |       /  |           |
      *                 /|\        /|\          |
-     *                  o__________o___________| 
-     *                                        
-     *                             
+     *                  o__________o___________|
+     *
+     *
      * </code>
      * </pre>
-     * 
+     *
      * @throws Exception
      */
     private void buildGraph() {
@@ -239,13 +241,19 @@ class SplitGraph extends PlanarGraph {
         for( int i = 0; i < nParts; i++ ) {
             currGeom = linearGeom.getGeometryN(i);
             coords = currGeom.getCoordinates();
+            if (coords.length<2)
+            	continue;
             Label label = new Label(onLoc, leftLoc, rightLoc);
             Edge edge = new SplitEdge(coords, label);
             edges.add(edge);
         }
         // for each edge in the list, adds two DirectedEdge, one reflecting
         // the given edge and other the opposite
-        super.addEdges(edges);
+        try{
+        	super.addEdges(edges);
+        }catch (Exception e) {
+			Logger.getLogger(this.getClass()).error(e);
+		}
     }
 
 }
