@@ -31,7 +31,7 @@ public class SnapConfigPage extends AbstractPreferencePage {
     private ArrayList<ISnapper> snappers = new ArrayList<ISnapper>();
 	private static boolean applySnappers=true;
     @SuppressWarnings("unchecked")
-	private static HashMap<ISnapper,Boolean> selected = new HashMap<ISnapper,Boolean>();
+	public static HashMap<ISnapper,Boolean> selected = new HashMap<ISnapper,Boolean>();
     static {
     	new SnapConfigPage().initializeValues();
     }
