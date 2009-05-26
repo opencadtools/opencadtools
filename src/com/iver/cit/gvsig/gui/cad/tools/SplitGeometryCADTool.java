@@ -214,6 +214,8 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 			IFeature feat = (IFeature) editedRow.getLinkedRow().cloneRow();
 			IGeometry ig = feat.getGeometry();
 			Geometry jtsGeo = FConverter.java2d_to_jts((FShape)ig.getInternalShape());
+			if (jtsGeo==null)
+				return;
 			try {
 			Geometry splitGeo = SplitStrategy.splitOp(jtsGeo, splittingLs);
 			if(splitGeo instanceof GeometryCollection
