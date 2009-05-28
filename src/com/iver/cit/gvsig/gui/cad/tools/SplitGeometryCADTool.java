@@ -201,16 +201,20 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 				new PrecisionModel(10000)).createLineString(digitizedCoords);
 
 		ArrayList selectedRows = getSelectedRows();
-//		ArrayList<IRowEdited> splitSelectionGeoms = new
-//			ArrayList<IRowEdited>();
 		IRowEdited editedRow = null;
 		VectorialLayerEdited vle = getVLE();
 		VectorialEditableAdapter vea = vle.getVEA();
 		getCadToolAdapter().getMapControl().getMapContext().beginAtomicEvent();
 		vea.startComplexRow();
 		List<Integer> indices = new ArrayList<Integer>();
-		for (int i = 0; i < selectedRows.size(); i++) {
-			editedRow = (IRowEdited) selectedRows.get(i);
+		ArrayList auxSelectedRows=new ArrayList(selectedRows);
+		try {
+			vle.clearSelection(false);
+		} catch (ReadDriverException e1) {
+			e1.printStackTrace();
+		}
+		for (int i = 0; i < auxSelectedRows.size(); i++) {
+			editedRow = (IRowEdited) auxSelectedRows.get(i);
 			IFeature feat = (IFeature) editedRow.getLinkedRow().cloneRow();
 			IGeometry ig = feat.getGeometry();
 			Geometry jtsGeo = FConverter.java2d_to_jts((FShape)ig.getInternalShape());
@@ -223,11 +227,6 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 
 				//Saving originals polygons index
 				indices.add(new Integer(editedRow.getIndex()));
-//				try {
-//					vle.clearSelection(false);
-//				} catch (ReadDriverException e) {
-//					PluginServices.getLogger().error("Error clearing selection", e);
-//				}
 				//and then, we add new features for each split geometry
 				GeometryCollection gc = (GeometryCollection)splitGeo;
 				for(int j = 0; j < gc.getNumGeometries(); j++){
@@ -238,7 +237,6 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 					if (j==0){
 						newIdx=editedRow.getIndex();
 						try {
-							String newFID = vea.getNewFID();
 							df = new DefaultFeature(fmapGeo, feat.getAttributes(),feat.getID());
 							vea.modifyRow(newIdx, df, getName(),
 									EditionEvent.GRAPHIC);
@@ -249,7 +247,6 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 						} catch (ReadDriverException e) {
 							NotificationManager.addError(e.getMessage(),e);
 						}
-//						CADUtil.modifyFeature(vle, newIdx ,getName(), df);
 					}else{
 
 						try {
@@ -268,15 +265,10 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 						} catch (ReadDriverException e) {
 							NotificationManager.addError(e);
 						}
-
-
-
-//						newIdx = CADUtil.addFeature(vle, df, getName());
 					}
 					DefaultRowEdited newRowEdited = new DefaultRowEdited(df,
 								IRowEdited.STATUS_ADDED,
 									newIdx);
-//					splitSelectionGeoms.add(newRowEdited);
 					vle.addSelectionCache(newRowEdited);
 				}//for j
 			}//if splitGeo
@@ -284,22 +276,6 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 				PluginServices.getLogger().error("Error splitting geom "+editedRow.getIndex(), ex);
 			}
 		}
-
-		// Vector index ordered highest to lowest
-//		Collections.sort(indices, Collections.reverseOrder());
-//		// Clear polygon erasing their lines in the table
-//		for(int i = 0; i< indices.size();i++) {
-//
-//			try {
-//				vea.removeRow(((Integer)indices.get(i)).intValue(),
-//						PluginServices.getText(this,"deleted_feature"),
-//						EditionEvent.GRAPHIC);
-//			} catch (ExpansionFileReadException e) {
-//				logger.error("Error ExpansionFileReadException en la funcion split");
-//			} catch (ReadDriverException e) {
-//				logger.error("Error ReadDriverException en la funcion split");
-//			}
-//		}
 		vea.endComplexRow(getName());
 
 		getCadToolAdapter().getMapControl().getMapContext().endAtomicEvent();
