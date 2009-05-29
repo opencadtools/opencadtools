@@ -99,6 +99,16 @@ public class StartEditing extends Extension {
 								JOptionPane.WARNING_MESSAGE);
 					}
 
+					if (lv.isJoined()) {
+						int resp = JOptionPane.showConfirmDialog((Component) PluginServices
+								.getMainFrame(), PluginServices.getText(this,"se_perdera_la_unión")+
+								"\n" + PluginServices.getText(this,"desea_continuar"),
+								PluginServices.getText(this,"start_edition"),
+								JOptionPane.YES_NO_OPTION);
+						if (resp != JOptionPane.YES_OPTION) { // CANCEL EDITING
+							return; // Salimos sin iniciar edición
+						}
+					}
 					lv.setEditing(true);
 					VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
 					.getSource();
