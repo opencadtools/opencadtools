@@ -139,10 +139,13 @@ public class StopEditing extends Extension {
 						"realmente_desea_guardar_la_capa")
 						+ " : " + layer.getName()+"?", PluginServices.getText(this,
 						"guardar"), JOptionPane.YES_NO_OPTION);
-				if (resp != JOptionPane.YES_OPTION) { // CANCEL EDITING
-					cancelEdition(layer);
-				} else { // GUARDAMOS EL TEMA
+				if (resp == JOptionPane.YES_OPTION) { // GUARDAMOS EL TEMA
 					saveLayer(layer);
+
+				} else if (resp == JOptionPane.NO_OPTION){ // CANCEL EDITING
+					cancelEdition(layer);
+				} else {
+					return false;
 				}
 
 				vea.getCommandRecord().removeCommandListener(mapControl);
