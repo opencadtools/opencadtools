@@ -196,7 +196,7 @@ public class PolylineCADTool extends DefaultCADTool {
            }
         	Point2D point = new Point2D.Double(x, y);
 
-            if (antPoint != null) {
+            if (antPoint != null && (antPoint.getX()!=point.getX() || antPoint.getY()!=point.getY())) {
                 GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
                         2);
                 elShape.moveTo(antPoint.getX(), antPoint.getY());
