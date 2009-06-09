@@ -43,6 +43,9 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Graphics;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.Value;
@@ -72,7 +75,11 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class JoinCADTool extends DefaultCADTool {
     protected JoinCADToolContext _fsm;
-
+    private TreeSet<DefaultRowEdited> shorted = new TreeSet<DefaultRowEdited>(new Comparator<DefaultRowEdited>(){
+		public int compare(DefaultRowEdited o1, DefaultRowEdited o2) {
+			return new Integer(o2.getIndex()).compareTo(new Integer(o1.getIndex()));
+		}
+	});
     /**
      * Crea un nuevo JoinCADTool.
      */
@@ -142,6 +149,7 @@ public class JoinCADTool extends DefaultCADTool {
      */
     public void drawOperation(Graphics g, double x, double y) {
     }
+
     public void join() {
     	ArrayList selectedRow = getSelectedRows();
     	if (selectedRow.size()<2) {
@@ -154,20 +162,22 @@ public class JoinCADTool extends DefaultCADTool {
     		vea.startComplexRow();
     		Geometry geomTotal=null;
     		DefaultRowEdited[] dres=(DefaultRowEdited[])selectedRow.toArray(new DefaultRowEdited[0]);
-    		Value[] values=null;
     		for (int i = 0; i < dres.length; i++) {
-    			DefaultRowEdited dre = (DefaultRowEdited) dres[i];
+        		shorted.add(dres[i]);
+    		}
+    		boolean first=true;
+    		Value[] values=null;
+    		Iterator<DefaultRowEdited> iterator=shorted.iterator();
+        	while (iterator.hasNext()) {
+    			DefaultRowEdited dre = (DefaultRowEdited) iterator.next();
     			DefaultFeature df = (DefaultFeature) dre.getLinkedRow()
-    			.cloneRow();
-    			if (i==0)
+    				.cloneRow();
+    			if (first){
     				values=df.getAttributes();
-
-    			IGeometry geom=df.getGeometry();
-    			if (vea.getInversedIndex(dre.getIndex())<0){
-    				vea.removeRow(dre.getIndex(), getName(), EditionEvent.GRAPHIC);
-    			}else{
-    				vea.removeRow(vea.getInversedIndex(dre.getIndex()), getName(), EditionEvent.GRAPHIC);
+    				first=false;
     			}
+    			IGeometry geom=df.getGeometry();
+   				vea.removeRow(dre.getIndex(), getName(), EditionEvent.GRAPHIC);
 
     			if (geomTotal==null){
     				geomTotal=geom.toJTSGeometry();
@@ -176,6 +186,7 @@ public class JoinCADTool extends DefaultCADTool {
     				geomTotal=geomTotal.union(geomJTS);
     			}
     		}
+        	shorted.clear();
     		String newFID = vea.getNewFID();
     		IGeometry geom = FConverter.jts_to_igeometry(geomTotal);
     		DefaultFeature df1 = new DefaultFeature(geom, values, newFID);
