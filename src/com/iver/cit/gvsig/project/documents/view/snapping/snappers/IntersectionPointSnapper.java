@@ -4,17 +4,20 @@ import java.awt.Graphics;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FArc2D;
 import com.iver.cit.gvsig.fmap.core.FCircle2D;
 import com.iver.cit.gvsig.fmap.core.FEllipse2D;
+import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.FSpline2D;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.project.documents.view.snapping.AbstractSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperGeometriesVectorial;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
 
 
@@ -25,7 +28,7 @@ import com.vividsolutions.jts.geom.LineSegment;
  */
 public class IntersectionPointSnapper extends AbstractSnapper
     implements ISnapperGeometriesVectorial {
-    private IGeometry[] geometries;
+    private List geometries=new ArrayList<IGeometry>();
     public IntersectionPointSnapper() {
         System.err.println("Construido IntersectionPoinSnapper");
     }
@@ -43,21 +46,36 @@ public class IntersectionPointSnapper extends AbstractSnapper
     				return null;
     	}
     	Point2D result = null;
+    	geometries.add(geom);
+//        if (geometries == null) {
+//            return null;
+//        }
 
-        if (geometries == null) {
-            return null;
+        for (int i = 0; i < geometries.size(); i++) {
+        	IGeometry auxGeom=(IGeometry)geometries.get(i);
+        	if (!geom.equals(auxGeom)){
+        		Point2D r = intersects2(geom, auxGeom, point, tolerance);
+            	if (r != null) {
+            		geometries.clear();
+            		return r;
+//                	result = r;
+            	}
+        	}
         }
-
-        for (int i = 0; i < geometries.length; i++) {
-        	Point2D r = intersects(geom, geometries[i], point, tolerance);
-
-            if (r != null) {
-                result = r;
-            }
-        }
-
+        if (geometries.size()>5)
+        	geometries.clear();
         return result;
     }
+    private Point2D intersects2(IGeometry g1, IGeometry g2, Point2D point,
+            double tolerance) {
+    	Geometry intersection=g1.toJTSGeometry().intersection(g2.toJTSGeometry());
+    	IGeometry g=FConverter.jts_to_igeometry(intersection);
+    	if (g!=null && g.getGeometryType()==FShape.POINT){
+    		return g.getHandlers(IGeometry.SELECTHANDLER)[0].getPoint();
+    	}
+    	return null;
+    }
+
 
     /**
      * DOCUMENT ME!
@@ -213,7 +231,7 @@ public class IntersectionPointSnapper extends AbstractSnapper
      *
      * @param geoms DOCUMENT ME!
      */
-    public void setGeometries(IGeometry[] geoms) {
+    public void setGeometries(List geoms) {
         this.geometries = geoms;
     }
 

@@ -41,6 +41,7 @@
 package com.iver.cit.gvsig.project.documents.view.snapping;
 
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 
@@ -54,5 +55,5 @@ public interface ISnapperGeometriesVectorial extends ISnapperVectorial {
     Point2D getSnapPoint(Point2D queryPoint, IGeometry geomToSnap,
         double tolerance, Point2D lastPointEntered);
 
-    void setGeometries(IGeometry[] geoms);
+    void setGeometries(List geoms);
 }

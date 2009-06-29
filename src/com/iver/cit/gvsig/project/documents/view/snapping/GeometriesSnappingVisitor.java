@@ -45,7 +45,7 @@ public class GeometriesSnappingVisitor extends SnappingVisitor
         }
 
         IGeometry[] geoms = (IGeometry[]) geometries.toArray(new IGeometry[0]);
-        ((ISnapperGeometriesVectorial) snapper).setGeometries(geoms);
+//        ((ISnapperGeometriesVectorial) snapper).setGeometries(geoms);
 
         Point2D result = null;
 

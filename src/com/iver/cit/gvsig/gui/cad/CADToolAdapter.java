@@ -54,6 +54,7 @@ import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperGeometriesVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.SnappingVisitor;
@@ -454,6 +455,9 @@ public class CADToolAdapter extends Behavior {
                         Point2D theSnappedPoint = null;
                         if (theSnapper instanceof ISnapperVectorial)
                         {
+//                        	if (theSnapper instanceof ISnapperGeometriesVectorial){
+//                        		((ISnapperGeometriesVectorial)theSnapper).setGeometries(geoms);
+//                        	}
 //                            snapVisitor = new SnappingVisitor((ISnapperVectorial) theSnapper, point, mapTolerance, lastPoint);
 //                            // System.out.println("Cache size = " + cache.size());
 //                            cache.query(e, snapVisitor);

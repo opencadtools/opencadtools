@@ -273,10 +273,13 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			.getLayerEdited(layerActive);
 		ArrayList layersToSnap=lyrEd.getLayersToSnap();
 		for (int i = 0; i < layers.getLayersCount(); i++) {
-			FLyrVect layer=(FLyrVect)layers.getLayer(i);
-			tm.setValueAt(layer.getName(), i, 1);
-			tm.setValueAt(layersToSnap.contains(layer), i, 0);
-			tm.setValueAt(layer.getSpatialCache().getMaxFeatures(), i, 2);
+			FLayer layer=layers.getLayer(i);
+			if (layer instanceof FLyrVect){
+				FLyrVect lv=(FLyrVect)layer;
+				tm.setValueAt(lv.getName(), i, 1);
+				tm.setValueAt(layersToSnap.contains(lv), i, 0);
+				tm.setValueAt(lv.getSpatialCache().getMaxFeatures(), i, 2);
+			}
 		}
 	}
 
