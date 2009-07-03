@@ -92,6 +92,11 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPoint;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 
@@ -213,6 +218,7 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 		} catch (ReadDriverException e1) {
 			e1.printStackTrace();
 		}
+
 		for (int i = 0; i < auxSelectedRows.size(); i++) {
 			editedRow = (IRowEdited) auxSelectedRows.get(i);
 			IFeature feat = (IFeature) editedRow.getLinkedRow().cloneRow();
@@ -229,12 +235,34 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 				indices.add(new Integer(editedRow.getIndex()));
 				//and then, we add new features for each split geometry
 				GeometryCollection gc = (GeometryCollection)splitGeo;
-				for(int j = 0; j < gc.getNumGeometries(); j++){
-					Geometry g = gc.getGeometryN(j);
-					IGeometry fmapGeo = FConverter.jts_to_igeometry(g);
+				ArrayList<Geometry> geoms0=new ArrayList<Geometry>();
+				ArrayList<Geometry> geoms1=new ArrayList<Geometry>();
+				if (gc.getNumGeometries()>2){
+					Geometry[] splitGroups=createSplitGroups(jtsGeo,splittingLs);
+					if (splitGroups.length==0){
+						continue;
+					}
+
+					for(int j = 0; j < gc.getNumGeometries(); j++){
+						Geometry g = gc.getGeometryN(j);
+						if (splitGroups[0].contains(g)){
+							geoms0.add(g);
+						}else{
+							geoms1.add(g);
+						}
+					}
+				}else if (gc.getNumGeometries()==2){
+					geoms0.add(gc.getGeometryN(0));
+					geoms1.add(gc.getGeometryN(1));
+				}else{
+					continue;
+				}
+				GeometryCollection gc0=createMulti(geoms0,gc.getFactory());
+
+					IGeometry fmapGeo = FConverter.jts_to_igeometry(gc0);
 					DefaultFeature df = null;
 					int newIdx = 0;
-					if (j==0){
+//					if (j==0){
 						newIdx=editedRow.getIndex();
 						try {
 							df = new DefaultFeature(fmapGeo, feat.getAttributes(),feat.getID());
@@ -247,8 +275,9 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 						} catch (ReadDriverException e) {
 							NotificationManager.addError(e.getMessage(),e);
 						}
-					}else{
-
+//					}else{
+						GeometryCollection gc1=createMulti(geoms1,gc.getFactory());
+						fmapGeo = FConverter.jts_to_igeometry(gc1);
 						try {
 							String newFID = vea.getNewFID();
 							df = new DefaultFeature(fmapGeo, feat.getAttributes(),newFID);
@@ -265,12 +294,12 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 						} catch (ReadDriverException e) {
 							NotificationManager.addError(e);
 						}
-					}
+//					}
 					DefaultRowEdited newRowEdited = new DefaultRowEdited(df,
 								IRowEdited.STATUS_ADDED,
 									newIdx);
 					vle.addSelectionCache(newRowEdited);
-				}//for j
+//				}//for j
 			}//if splitGeo
 			} catch (Exception ex) {
 				PluginServices.getLogger().error("Error splitting geom "+editedRow.getIndex(), ex);
@@ -281,11 +310,43 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 		getCadToolAdapter().getMapControl().getMapContext().endAtomicEvent();
 	}
 
+	private GeometryCollection createMulti(ArrayList<Geometry> geoms,GeometryFactory factory) {
+		if (geoms.size()==0)
+			return null;
+		if (geoms.get(0) instanceof Polygon){
+			return new MultiPolygon((Polygon[])geoms.toArray(new Polygon[0]),factory);
+		}else if (geoms.get(0) instanceof LineString){
+			return new MultiLineString((LineString[])geoms.toArray(new LineString[0]),factory);
+		}else if (geoms.get(0) instanceof Point){
+			return new MultiPoint((Point[])geoms.toArray(new Point[0]),factory);
+		}
+		return null;
+	}
+
+
+	private Geometry[] createSplitGroups(Geometry splitGeo, LineString splittingLs) {
+		try{
+		Geometry[] geomsJTS=new Geometry[2];
+		Geometry r=splitGeo.getEnvelope();
+		Geometry splitG = SplitStrategy.splitOp(r, splittingLs);
+		if(splitG instanceof GeometryCollection
+				&& ((GeometryCollection)splitG).getNumGeometries()>1){
+			GeometryCollection gc = (GeometryCollection)splitG;
+			for(int j = 0; j < gc.getNumGeometries(); j++){
+				geomsJTS[j]=gc.getGeometryN(j);
+			}
+		}
+		return geomsJTS;
+		}catch (Exception e) {
+			NotificationManager.showMessageError(PluginServices.getText(this, "line_not_cross_rectangle"), e);
+		}
+		return null;
+	}
+
 	public void end(){
 		getCadToolAdapter().refreshEditedLayer();
 		init();
 	}
-
 
 	public void addOption(String s) {
 		State actualState = _fsm.getPreviousState();
@@ -351,23 +412,50 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 
 
 	public void drawOperation(Graphics g, double x, double y) {
-		State actualState = _fsm.getState();
-        String status = actualState.getName();
-
-        // draw splitting line
-        if ((status.equals("SplitGeometry.DigitizingLine"))) {
-        	drawPolyLine((Graphics2D) g, x, y);
-         }
-
-        // draw selection
-        try {
-        	Image imgSel = getVLE().getSelectionImage();
-        	if (imgSel != null)
-        		g.drawImage(imgSel, 0, 0, null);
-        } catch (Exception e) {
-        	PluginServices.getLogger().error("Error drawing Editing Selection", e);
-        }
+		try{
+			State actualState = _fsm.getState();
+			String status = actualState.getName();
+			drawRectangleOfSplit((Graphics2D) g);
+			// draw splitting line
+			if ((status.equals("SplitGeometry.DigitizingLine"))) {
+				drawPolyLine((Graphics2D) g, x, y);
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		// draw selection
+		try {
+			Image imgSel = getVLE().getSelectionImage();
+			if (imgSel != null)
+				g.drawImage(imgSel, 0, 0, null);
+		} catch (Exception e) {
+			PluginServices.getLogger().error("Error drawing Editing Selection", e);
+		}
 	}
+
+	private void drawRectangleOfSplit(Graphics2D g) {
+		ArrayList selectedRows = getSelectedRows();
+		for (int i = 0; i < selectedRows.size(); i++) {
+			IRowEdited editedRow = (IRowEdited) selectedRows.get(i);
+			IFeature feat = (IFeature) editedRow.getLinkedRow();
+			IGeometry ig = feat.getGeometry();
+			Geometry jtsG=ig.toJTSGeometry();
+			if (jtsG !=null && jtsG instanceof GeometryCollection && jtsG.getNumGeometries()>1){
+				Rectangle2D r=ig.getBounds2D();
+				GeneralPathX gpx = new GeneralPathX();
+				gpx.moveTo(r.getX(), r.getY());
+				gpx.lineTo(r.getMaxX(), r.getY());
+				gpx.lineTo(r.getMaxX(), r.getMaxY());
+				gpx.lineTo(r.getX(), r.getMaxY());
+				gpx.closePath();
+				ShapeFactory.createPolygon2D(gpx).draw((Graphics2D) g,
+						getCadToolAdapter().getMapControl().getViewPort(),
+						DefaultCADTool.axisReferencesSymbol);
+			}
+		}
+
+	}
+
 
 	public String getName() {
 		return PluginServices.getText(this, "split_geometry_shell");
@@ -393,5 +481,4 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 			_fsm.addOption(s);
 		}
 	}
-
 }
