@@ -70,9 +70,20 @@ public class StartEditing extends Extension {
 
 			boolean bEditingStarted = false;
 			if (actives.length == 1 &&	actives[0] instanceof FLyrVect) {
-				if (!mapControl.getProjection().getAbrev().equals(actives[0].getProjection().getAbrev())){
+				FLyrVect lv = (FLyrVect) actives[0];
+				if (!mapControl.getProjection().getAbrev().equals(lv.getProjection().getAbrev())){
 					NotificationManager.showMessageInfo(PluginServices.getText(this,"no_es_posible_editar_capa_reproyectada"),null);
 					return;
+				}
+				if (lv.isJoined()) {
+					int resp = JOptionPane.showConfirmDialog((Component) PluginServices
+							.getMainFrame(), PluginServices.getText(this,"se_perdera_la_union")+
+							"\n" + PluginServices.getText(this,"desea_continuar"),
+							PluginServices.getText(this,"start_edition"),
+							JOptionPane.YES_NO_OPTION);
+					if (resp != JOptionPane.YES_OPTION) { // CANCEL EDITING
+						return; // Salimos sin iniciar edición
+					}
 				}
 				CADExtension.initFocus();
 				vista.showConsole();
@@ -84,7 +95,7 @@ public class StartEditing extends Extension {
 				 * layers.getLayer(j).setVisible(false); }
 				 */
 
-				FLyrVect lv = (FLyrVect) actives[0];
+
 				// lv.setVisible(true);
 				lv.addLayerListener(editionManager);
 				try {
@@ -97,17 +108,6 @@ public class StartEditing extends Extension {
 								PluginServices.getText(this, "this_layer_is_not_self_editable"),
 								PluginServices.getText(this, "warning_title"),
 								JOptionPane.WARNING_MESSAGE);
-					}
-
-					if (lv.isJoined()) {
-						int resp = JOptionPane.showConfirmDialog((Component) PluginServices
-								.getMainFrame(), PluginServices.getText(this,"se_perdera_la_unión")+
-								"\n" + PluginServices.getText(this,"desea_continuar"),
-								PluginServices.getText(this,"start_edition"),
-								JOptionPane.YES_NO_OPTION);
-						if (resp != JOptionPane.YES_OPTION) { // CANCEL EDITING
-							return; // Salimos sin iniciar edición
-						}
 					}
 					lv.setEditing(true);
 					VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
