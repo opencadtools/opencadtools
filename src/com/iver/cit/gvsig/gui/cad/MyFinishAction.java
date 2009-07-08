@@ -2,6 +2,9 @@ package com.iver.cit.gvsig.gui.cad;
 
 import java.awt.Component;
 import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 
 import javax.swing.JOptionPane;
@@ -23,6 +26,7 @@ import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ICanReproject;
 import com.iver.cit.gvsig.fmap.crs.CRSFactory;
 import com.iver.cit.gvsig.fmap.drivers.ConnectionFactory;
+import com.iver.cit.gvsig.fmap.drivers.ConnectionJDBC;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DXFLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
@@ -176,84 +180,93 @@ public class MyFinishAction extends FinishAction
 				IConnection conex = ConnectionFactory.createConnection(cs.getConnectionString(),
 						cs.getUser(), cs.getPassw());
 
-				DBLayerDefinition dbLayerDef = new DBLayerDefinition();
-				dbLayerDef.setCatalogName(cs.getDb());
-				dbLayerDef.setSchema(cs.getSchema());
-				dbLayerDef.setTableName(layerName);
-				dbLayerDef.setShapeType(geometryType);
-				dbLayerDef.setFieldsDesc(fieldsDesc);
-				dbLayerDef.setFieldGeometry("the_geom");
-				dbLayerDef.setFieldID("gid");
-
-				dbLayerDef.setWhereClause("");
-				String strSRID = mapCtrl.getProjection().getAbrev()
-						.substring(5);
-				dbLayerDef.setSRID_EPSG(strSRID);
-				dbLayerDef.setConnection(conex);
-
-    			PostGISWriter writer= new PostGISWriter(); //(PostGISWriter)LayerFactory.getWM().getWriter("PostGIS Writer");
-    			writer.setWriteAll(true);
-    			writer.setCreateTable(true);
-    			writer.initialize(dbLayerDef);
-
-    			// Creamos la tabla.
-    			writer.preProcess();
-    			writer.postProcess();
-
-    	        if (dbDriver instanceof ICanReproject)
-    	        {
-    	            ((ICanReproject)dbDriver).setDestProjection(strSRID);
-    	        }
-
-    	        // Creamos el driver. OJO: Hay que añadir el campo ID a la
-    	        // definición de campos.
-
-    	        boolean bFound = false;
-    	        for (int i=0; i < dbLayerDef.getFieldsDesc().length; i++)
-    	        {
-    	        	FieldDescription f = dbLayerDef.getFieldsDesc()[i];
-    	        	if (f.getFieldName().equalsIgnoreCase(dbLayerDef.getFieldID()))
-    	        	{
-    	        		bFound = true;
-    	        		break;
-    	        	}
-    	        }
-    	        // Si no está, lo añadimos
-    	        if (!bFound)
-    	        {
-    	        	int numFieldsAnt = dbLayerDef.getFieldsDesc().length;
-    	        	FieldDescription[] newFields = new FieldDescription[dbLayerDef.getFieldsDesc().length + 1];
-    	            for (int i=0; i < numFieldsAnt; i++)
-    	            {
-    	            	newFields[i] = dbLayerDef.getFieldsDesc()[i];
-    	            }
-    	            newFields[numFieldsAnt] = new FieldDescription();
-    	            newFields[numFieldsAnt].setFieldDecimalCount(0);
-    	            newFields[numFieldsAnt].setFieldType(Types.INTEGER);
-    	            newFields[numFieldsAnt].setFieldLength(7);
-    	            newFields[numFieldsAnt].setFieldName(dbLayerDef.getFieldID());
-    	            dbLayerDef.setFieldsDesc(newFields);
-
-    	        }
-
-                // all fields to lowerCase
-    	     	FieldDescription field;
-    	     	for (int i=0;i<dbLayerDef.getFieldsDesc().length;i++){
-    	     		field = dbLayerDef.getFieldsDesc()[i];
-    	     		field.setFieldName(field.getFieldName().toLowerCase());
-    	     	}
-    	     	dbLayerDef.setFieldID(dbLayerDef.getFieldID().toLowerCase());
-    	     	dbLayerDef.setFieldGeometry(dbLayerDef.getFieldGeometry().toLowerCase());
-
-    	        dbDriver.setData(conex, dbLayerDef);
-    	        IProjection proj = null;
-    	        if (drv instanceof ICanReproject)
-    	        {
-    	        	 proj = CRSFactory.getCRS("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection(null,null));
-    	        }
-
-    			lyr = (FLyrVect) LayerFactory.createDBLayer(dbDriver, layerName, proj);
-    			postgisPanel.saveConnectionSettings();
+				PostGISWriter writer= new PostGISWriter(); //(PostGISWriter)LayerFactory.getWM().getWriter("PostGIS Writer");
+				if(!existTable(conex,cs.getSchema(), layerName)){
+				
+					DBLayerDefinition dbLayerDef = new DBLayerDefinition();
+					dbLayerDef.setCatalogName(cs.getDb());
+					dbLayerDef.setSchema(cs.getSchema());
+					dbLayerDef.setTableName(layerName);
+					dbLayerDef.setShapeType(geometryType);
+					dbLayerDef.setFieldsDesc(fieldsDesc);
+					dbLayerDef.setFieldGeometry("the_geom");
+					dbLayerDef.setFieldID("gid");
+	
+					dbLayerDef.setWhereClause("");
+					String strSRID = mapCtrl.getProjection().getAbrev()
+							.substring(5);
+					dbLayerDef.setSRID_EPSG(strSRID);
+					dbLayerDef.setConnection(conex);
+	
+	    			
+	    			writer.setWriteAll(true);
+	    			writer.setCreateTable(true);
+	    			writer.initialize(dbLayerDef);
+	
+	    			// Creamos la tabla.
+	    			writer.preProcess();
+	    			writer.postProcess();
+	
+	    	        if (dbDriver instanceof ICanReproject)
+	    	        {
+	    	            ((ICanReproject)dbDriver).setDestProjection(strSRID);
+	    	        }
+	
+	    	        // Creamos el driver. OJO: Hay que añadir el campo ID a la
+	    	        // definición de campos.
+	
+	    	        boolean bFound = false;
+	    	        for (int i=0; i < dbLayerDef.getFieldsDesc().length; i++)
+	    	        {
+	    	        	FieldDescription f = dbLayerDef.getFieldsDesc()[i];
+	    	        	if (f.getFieldName().equalsIgnoreCase(dbLayerDef.getFieldID()))
+	    	        	{
+	    	        		bFound = true;
+	    	        		break;
+	    	        	}
+	    	        }
+	    	        // Si no está, lo añadimos
+	    	        if (!bFound)
+	    	        {
+	    	        	int numFieldsAnt = dbLayerDef.getFieldsDesc().length;
+	    	        	FieldDescription[] newFields = new FieldDescription[dbLayerDef.getFieldsDesc().length + 1];
+	    	            for (int i=0; i < numFieldsAnt; i++)
+	    	            {
+	    	            	newFields[i] = dbLayerDef.getFieldsDesc()[i];
+	    	            }
+	    	            newFields[numFieldsAnt] = new FieldDescription();
+	    	            newFields[numFieldsAnt].setFieldDecimalCount(0);
+	    	            newFields[numFieldsAnt].setFieldType(Types.INTEGER);
+	    	            newFields[numFieldsAnt].setFieldLength(7);
+	    	            newFields[numFieldsAnt].setFieldName(dbLayerDef.getFieldID());
+	    	            dbLayerDef.setFieldsDesc(newFields);
+	
+	    	        }
+	
+	                // all fields to lowerCase
+	    	     	FieldDescription field;
+	    	     	for (int i=0;i<dbLayerDef.getFieldsDesc().length;i++){
+	    	     		field = dbLayerDef.getFieldsDesc()[i];
+	    	     		field.setFieldName(field.getFieldName().toLowerCase());
+	    	     	}
+	    	     	dbLayerDef.setFieldID(dbLayerDef.getFieldID().toLowerCase());
+	    	     	dbLayerDef.setFieldGeometry(dbLayerDef.getFieldGeometry().toLowerCase());
+	
+	    	        dbDriver.setData(conex, dbLayerDef);
+	    	        IProjection proj = null;
+	    	        if (drv instanceof ICanReproject)
+	    	        {
+	    	        	 proj = CRSFactory.getCRS("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection(null,null));
+	    	        }
+	
+	    			lyr = (FLyrVect) LayerFactory.createDBLayer(dbDriver, layerName, proj);
+	    			postgisPanel.saveConnectionSettings();
+    			
+				}
+				else {
+					JOptionPane.showMessageDialog(null,PluginServices.getText(this,"table_already_exists_in_database"),PluginServices.getText(this,"warning_title"),JOptionPane.WARNING_MESSAGE);
+					return;
+				}
 
 			}
 			else // Si no es ni lo uno ni lo otro,
@@ -296,6 +309,33 @@ public class MyFinishAction extends FinishAction
 		}
 
 
+	}
+	
+	private boolean existTable(IConnection conex,String schema, String tableName) throws SQLException{
+		
+		Statement st = null;
+		boolean exists =false;
+		
+		if (schema == null || schema.equals("")){
+			schema = " current_schema()::Varchar ";
+		} else {
+			schema = "'" + schema + "'";
+		}
+
+		String sql = "select relname,nspname " +
+			"from pg_class inner join pg_namespace " +
+			"on relnamespace = pg_namespace.oid where "+
+			" relkind = 'r' and relname = '" + tableName +"' and nspname = " + schema;
+
+		st = ((ConnectionJDBC)conex).getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		if (rs.next()){
+			exists = true;
+		}
+		rs.close();
+		st.close();
+
+		return exists;
 	}
 
 }
