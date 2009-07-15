@@ -272,6 +272,8 @@ public class EditVertexCADTool extends DefaultCADTool {
 			Handler[] handlers=ig.getHandlers(IGeometry.SELECTHANDLER);
 			if (numSelect>=handlers.length)
 				numSelect=0;
+			if (handlers.length==0)
+				continue;
 			FGraphicUtilities.DrawVertex((Graphics2D)g,vp.getAffineTransform(),handlers[numSelect]);
 		}
 	}
