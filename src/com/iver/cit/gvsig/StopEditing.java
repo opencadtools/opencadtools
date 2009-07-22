@@ -2,6 +2,7 @@ package com.iver.cit.gvsig;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -36,6 +37,7 @@ import com.iver.cit.gvsig.fmap.layers.LayersIterator;
 import com.iver.cit.gvsig.fmap.rendering.IVectorLegend;
 import com.iver.cit.gvsig.fmap.spatialindex.IPersistentSpatialIndex;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
+import com.iver.cit.gvsig.gui.cad.panels.StopEditingPanel;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
@@ -55,11 +57,36 @@ import com.iver.utiles.swing.threads.IMonitorableTask;
  */
 public class StopEditing extends Extension {
 	private View vista;
-
+	private static HashMap<String, Class> supportedFormats = new HashMap<String,  Class>();
+	
+	/**
+	 * Add a format to export the edited layer.
+	 * @param name
+	 * The name of the format
+	 * @param extension
+	 * The extension that can export this format.
+	 */
+	public static void addExportFormat(String name, Class extension){
+		supportedFormats.put(name, extension);
+	}
+	
+	/**
+	 * Returns all the formats that can be used to export 
+	 * an edited layer.
+	 * @return
+	 * A map of formats and extensions.
+	 */
+	public static HashMap<String, Class> getSupportedFormats(){
+		return supportedFormats;
+	}
+	
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
+		addExportFormat("SHP", ExportTo.class);
+		addExportFormat("DXF", ExportTo.class);
+		addExportFormat("POSTGIS", ExportTo.class);
 	}
 
 	/**
@@ -166,30 +193,7 @@ public class StopEditing extends Extension {
 				return true;
 			}
 			// Si no existe writer para la capa que tenemos en edición
-				resp = JOptionPane
-						.showConfirmDialog(
-								(Component) PluginServices.getMainFrame(),
-								PluginServices
-										.getText(
-												this,
-												"no_existe_writer_para_este_formato_de_capa_o_no_tiene_permisos_de_escritura_los_datos_no_se_guardaran_desea_continuar")
-										+ " : " + layer.getName(),
-								PluginServices.getText(this, "cancelar_edicion"),
-								JOptionPane.YES_NO_OPTION);
-				if (resp == JOptionPane.YES_OPTION) { // CANCEL EDITING
-					cancelEdition(layer);
-
-					vea.getCommandRecord().removeCommandListener(mapControl);
-					if (!(layer.getSource().getDriver() instanceof IndexedShpDriver)){
-						VectorialLayerEdited vle=(VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(layer);
-						layer.setLegend((IVectorLegend)vle.getLegend());
-					}
-					layer.setEditing(false);
-					return true;
-				}
-
-		} catch (LegendLayerException e) {
-			NotificationManager.addError(e);
+			PluginServices.getMDIManager().addCentredWindow(new StopEditingPanel(this, layer, mapControl));						
 		} catch (StartEditionLayerException e) {
 			NotificationManager.addError(e);
 		} catch (ReadDriverException e) {
@@ -243,7 +247,7 @@ public class StopEditing extends Extension {
 		layer.setProperty("stoppingEditing",new Boolean(false));
 	}
 
-	private void cancelEdition(FLyrVect layer) throws CancelEditingTableException, CancelEditingLayerException {
+	public void cancelEdition(FLyrVect layer) throws CancelEditingTableException, CancelEditingLayerException {
 		layer.setProperty("stoppingEditing",new Boolean(true));
 		com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
 				.getMDIManager().getAllWindows();
