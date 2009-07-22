@@ -589,6 +589,18 @@ public class CADToolAdapter extends Behavior {
 
 		getMapControl().setCursor(transparentCursor);
 	}
+	
+	/**
+	 * Uses like a mouse pointer the image that provides the
+	 * selected tool.
+	 */
+	private void setToolMouse(){
+		Image cursor = PluginServices.getIconTheme().get("cad-selection-icon").getImage();
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Cursor c = toolkit.createCustomCursor(cursor , 
+				new Point(16, 16), "img");
+		getMapControl().setCursor (c);
+	}
 
 	/**
 	 * <p>Draws a 31x31 pixels cross round the mouse's cursor with an small geometry centered:
@@ -603,60 +615,15 @@ public class CADToolAdapter extends Behavior {
 	 * @param g <code>MapControl</code>'s graphics where the data will be drawn
 	 */
 	private void drawCursor(Graphics g) {
-		((Graphics2D)g).setStroke(new BasicStroke(1));
-		g.setColor(Color.black);
-		Point2D p = adjustedPoint;
-
-		if (p == null) {
-			getGrid().setViewPort(getMapControl().getViewPort());
-
+		if (adjustedPoint == null){
 			return;
 		}
-
-		int size1 = 15;
-		int size2 = 3;
-		g.drawLine((int) (p.getX() - size1), (int) (p.getY()),
-				(int) (p.getX() + size1), (int) (p.getY()));
-		g.drawLine((int) (p.getX()), (int) (p.getY() - size1),
-				(int) (p.getX()), (int) (p.getY() + size1));
-
-		// getMapControl().setToolTipText(null);
-		if (adjustedPoint != null) {
-			if (bForceCoord) {
-				/* g.setColor(Color.ORANGE);
-				g.drawRect((int) (adjustedPoint.getX() - 6),
-						(int) (adjustedPoint.getY() - 6), 12, 12);
-				g.drawRect((int) (adjustedPoint.getX() - 3),
-						(int) (adjustedPoint.getY() - 3), 6, 6);
-				g.setColor(Color.MAGENTA);
-				g.drawRect((int) (adjustedPoint.getX() - 4),
-						(int) (adjustedPoint.getY() - 4), 8, 8); */
-				if (usedSnap != null)
-				{
-					usedSnap.draw(g, adjustedPoint);
-
-					Graphics2D g2 = (Graphics2D) g;
-			        FontMetrics metrics = g2.getFontMetrics();
-			        int w = metrics.stringWidth(usedSnap.getToolTipText()) + 5;
-			        int h = metrics.getMaxAscent() + 5;
-			        int x = (int)p.getX()+9;
-			        int y = (int)p.getY()- 7;
-
-			        g2.setColor(theTipColor );
-			        g2.fillRect(x, y-h, w, h);
-			        g2.setColor(Color.BLACK);
-			        g2.drawRect(x, y-h, w, h);
-					g2.drawString(usedSnap.getToolTipText(), x+3, y-3);
-
-
-					// getMapControl().setToolTipText(usedSnap.getToolTipText());
-				}
-
-				bForceCoord = false;
-			} else {
-				g.drawRect((int) (p.getX() - size2), (int) (p.getY() - size2),
-						(int) (size2 * 2), (int) (size2 * 2));
-			}
+		
+		if (usedSnap != null){
+			usedSnap.draw(g, adjustedPoint);
+			clearMouseImage();			
+		}else{
+			setToolMouse();
 		}
 	}
 

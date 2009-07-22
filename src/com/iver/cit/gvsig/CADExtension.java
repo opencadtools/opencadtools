@@ -221,6 +221,10 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 				"snapper-icon",
 				CADExtension.class.getClassLoader().getResource(
 						"images/Snapper.png"));
+		PluginServices.getIconTheme().registerDefault(
+				"cad-selection-icon",
+				CADExtension.class.getClassLoader().getResource(
+						"images/cadselection.png"));
 	}
 
 	/**
