@@ -272,14 +272,18 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		VectorialLayerEdited lyrEd = (VectorialLayerEdited) edManager
 			.getLayerEdited(layerActive);
 		ArrayList layersToSnap=lyrEd.getLayersToSnap();
+		ArrayList layersVect=new ArrayList();
 		for (int i = 0; i < layers.getLayersCount(); i++) {
 			FLayer layer=layers.getLayer(i);
-			if (layer instanceof FLyrVect){
-				FLyrVect lv=(FLyrVect)layer;
-				tm.setValueAt(lv.getName(), i, 1);
-				tm.setValueAt(layersToSnap.contains(lv), i, 0);
-				tm.setValueAt(lv.getSpatialCache().getMaxFeatures(), i, 2);
+			if (layer instanceof FLyrVect) {
+				layersVect.add(layer);
 			}
+		}
+		for (int i = 0; i < layersVect.size(); i++) {
+			FLyrVect lv=(FLyrVect)layersVect.get(i);
+			tm.setValueAt(lv.getName(), i, 1);
+			tm.setValueAt(layersToSnap.contains(lv), i, 0);
+			tm.setValueAt(lv.getSpatialCache().getMaxFeatures(), i, 2);
 		}
 	}
 
