@@ -130,6 +130,8 @@ public class ExportTo extends Extension {
 			if (bitSet.cardinality() == 0) {
 				rowCount = va.getShapeCount();
 				for (int i = 0; i < rowCount; i++) {
+					if (isCanceled())
+						break;
 					IGeometry geom = va.getShape(i);
 					if (geom == null) {
 						continue;
@@ -138,6 +140,8 @@ public class ExportTo extends Extension {
 						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
 						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
 					}
+					if (isCanceled())
+						break;
 					if (ct != null) {
 						if (bMustClone)
 							geom = geom.cloneGeometry();
@@ -160,6 +164,8 @@ public class ExportTo extends Extension {
 				int counter = 0;
 				for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
 						.nextSetBit(i + 1)) {
+					if (isCanceled())
+						break;
 					IGeometry geom = va.getShape(i);
 					if (geom == null) {
 						continue;
@@ -168,6 +174,8 @@ public class ExportTo extends Extension {
 						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
 						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
 					}
+					if (isCanceled())
+						break;
 					if (ct != null) {
 						if (bMustClone)
 							geom = geom.cloneGeometry();
@@ -192,7 +200,7 @@ public class ExportTo extends Extension {
 
 			writer.postProcess();
 			va.stop();
-			if (reader != null){
+			if (reader != null && !isCanceled()){
 				int res = JOptionPane.showConfirmDialog(
 					(JComponent) PluginServices.getMDIManager().getActiveWindow()
 					, PluginServices.getText(this, "insertar_en_la_vista_la_capa_creada"),
