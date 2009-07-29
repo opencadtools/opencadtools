@@ -4,6 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
+import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
@@ -133,6 +134,9 @@ public class StartEditing extends Extension {
 					if (pt != null){
 						pt.setModel(vea);
 						changeModelTable(pt,vea);
+						if(lv.isJoined()){
+							pt.restoreDataSource();
+						}
 					}
 
 					startCommandsApplicable(vista,lv);
@@ -143,6 +147,8 @@ public class StartEditing extends Extension {
 				} catch (StartEditionLayerException e) {
 					NotificationManager.addError(e.getMessage(),e);
 				} catch (ReadDriverException e) {
+					NotificationManager.addError(e.getMessage(),e);
+				} catch (DriverLoadException e) {
 					NotificationManager.addError(e.getMessage(),e);
 				}
 
