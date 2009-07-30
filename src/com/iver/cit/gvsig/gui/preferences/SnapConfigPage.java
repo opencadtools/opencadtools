@@ -1,8 +1,9 @@
 package com.iver.cit.gvsig.gui.preferences;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
 import javax.swing.ImageIcon;
@@ -31,7 +32,18 @@ public class SnapConfigPage extends AbstractPreferencePage {
     private ArrayList<ISnapper> snappers = new ArrayList<ISnapper>();
 	private static boolean applySnappers=true;
     @SuppressWarnings("unchecked")
-	public static HashMap<ISnapper,Boolean> selected = new HashMap<ISnapper,Boolean>();
+	public static TreeMap<ISnapper,Boolean> selected = new TreeMap<ISnapper,Boolean>(new Comparator<ISnapper>(){
+
+		public int compare(ISnapper o1, ISnapper o2) {
+			if (o1.getClass().equals(o2.getClass()))
+				return 0;
+			if (o1.getPriority()>o2.getPriority())
+				return 1;
+			else
+				return -1;
+		}
+
+	});
     static {
     	new SnapConfigPage().initializeValues();
     }
@@ -151,10 +163,11 @@ public class SnapConfigPage extends AbstractPreferencePage {
             String nameClass=snp.getClass().getName();
             nameClass=nameClass.substring(nameClass.lastIndexOf('.'));
             boolean select = prefs.getBoolean("snapper_activated" + nameClass, false);
-            if (select)
-            	selected.put(snp, new Boolean(select));
             int priority = prefs.getInt("snapper_priority" + nameClass,3);
             snp.setPriority(priority);
+            if (select)
+            	selected.put(snp, new Boolean(select));
+
         }
         applySnappers = prefs.getBoolean("apply-snappers",true);
         snapConfig.setApplySnappers(applySnappers);

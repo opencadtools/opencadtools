@@ -42,7 +42,6 @@ package com.iver.cit.gvsig.project.documents.view.snapping.gui;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
@@ -311,7 +310,7 @@ public class SnapConfig extends JPanel {
 		return getJChkBoxRefentActive().isSelected();
 	}
 
-	public void selectSnappers(HashMap selected) {
+	public void selectSnappers(TreeMap selected) {
 		for (int i=0;i<snappers.size();i++) {
 			Boolean b=(Boolean)selected.get(snappers.get(i));
 			if (b!=null)
