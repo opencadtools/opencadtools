@@ -2,7 +2,6 @@ package com.iver.cit.gvsig.project.documents.view.snapping;
 
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.CentralPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.FinalPointSnapper;
-import com.iver.cit.gvsig.project.documents.view.snapping.snappers.InsertPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.IntersectionPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.MediumPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.NearestPointSnapper;
@@ -29,7 +28,7 @@ public class Snapping {
     	extensionPoints.add("Snapper","PixelSnapper", PixelSnapper.class);
     	extensionPoints.add("Snapper","CentralPointSnapper", CentralPointSnapper.class);
     	extensionPoints.add("Snapper","QuadrantPointSnapper", QuadrantPointSnapper.class);
-    	extensionPoints.add("Snapper","InsertPointSnapper", InsertPointSnapper.class);
+//    	extensionPoints.add("Snapper","InsertPointSnapper", InsertPointSnapper.class);
     	extensionPoints.add("Snapper","IntersectionPointSnapper", IntersectionPointSnapper.class);
     	extensionPoints.add("Snapper","MediumPointSnapper", MediumPointSnapper.class);
     	extensionPoints.add("Snapper","PerpendicularPointSnapper", PerpendicularPointSnapper.class);

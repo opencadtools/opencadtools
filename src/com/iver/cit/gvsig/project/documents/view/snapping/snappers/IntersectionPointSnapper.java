@@ -10,6 +10,7 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FArc2D;
 import com.iver.cit.gvsig.fmap.core.FCircle2D;
 import com.iver.cit.gvsig.fmap.core.FEllipse2D;
+import com.iver.cit.gvsig.fmap.core.FPolyline2D;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.FSpline2D;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
@@ -39,10 +40,7 @@ public class IntersectionPointSnapper extends AbstractSnapper
      */
     public Point2D getSnapPoint(Point2D point, IGeometry geom,
         double tolerance, Point2D lastPointEntered) {
-    	if (geom.getInternalShape() instanceof FCircle2D ||
-    			geom.getInternalShape() instanceof FArc2D ||
-    			geom.getInternalShape() instanceof FEllipse2D ||
-    			geom.getInternalShape() instanceof FSpline2D){
+    	if (!(geom.getInternalShape() instanceof FPolyline2D)){
     				return null;
     	}
     	Point2D result = null;
