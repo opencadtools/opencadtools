@@ -57,6 +57,7 @@ import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
+import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
@@ -448,19 +449,25 @@ public abstract class DefaultCADTool implements CADTool {
 	public abstract String toString();
 
 	public void throwValueException(String s, double d) {
-		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
-		vista.getConsolePanel().addText(s + " : " + d, JConsole.ERROR);
+		IWindow window = PluginServices.getMDIManager().getActiveWindow();
+		if (window instanceof View){
+			((View)window).getConsolePanel().addText(s + " : " + d, JConsole.ERROR);
+		}
 	}
 
 	public void throwOptionException(String s, String o) {
-		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
-		vista.getConsolePanel().addText(s + " : " + o, JConsole.ERROR);
+		IWindow window = PluginServices.getMDIManager().getActiveWindow();
+		if (window instanceof View){
+			((View)window).getConsolePanel().addText(s + " : " + o, JConsole.ERROR);
+		}
 	}
 
 	public void throwPointException(String s, double x, double y) {
-		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
-		vista.getConsolePanel().addText(s + " : " + " X = " + x + ", Y = " + y,
+		IWindow window = PluginServices.getMDIManager().getActiveWindow();
+		if (window instanceof View){
+			((View)window).getConsolePanel().addText(s + " : " + " X = " + x + ", Y = " + y,
 				JConsole.ERROR);
+		}
 	}
 
 	public void setPreviosTool(DefaultCADTool tool) {
