@@ -436,7 +436,20 @@ public class CADToolAdapter extends Behavior {
             {
                 // La lista de snappers está siempre ordenada por prioridad. Los de mayor
                 // prioridad están primero.
+            	long t1 = System.currentTimeMillis();
                 List geoms = cache.query(e);
+                long t2 = System.currentTimeMillis();
+                System.out.println("T cache snapping = " + (t2-t1) + " numGeoms=" + geoms.size());
+                for (int i = 0; i < snappers.size(); i++)
+                {
+                    ISnapper theSnapper = (ISnapper) snappers.get(i);
+                    if (theSnapper instanceof ISnapperVectorial)
+                    {
+                    	if (theSnapper instanceof ISnapperGeometriesVectorial){
+                    		((ISnapperGeometriesVectorial)theSnapper).setGeometries(geoms);
+                    	}
+                    }
+                }                
                 for (int n=0; n < geoms.size(); n++) {
                     IGeometry geom = (IGeometry) geoms.get(n);
                     for (int i = 0; i < snappers.size(); i++)
@@ -462,7 +475,10 @@ public class CADToolAdapter extends Behavior {
 //                            // System.out.println("Cache size = " + cache.size());
 //                            cache.query(e, snapVisitor);
 //                            theSnappedPoint = snapVisitor.getSnapPoint();
+//                        	long t3 = System.currentTimeMillis();
                             theSnappedPoint = ((ISnapperVectorial) theSnapper).getSnapPoint(point, geom, mapTolerance, lastPoint);
+//                            long t4 = System.currentTimeMillis();
+//                            System.out.println("Tiempo snapping " + theSnapper.getToolTipText() + " " + (t4-t3));
                         }
                         if (theSnapper instanceof ISnapperRaster)
                         {

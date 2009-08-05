@@ -194,7 +194,7 @@ public class SnapConfigPage extends AbstractPreferencePage {
             	prefs.putInt("snapper_priority" + nameClass, priority);
                 snp.setPriority(priority);
             }else{
-            	selected.put(snp, new Boolean(false));
+//            	selected.put(snp, new Boolean(false));
             	int priority = 3;
             	prefs.putInt("snapper_priority" + nameClass, priority);
                 snp.setPriority(priority);
