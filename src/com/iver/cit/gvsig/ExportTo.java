@@ -5,6 +5,8 @@ import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.JComponent;
@@ -73,6 +75,27 @@ import com.iver.utiles.swing.threads.AbstractMonitorableTask;
 
 public class ExportTo extends Extension {
 	private String lastPath = null;
+	private static HashMap<FLyrVect, EndExportToCommand> exportedLayers = 
+		new HashMap<FLyrVect, EndExportToCommand>();
+	
+	/**
+	 * This method is used to add a layer that is exported
+	 * to other format and its edition has to be finished
+	 * at the end of this process.
+	 * @param layer
+	 */
+	public static void addLayerToStopEdition(FLyrVect layer, EndExportToCommand command){
+		exportedLayers.put(layer, command);
+	}
+	
+	public static void executeCommand(FLyrVect layer) throws Exception{
+		if (exportedLayers.containsKey(layer)){
+			EndExportToCommand command = exportedLayers.get(layer);
+			command.execute();
+			exportedLayers.remove(layer);
+		}
+	}
+
 	private class WriterTask extends AbstractMonitorableTask
 	{
 		FLyrVect lyrVect;
@@ -222,8 +245,11 @@ public class ExportTo extends Extension {
 		 * @see com.iver.utiles.swing.threads.IMonitorableTask#finished()
 		 */
 		public void finished() {
-			// TODO Auto-generated method stub
-
+			try {
+				executeCommand(lyrVect);
+			} catch (Exception e) {
+				NotificationManager.addError(e);
+			}
 		}
 
 	}
@@ -235,15 +261,16 @@ public class ExportTo extends Extension {
 		public void run() throws Exception {
 			for (int i = 0; i < tasks.size(); i++) {
 				((WriterTask)tasks.get(i)).run();
-			}
-			tasks.clear();
+			}			
 		}
 		/* (non-Javadoc)
 		 * @see com.iver.utiles.swing.threads.IMonitorableTask#finished()
 		 */
 		public void finished() {
-			// TODO Auto-generated method stub
-
+			for (int i = 0; i < tasks.size(); i++) {
+				((WriterTask)tasks.get(i)).finished();		
+			}
+			tasks.clear();
 		}
 
 
@@ -760,6 +787,16 @@ public class ExportTo extends Extension {
 
 		return -1;
 
+	}
+	
+	/**
+	 * This class is used to execute a command at the end of a 
+	 * export process.
+	 * @author jpiera
+	 *
+	 */
+	public interface EndExportToCommand{		
+		public void execute() throws Exception;
 	}
 
 }

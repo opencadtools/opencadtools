@@ -58,7 +58,7 @@ import com.iver.utiles.swing.threads.IMonitorableTask;
 public class StopEditing extends Extension {
 	private View vista;
 	private static HashMap<String, Class> supportedFormats = new HashMap<String,  Class>();
-	
+			
 	/**
 	 * Add a format to export the edited layer.
 	 * @param name
@@ -77,7 +77,7 @@ public class StopEditing extends Extension {
 	 * A map of formats and extensions.
 	 */
 	public static HashMap<String, Class> getSupportedFormats(){
-		return supportedFormats;
+		return supportedFormats;		
 	}
 	
 	/**

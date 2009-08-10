@@ -42,25 +42,27 @@ import org.gvsig.gui.beans.swing.JButton;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
+import com.iver.andami.plugins.Extension;
 import com.iver.andami.plugins.IExtension;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
 import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.ClearSelectionExtension;
+import com.iver.cit.gvsig.ExportTo;
 import com.iver.cit.gvsig.StopEditing;
-import com.iver.cit.gvsig.exceptions.layers.CancelEditingLayerException;
-import com.iver.cit.gvsig.exceptions.table.CancelEditingTableException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.rendering.IVectorLegend;
+import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.utiles.swing.JComboBox;
 
 /**
  * @author <a href="mailto:jpiera@gvsig.org">Jorge Piera</a>
  */
-public class StopEditingPanel extends JPanel implements ActionListener, IWindow{
+public class StopEditingPanel extends JPanel implements ActionListener, IWindow, ExportTo.EndExportToCommand{
 	private JPanel buttonsPanel;
 	private JButton acceptButton;
 	private JButton closeButton;
@@ -219,10 +221,16 @@ public class StopEditingPanel extends JPanel implements ActionListener, IWindow{
 			if (obj != null){
 				Class extensionClass = StopEditing.getSupportedFormats().get(obj);
 				IExtension extension = PluginServices.getExtension(extensionClass);
-				if (extension != null){
+					if (extension != null){
 					closeButtonActionPerformed();
-					extension.execute((String)obj);
-					stopEditing();
+					IExtension clearExtension = PluginServices.getExtension(ClearSelectionExtension.class);
+					clearExtension.execute("DEL_SELECTION");
+					
+					ExportTo.addLayerToStopEdition(layer, this);
+					
+					mapControl.setTool("pointSelection");
+					
+					extension.execute((String)obj);					
 				}				
 			}			
 		}		
@@ -251,6 +259,14 @@ public class StopEditingPanel extends JPanel implements ActionListener, IWindow{
 
 	public Object getWindowProfile() {
 		return WindowInfo.DIALOG_PROFILE;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.ExportTo.EndExportToCommand#execute()
+	 */
+	public void execute() throws Exception {
+		stopEditing();		
 	}
 }
 
