@@ -147,9 +147,7 @@ public class ExportTo extends Extension {
 				lyrDef.setShapeType(FShape.POINT);
 				writer.initialize(lyrDef);
 			}
-			if(writer instanceof ShpWriter && lyrVect.getSource() instanceof VectorialFileAdapter)
-				((ShpWriter)writer).loadDbfEncoding(((VectorialFileAdapter)lyrVect.getSource()).getFile().getAbsolutePath());
-
+			
 			// Creamos la tabla.
 			writer.preProcess();
 
@@ -653,13 +651,12 @@ public class ExportTo extends Extension {
 					lyrDefPoint.setFile(filePoints);
 					lyrDefPoint.setName(filePoints.getName());
 					lyrDefPoint.setShapeType(FShape.POINT);
+					loadEnconding(layer, writer1);
 					writer1.setFile(filePoints);
 					writer1.initialize(lyrDefPoint);
 					writers[0]=writer1;
 					drivers[0]=getOpenShpDriver(filePoints);
 					//drivers[0]=null;
-
-
 
 					ShpWriter writer2 = (ShpWriter) LayerFactory.getWM().getWriter(
 					"Shape Writer");
@@ -672,6 +669,7 @@ public class ExportTo extends Extension {
 					lyrDefLine.setFile(fileLines);
 					lyrDefLine.setName(fileLines.getName());
 					lyrDefLine.setShapeType(FShape.LINE);
+					loadEnconding(layer, writer2);
 					writer2.setFile(fileLines);
 					writer2.initialize(lyrDefLine);
 					writers[1]=writer2;
@@ -688,6 +686,7 @@ public class ExportTo extends Extension {
 					lyrDefPolygon.setFile(filePolygons);
 					lyrDefPolygon.setName(filePolygons.getName());
 					lyrDefPolygon.setShapeType(FShape.POLYGON);
+					loadEnconding(layer, writer3);
 					writer3.setFile(filePolygons);
 					writer3.initialize(lyrDefPolygon);
 					writers[2]=writer3;
@@ -698,8 +697,7 @@ public class ExportTo extends Extension {
 				} else {
 					ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
 						"Shape Writer");
-					if(layer.getSource() instanceof VectorialFileAdapter)
-						writer.loadDbfEncoding(((VectorialFileAdapter)layer.getSource()).getFile().getAbsolutePath());
+					loadEnconding(layer, writer);
 					IndexedShpDriver drv = getOpenShpDriver(newFile);
 					SHPLayerDefinition lyrDef = new SHPLayerDefinition();
 					lyrDef.setFieldsDesc(fieldsDescrip);
@@ -733,6 +731,21 @@ public class ExportTo extends Extension {
 			NotificationManager.addError(e.getMessage(),e);
 		}
 
+	}
+	
+	/**
+	 * Loads the dbf enconding
+	 * @param layer
+	 * @param writer
+	 */
+	private void loadEnconding(FLyrVect layer, ShpWriter writer) {
+		if(layer.getSource() instanceof VectorialFileAdapter)
+			writer.loadDbfEncoding(((VectorialFileAdapter)layer.getSource()).getFile().getAbsolutePath());
+		else {
+			Object s = layer.getProperty("DBFFile");
+			if(s != null && s instanceof String)
+				writer.loadDbfEncoding((String)s);
+		}
 	}
 
 	private IndexedShpDriver getOpenShpDriver(File fileShp) throws OpenDriverException {
