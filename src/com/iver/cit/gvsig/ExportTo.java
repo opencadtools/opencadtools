@@ -65,6 +65,7 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
+import com.iver.cit.gvsig.fmap.layers.VectorialFileAdapter;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.vectorialdb.ConnectionSettings;
@@ -146,6 +147,8 @@ public class ExportTo extends Extension {
 				lyrDef.setShapeType(FShape.POINT);
 				writer.initialize(lyrDef);
 			}
+			if(writer instanceof ShpWriter && lyrVect.getSource() instanceof VectorialFileAdapter)
+				((ShpWriter)writer).loadDbfEncoding(((VectorialFileAdapter)lyrVect.getSource()).getFile().getAbsolutePath());
 
 			// Creamos la tabla.
 			writer.preProcess();
@@ -632,7 +635,7 @@ public class ExportTo extends Extension {
 
 				SelectableDataSource sds = layer.getRecordset();
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
-
+				
 				if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
 				// ficheros
 				{
@@ -695,6 +698,8 @@ public class ExportTo extends Extension {
 				} else {
 					ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
 						"Shape Writer");
+					if(layer.getSource() instanceof VectorialFileAdapter)
+						writer.loadDbfEncoding(((VectorialFileAdapter)layer.getSource()).getFile().getAbsolutePath());
 					IndexedShpDriver drv = getOpenShpDriver(newFile);
 					SHPLayerDefinition lyrDef = new SHPLayerDefinition();
 					lyrDef.setFieldsDesc(fieldsDescrip);
