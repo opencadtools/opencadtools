@@ -58,7 +58,7 @@ import com.iver.utiles.swing.threads.IMonitorableTask;
 public class StopEditing extends Extension {
 	private View vista;
 	private static HashMap<String, Class> supportedFormats = new HashMap<String,  Class>();
-			
+
 	/**
 	 * Add a format to export the edited layer.
 	 * @param name
@@ -69,17 +69,17 @@ public class StopEditing extends Extension {
 	public static void addExportFormat(String name, Class extension){
 		supportedFormats.put(name, extension);
 	}
-	
+
 	/**
-	 * Returns all the formats that can be used to export 
+	 * Returns all the formats that can be used to export
 	 * an edited layer.
 	 * @return
 	 * A map of formats and extensions.
 	 */
 	public static HashMap<String, Class> getSupportedFormats(){
-		return supportedFormats;		
+		return supportedFormats;
 	}
-	
+
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
@@ -193,7 +193,8 @@ public class StopEditing extends Extension {
 				return true;
 			}
 			// Si no existe writer para la capa que tenemos en edición
-			PluginServices.getMDIManager().addCentredWindow(new StopEditingPanel(this, layer, mapControl));						
+			PluginServices.getMDIManager().addCentredWindow(new StopEditingPanel(this, layer, mapControl));
+			return true;
 		} catch (StartEditionLayerException e) {
 			NotificationManager.addError(e);
 		} catch (ReadDriverException e) {
