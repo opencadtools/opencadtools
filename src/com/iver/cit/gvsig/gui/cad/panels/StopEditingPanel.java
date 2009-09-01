@@ -231,6 +231,8 @@ public class StopEditingPanel extends JPanel implements ActionListener, IWindow,
 					mapControl.setTool("pointSelection");
 
 					extension.execute((String)obj);
+
+					layer.setEditing(false);
 				}
 			}
 		}
