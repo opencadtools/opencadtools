@@ -87,7 +87,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 public class SelectionCADTool extends DefaultCADTool {
 	public static int tolerance = 4;
 
-	private SelectionCADToolContext _fsm;
+	protected SelectionCADToolContext _fsm;
 
 	protected Point2D firstPoint;
 
