@@ -232,7 +232,7 @@ public class StopEditingPanel extends JPanel implements ActionListener, IWindow,
 
 					extension.execute((String)obj);
 
-					layer.setEditing(false);
+//					layer.setEditing(false);
 				}
 			}
 		}
