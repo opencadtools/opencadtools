@@ -214,6 +214,8 @@ public class StopEditing extends Extension {
 
 
 	private void saveLayer(FLyrVect layer) throws ReadDriverException, InitializeWriterException, StopWriterVisitorException{
+		layer.setWaitTodraw(true);
+		vista.getMapControl().cancelDrawing();
 		layer.setProperty("stoppingEditing",new Boolean(true));
 		VectorialEditableAdapter vea = (VectorialEditableAdapter) layer
 				.getSource();
@@ -246,6 +248,8 @@ public class StopEditing extends Extension {
 		writer.initialize(lyrDef);
 		vea.stopEdition(writer, EditionEvent.GRAPHIC);
 		layer.setProperty("stoppingEditing",new Boolean(false));
+		layer.setWaitTodraw(false);
+		vista.getMapControl().drawMap(false);
 	}
 
 	public void cancelEdition(FLyrVect layer) throws CancelEditingTableException, CancelEditingLayerException {
