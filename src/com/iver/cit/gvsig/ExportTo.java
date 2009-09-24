@@ -76,9 +76,9 @@ import com.iver.utiles.swing.threads.AbstractMonitorableTask;
 
 public class ExportTo extends Extension {
 	private String lastPath = null;
-	private static HashMap<FLyrVect, EndExportToCommand> exportedLayers = 
+	private static HashMap<FLyrVect, EndExportToCommand> exportedLayers =
 		new HashMap<FLyrVect, EndExportToCommand>();
-	
+
 	/**
 	 * This method is used to add a layer that is exported
 	 * to other format and its edition has to be finished
@@ -88,7 +88,7 @@ public class ExportTo extends Extension {
 	public static void addLayerToStopEdition(FLyrVect layer, EndExportToCommand command){
 		exportedLayers.put(layer, command);
 	}
-	
+
 	public static void executeCommand(FLyrVect layer) throws Exception{
 		if (exportedLayers.containsKey(layer)){
 			EndExportToCommand command = exportedLayers.get(layer);
@@ -133,6 +133,7 @@ public class ExportTo extends Extension {
 
 		}
 		public void run() throws Exception {
+			lyrVect.setWaitTodraw(true);
 			va.start();
 			ICoordTrans ct = lyrVect.getCoordTrans();
 			DriverAttributes attr = va.getDriverAttributes();
@@ -147,7 +148,7 @@ public class ExportTo extends Extension {
 				lyrDef.setShapeType(FShape.POINT);
 				writer.initialize(lyrDef);
 			}
-			
+
 			// Creamos la tabla.
 			writer.preProcess();
 
@@ -240,6 +241,7 @@ public class ExportTo extends Extension {
 					mapContext.getLayers().addLayer(newLayer);
 				}
 			}
+			lyrVect.setWaitTodraw(false);
 
 		}
 		/* (non-Javadoc)
@@ -262,14 +264,14 @@ public class ExportTo extends Extension {
 		public void run() throws Exception {
 			for (int i = 0; i < tasks.size(); i++) {
 				((WriterTask)tasks.get(i)).run();
-			}			
+			}
 		}
 		/* (non-Javadoc)
 		 * @see com.iver.utiles.swing.threads.IMonitorableTask#finished()
 		 */
 		public void finished() {
 			for (int i = 0; i < tasks.size(); i++) {
-				((WriterTask)tasks.get(i)).finished();		
+				((WriterTask)tasks.get(i)).finished();
 			}
 			tasks.clear();
 		}
@@ -633,7 +635,7 @@ public class ExportTo extends Extension {
 
 				SelectableDataSource sds = layer.getRecordset();
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
-				
+
 				if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
 				// ficheros
 				{
@@ -732,7 +734,7 @@ public class ExportTo extends Extension {
 		}
 
 	}
-	
+
 	/**
 	 * Loads the dbf enconding
 	 * @param layer
@@ -806,14 +808,14 @@ public class ExportTo extends Extension {
 		return -1;
 
 	}
-	
+
 	/**
-	 * This class is used to execute a command at the end of a 
+	 * This class is used to execute a command at the end of a
 	 * export process.
 	 * @author jpiera
 	 *
 	 */
-	public interface EndExportToCommand{		
+	public interface EndExportToCommand{
 		public void execute() throws Exception;
 	}
 
