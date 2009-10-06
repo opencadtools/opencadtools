@@ -4,10 +4,11 @@ import java.awt.Component;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.prefs.Preferences;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -47,6 +48,7 @@ import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.IVectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
+import com.iver.cit.gvsig.fmap.drivers.dbf.DbaseFile;
 import com.iver.cit.gvsig.fmap.drivers.dxf.DXFMemoryDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGisDriver;
@@ -78,7 +80,8 @@ public class ExportTo extends Extension {
 	private String lastPath = null;
 	private static HashMap<FLyrVect, EndExportToCommand> exportedLayers =
 		new HashMap<FLyrVect, EndExportToCommand>();
-
+	private static Preferences prefs = Preferences.userRoot().node( "gvSIG.encoding.dbf" );
+	
 	/**
 	 * This method is used to add a layer that is exported
 	 * to other format and its edition has to be finished
@@ -148,7 +151,18 @@ public class ExportTo extends Extension {
 				lyrDef.setShapeType(FShape.POINT);
 				writer.initialize(lyrDef);
 			}
-
+			
+			 if(writer instanceof ShpWriter) {
+				 String charSetName = prefs.get("dbf_encoding", DbaseFile.getDefaultCharset().toString());
+				 if(lyrVect.getSource() instanceof VectorialFileAdapter) {
+					 ((ShpWriter)writer).loadDbfEncoding(((VectorialFileAdapter)lyrVect.getSource()).getFile().getAbsolutePath(), Charset.forName(charSetName));
+				 } else {
+						Object s = lyrVect.getProperty("DBFFile");
+						if(s != null && s instanceof String)
+							((ShpWriter)writer).loadDbfEncoding((String)s, Charset.forName(charSetName));
+				 }
+			 }
+			
 			// Creamos la tabla.
 			writer.preProcess();
 
@@ -741,12 +755,13 @@ public class ExportTo extends Extension {
 	 * @param writer
 	 */
 	private void loadEnconding(FLyrVect layer, ShpWriter writer) {
+		String charSetName = prefs.get("dbf_encoding", DbaseFile.getDefaultCharset().toString());
 		if(layer.getSource() instanceof VectorialFileAdapter)
-			writer.loadDbfEncoding(((VectorialFileAdapter)layer.getSource()).getFile().getAbsolutePath());
+			writer.loadDbfEncoding(((VectorialFileAdapter)layer.getSource()).getFile().getAbsolutePath(), Charset.forName(charSetName));
 		else {
 			Object s = layer.getProperty("DBFFile");
 			if(s != null && s instanceof String)
-				writer.loadDbfEncoding((String)s);
+				writer.loadDbfEncoding((String)s, Charset.forName(charSetName));
 		}
 	}
 
