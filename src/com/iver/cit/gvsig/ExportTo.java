@@ -350,6 +350,16 @@ public class ExportTo extends Extension {
 		try {
 			String tableName = JOptionPane.showInputDialog(PluginServices
 					.getText(this, "intro_tablename"));
+			
+			CharSequence seq = "\\/=.:,;¿?*{}´$%&()@#|!¬";
+			for (int i = 0; i < seq.length(); i++) {
+				char c = seq.charAt(i);
+				if(tableName != null && tableName.indexOf(c) != -1) {
+					NotificationManager.showMessageInfo(PluginServices.getText(this, "wrong_characters"), null);
+					break;
+				}
+			} 
+		
 			if (tableName == null)
 				return;
 			tableName = tableName.toLowerCase();
