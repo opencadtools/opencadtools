@@ -32,15 +32,13 @@ public class StartEditingTocMenuEntry extends AbstractTocContextMenuAction {
 	}
 
 	public boolean isEnabled(ITocItem item, FLayer[] selectedItems) {
-		return true;
+		StartEditing startEditind=(StartEditing)PluginServices.getExtension(StartEditing.class);
+		return startEditind.isEnabled();
 	}
 
 	public boolean isVisible(ITocItem item, FLayer[] selectedItems) {
-		IWindow window=PluginServices.getMDIManager().getActiveWindow();
-		if (window instanceof View){
-			return (isTocItemBranch(item)) && (selectedItems.length == 1 && selectedItems[0].isAvailable() && selectedItems[0] instanceof FLyrVect) && !((FLyrVect)selectedItems[0]).isEditing();
-		}
-		return false;
+		StartEditing startEditind=(StartEditing)PluginServices.getExtension(StartEditing.class);
+		return startEditind.isVisible();
 	}
 
 	public void execute(ITocItem item, FLayer[] selectedItems) {

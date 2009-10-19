@@ -244,6 +244,9 @@ public class StartEditing extends Extension {
 		if (selected.length == 1 && selected[0].isAvailable() && selected[0] instanceof FLyrVect) {
 			if (selected[0].isEditing())
 				return false;
+			if (((FLyrVect)selected[0]).isJoined()){
+				return false;
+			}
 			return true;
 		}
 		return false;
