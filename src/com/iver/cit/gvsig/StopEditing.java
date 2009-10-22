@@ -194,7 +194,7 @@ public class StopEditing extends Extension {
 			}
 			// Si no existe writer para la capa que tenemos en edición
 			PluginServices.getMDIManager().addCentredWindow(new StopEditingPanel(this, layer, mapControl));
-			return true;
+			return false;
 		} catch (StartEditionLayerException e) {
 			NotificationManager.addError(e);
 		} catch (ReadDriverException e) {
