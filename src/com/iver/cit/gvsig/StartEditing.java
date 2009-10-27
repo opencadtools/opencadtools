@@ -255,7 +255,7 @@ public class StartEditing extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
-		IWindow f = (View) PluginServices.getMDIManager().getActiveWindow();
+		IWindow f = (IWindow) PluginServices.getMDIManager().getActiveWindow();
 
 		if (f == null) {
 			return false;
