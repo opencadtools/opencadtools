@@ -9,6 +9,7 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
+import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.exceptions.layers.StartEditionLayerException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -242,8 +243,6 @@ public class StartEditing extends Extension {
 		FLayer[] selected = f.getModel().getMapContext().getLayers()
 				.getActives();
 		if (selected.length == 1 && selected[0].isAvailable() && selected[0] instanceof FLyrVect) {
-			if (selected[0].isEditing())
-				return false;
 			if (((FLyrVect)selected[0]).isJoined()){
 				return false;
 			}
@@ -256,15 +255,21 @@ public class StartEditing extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
-		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveWindow();
+		IWindow f = (View) PluginServices.getMDIManager().getActiveWindow();
 
 		if (f == null) {
 			return false;
 		}
-
-		if (f instanceof View)
-			return true;
+		if (f instanceof View){
+			View view=(View)f;
+			FLayer[] selected = view.getModel().getMapContext().getLayers()
+			.getActives();
+			if (selected.length == 1 && selected[0].isAvailable() && selected[0] instanceof FLyrVect) {
+				if (selected[0].isEditing())
+					return false;
+				return true;
+			}
+		}
 		return false;
 	}
 }
