@@ -70,7 +70,7 @@ public class StartEditing extends Extension {
 			IProjectView model = vista.getModel();
 			FLayer[] actives = model.getMapContext().getLayers().getActives();
 
-			boolean bEditingStarted = false;
+//			boolean bEditingStarted = false;
 			if (actives.length == 1 &&	actives[0] instanceof FLyrVect) {
 				FLyrVect lv = (FLyrVect) actives[0];
 				if (!mapControl.getProjection().getAbrev().equals(lv.getProjection().getAbrev())){
