@@ -240,7 +240,7 @@ public class SnapConfig extends JPanel {
 	private JCheckBox getJChkBoxRefentActive() {
 		if (jChkBoxRefentActive == null) {
 			jChkBoxRefentActive = new JCheckBox();
-			jChkBoxRefentActive.setText("Referencia a Objetos Activada:");
+			jChkBoxRefentActive.setText(PluginServices.getText(this,"object_reference_enabled"));
 			jChkBoxRefentActive.setBounds(new java.awt.Rectangle(26,10,418,23));
 		}
 		return jChkBoxRefentActive;
