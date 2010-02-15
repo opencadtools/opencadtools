@@ -632,7 +632,7 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 	public void selectionChanged(SelectionEvent e) {
 		try {
-			if (getVEA().getSelection().isEmpty())
+			if (getVEA()!=null && getVEA().getSelection().isEmpty())
 				clearSelection(NOTSAVEPREVIOUS);
 		} catch (ReadDriverException e1) {
 			NotificationManager.addError(e1.getMessage(),e1);
