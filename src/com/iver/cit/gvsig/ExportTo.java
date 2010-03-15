@@ -81,7 +81,7 @@ public class ExportTo extends Extension {
 	private static HashMap<FLyrVect, EndExportToCommand> exportedLayers =
 		new HashMap<FLyrVect, EndExportToCommand>();
 	private static Preferences prefs = Preferences.userRoot().node( "gvSIG.encoding.dbf" );
-	
+
 	/**
 	 * This method is used to add a layer that is exported
 	 * to other format and its edition has to be finished
@@ -151,7 +151,7 @@ public class ExportTo extends Extension {
 				lyrDef.setShapeType(FShape.POINT);
 				writer.initialize(lyrDef);
 			}
-			
+
 			 if(writer instanceof ShpWriter) {
 				 String charSetName = prefs.get("dbf_encoding", DbaseFile.getDefaultCharset().toString());
 				 if(lyrVect.getSource() instanceof VectorialFileAdapter) {
@@ -162,7 +162,7 @@ public class ExportTo extends Extension {
 							((ShpWriter)writer).loadDbfEncoding((String)s, Charset.forName(charSetName));
 				 }
 			 }
-			
+
 			// Creamos la tabla.
 			writer.preProcess();
 
@@ -173,6 +173,7 @@ public class ExportTo extends Extension {
 						break;
 					IGeometry geom = va.getShape(i);
 					if (geom == null) {
+						reportStep();
 						continue;
 					}
 					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
@@ -207,6 +208,7 @@ public class ExportTo extends Extension {
 						break;
 					IGeometry geom = va.getShape(i);
 					if (geom == null) {
+						reportStep();
 						continue;
 					}
 					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
@@ -350,7 +352,7 @@ public class ExportTo extends Extension {
 		try {
 			String tableName = JOptionPane.showInputDialog(PluginServices
 					.getText(this, "intro_tablename"));
-			
+
 			CharSequence seq = "\\/=.:,;¿?*{}´$%&()@#|!¬";
 			for (int i = 0; i < seq.length(); i++) {
 				char c = seq.charAt(i);
@@ -358,8 +360,8 @@ public class ExportTo extends Extension {
 					NotificationManager.showMessageInfo(PluginServices.getText(this, "wrong_characters"), null);
 					break;
 				}
-			} 
-		
+			}
+
 			if (tableName == null)
 				return;
 			tableName = tableName.toLowerCase();
