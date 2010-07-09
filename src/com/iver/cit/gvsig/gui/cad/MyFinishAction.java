@@ -2,10 +2,12 @@ package com.iver.cit.gvsig.gui.cad;
 
 import java.awt.Component;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 
@@ -35,6 +37,7 @@ import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.drivers.IVectorialJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
+import com.iver.cit.gvsig.fmap.drivers.dbf.DbaseFile;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.rules.IRule;
@@ -53,6 +56,7 @@ import com.iver.cit.gvsig.vectorialdb.ConnectionSettings;
 
 public class MyFinishAction extends FinishAction
 {
+	private static Preferences prefs = Preferences.userRoot().node( "gvSIG.encoding.dbf" );
 	JWizardComponents myWizardComponents;
 	FinishAction oldAction;
 	ITableDefinition lyrDef = null;
@@ -108,6 +112,9 @@ public class MyFinishAction extends FinishAction
     		    lyrDef.setName(layerName);
     		    lyrDef.setShapeType(geometryType);
     			ShpWriter writer= (ShpWriter)LayerFactory.getWM().getWriter("Shape Writer");
+    			String charSetName = prefs.get("dbf_encoding", DbaseFile.getDefaultCharset().toString());
+    			writer.loadDbfEncoding(newFile.getAbsolutePath(), Charset.forName(charSetName));
+    			writer.setCharset(Charset.forName(charSetName));
     			writer.setFile(newFile);
     			writer.initialize(lyrDef);
     			writer.preProcess();
