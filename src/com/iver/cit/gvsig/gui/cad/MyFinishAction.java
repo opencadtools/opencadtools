@@ -249,16 +249,7 @@ public class MyFinishAction extends FinishAction
 	    	            dbLayerDef.setFieldsDesc(newFields);
 	
 	    	        }
-	
-	                // all fields to lowerCase
-	    	     	FieldDescription field;
-	    	     	for (int i=0;i<dbLayerDef.getFieldsDesc().length;i++){
-	    	     		field = dbLayerDef.getFieldsDesc()[i];
-	    	     		field.setFieldName(field.getFieldName().toLowerCase());
-	    	     	}
-	    	     	dbLayerDef.setFieldID(dbLayerDef.getFieldID().toLowerCase());
-	    	     	dbLayerDef.setFieldGeometry(dbLayerDef.getFieldGeometry().toLowerCase());
-	
+
 	    	        dbDriver.setData(conex, dbLayerDef);
 	    	        IProjection proj = null;
 	    	        if (drv instanceof ICanReproject)
