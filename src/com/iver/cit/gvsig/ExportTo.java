@@ -422,7 +422,7 @@ public class ExportTo extends Extension {
 				String fieldName="gid";
 				while (findFileByName(fieldsDescrip,fieldName) != -1){
 					index++;
-					fieldName="gid"+index;
+					fieldName= "gid" + index;
 				}
 				dbLayerDef.setFieldID(fieldName);
 
@@ -431,7 +431,7 @@ public class ExportTo extends Extension {
 				fieldName="the_geom";
 				while (findFileByName(fieldsDescrip,fieldName) != -1){
 					index++;
-					fieldName="the_geom"+index;
+					fieldName = "the_geom" + index;
 				}
 				dbLayerDef.setFieldGeometry(fieldName);
 
@@ -450,7 +450,7 @@ public class ExportTo extends Extension {
 				newFields[numFieldsAnt].setFieldDecimalCount(0);
 				newFields[numFieldsAnt].setFieldType(Types.INTEGER);
 				newFields[numFieldsAnt].setFieldLength(7);
-				newFields[numFieldsAnt].setFieldName("gid");
+				newFields[numFieldsAnt].setFieldName(dbLayerDef.getFieldID());
 				dbLayerDef.setFieldsDesc(newFields);
 
 			}
