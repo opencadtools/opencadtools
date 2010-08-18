@@ -197,7 +197,9 @@ public class MyFinishAction extends FinishAction
 					dbLayerDef.setShapeType(geometryType);
 					dbLayerDef.setFieldsDesc(fieldsDesc);
 					dbLayerDef.setFieldGeometry("the_geom");
-					dbLayerDef.setFieldID("gid");
+					
+					// create gid & add it to FieldDescription array
+					dbLayerDef.setNewFieldID();
 	
 					dbLayerDef.setWhereClause("");
 					String strSRID = mapCtrl.getProjection().getAbrev()
@@ -217,38 +219,7 @@ public class MyFinishAction extends FinishAction
 	    	        if (dbDriver instanceof ICanReproject)
 	    	        {
 	    	            ((ICanReproject)dbDriver).setDestProjection(strSRID);
-	    	        }
-	
-	    	        // Creamos el driver. OJO: Hay que añadir el campo ID a la
-	    	        // definición de campos.
-	
-	    	        boolean bFound = false;
-	    	        for (int i=0; i < dbLayerDef.getFieldsDesc().length; i++)
-	    	        {
-	    	        	FieldDescription f = dbLayerDef.getFieldsDesc()[i];
-	    	        	if (f.getFieldName().equalsIgnoreCase(dbLayerDef.getFieldID()))
-	    	        	{
-	    	        		bFound = true;
-	    	        		break;
-	    	        	}
-	    	        }
-	    	        // Si no está, lo añadimos
-	    	        if (!bFound)
-	    	        {
-	    	        	int numFieldsAnt = dbLayerDef.getFieldsDesc().length;
-	    	        	FieldDescription[] newFields = new FieldDescription[dbLayerDef.getFieldsDesc().length + 1];
-	    	            for (int i=0; i < numFieldsAnt; i++)
-	    	            {
-	    	            	newFields[i] = dbLayerDef.getFieldsDesc()[i];
-	    	            }
-	    	            newFields[numFieldsAnt] = new FieldDescription();
-	    	            newFields[numFieldsAnt].setFieldDecimalCount(0);
-	    	            newFields[numFieldsAnt].setFieldType(Types.INTEGER);
-	    	            newFields[numFieldsAnt].setFieldLength(7);
-	    	            newFields[numFieldsAnt].setFieldName(dbLayerDef.getFieldID());
-	    	            dbLayerDef.setFieldsDesc(newFields);
-	
-	    	        }
+	    	        }	
 
 	    	        dbDriver.setData(conex, dbLayerDef);
 	    	        IProjection proj = null;
