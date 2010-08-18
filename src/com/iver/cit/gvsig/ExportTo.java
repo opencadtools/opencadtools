@@ -152,16 +152,16 @@ public class ExportTo extends Extension {
 				writer.initialize(lyrDef);
 			}
 
-			 if(writer instanceof ShpWriter) {
-				 String charSetName = prefs.get("dbf_encoding", DbaseFile.getDefaultCharset().toString());
-				 if(lyrVect.getSource() instanceof VectorialFileAdapter) {
-					 ((ShpWriter)writer).loadDbfEncoding(((VectorialFileAdapter)lyrVect.getSource()).getFile().getAbsolutePath(), Charset.forName(charSetName));
-				 } else {
-						Object s = lyrVect.getProperty("DBFFile");
-						if(s != null && s instanceof String)
-							((ShpWriter)writer).loadDbfEncoding((String)s, Charset.forName(charSetName));
-				 }
-			 }
+			if(writer instanceof ShpWriter) {
+				String charSetName = prefs.get("dbf_encoding", DbaseFile.getDefaultCharset().toString());
+				if(lyrVect.getSource() instanceof VectorialFileAdapter) {
+					((ShpWriter)writer).loadDbfEncoding(((VectorialFileAdapter)lyrVect.getSource()).getFile().getAbsolutePath(), Charset.forName(charSetName));
+				} else {
+					Object s = lyrVect.getProperty("DBFFile");
+					if(s != null && s instanceof String)
+						((ShpWriter)writer).loadDbfEncoding((String)s, Charset.forName(charSetName));
+				}
+			}
 
 			// Creamos la tabla.
 			writer.preProcess();
@@ -203,7 +203,7 @@ public class ExportTo extends Extension {
 			} else {
 				int counter = 0;
 				for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
-						.nextSetBit(i + 1)) {
+				.nextSetBit(i + 1)) {
 					if (isCanceled())
 						break;
 					IGeometry geom = va.getShape(i);
@@ -243,10 +243,10 @@ public class ExportTo extends Extension {
 			va.stop();
 			if (reader != null && !isCanceled()){
 				int res = JOptionPane.showConfirmDialog(
-					(JComponent) PluginServices.getMDIManager().getActiveWindow()
-					, PluginServices.getText(this, "insertar_en_la_vista_la_capa_creada"),
-					PluginServices.getText(this,"insertar_capa"),
-					JOptionPane.YES_NO_OPTION);
+						(JComponent) PluginServices.getMDIManager().getActiveWindow()
+						, PluginServices.getText(this, "insertar_en_la_vista_la_capa_creada"),
+						PluginServices.getText(this,"insertar_capa"),
+						JOptionPane.YES_NO_OPTION);
 
 				if (res == JOptionPane.YES_OPTION)
 				{
@@ -305,7 +305,7 @@ public class ExportTo extends Extension {
 	 */
 	public void execute(String actionCommand) {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveWindow();
+		.getActiveWindow();
 
 		if (f instanceof View) {
 			View vista = (View) f;
@@ -319,12 +319,12 @@ public class ExportTo extends Extension {
 					if (actives[i] instanceof FLyrVect) {
 						FLyrVect lv = (FLyrVect) actives[i];
 						int numSelec = lv.getRecordset().getSelection()
-								.cardinality();
+						.cardinality();
 						if (numSelec > 0) {
 							int resp = JOptionPane.showConfirmDialog(
 									(Component) PluginServices.getMainFrame(),
 									PluginServices.getText(this,"se_van_a_guardar_") + numSelec
-											+ PluginServices.getText(this,"features_desea_continuar"),
+									+ PluginServices.getText(this,"features_desea_continuar"),
 									PluginServices.getText(this,"export_to"), JOptionPane.YES_NO_OPTION);
 							if (resp != JOptionPane.YES_OPTION) {
 								continue;
@@ -350,8 +350,23 @@ public class ExportTo extends Extension {
 
 	public void saveToPostGIS(MapContext mapContext, FLyrVect layer){
 		try {
-			String tableName = JOptionPane.showInputDialog(PluginServices
-					.getText(this, "intro_tablename"));
+			String tableName = null;
+			boolean tableNameNotFilled = true;
+
+			// show the input tableName dialog until user cancel or enter a valid identifier
+			do {
+				tableName = JOptionPane.showInputDialog(PluginServices.getText(this, "intro_tablename"));
+				if (tableName == null) {
+					return;
+				}
+				tableNameNotFilled = (tableName.trim().length() == 0);
+				if (tableNameNotFilled) {
+					JOptionPane.showMessageDialog(null,
+							PluginServices.getText(this,"intro_tablename_blank"),
+							PluginServices.getText(this,"warning"),
+							JOptionPane.WARNING_MESSAGE);
+				}
+			} while (tableNameNotFilled);
 
 			CharSequence seq = "\\/=.:,;¿?*{}´$%&()@#|!¬";
 			for (int i = 0; i < seq.length(); i++) {
@@ -361,10 +376,6 @@ public class ExportTo extends Extension {
 					break;
 				}
 			}
-
-			if (tableName == null)
-				return;
-			tableName = tableName.toLowerCase();
 
 			DlgConnection dlg = new DlgConnection(new String[]{"PostGIS JDBC Driver"});
 			dlg.setModal(true);
@@ -398,8 +409,8 @@ public class ExportTo extends Extension {
 
 			FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 			dbLayerDef.setFieldsDesc(fieldsDescrip);
-	        // Creamos el driver. OJO: Hay que añadir el campo ID a la
-	        // definición de campos.
+			// Creamos el driver. OJO: Hay que añadir el campo ID a la
+			// definición de campos.
 
 			if (originalDef != null){
 				dbLayerDef.setFieldID(originalDef.getFieldID());
@@ -429,20 +440,20 @@ public class ExportTo extends Extension {
 			// if id field dosen't exist we add it
 			if (findFileByName(fieldsDescrip,dbLayerDef.getFieldID()) == -1)
 			{
-	        	int numFieldsAnt = fieldsDescrip.length;
-	        	FieldDescription[] newFields = new FieldDescription[dbLayerDef.getFieldsDesc().length + 1];
-	            for (int i=0; i < numFieldsAnt; i++)
-	            {
-	            	newFields[i] = fieldsDescrip[i];
-	            }
-	            newFields[numFieldsAnt] = new FieldDescription();
-	            newFields[numFieldsAnt].setFieldDecimalCount(0);
-	            newFields[numFieldsAnt].setFieldType(Types.INTEGER);
-	            newFields[numFieldsAnt].setFieldLength(7);
-	            newFields[numFieldsAnt].setFieldName("gid");
-	            dbLayerDef.setFieldsDesc(newFields);
+				int numFieldsAnt = fieldsDescrip.length;
+				FieldDescription[] newFields = new FieldDescription[dbLayerDef.getFieldsDesc().length + 1];
+				for (int i=0; i < numFieldsAnt; i++)
+				{
+					newFields[i] = fieldsDescrip[i];
+				}
+				newFields[numFieldsAnt] = new FieldDescription();
+				newFields[numFieldsAnt].setFieldDecimalCount(0);
+				newFields[numFieldsAnt].setFieldType(Types.INTEGER);
+				newFields[numFieldsAnt].setFieldLength(7);
+				newFields[numFieldsAnt].setFieldName("gid");
+				dbLayerDef.setFieldsDesc(newFields);
 
-	        }
+			}
 
 			// all fields to lowerCase
 			FieldDescription field;
@@ -566,7 +577,7 @@ public class ExportTo extends Extension {
 		} else {
 			int counter = 0;
 			for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
-					.nextSetBit(i + 1)) {
+			.nextSetBit(i + 1)) {
 				IGeometry geom = va.getShape(i);
 
 				progress.setProgress(counter++);
@@ -604,7 +615,7 @@ public class ExportTo extends Extension {
 				newFile = new File(path);
 
 				DxfWriter writer = (DxfWriter) LayerFactory.getWM().getWriter(
-						"DXF Writer");
+				"DXF Writer");
 				SHPLayerDefinition lyrDef = new SHPLayerDefinition();
 				SelectableDataSource sds = layer.getRecordset();
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
@@ -663,7 +674,7 @@ public class ExportTo extends Extension {
 				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
 
 				if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
-				// ficheros
+					// ficheros
 				{
 					ShpWriter writer1 = (ShpWriter) LayerFactory.getWM().getWriter(
 					"Shape Writer");
@@ -724,7 +735,7 @@ public class ExportTo extends Extension {
 					writeMultiFeatures(mapContext,layer, writers, drivers);
 				} else {
 					ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
-						"Shape Writer");
+					"Shape Writer");
 					loadEnconding(layer, writer);
 					IndexedShpDriver drv = getOpenShpDriver(newFile);
 					SHPLayerDefinition lyrDef = new SHPLayerDefinition();
@@ -736,15 +747,15 @@ public class ExportTo extends Extension {
 					writer.initialize(lyrDef);
 					// CODIGO PARA EXPORTAR UN SHP A UN CHARSET DETERMINADO
 					// ES UTIL PARA QUE UN DBF SE VEA CORRECTAMENTE EN EXCEL, POR EJEMPLO
-//					Charset resul = (Charset) JOptionPane.showInputDialog((Component)PluginServices.getMDIManager().getActiveWindow(),
-//								PluginServices.getText(ExportTo.class, "select_charset_for_writing"),
-//								"Charset", JOptionPane.QUESTION_MESSAGE, null,
-//								Charset.availableCharsets().values().toArray(),
-//								writer.getCharsetForWriting().displayName());
-//					if (resul == null)
-//						return;
-//					Charset charset = resul;
-//					writer.setCharsetForWriting(charset);
+					//					Charset resul = (Charset) JOptionPane.showInputDialog((Component)PluginServices.getMDIManager().getActiveWindow(),
+					//								PluginServices.getText(ExportTo.class, "select_charset_for_writing"),
+					//								"Charset", JOptionPane.QUESTION_MESSAGE, null,
+					//								Charset.availableCharsets().values().toArray(),
+					//								writer.getCharsetForWriting().displayName());
+					//					if (resul == null)
+					//						return;
+					//					Charset charset = resul;
+					//					writer.setCharsetForWriting(charset);
 					writeFeatures(mapContext, layer, writer, drv);
 
 				}
@@ -811,7 +822,7 @@ public class ExportTo extends Extension {
 	 */
 	public boolean isVisible() {
 		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-				.getActiveWindow();
+		.getActiveWindow();
 
 		if (f == null) {
 			return false;
@@ -823,14 +834,14 @@ public class ExportTo extends Extension {
 	}
 
 	private int findFileByName(FieldDescription[] fields, String fieldName){
-        for (int i=0; i < fields.length; i++)
-        {
-        	FieldDescription f = fields[i];
-        	if (f.getFieldName().equalsIgnoreCase(fieldName))
-        	{
-        		return i;
-        	}
-        }
+		for (int i=0; i < fields.length; i++)
+		{
+			FieldDescription f = fields[i];
+			if (f.getFieldName().equalsIgnoreCase(fieldName))
+			{
+				return i;
+			}
+		}
 
 		return -1;
 
