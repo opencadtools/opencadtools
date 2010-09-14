@@ -353,8 +353,8 @@ public class EditionPreferencePage extends AbstractPreferencePage {
                 jPanelSnappers.add(snapperLabel);
                 jPanelSnappers.add(eielVertexEIELSnapCB);
                 jPanelSnappers.add(eielLineEIELSnapCB);
-                jPanelSnappers.add(vertexSnapCB);
-                jPanelSnappers.add(lineSnapCB);
+//                jPanelSnappers.add(vertexSnapCB);
+//                jPanelSnappers.add(lineSnapCB);
                 jPanelSnappers.add(deleteButtonLabel);
                 jPanelSnappers.add(deleteButtonOptionCB);
                 //jPanelSnappers.add(getJScrollPane(), java.awt.BorderLayout.EAST);                                                                    
