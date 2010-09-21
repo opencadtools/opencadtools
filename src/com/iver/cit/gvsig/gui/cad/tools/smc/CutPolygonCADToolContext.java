@@ -357,6 +357,13 @@ public final class CutPolygonCADToolContext
                 super (name, id);
             }
 
+            protected void Entry(CutPolygonCADToolContext context) {
+
+            	CutPolygonCADTool tool = context.getOwner();
+            	tool.setDescription(new String[]{"cancel"});
+
+            }
+
             protected void addPoint(CutPolygonCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 CutPolygonCADTool ctxt = context.getOwner();
@@ -432,11 +439,17 @@ public final class CutPolygonCADToolContext
                 super (name, id);
             }
 
+            protected void Entry(CutPolygonCADToolContext context) {
+
+            	CutPolygonCADTool tool = context.getOwner();
+            	tool.setDescription(new String[]{"cancel", "terminate", "change_base_geom"});
+            }
+
             protected void addOption(CutPolygonCADToolContext context, String s)
             {
                 CutPolygonCADTool ctxt = context.getOwner();
 
-                if (s.equals("espacio"))//&& ctxt.checksOnEditionSinContinuidad(ctxt.getGeometriaResultante(), ctxt.getCurrentGeoid())))
+                if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate")))//&& ctxt.checksOnEditionSinContinuidad(ctxt.getGeometriaResultante(), ctxt.getCurrentGeoid())))
                 {
 
                     (context.getState()).Exit(context);
@@ -453,18 +466,18 @@ public final class CutPolygonCADToolContext
                 } else if (s.equals("g")||s.equals("G")) {
 
                     // No actions.
-                } else if (s.equals("tab")) {
-                	
+                } else if (s.equals("tab") || s.equals(PluginServices.getText(this, "change_base_geom"))) {
+
                     CutPolygonCADToolState endState = context.getState();
                     context.clearState();
-                    
+
                     try {
-                    	
+
                         ctxt.changePieceOfGeometry();
-                        
+
                     } finally{
-                    	
-                        context.setState(endState);                        
+
+                        context.setState(endState);
                     }
                 }  else {
                     super.addOption(context, s);
