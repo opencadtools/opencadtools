@@ -428,9 +428,9 @@ public class InsertVertexCADTool extends DefaultCADTool {
 					geom1=ShapeFactory.createPolyline2D(gpxAux);
 					if (geom1.intersects(rect)|| finish){
 						newGp.lineTo(p.getX(), p.getY());
-						newGp.lineTo(pLast.getX(),pLast.getY());
-					}else{
-						newGp.lineTo(pLast.getX(), pLast.getY());
+//						newGp.lineTo(pLast.getX(),pLast.getY());
+//					}else{
+//						newGp.lineTo(pLast.getX(), pLast.getY());
 					}
 					//}
 					newGp.closePath();
