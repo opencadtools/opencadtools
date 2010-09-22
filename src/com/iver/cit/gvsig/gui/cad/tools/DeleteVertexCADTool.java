@@ -148,8 +148,14 @@ public class DeleteVertexCADTool extends DefaultCADTool {
 	 */
 	public void addPoint(double x, double y,InputEvent event) {
 
-		selectHandler(x,y);
-		addVertex=false;
+		if (!isHandler(x,y)) {
+			CADExtension.setCADTool("_selection", false);
+			((SelectionCADTool) CADExtension.getCADTool()).setNextTool("_deleteVertex");
+			CADExtension.getCADTool().transition(x, y, event);
+		} else {
+			selectHandler(x,y);
+			addVertex=false;
+		}
 
 	}
 
@@ -687,6 +693,36 @@ if(s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"del")
 	public String getName() {
 		return PluginServices.getText(this,"delete_vertex_");
 	}
+
+	/**
+	 * returns
+	 * @param x
+	 * @param y
+	 * @return true if theres a handler on the selected geometry in coords x,y; false otherwise.
+	 */
+	private boolean isHandler(double x, double y) {
+
+		Point2D firstPoint = new Point2D.Double(x, y);
+		double tam = getCadToolAdapter().getMapControl().getViewPort().toMapDistance(SelectionCADTool.tolerance);
+
+		IGeometry geometry = getSelectedGeometry();
+
+		if (geometry == null) {
+			return false;
+		}
+
+		Handler[] handlers = geometry
+		.getHandlers(IGeometry.SELECTHANDLER);
+		for (int h = 0; h < handlers.length; h++) {
+			if (handlers[h].getPoint().distance(firstPoint) < tam) {
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
 
 	private void selectHandler(double x, double y) {
 
