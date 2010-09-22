@@ -334,8 +334,8 @@ public final class DeleteVertexCADToolContext
                 DeleteVertexCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
-                ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
+                ctxt.setQuestion(PluginServices.getText(this,"select_vertex"));
+                ctxt.setDescription(new String[0]);
                 return;
             }
 
@@ -392,8 +392,6 @@ public final class DeleteVertexCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"select_from_point"));
-                    ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
