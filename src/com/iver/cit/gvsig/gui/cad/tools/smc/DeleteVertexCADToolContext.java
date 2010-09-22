@@ -26,9 +26,10 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.DeleteVertexCADTool;
 import java.awt.event.InputEvent;
+
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.tools.DeleteVertexCADTool;
 
 
 //TODO [NachoV] This is a very modified copy of EditVertexCADToolCOntext,
@@ -164,13 +165,11 @@ public final class DeleteVertexCADToolContext
         // Statics.
         //
         /* package */ static DeleteVertex_Default.DeleteVertex_SelectVertexOrDelete SelectVertexOrDelete;
-        /* package */ static DeleteVertex_Default.DeleteVertex_AddVertex AddVertex;
         private static DeleteVertex_Default Default;
 
         static
         {
             SelectVertexOrDelete = new DeleteVertex_Default.DeleteVertex_SelectVertexOrDelete("DeleteVertex.SelectVertexOrDelete", 0);
-            AddVertex = new DeleteVertex_Default.DeleteVertex_AddVertex("DeleteVertex.AddVertex", 1);
             Default = new DeleteVertex_Default("DeleteVertex.Default", -1);
         }
 
@@ -190,64 +189,33 @@ public final class DeleteVertexCADToolContext
 
         protected void addOption(DeleteVertexCADToolContext context, String s)
         {
-            DeleteVertexCADTool ctxt = context.getOwner();
+        	DeleteVertexCADTool ctxt = context.getOwner();
 
-            if (s.equals(PluginServices.getText(this,"cancel")))
-            {
-                boolean loopbackFlag =
-                    context.getState().getName().equals(
-                        DeleteVertex.SelectVertexOrDelete.getName());
+        	boolean loopbackFlag =
+        		context.getState().getName().equals(
+        				DeleteVertex.SelectVertexOrDelete.getName());
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Exit(context);
-                }
+        	if (loopbackFlag == false)
+        	{
+        		(context.getState()).Exit(context);
+        	}
 
-                context.clearState();
-                try
-                {
-                    ctxt.end();
-                }
-                finally
-                {
-                    context.setState(DeleteVertex.SelectVertexOrDelete);
+        	context.clearState();
+        	try
+        	{
+        		ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+        	}
+        	finally
+        	{
+        		context.setState(DeleteVertex.SelectVertexOrDelete);
 
-                    if (loopbackFlag == false)
-                    {
-                        (context.getState()).Entry(context);
-                    }
+        		if (loopbackFlag == false)
+        		{
+        			(context.getState()).Entry(context);
+        		}
 
-                }
-            }
-            else
-            {
-                boolean loopbackFlag =
-                    context.getState().getName().equals(
-                        DeleteVertex.SelectVertexOrDelete.getName());
+        	}
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Exit(context);
-                }
-
-                context.clearState();
-                try
-                {
-                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
-                }
-                finally
-                {
-                    context.setState(DeleteVertex.SelectVertexOrDelete);
-
-                    if (loopbackFlag == false)
-                    {
-                        (context.getState()).Entry(context);
-                    }
-
-                }
-            }
-
-            return;
         }
 
         protected void addValue(DeleteVertexCADToolContext context, double d)
@@ -339,50 +307,6 @@ public final class DeleteVertexCADToolContext
                 return;
             }
 
-//            protected void addOption(DeleteVertexCADToolContext context, String s)
-//            {
-//                DeleteVertexCADTool ctxt = context.getOwner();
-//
-//                if (s.equals("i") || s.equals("I") || s.equals(PluginServices.getText(this,"add")))
-//                {
-//
-//                    (context.getState()).Exit(context);
-//                    context.clearState();
-//                    try
-//                    {
-//                        ctxt.setQuestion(PluginServices.getText(this,"add_vertex"));
-//                        ctxt.setDescription(new String[]{"cancel"});
-//                        ctxt.addOption(s);
-//                    }
-//                    finally
-//                    {
-//                        context.setState(DeleteVertex.AddVertex);
-//                        (context.getState()).Entry(context);
-//                    }
-//                }
-//                else if (!s.equals("i") && !s.equals("I") && !s.equals(PluginServices.getText(this,"add")))
-//                {
-//                    DeleteVertexCADToolState endState = context.getState();
-//
-//                    context.clearState();
-//                    try
-//                    {
-//                        ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
-//                        ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
-//                        ctxt.addOption(s);
-//                    }
-//                    finally
-//                    {
-//                        context.setState(endState);
-//                    }
-//                }                else
-//                {
-//                    super.addOption(context, s);
-//                }
-//
-//                return;
-//            }
-
             protected void addPoint(DeleteVertexCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 DeleteVertexCADTool ctxt = context.getOwner();
@@ -397,44 +321,6 @@ public final class DeleteVertexCADToolContext
                 finally
                 {
                     context.setState(endState);
-                }
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-        private static final class DeleteVertex_AddVertex
-            extends DeleteVertex_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private DeleteVertex_AddVertex(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addPoint(DeleteVertexCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                DeleteVertexCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"select_from_point"));
-                    ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
-                    ctxt.addPoint(pointX, pointY, event);
-                }
-                finally
-                {
-                    context.setState(DeleteVertex.SelectVertexOrDelete);
-                    (context.getState()).Entry(context);
                 }
                 return;
             }
