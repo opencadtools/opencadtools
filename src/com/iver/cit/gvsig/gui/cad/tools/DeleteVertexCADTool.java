@@ -29,7 +29,6 @@ import java.awt.event.InputEvent;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-
 import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
@@ -405,6 +404,8 @@ if(s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"del")
 
 		}
 
+		boolean closed = false;
+
 		theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
 		int numSegmentsAdded = 0;
 		while (!theIterator.isDone()) {
@@ -455,6 +456,7 @@ if(s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"del")
 				if (numSegmentsAdded < 3)
 					newGp.lineTo(theData[0], theData[1]);
 				newGp.closePath();
+				closed = true;
 
 				break;
 			} //end switch
@@ -477,8 +479,8 @@ if(s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"del")
 		case FShape.POLYGON + FShape.Z:
 			//if first/last point is removed, we must ensure there's new first point has the
 			//same coordinates than the new last point.
-			if (numHandler == 0 || numHandler==handlers.length-1) {
-				newGp.lineTo(handlers[1].getPoint().getX(), handlers[1].getPoint().getY());
+			if (!closed && (numHandler == 0 || numHandler==handlers.length-1)) {
+//				newGp.lineTo(handlers[1].getPoint().getX(), handlers[1].getPoint().getY());
 				newGp.closePath();
 			}
 			shp = new FPolygon2D(newGp);
