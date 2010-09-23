@@ -396,8 +396,6 @@ public final class InsertVertexCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"select_from_point"));
-                    ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

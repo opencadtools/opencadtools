@@ -693,7 +693,7 @@ if(s.equals("e") || s.equals("E") || s.equals(PluginServices.getText(this,"del")
 
 
 	public String getName() {
-		return PluginServices.getText(this,"delete_vertex_");
+		return PluginServices.getText(this,"remove_vertex_");
 	}
 
 	/**

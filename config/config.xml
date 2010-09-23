@@ -430,7 +430,7 @@
 			<menu text="geometry/follow" action-command="_follow" icon="follow-geometry"/>
 
 			<tool-bar name="ed_options" position="33">
-				<selectable-tool icon="follow-geometry" action-command="_follow" tooltip="continue_geom" group="vista" position="6"/>
+				<selectable-tool icon="follow-geometry" action-command="_follow" tooltip="follow_geom" group="vista" position="6"/>
 			</tool-bar>
 		</extension>
 

@@ -496,7 +496,7 @@ public class InsertVertexCADTool extends DefaultCADTool {
 		}
 	}
 	public String getName() {
-		return PluginServices.getText(this,"insert_vertex_");
+		return PluginServices.getText(this,"add_vertex_");
 	}
 	
 	
