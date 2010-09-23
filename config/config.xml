@@ -427,7 +427,7 @@
 		<extension class-name="com.iver.cit.gvsig.FollowGeometryExtension"
 			description="Extension to follow the geometry that is being digitalized before picking another tool."
 			active="true">
-			<menu text="geometry/follow" action-command="_follow" icon="follow-geometry"/>
+			<menu text="geometry/follow_geom" action-command="_follow" icon="follow-geometry"/>
 
 			<tool-bar name="ed_options" position="33">
 				<selectable-tool icon="follow-geometry" action-command="_follow" tooltip="follow_geom" group="vista" position="6"/>
