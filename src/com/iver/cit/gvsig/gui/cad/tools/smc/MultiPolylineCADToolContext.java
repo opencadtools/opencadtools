@@ -521,7 +521,7 @@ public final class MultiPolylineCADToolContext
                         ctxt.clear();
                     }
                 }
-                else if (s.equals("espacio")|| s.equals(PluginServices.getText(this, "terminate")))
+                else if (s.equalsIgnoreCase("c")|| s.equals(PluginServices.getText(this, "cancel")))
                 {
 
                     (context.getState()).Exit(context);
