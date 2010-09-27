@@ -397,6 +397,7 @@ public final class EllipseCADToolContext
                 try
                 {
                     ctxt.addPoint(pointX, pointY, event);
+                    ctxt.fireEndGeometry();
                 }
                 finally
                 {
@@ -416,6 +417,7 @@ public final class EllipseCADToolContext
                 try
                 {
                     ctxt.addValue(d);
+                    ctxt.fireEndGeometry();
                 }
                 finally
                 {

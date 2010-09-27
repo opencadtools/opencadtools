@@ -5,9 +5,10 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import java.awt.event.InputEvent;
+
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 
 public final class PointCADToolContext
     extends statemap.FSMContext
@@ -319,6 +320,7 @@ public final class PointCADToolContext
                     ctxt.setQuestion(PluginServices.getText(this,"insert_point"));
                     ctxt.setDescription(new String[]{"cancel"});
                     ctxt.addPoint(pointX, pointY, event);
+                    ctxt.fireEndGeometry();
                 }
                 finally
                 {

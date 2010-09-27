@@ -422,6 +422,7 @@ public final class MultiPointCADToolContext
                         ctxt.setDescription(new String[]{"cancel"});
                         ctxt.addOption(s);
                         ctxt.endGeometry();
+                        ctxt.fireEndGeometry();
                     }
                     finally
                     {

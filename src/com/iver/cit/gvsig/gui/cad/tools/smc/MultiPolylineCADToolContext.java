@@ -509,6 +509,7 @@ public final class MultiPolylineCADToolContext
                         ctxt.saveTempGeometry();
 //                        ctxt.updateFormConstants();
 //                        ctxt.openForm();
+                        ctxt.fireEndGeometry();
                     }
                     finally
                     {

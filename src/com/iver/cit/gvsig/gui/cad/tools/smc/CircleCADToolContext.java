@@ -393,6 +393,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.addPoint(pointX, pointY, event);
+                    ctxt.fireEndGeometry();
                 }
                 finally
                 {
@@ -412,6 +413,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.addValue(d);
+                    ctxt.fireEndGeometry();
                 }
                 finally
                 {
@@ -486,6 +488,7 @@ public final class CircleCADToolContext
                 try
                 {
                     ctxt.addPoint(pointX, pointY, event);
+                    ctxt.fireEndGeometry();
                 }
                 finally
                 {

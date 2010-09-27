@@ -5,9 +5,10 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
 import java.awt.event.InputEvent;
+
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.tools.RectangleCADTool;
 
 public final class RectangleCADToolContext
     extends statemap.FSMContext
@@ -391,6 +392,7 @@ public final class RectangleCADToolContext
                 try
                 {
                     ctxt.addPoint(pointX, pointY, event);
+                    ctxt.fireEndGeometry();
                 }
                 finally
                 {
@@ -427,6 +429,7 @@ public final class RectangleCADToolContext
                 try
                 {
                     ctxt.addPoint(pointX, pointY, event);
+                    ctxt.fireEndGeometry();
                 }
                 finally
                 {

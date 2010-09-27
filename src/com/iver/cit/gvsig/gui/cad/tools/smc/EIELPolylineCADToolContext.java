@@ -520,6 +520,7 @@ public final class EIELPolylineCADToolContext
                         ctxt.addOption(s);
                         ctxt.endGeometry();
                         ctxt.end();
+                        ctxt.fireEndGeometry();
                     }
                     finally
                     {
@@ -662,6 +663,7 @@ public final class EIELPolylineCADToolContext
                         ctxt.addOption(s);
                         ctxt.endGeometry();
                         ctxt.end();
+                        ctxt.fireEndGeometry();
                     }
                     finally
                     {
