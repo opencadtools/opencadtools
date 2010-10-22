@@ -572,18 +572,25 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 						{
 							FLyrVect lyrVect = (FLyrVect) lyrEd.getLayersToSnap().get(i);
 							lyrVect.setSpatialCacheEnabled(true);
+							// a layer reload is needed to get snappers working...
+							try {
+								lyrVect.reload();
+							} catch (ReloadLayerException e) {
+								Logger.getLogger(EditionPreferencePage.class).error("Error reloading layer", e);
+							}
 						}
 
 				}
 
 		} // while
-		mapContext.invalidate();
+
 		try{
 			SelectionCADTool.tolerance = Integer.parseInt(getJTxtTolerance().getText());
 
 		}catch (Exception e) {
 			throw new StoreException(PluginServices.getText(this, "tolerancia_incorrecta"),e);
 		}
+		mapContext.invalidate();
 	}
 
 	public void initializeDefaults() {
