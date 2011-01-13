@@ -47,6 +47,7 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.exceptions.commands.EditionCommandException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.CADTool;
@@ -80,9 +81,11 @@ public class RedoViewExtension extends Extension {
 		if (s.compareTo("REDO") == 0) {
 			try {
 					FLayers layers=mapControl.getMapContext().getLayers();
-					for (int i=0;i<layers.getLayersCount();i++){
-						if (layers.getLayer(i) instanceof FLyrVect && layers.getLayer(i).isEditing() && layers.getLayer(i).isActive()){
-							VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
+					FLayer[] activeLayers = layers.getActives();
+					if (activeLayers.length==1) {
+						FLayer activeLayer = activeLayers[0];
+						if (activeLayer instanceof FLyrVect && ((FLyrVect)activeLayer).getSource() instanceof VectorialEditableAdapter && activeLayer.isEditing() && activeLayer.isActive()){
+							VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)activeLayer).getSource();
 							vea.redo();
 							vea.getCommandRecord().fireCommandsRepaint(null);
 							vea.getSelection().clear();
@@ -109,9 +112,11 @@ public class RedoViewExtension extends Extension {
 		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
 		MapControl mapControl = vista.getMapControl();
 		FLayers layers=mapControl.getMapContext().getLayers();
-		for (int i=0;i<layers.getLayersCount();i++){
-			if (layers.getLayer(i) instanceof FLyrVect && ((FLyrVect)layers.getLayer(i)).getSource() instanceof VectorialEditableAdapter && layers.getLayer(i).isEditing() && layers.getLayer(i).isActive()){
-				VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
+		FLayer[] activeLayers = layers.getActives();
+		if (activeLayers.length==1) {
+			FLayer activeLayer = activeLayers[0];
+			if (activeLayer instanceof FLyrVect && ((FLyrVect)activeLayer).getSource() instanceof VectorialEditableAdapter && activeLayer.isEditing() && activeLayer.isActive()){
+				VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)activeLayer).getSource();
 				if (vea==null)return false;
 				return vea.getCommandRecord().moreRedoCommands();
 			}
@@ -134,9 +139,11 @@ public class RedoViewExtension extends Extension {
 		if (f instanceof View) {
 			MapControl mapControl = ((View)f).getMapControl();
 			FLayers layers=mapControl.getMapContext().getLayers();
-			for (int i=0;i<layers.getLayersCount();i++){
-				if (layers.getLayer(i) instanceof FLyrVect && ((FLyrVect)layers.getLayer(i)).getSource() instanceof VectorialEditableAdapter && layers.getLayer(i).isEditing() && layers.getLayer(i).isActive()){
-					VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)layers.getLayer(i)).getSource();
+			FLayer[] activeLayers = layers.getActives();
+			if (activeLayers.length==1) {
+				FLayer activeLayer = activeLayers[0];
+				if (activeLayer instanceof FLyrVect && ((FLyrVect)activeLayer).getSource() instanceof VectorialEditableAdapter && activeLayer.isEditing() && activeLayer.isActive()){
+					VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)activeLayer).getSource();
 					if (vea==null)return false;
 					return true;
 				}
