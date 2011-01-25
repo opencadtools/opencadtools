@@ -250,7 +250,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		jLabel.setPreferredSize(new java.awt.Dimension(28, 20));
 		jLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-		this.setSize(new java.awt.Dimension(502,288));
+		this.setSize(new java.awt.Dimension(502,488));
 		this.setPreferredSize(this.getSize());
 		this.add(getJPanelNord(), BorderLayout.NORTH);
 
@@ -742,8 +742,10 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
-			jScrollPane.setPreferredSize(new java.awt.Dimension(500,419));
-			jScrollPane.setViewportView(getJTableSnapping());
+			jScrollPane.setPreferredSize(new java.awt.Dimension(500,250));
+			JTable aux = getJTableSnapping();
+			jScrollPane.setViewportView(aux);
+			aux.setFillsViewportHeight(true);
 		}
 		return jScrollPane;
 	}
