@@ -1,6 +1,7 @@
 package com.iver.cit.gvsig;
 
 import java.awt.Component;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -18,6 +19,7 @@ import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.edition.rules.IRule;
 import com.iver.cit.gvsig.fmap.edition.rules.RulePolygon;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.XMLException;
 import com.iver.cit.gvsig.fmap.rendering.ILegend;
@@ -125,6 +127,8 @@ public class StartEditing extends Extension {
 					if (!(lv.getSource().getDriver() instanceof IndexedShpDriver)){
 						VectorialLayerEdited vle=(VectorialLayerEdited)editionManager.getLayerEdited(lv);
 						vle.setLegend(legendOriginal);
+						//starts snapping over every visible layer
+						setSnappers(vle, mapControl.getMapContext().getLayers());
 					}
 					vea.getCommandRecord().addCommandListener(mapControl);
 					// Si existe una tabla asociada a esta capa se cambia su
@@ -255,7 +259,7 @@ public class StartEditing extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
 	public boolean isVisible() {
-		IWindow f = (IWindow) PluginServices.getMDIManager().getActiveWindow();
+		IWindow f = PluginServices.getMDIManager().getActiveWindow();
 
 		if (f == null) {
 			return false;
@@ -271,5 +275,19 @@ public class StartEditing extends Extension {
 			}
 		}
 		return false;
+	}
+
+	public void setSnappers(VectorialLayerEdited vle, FLayers layers) {
+
+		ArrayList layersToSnap = vle.getLayersToSnap();
+		for (int i=0; i<layers.getLayersCount(); i++) {
+			FLayer layer = layers.getLayer(i);
+			if (layer instanceof FLayers) {
+				setSnappers(vle, (FLayers) layer);
+			} else if ((layer instanceof FLyrVect) && (layer.isVisible())) {
+				layersToSnap.add(layer);
+			}
+		}
+
 	}
 }
