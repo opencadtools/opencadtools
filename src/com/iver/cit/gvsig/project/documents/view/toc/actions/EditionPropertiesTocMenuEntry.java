@@ -1,5 +1,6 @@
 package com.iver.cit.gvsig.project.documents.view.toc.actions;
 
+import java.awt.Dimension;
 import java.util.Iterator;
 
 import com.iver.andami.PluginServices;
@@ -67,6 +68,10 @@ public class EditionPropertiesTocMenuEntry extends AbstractTocContextMenuAction 
 
 		GenericDlgPreferences dlg = new GenericDlgPreferences();
 		dlg.addPreferencePage(pref);
+
+		Dimension d = dlg.getSize();
+		d.height = pref.getHeight()+70;
+		dlg.setSize(d);
 
 		 ExtensionPoints extensionPoints = ExtensionPointsSingleton.getInstance();
 	        ExtensionPoint extensionPoint =(ExtensionPoint)extensionPoints.get("cad_editing_properties_pages");
