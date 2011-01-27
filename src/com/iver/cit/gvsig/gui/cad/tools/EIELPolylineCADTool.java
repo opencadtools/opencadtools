@@ -624,6 +624,7 @@ public class EIELPolylineCADTool extends InsertionCADTool {
 	public void end() {
 		/* CADExtension.setCADTool("polyline");
         PluginServices.getMainFrame().setSelectedTool("POLYLINE"); */
+		clear();
 	}
 
 	public String getName() {
