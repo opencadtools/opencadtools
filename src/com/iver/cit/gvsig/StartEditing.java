@@ -5,15 +5,12 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import org.apache.log4j.Logger;
-
 import com.hardcode.driverManager.DriverLoadException;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.andami.ui.mdiManager.IWindow;
-import com.iver.cit.gvsig.exceptions.layers.ReloadLayerException;
 import com.iver.cit.gvsig.exceptions.layers.StartEditionLayerException;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -27,7 +24,6 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.XMLException;
 import com.iver.cit.gvsig.fmap.rendering.ILegend;
 import com.iver.cit.gvsig.gui.cad.CADTool;
-import com.iver.cit.gvsig.gui.preferences.EditionPreferencePage;
 import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.ProjectTable;
@@ -290,15 +286,17 @@ public class StartEditing extends Extension {
 				setSnappers(vle, (FLayers) layer);
 			} else if ((layer instanceof FLyrVect) && (layer.isVisible())) {
 				FLyrVect lyrVect = (FLyrVect) layer;
-				layersToSnap.add(lyrVect);
-				lyrVect.setSpatialCacheEnabled(true);
-				// a layer reload is needed to get snappers working...
-				try {
-					if (vle.getLayer() != lyrVect) {
-						lyrVect.reload();
-					}
-				} catch (ReloadLayerException e) {
-					Logger.getLogger(EditionPreferencePage.class).error("Error reloading layer", e);
+				if (!layersToSnap.contains(lyrVect)) {
+					layersToSnap.add(lyrVect);
+					lyrVect.setSpatialCacheEnabled(true);
+					// a layer reload is needed to get snappers working...
+//					try {
+//						if (vle.getLayer() != lyrVect) {
+//							lyrVect.reload();
+//						}
+//					} catch (ReloadLayerException e) {
+//						Logger.getLogger(EditionPreferencePage.class).error("Error reloading layer", e);
+//					}
 				}
 			}
 		}
