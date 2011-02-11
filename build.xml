@@ -32,7 +32,7 @@
 
 
   <target name="dist"
-        description="generate the distribution" >
+        description="generate the distribution" depends="make-package-info">
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}"/>
     <copy todir="${extensionsDir}/${mainplugin}/lib">
@@ -41,6 +41,7 @@
   	<jar jarfile="${dist}/${jarName}" basedir="${build}"/>
     <copy file="config/config.xml" todir="${dist}"/>
   	<copy file="build.number" todir="${dist}"/>
+	<copy file="package.info" todir="${dist}"/>
     <copy todir="${dist}">
     	<fileset dir="config" includes="text*.properties"/>
     </copy>
@@ -73,9 +74,10 @@
 		    <jar jarfile="${dist}/${jarName}" basedir="${build}"/>
 		</target>
 
-		<target name="copy-data-files">
+		<target name="copy-data-files" depends="make-package-info">
 		    <copy file="config/config.xml" todir="${dist}"/>
 			<copy file="build.number" todir="${dist}"/>
+			<copy file="package.info" todir="${dist}"/>
 			<copy todir="${dist}">
 				<fileset dir="config" includes="text*.properties"/>
 			</copy>
