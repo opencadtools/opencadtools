@@ -268,14 +268,12 @@ public class ExportSeveralTo extends ExportTo {
 		} else {
 			overwrite = false;
 			JFileChooser jfc = new JFileChooser();
-			SimpleFileFilter filterShp = new SimpleFileFilter("shp",
-					PluginServices.getText(this, "shp_files"));
-			jfc.setFileFilter(filterShp);
+            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
 				File newFile = jfc.getSelectedFile();
 				String path = newFile.getAbsolutePath();
-				if (path.endsWith(".shp")) {
-					path = path.substring(0, path.lastIndexOf(".shp"));
+				if (!path.endsWith(File.separator)) {
+					path = path + File.separator;
 				}
 
 				View view = (View) PluginServices.getMDIManager().getActiveWindow();
@@ -297,23 +295,24 @@ public class ExportSeveralTo extends ExportTo {
 								continue;
 							}
 						}
-						String newFilePath = path + "_" + PluginServices.getText(this, "layer") 
-						 + "_" + i + "_" + activeLayers[i].getName();
+						String newFilePath = path 
+									+ activeLayers[i].getName().replaceAll(" ",
+											"_");
 						if (!newFilePath.toLowerCase().endsWith(".shp")) {
 							newFilePath = newFilePath + ".shp";
 						}
 						newFile = new File(newFilePath);
-						if (!overwrite && newFile.exists()) {
-							int resp = JOptionPane.showConfirmDialog(
-									(Component) PluginServices.getMainFrame(),PluginServices.getText(this,"fichero_ya_existe_seguro_desea_guardarlo"),
-									PluginServices.getText(this,"guardar"), JOptionPane.YES_NO_OPTION);
-							if (resp != JOptionPane.YES_OPTION) {
-								return;
-							}
-							overwrite = true;
+                        int r = 0;
+						while (newFile.exists()) {
+								newFile = new File(newFilePath.substring(0,
+										newFilePath.length() - 4)
+										+ "_"
+										+ r
+										+ ".shp");
+								r++;
 						}
 							saveToShp(view.getMapControl().getMapContext(), 
-									(FLyrVect) activeLayers[i], newFilePath);
+									(FLyrVect) activeLayers[i], newFile.getAbsolutePath());
 					}
 				}
 			}
