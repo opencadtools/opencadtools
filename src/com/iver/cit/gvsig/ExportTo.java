@@ -841,7 +841,7 @@ public class ExportTo extends Extension {
 
 		if (f instanceof View) {
 			FLayer[] layers = ((View) f).getMapControl().getMapContext().getLayers().getActives();
-			if (layers.length > 0) {
+			if (layers.length == 1) {
 				return true;
 			}
 		}
