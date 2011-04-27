@@ -124,12 +124,12 @@ public class StartEditing extends Extension {
 						vea.getRules().add(rulePol);
 					}
 
-					if (!(lv.getSource().getDriver() instanceof IndexedShpDriver)){
-						VectorialLayerEdited vle=(VectorialLayerEdited)editionManager.getLayerEdited(lv);
-						vle.setLegend(legendOriginal);
-						//starts snapping over every visible layer
-						setSnappers(vle, mapControl.getMapContext().getLayers());
-					}
+//					if (!(lv.getSource().getDriver() instanceof IndexedShpDriver)){
+					VectorialLayerEdited vle=(VectorialLayerEdited)editionManager.getLayerEdited(lv);
+					vle.setLegend(legendOriginal);
+					//starts snapping over every visible layer
+					setSnappers(vle, mapControl.getMapContext().getLayers());
+//					}
 					vea.getCommandRecord().addCommandListener(mapControl);
 					// Si existe una tabla asociada a esta capa se cambia su
 					// modelo por el VectorialEditableAdapter.
