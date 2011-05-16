@@ -37,6 +37,7 @@ import com.iver.cit.gvsig.fmap.drivers.ITableDefinition;
 import com.iver.cit.gvsig.fmap.drivers.IVectorialJDBCDriver;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialFileDriver;
+import com.iver.cit.gvsig.fmap.drivers.db.utils.ConnectionWithParams;
 import com.iver.cit.gvsig.fmap.drivers.dbf.DbaseFile;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -50,9 +51,9 @@ import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
-import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.vectorialdb.ConnectionSettings;
+import com.prodevelop.cit.gvsig.vectorialdb.wizard.NewVectorDBConnectionPanel;
 
 public class MyFinishAction extends FinishAction
 {
@@ -170,9 +171,11 @@ public class MyFinishAction extends FinishAction
 			{
 				ChooseGeometryType geometryTypePanel = (ChooseGeometryType) myWizardComponents.getWizardPanel(0);
 				JPanelFieldDefinition fieldDefinitionPanel = (JPanelFieldDefinition) myWizardComponents.getWizardPanel(1);
+				NewVectorDBConnectionPanel conn_pan = (NewVectorDBConnectionPanel) myWizardComponents.getWizardPanel(2);
+				
 
-
-				String layerName = geometryTypePanel.getLayerName();
+				String _layerName = geometryTypePanel.getLayerName();
+				String _tableName = conn_pan.getTableName();
 				String selectedDriver = geometryTypePanel.getSelectedDriver();
 				int geometryType = geometryTypePanel.getSelectedGeometryType();
 				FieldDescription[] fieldsDesc = fieldDefinitionPanel.getFieldsDescription();
@@ -180,20 +183,22 @@ public class MyFinishAction extends FinishAction
 				Driver drv = LayerFactory.getDM().getDriver(selectedDriver);
 
 				IVectorialJDBCDriver dbDriver = (IVectorialJDBCDriver) drv;
-	    		PostGISpanel postgisPanel = (PostGISpanel) myWizardComponents.getWizardPanel(2);
-				ConnectionSettings cs = postgisPanel.getConnSettings();
-				if (cs == null)
+				NewVectorDBConnectionPanel postgisPanel = (NewVectorDBConnectionPanel) myWizardComponents.getWizardPanel(2);
+				ConnectionWithParams cwp = postgisPanel.getConnectionWithParams();
+				if (cwp == null)
 					return;
-				IConnection conex = ConnectionFactory.createConnection(cs.getConnectionString(),
-						cs.getUser(), cs.getPassw());
+				
+				IConnection conex = ConnectionFactory.createConnection(
+						cwp.getConnectionStr(),
+						cwp.getUser(), cwp.getPw());
 
 				PostGISWriter writer= new PostGISWriter(); //(PostGISWriter)LayerFactory.getWM().getWriter("PostGIS Writer");
-				if(!existTable(conex,cs.getSchema(), layerName)){
+				if(!existTable(conex,cwp.getSchema(), _tableName)){
 				
 					DBLayerDefinition dbLayerDef = new DBLayerDefinition();
-					dbLayerDef.setCatalogName(cs.getDb());
-					dbLayerDef.setSchema(cs.getSchema());
-					dbLayerDef.setTableName(layerName);
+					dbLayerDef.setCatalogName(cwp.getDb());
+					dbLayerDef.setSchema(cwp.getSchema());
+					dbLayerDef.setTableName(_tableName);
 					dbLayerDef.setShapeType(geometryType);
 					dbLayerDef.setFieldsDesc(fieldsDesc);
 					dbLayerDef.setFieldGeometry("the_geom");
@@ -228,8 +233,8 @@ public class MyFinishAction extends FinishAction
 	    	        	 proj = CRSFactory.getCRS("EPSG:" + ((ICanReproject)dbDriver).getSourceProjection(null,null));
 	    	        }
 	
-	    			lyr = (FLyrVect) LayerFactory.createDBLayer(dbDriver, layerName, proj);
-	    			postgisPanel.saveConnectionSettings();
+	    			lyr = (FLyrVect) LayerFactory.createDBLayer(dbDriver, _layerName, proj);
+	    			// postgisPanel.saveConnectionSettings();
     			
 				}
 				else {
@@ -308,4 +313,6 @@ public class MyFinishAction extends FinishAction
 	}
 
 }
+
+// [eiel-gestion-conexiones]
 

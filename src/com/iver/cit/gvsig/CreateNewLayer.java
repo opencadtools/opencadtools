@@ -12,6 +12,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.andami.ui.wizard.WizardAndami;
 import com.iver.cit.gvsig.fmap.MapControl;
+import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGisDriver;
 import com.iver.cit.gvsig.fmap.edition.ISpatialWriter;
 import com.iver.cit.gvsig.fmap.edition.IWriteable;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
@@ -20,8 +21,8 @@ import com.iver.cit.gvsig.gui.cad.MyFinishAction;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
-import com.iver.cit.gvsig.gui.cad.panels.PostGISpanel;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.prodevelop.cit.gvsig.vectorialdb.wizard.NewVectorDBConnectionPanel;
 
 /**
  * DOCUMENT ME!
@@ -115,11 +116,21 @@ public void execute(String actionCommand) {
 					wizard.getWizardComponents().addWizardPanel(panelChoose);
 					wizard.getWizardComponents().addWizardPanel(panelFields);
 					Driver driver = writerManager
-							.getDriver("PostGIS JDBC Driver");
+							.getDriver(PostGisDriver.NAME);
 					panelChoose.setDriver(driver);
 					panelFields.setWriter(((IWriteable) driver).getWriter());
-					wizard.getWizardComponents().addWizardPanel(
-							new PostGISpanel(wizard.getWizardComponents()));
+					
+					// wizard.getWizardComponents().addWizardPanel(
+					// 		new PostGISpanel(wizard.getWizardComponents()));
+					
+					
+	       			 NewVectorDBConnectionPanel connPanel = 
+	       				 new NewVectorDBConnectionPanel(
+	       						 wizard.getWizardComponents(),
+	       						 PostGisDriver.NAME,
+	       						 20);
+	       			wizard.getWizardComponents().addWizardPanel(connPanel);
+	       			 
 
 					wizard.getWizardComponents().setFinishAction(
 							new MyFinishAction(wizard.getWizardComponents(),
@@ -168,3 +179,5 @@ public void execute(String actionCommand) {
 		return false;
 	}
 }
+
+// [eiel-gestion-conexiones]

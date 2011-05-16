@@ -439,7 +439,7 @@ public class CADToolAdapter extends Behavior {
             	long t1 = System.currentTimeMillis();
                 List geoms = cache.query(e);
                 long t2 = System.currentTimeMillis();
-                System.out.println("T cache snapping = " + (t2-t1) + " numGeoms=" + geoms.size());
+                // System.out.println("T cache snapping = " + (t2-t1) + " numGeoms=" + geoms.size());
                 for (int i = 0; i < snappers.size(); i++)
                 {
                     ISnapper theSnapper = (ISnapper) snappers.get(i);
@@ -1432,3 +1432,5 @@ public class CADToolAdapter extends Behavior {
 		return type;
 	}
 }
+
+// [eiel-gestion-conexiones]

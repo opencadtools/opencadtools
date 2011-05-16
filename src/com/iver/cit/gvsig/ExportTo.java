@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 
+import org.apache.log4j.Logger;
 import org.cresques.cts.ICoordTrans;
 
 import com.hardcode.driverManager.Driver;
@@ -48,6 +49,7 @@ import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.IVectorialDatabaseDriver;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
+import com.iver.cit.gvsig.fmap.drivers.db.utils.ConnectionWithParams;
 import com.iver.cit.gvsig.fmap.drivers.dbf.DbaseFile;
 import com.iver.cit.gvsig.fmap.drivers.dxf.DXFMemoryDriver;
 import com.iver.cit.gvsig.fmap.drivers.jdbc.postgis.PostGISWriter;
@@ -75,8 +77,12 @@ import com.iver.cit.gvsig.vectorialdb.DlgConnection;
 import com.iver.utiles.PostProcessSupport;
 import com.iver.utiles.SimpleFileFilter;
 import com.iver.utiles.swing.threads.AbstractMonitorableTask;
+import com.prodevelop.cit.gvsig.vectorialdb.wizard.ConnectionChooserPanel;
+
 
 public class ExportTo extends Extension {
+	
+	private static Logger logger = Logger.getLogger(ExportTo.class.getName());
 	private String lastPath = null;
 	private static HashMap<FLyrVect, EndExportToCommand> exportedLayers =
 		new HashMap<FLyrVect, EndExportToCommand>();
@@ -377,15 +383,22 @@ public class ExportTo extends Extension {
 				}
 			}
 
-			DlgConnection dlg = new DlgConnection(new String[]{"PostGIS JDBC Driver"});
-			dlg.setModal(true);
-			dlg.setVisible(true);
-			ConnectionSettings cs = dlg.getConnSettings();
-			if (cs == null)
-				return;
-			IConnection conex = ConnectionFactory.createConnection(cs
-					.getConnectionString(), cs.getUser(), cs.getPassw());
+			ConnectionChooserPanel ccp = new ConnectionChooserPanel(PostGisDriver.NAME);
+            PluginServices.getMDIManager().addWindow(ccp);
 
+            if (!ccp.isOkPressed()) {
+            	logger.warn("User cancelled connection dlg, export is canceled.");
+                return;
+            }
+
+            ConnectionWithParams cwp = ccp.getSelectedCWP();
+
+            if (cwp == null) {
+            	logger.error("Selected CWP is null (?) Export canceled.");
+                return;
+            }
+
+			IConnection _conex = cwp.getConnection();
 
 			DBLayerDefinition originalDef = null;
 			if (layer.getSource().getDriver() instanceof IVectorialDatabaseDriver) {
@@ -400,7 +413,7 @@ public class ExportTo extends Extension {
 			dbLayerDef.setCatalogName("");
 
 			// Añadimos el schema dentro del layer definition para poder tenerlo en cuenta.
-			dbLayerDef.setSchema(cs.getSchema());
+			dbLayerDef.setSchema(cwp.getSchema());
 
 			dbLayerDef.setTableName(tableName);
 			dbLayerDef.setName(tableName);
@@ -467,7 +480,7 @@ public class ExportTo extends Extension {
 			dbLayerDef.setWhereClause("");
 			String strSRID = layer.getProjection().getAbrev();
 			dbLayerDef.setSRID_EPSG(strSRID);
-			dbLayerDef.setConnection(conex);
+			dbLayerDef.setConnection(_conex);
 
 			PostGISWriter writer=(PostGISWriter)LayerFactory.getWM().getWriter("PostGIS Writer");
 			writer.setWriteAll(true);
@@ -478,7 +491,7 @@ public class ExportTo extends Extension {
 			postGISDriver.open();
 			PostProcessSupport.clearList();
 			Object[] params = new Object[2];
-			params[0] = conex;
+			params[0] = _conex;
 			params[1] = dbLayerDef;
 			PostProcessSupport.addToPostProcess(postGISDriver, "setData",
 					params, 1);
@@ -487,8 +500,6 @@ public class ExportTo extends Extension {
 
 		} catch (DriverLoadException e) {
 			NotificationManager.addError(e.getMessage(),e);
-		} catch (DBException e) {
-			NotificationManager.showMessageError(e.getLocalizedMessage(),e);
 		} catch (InitializeWriterException e) {
 			NotificationManager.showMessageError(e.getMessage(),e);
 		} catch (ReadDriverException e) {
@@ -858,3 +869,5 @@ public class ExportTo extends Extension {
 	}
 
 }
+
+// [eiel-gestion-conexiones]
