@@ -214,41 +214,59 @@ public class StopEditing extends Extension {
 
 
 	private void saveLayer(FLyrVect layer) throws ReadDriverException, InitializeWriterException, StopWriterVisitorException{
+		
 		layer.setWaitTodraw(true);
-		vista.getMapControl().cancelDrawing();
-		layer.setProperty("stoppingEditing",new Boolean(true));
-		VectorialEditableAdapter vea = (VectorialEditableAdapter) layer
-				.getSource();
+		
+		try {
+			vista.getMapControl().cancelDrawing();
+			layer.setProperty("stoppingEditing",new Boolean(true));
+			VectorialEditableAdapter vea = (VectorialEditableAdapter) layer
+					.getSource();
 
-		ISpatialWriter writer = (ISpatialWriter) vea.getWriter();
-		com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
-				.getMDIManager().getAllWindows();
-		for (int j = 0; j < views.length; j++) {
-			if (views[j] instanceof Table) {
-				Table table = (Table) views[j];
-				if (table.getModel().getAssociatedTable() != null
-						&& table.getModel().getAssociatedTable().equals(layer)) {
-					table.stopEditingCell();
+			ISpatialWriter writer = (ISpatialWriter) vea.getWriter();
+			com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
+					.getMDIManager().getAllWindows();
+			for (int j = 0; j < views.length; j++) {
+				if (views[j] instanceof Table) {
+					Table table = (Table) views[j];
+					if (table.getModel().getAssociatedTable() != null
+							&& table.getModel().getAssociatedTable().equals(layer)) {
+						table.stopEditingCell();
+					}
 				}
 			}
+			vea.cleanSelectableDatasource();
+			layer.setRecordset(vea.getRecordset()); // Queremos que el recordset del layer
+			// refleje los cambios en los campos.
+			ILayerDefinition lyrDef = EditionUtilities.createLayerDefinition(layer);
+			String aux="FIELDS:";
+			FieldDescription[] flds = lyrDef.getFieldsDesc();
+			for (int i=0; i < flds.length; i++)
+			{
+				aux = aux + ", " + flds[i].getFieldAlias();
+			}
+			System.err.println("Escribiendo la capa " + lyrDef.getName() +
+					" con los campos " + aux);
+			lyrDef.setShapeType(layer.getShapeType());
+			writer.initialize(lyrDef);
+			vea.stopEdition(writer, EditionEvent.GRAPHIC);
+			
+		} catch (ReadDriverException any_ex) {
+			layer.setWaitTodraw(false);
+			layer.setProperty("stoppingEditing",new Boolean(false));
+			throw any_ex;
+		} catch (InitializeWriterException any_ex) {
+			layer.setWaitTodraw(false);
+			layer.setProperty("stoppingEditing",new Boolean(false));
+			throw any_ex;
+		} catch (StopWriterVisitorException any_ex) {
+			layer.setWaitTodraw(false);
+			layer.setProperty("stoppingEditing",new Boolean(false));
+			throw any_ex;
 		}
-		vea.cleanSelectableDatasource();
-		layer.setRecordset(vea.getRecordset()); // Queremos que el recordset del layer
-		// refleje los cambios en los campos.
-		ILayerDefinition lyrDef = EditionUtilities.createLayerDefinition(layer);
-		String aux="FIELDS:";
-		FieldDescription[] flds = lyrDef.getFieldsDesc();
-		for (int i=0; i < flds.length; i++)
-		{
-			aux = aux + ", " + flds[i].getFieldAlias();
-		}
-		System.err.println("Escribiendo la capa " + lyrDef.getName() +
-				" con los campos " + aux);
-		lyrDef.setShapeType(layer.getShapeType());
-		writer.initialize(lyrDef);
-		vea.stopEdition(writer, EditionEvent.GRAPHIC);
-		layer.setProperty("stoppingEditing",new Boolean(false));
+		
 		layer.setWaitTodraw(false);
+		layer.setProperty("stoppingEditing",new Boolean(false));
 		vista.getMapControl().drawMap(false);
 	}
 
@@ -493,3 +511,4 @@ public class StopEditing extends Extension {
 	}
 }
 
+// [eiel-error-postgis]
