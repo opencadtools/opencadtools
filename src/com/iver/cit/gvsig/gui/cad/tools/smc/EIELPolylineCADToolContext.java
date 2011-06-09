@@ -273,30 +273,7 @@ public final class EIELPolylineCADToolContext
             }
             else
             {
-                boolean loopbackFlag =
-                    context.getState().getName().equals(
-                        Polyline.FirstPoint.getName());
-
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Exit(context);
-                }
-
-                context.clearState();
-                try
-                {
-                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
-                }
-                finally
-                {
-                    context.setState(Polyline.FirstPoint);
-
-                    if (loopbackFlag == false)
-                    {
-                        (context.getState()).Entry(context);
-                    }
-
-                }
+                ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
             }
 
             return;
