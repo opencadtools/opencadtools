@@ -50,6 +50,9 @@ public class SnappersExtension extends Extension {
 	 */
 	public void initialize() {
 		snapperStatus = SnapperStatus.getSnapperStatus();
+
+		PluginServices.getIconTheme().registerDefault("Snapper",
+				this.getClass().getClassLoader().getResource("images/Snapper.png"));
 	}
 
 	/**
