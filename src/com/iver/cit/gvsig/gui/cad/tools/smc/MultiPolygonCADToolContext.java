@@ -138,8 +138,12 @@ public final class MultiPolygonCADToolContext
             super (name, id);
         }
 
-        protected void Entry(MultiPolygonCADToolContext context) {}
+        protected void Entry(MultiPolygonCADToolContext context) {
+        	context.getOwner().setDescription(getDescription());
+        }
         protected void Exit(MultiPolygonCADToolContext context) {}
+
+        protected abstract String[] getDescription();
 
         protected void addOption(MultiPolygonCADToolContext context, String s)
         {
@@ -222,11 +226,15 @@ public final class MultiPolygonCADToolContext
             super (name, id);
         }
 
+        protected String[] getDescription() {
+        	return new String[]{"cancel"};
+        }
+
         protected void addOption(MultiPolygonCADToolContext context, String s)
         {
             MultiPolygonCADTool ctxt = context.getOwner();
 
-            if (s.equals("espacio"))
+            if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate")))
             {
                 MultiAreaCADToolState endState = context.getState();
 
@@ -400,7 +408,7 @@ public final class MultiPolygonCADToolContext
                 MultiPolygonCADTool ctxt = context.getOwner();
 
                 ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                ctxt.setDescription(new String[]{"cancel"});
+                ctxt.setDescription(getDescription());
                 return;
             }
 
@@ -555,11 +563,15 @@ public final class MultiPolygonCADToolContext
                 super (name, id);
             }
 
+            protected String[] getDescription() {
+            	return new String[]{"terminate", "next", "cancel"};
+            }
+
             protected void addOption(MultiPolygonCADToolContext context, String s)
             {
                 MultiPolygonCADTool ctxt = context.getOwner();
 
-                if (s.equals("espacio"))
+                if (s.equals("espacio")|| s.equals(PluginServices.getText(this, "terminate")))
                 {
 
                     (context.getState()).Exit(context);
@@ -575,12 +587,12 @@ public final class MultiPolygonCADToolContext
                         (context.getState()).Entry(context);
 //                        if (ActivateFormsExtension.getActivated()) {
 //                        	VectorialLayerEdited vle=ctxt.getVLE();
-//                        	OpenFormsExtension.openForm(vle);                   
+//                        	OpenFormsExtension.openForm(vle);
 //                    	}
                         ctxt.clear();
                     }
                 }
-                else if (s.equals("tab"))
+                else if (s.equals("tab")|| s.equals(PluginServices.getText(this, "next")))
                 {
 
                     (context.getState()).Exit(context);

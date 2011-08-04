@@ -124,6 +124,8 @@ public final class AreaCADToolContext
         protected void Entry(AreaCADToolContext context) {}
         protected void Exit(AreaCADToolContext context) {}
 
+        protected abstract String[] getDescription();
+
         protected void addOption(AreaCADToolContext context, String s)
         {
             Default(context);
@@ -207,11 +209,15 @@ public final class AreaCADToolContext
             super (name, id);
         }
 
+        protected void Entry(AreaCADToolContext context) {
+        	context.getOwner().setDescription(getDescription());
+        }
+
         protected void addOption(AreaCADToolContext context, String s)
         {
             AreaCADTool ctxt = context.getOwner();
 
-            if (s.equals("espacio"))
+            if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate")))
             {
                 AreaCADToolState endState  = context.getState();
 
@@ -363,6 +369,12 @@ public final class AreaCADToolContext
             return;
         }
 
+		@Override
+		protected String[] getDescription() {
+			// TODO Auto-generated method stub
+			return new String[]{"cancel"};
+		}
+
     //-----------------------------------------------------------
     // Inner classse.
     //
@@ -385,7 +397,7 @@ public final class AreaCADToolContext
                 AreaCADTool ctxt = context.getOwner();
 
                 ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                ctxt.setDescription(new String[]{"cancel"});
+                ctxt.setDescription(getDescription());
                 return;
             }
 
@@ -502,6 +514,10 @@ public final class AreaCADToolContext
                 super (name, id);
             }
 
+//            protected String[] getDescription() {
+//            	return new String[]{"terminate", "cancel"};
+//            }
+
             protected void addPoint(AreaCADToolContext context, double pointX, double pointY, InputEvent event)
             {
                 AreaCADTool ctxt = context.getOwner();
@@ -512,6 +528,7 @@ public final class AreaCADToolContext
                 try
                 {
                     ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
+//                    ctxt.setDescription(new String[]{"terminate", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -559,19 +576,23 @@ public final class AreaCADToolContext
                 super (name, id);
             }
 
-            protected void Entry(AreaCADToolContext context)
-            {
-                AreaCADTool ctxt = context.getOwner();
-
-                //ctxt.clearCompoundGeom();
-                return;
+            protected String[] getDescription() {
+            	return new String[]{"terminate", "next", "cancel"};
             }
+
+//            protected void Entry(AreaCADToolContext context)
+//            {
+//                AreaCADTool ctxt = context.getOwner();
+//
+//                //ctxt.clearCompoundGeom();
+//                return;
+//            }
 
             protected void addOption(AreaCADToolContext context, String s)
             {
                 AreaCADTool ctxt = context.getOwner();
 
-                if (s.equals("espacio")) //NACHOV && ctxt.hasNextGeometry() && ctxt.checksOnInsertion(ctxt.getCurrentGeom()))
+                if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate"))) //NACHOV && ctxt.hasNextGeometry() && ctxt.checksOnInsertion(ctxt.getCurrentGeom()))
                 {
 
                     (context.getState()).Exit(context);
@@ -638,7 +659,7 @@ public final class AreaCADToolContext
 //                        (context.getState()).Entry(context);
 //                    }
 //                }
-                else if (s.equals("tab"))
+                else if (s.equals("tab")|| s.equals(PluginServices.getText(this, "next")))
                 {
 
                     (context.getState()).Exit(context);
@@ -758,7 +779,7 @@ public final class AreaCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equals("espacio"))
+                else if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate")))
                 {
 
                     (context.getState()).Exit(context);

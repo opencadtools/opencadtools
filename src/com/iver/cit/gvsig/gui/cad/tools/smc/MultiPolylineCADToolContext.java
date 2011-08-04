@@ -7,11 +7,10 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 //import com.iver.cit.gvsig.ActivateFormsExtension;
 //import com.iver.cit.gvsig.OpenFormsExtension;
-import com.iver.cit.gvsig.gui.cad.tools.MultiPolylineCADTool;
-import com.iver.cit.gvsig.layers.VectorialLayerEdited;
-
 import java.awt.event.InputEvent;
+
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.tools.MultiPolylineCADTool;
 
 public final class MultiPolylineCADToolContext
     extends statemap.FSMContext
@@ -114,8 +113,12 @@ public final class MultiPolylineCADToolContext
             super (name, id);
         }
 
-        protected void Entry(MultiPolylineCADToolContext context) {}
+        protected void Entry(MultiPolylineCADToolContext context) {
+        	context.getOwner().setDescription(getDescription());
+            }
         protected void Exit(MultiPolylineCADToolContext context) {}
+
+        protected abstract String[] getDescription();
 
         protected void addOption(MultiPolylineCADToolContext context, String s)
         {
@@ -194,11 +197,19 @@ public final class MultiPolylineCADToolContext
             super (name, id);
         }
 
+        protected void Entry(MultiPolygonCADToolContext context) {
+        	context.getOwner().setDescription(getDescription());
+        }
+
+        protected String[] getDescription() {
+        	return new String[]{"cancelar"};
+        }
+
         protected void addOption(MultiPolylineCADToolContext context, String s)
         {
             MultiPolylineCADTool ctxt = context.getOwner();
 
-            if (s.equals("espacio"))
+            if (s.equals("espacio")|| s.equals(PluginServices.getText(this, "terminate")))
             {
                 MultiLineaCADToolState endState = context.getState();
 
@@ -372,7 +383,7 @@ public final class MultiPolylineCADToolContext
                 MultiPolylineCADTool ctxt = context.getOwner();
 
                 ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                ctxt.setDescription(new String[]{"cancel"});
+                ctxt.setDescription(getDescription());
                 return;
             }
 
@@ -411,6 +422,10 @@ public final class MultiPolylineCADToolContext
             private MultiLinea_SecondPoint(String name, int id)
             {
                 super (name, id);
+            }
+
+            protected String[] getDescription() {
+            	return new String[]{"terminate", "next", "cancel"};
             }
 
             protected void addPoint(MultiPolylineCADToolContext context, double pointX, double pointY, InputEvent event)
@@ -470,11 +485,15 @@ public final class MultiPolylineCADToolContext
                 super (name, id);
             }
 
+            protected String[] getDescription() {
+            	return new String[]{"terminate", "next", "cancel"};
+            }
+
             protected void addOption(MultiPolylineCADToolContext context, String s)
             {
                 MultiPolylineCADTool ctxt = context.getOwner();
 
-                if (s.equals("espacio")) //&& ctxt.checksOnInsertion(ctxt.getCurrentGeom()))
+                if (s.equals("espacio")|| s.equals(PluginServices.getText(this, "terminate"))) //&& ctxt.checksOnInsertion(ctxt.getCurrentGeom()))
                 {
 
                     (context.getState()).Exit(context);
@@ -496,7 +515,7 @@ public final class MultiPolylineCADToolContext
                         ctxt.clear();
                     }
                 }
-                else if (s.equals("espacio"))
+                else if (s.equals("espacio")|| s.equals(PluginServices.getText(this, "terminate")))
                 {
 
                     (context.getState()).Exit(context);
@@ -511,7 +530,7 @@ public final class MultiPolylineCADToolContext
                         (context.getState()).Entry(context);
                     }
                 }
-                else if (s.equals("tab"))
+                else if (s.equals("tab")|| s.equals(PluginServices.getText(this, "next")))
                 {
 
                     (context.getState()).Exit(context);
