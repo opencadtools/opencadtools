@@ -76,6 +76,7 @@ import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SymmetryCADTool;
 import com.iver.cit.gvsig.gui.preferences.EditingPage;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
 import com.iver.cit.gvsig.project.documents.view.snapping.Snapping;
 import com.iver.cit.gvsig.project.documents.view.toc.MenuEntry;
 import com.iver.utiles.console.JConsole;
@@ -178,6 +179,11 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 		kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
 
 		registerIcons();
+		
+		//default snappers & follow geometry set to false
+		SnapperStatus.setNearLineActivated(true);
+		SnapperStatus.setVertexActivated(true);
+		FollowGeometryExtension.setActivated(false);
 	}
 
 	private void registerIcons(){

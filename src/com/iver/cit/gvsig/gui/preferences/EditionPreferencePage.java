@@ -47,6 +47,7 @@ import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
+import com.iver.cit.gvsig.FollowGeometryExtension;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -91,8 +92,9 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	private JPanel jPanelSnappers = null;
 	private JCheckBox eielVertexEIELSnapCB = new JCheckBox();
 	private JCheckBox eielLineEIELSnapCB = new JCheckBox();
-	private JCheckBox vertexSnapCB = new JCheckBox();
-	private JCheckBox lineSnapCB = new JCheckBox();
+	// private JCheckBox vertexSnapCB = new JCheckBox();
+	// private JCheckBox lineSnapCB = new JCheckBox();
+	private JCheckBox followGeometryCB = new JCheckBox();
 	private boolean changed = false;
 	
 	//[Cartolab]                                                                                                                                         
@@ -273,17 +275,18 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
                 eielVertexEIELSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_eiel_punto"));
                 eielLineEIELSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_eiel_linea"));
-                vertexSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_punto"));
-                lineSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_linea"));
+                followGeometryCB.setText(PluginServices.getText(this, "capas_edicion_follow_geometry"));
+                // vertexSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_punto"));
+                // lineSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_linea"));
 
-                eielVertexEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
+                eielLineEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
                 	public void actionPerformed(java.awt.event.ActionEvent evt) {
                 		if(eielVertexEIELSnapCB.isSelected()){
-                			addSnapper(new EIELFinalPointSnapper());
+                			addSnapper(new EIELNearestPointSnapper());
                 			SnapperStatus.setVertexActivated(true);
     	                	SnapperStatus.setNearLineActivated(eielLineEIELSnapCB.isSelected());
                 		}else{
-                			deleteSnapper("EIELFinalPoint");
+                			deleteSnapper("EIELNearestPoint");
                 			SnapperStatus.setVertexActivated(false);
     	                	SnapperStatus.setNearLineActivated(eielLineEIELSnapCB.isSelected());
                 		}
@@ -302,33 +305,39 @@ public class EditionPreferencePage extends AbstractPreferencePage {
                         }
                     }
                 });
-                eielLineEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
-                	public void actionPerformed(java.awt.event.ActionEvent evt) {
-                		if(eielLineEIELSnapCB.isSelected()){
-                			addSnapper(new EIELNearestPointSnapper());
-                		}else{
-                            deleteSnapper("EIELNearestPoint");
-                		}
+                                
+                followGeometryCB.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                		FollowGeometryExtension.setActivated(followGeometryCB.isSelected());
                     }
-                });
-                vertexSnapCB.addActionListener(new java.awt.event.ActionListener() {
-                	public void actionPerformed(java.awt.event.ActionEvent evt) {
-                		if(lineSnapCB.isSelected()){
-                			addSnapper(new FinalPointSnapper());
-                		}else{	
-                			deleteSnapper("FinalPoint");
-                		}
-                     }	
-                 });		
-                lineSnapCB.addActionListener(new java.awt.event.ActionListener() {
-                	public void actionPerformed(java.awt.event.ActionEvent evt) {
-                		if(lineSnapCB.isSelected()){
-                			addSnapper(new NearestPointSnapper());
-                		}else{
-                            deleteSnapper("NearestPoint");
-                        }
-                    }
-                });
+                 });
+//                eielLineEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
+//                	public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                		if(eielLineEIELSnapCB.isSelected()){
+//                			addSnapper(new EIELNearestPointSnapper());
+//                		}else{
+//                            deleteSnapper("EIELNearestPoint");
+//                		}
+//                    }
+//                });
+//                vertexSnapCB.addActionListener(new java.awt.event.ActionListener() {
+//                	public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                		if(lineSnapCB.isSelected()){
+//                			addSnapper(new FinalPointSnapper());
+//                		}else{	
+//                			deleteSnapper("FinalPoint");
+//                		}
+//                     }	
+//                 });		
+//                lineSnapCB.addActionListener(new java.awt.event.ActionListener() {
+//                	public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                		if(lineSnapCB.isSelected()){
+//                			addSnapper(new NearestPointSnapper());
+//                		}else{
+//                            deleteSnapper("NearestPoint");
+//                        }
+//                    }
+//                });
                 // Set if the BUTTON3 of the mouse delete the last point when editing instead of popMenu()                                           
                 // popMenu() will be available with SHIFT+BUTTON3                                                                                    
                 JLabel deleteButtonLabel = new JLabel();
@@ -353,6 +362,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
                 jPanelSnappers.add(snapperLabel);
                 jPanelSnappers.add(eielVertexEIELSnapCB);
                 jPanelSnappers.add(eielLineEIELSnapCB);
+                jPanelSnappers.add(followGeometryCB);
 //                jPanelSnappers.add(vertexSnapCB);
 //                jPanelSnappers.add(lineSnapCB);
                 jPanelSnappers.add(deleteButtonLabel);
@@ -370,7 +380,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		boolean termine = false;
 		ArrayList listaSnappers = layerEdited.getSnappers();
 		if(string.equals("EIELFinalPoint")){
-			while(!termine){
+			while(!termine && indice < listaSnappers.size()){
 				if((listaSnappers.get(indice) instanceof EIELFinalPointSnapper)){
 					listaSnappers.remove(indice);
 					termine=true;
@@ -383,7 +393,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 				}
 			}
 		}else if(string.equals("EIELNearestPoint")){
-			while(!termine){
+			while(!termine && indice < listaSnappers.size()){
 				if((listaSnappers.get(indice) instanceof EIELNearestPointSnapper)){
 					listaSnappers.remove(indice);
 					termine=true;
@@ -395,32 +405,32 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 					}
 				}
 			}
-		}else if(string.equals("FinalPoint")){
-			while(!termine){
-				if((listaSnappers.get(indice) instanceof FinalPointSnapper)){
-					listaSnappers.remove(indice);
-					termine=true;
-				}else{
-					if(indice<listaSnappers.size()-1){
-						indice++;
-					}else{
-						termine=true;
-					}
-				}
-			}
-		}else if(string.equals("NearestPoint")){
-			while(!termine){
-				if((listaSnappers.get(indice) instanceof NearestPointSnapper)){
-					listaSnappers.remove(indice);
-					termine=true;
-				}else{
-					if(indice<listaSnappers.size()-1){
-						indice++;
-					}else{
-						termine=true;
-					}
-				}
-			}
+//		}else if(string.equals("FinalPoint")){
+//			while(!termine){
+//				if((listaSnappers.get(indice) instanceof FinalPointSnapper)){
+//					listaSnappers.remove(indice);
+//					termine=true;
+//				}else{
+//					if(indice<listaSnappers.size()-1){
+//						indice++;
+//					}else{
+//						termine=true;
+//					}
+//				}
+//			}
+//		}else if(string.equals("NearestPoint")){
+//			while(!termine){
+//				if((listaSnappers.get(indice) instanceof NearestPointSnapper)){
+//					listaSnappers.remove(indice);
+//					termine=true;
+//				}else{
+//					if(indice<listaSnappers.size()-1){
+//						indice++;
+//					}else{
+//						termine=true;
+//					}
+//				}
+//			}
 		}
 	}
 
@@ -626,23 +636,26 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 //		ahora aqui comprobamos los snappers activos para la capa en edicion
 //		y activamos los checkboxes correspondientes
-		if(layerEdited!=null){
-			ArrayList snappers = layerEdited.getSnappers();
-            if(snappers!=null){
-            	for(int i=0; i<snappers.size();i++){
-            		ISnapper snapper = ((ISnapper)snappers.get(i));
-            		if(snapper instanceof EIELFinalPointSnapper){
-            			eielVertexEIELSnapCB.setSelected(true);
-            		}else if(snapper instanceof EIELNearestPointSnapper){
-            			eielLineEIELSnapCB.setSelected(true);
-            		}else if(snapper instanceof FinalPointSnapper){
-            			vertexSnapCB.setSelected(true);
-            			}else if(snapper instanceof NearestPointSnapper){
-            				lineSnapCB.setSelected(true);
-                        }
-                    }
-            	}
-			}
+//		if(layerEdited!=null){
+//			ArrayList snappers = layerEdited.getSnappers();
+//            if(snappers!=null){
+//            	for(int i=0; i<snappers.size();i++){
+//            		ISnapper snapper = ((ISnapper)snappers.get(i));
+//            		if(snapper instanceof EIELFinalPointSnapper){
+//            			eielVertexEIELSnapCB.setSelected(true);
+//            		}else if(snapper instanceof EIELNearestPointSnapper){
+//            			eielLineEIELSnapCB.setSelected(true);
+//            		}else if(snapper instanceof FinalPointSnapper){
+//            			vertexSnapCB.setSelected(true);
+//            			}else if(snapper instanceof NearestPointSnapper){
+//            				lineSnapCB.setSelected(true);
+//                        }
+//                    }
+//            	}
+//			}
+			eielVertexEIELSnapCB.setSelected(SnapperStatus.isVertexActivated());
+			eielLineEIELSnapCB.setSelected(SnapperStatus.isNearLineActivated());
+			followGeometryCB.setSelected(FollowGeometryExtension.isActivated());
 	}
 
 	/**

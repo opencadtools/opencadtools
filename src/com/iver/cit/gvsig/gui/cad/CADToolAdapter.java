@@ -34,6 +34,7 @@ import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.MDIManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
+import com.iver.cit.gvsig.FollowGeometryExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
@@ -333,11 +334,15 @@ public class CADToolAdapter extends Behavior {
 			}
 
 			if (otherMapAdjustedPoints == null || otherMapAdjustedPoints.size() == 1) {
-				
 				((CADTool) cadToolStack.peek()).drawOperation(g, p.getX(), p.getY());
 			} else {
 				// Calling to the special drawOperation with a list of points
 				((CADTool) cadToolStack.peek()).drawOperation(g, otherMapAdjustedPoints);
+				if (FollowGeometryExtension.isActivated()) {
+				    ((CADTool) cadToolStack.peek()).drawOperation(g, otherMapAdjustedPoints);
+				} else {
+				    ((CADTool) cadToolStack.peek()).drawOperation(g, p.getX(), p.getY());
+				}
 			}
 		}
 	}
@@ -418,10 +423,14 @@ public class CADToolAdapter extends Behavior {
 			transition(new double[] { p.getX(), p.getY() }, e, ABSOLUTE);
 		}*/
 		if (e.getButton() == MouseEvent.BUTTON1) {
-
+		    System.out.println("multi: " +
+			    getCadTool().isMultiTransition() + " follow: " +
+			    FollowGeometryExtension.isActivated());
 			if (otherMapAdjustedPoints == null
 					|| otherMapAdjustedPoints.size() == 0
-					|| !getCadTool().isMultiTransition()) {
+						|| !getCadTool().isMultiTransition()
+						|| !FollowGeometryExtension.isActivated()) {
+					
 
 				ViewPort vp = getMapControl().getMapContext().getViewPort();
 				Point2D p;
@@ -494,16 +503,16 @@ public class CADToolAdapter extends Behavior {
 //        // snappers.add(pixSnap);
         EIELFinalPointSnapper eielFinalSnap = new EIELFinalPointSnapper();
 		EIELNearestPointSnapper eielNearestSnap = new EIELNearestPointSnapper();
-		PixelSnapper pixSnap = new PixelSnapper();
+//		PixelSnapper pixSnap = new PixelSnapper();
 
 		snappers.clear();
 		if (SnapperStatus.isNearLineActivated()) {
-			snappers.add(eielFinalSnap);
-		}
-		if (SnapperStatus.isVertexActivated()) {
 			snappers.add(eielNearestSnap);
 		}
-		snappers.add(pixSnap);
+		if (SnapperStatus.isVertexActivated()) {
+			snappers.add(eielFinalSnap);
+		}
+//		snappers.add(pixSnap);
 		
         double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
         double minDist = mapTolerance;
@@ -542,7 +551,9 @@ public class CADToolAdapter extends Behavior {
 		             }
 		        }
 		   }   
-
+		if (SnapperStatus.isVertexActivated() ||
+			SnapperStatus.isNearLineActivated() ||
+			FollowGeometryExtension.isActivated())
                 for (int n=0; n < geoms.size(); n++) {
                     IGeometry geom = (IGeometry) geoms.get(n);
                     for (int i = 0; i < snappers.size(); i++)
@@ -554,6 +565,7 @@ public class CADToolAdapter extends Behavior {
                         if (usedSnap != null)
                         {
                             // Si ya tenemos un snap y es de alta prioridad, cogemos ese. (A no ser que en otra capa encontremos un snapper mejor)
+                            //TODO : revisar si es > o <
                             if (theSnapper.getPriority() > usedSnap.getPriority())
                                 break;
                         }

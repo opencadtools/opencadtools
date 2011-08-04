@@ -493,10 +493,10 @@ public abstract class DefaultCADTool implements CADTool {
 
 	public void throwPointException(String s, double x, double y) {
 		IWindow window = PluginServices.getMDIManager().getActiveWindow();
-		if (window instanceof View){
-			((View)window).getConsolePanel().addText(s + " : " + " X = " + x + ", Y = " + y,
-				JConsole.ERROR);
-	}
+		if (window instanceof View) {
+		    ((View)window).getConsolePanel().addText(s + " : " + " X = " + x + ", Y = " + y, JConsole.ERROR);
+		}
+    }
 	
 	public void throwInvalidGeometryException(String s) {
 		JOptionPane.showMessageDialog((Component) PluginServices.getMainFrame(), 
