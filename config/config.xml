@@ -294,6 +294,16 @@
 			</tool-bar>
 		</extension>
 
+		<extension class-name="com.iver.cit.gvsig.SnappersExtension"
+			   description="Extension to activate and deactivate the Snappers"
+			   active="true">
+		  <menu text="geometry/insert/snappers" action-command="_snappers" icon="images/Snapper.png"/>
+		  <tool-bar name="insert" position="31">
+		    <selectable-tool icon="images/Snapper.png" action-command="_snappers" tooltip="snappers" group="vista" position="22"/>
+		  </tool-bar>
+		</extension>
+ 
+
  		<extension class-name="com.iver.cit.gvsig.SplitGeometryCADToolExtension"
 			description="herramienta para dividir una geometria con una linea"
 			active="true">

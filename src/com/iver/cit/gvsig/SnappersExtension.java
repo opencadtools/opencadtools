@@ -59,7 +59,7 @@ public class SnappersExtension extends Extension {
 		CADExtension.initFocus();
 
 		if (s.equals("_snappers")) {
-			ILayerEdited lyrEdit = (VectorialLayerEdited) CADExtension.getEditionManager()
+		        ILayerEdited lyrEdit = CADExtension.getEditionManager()
 			.getActiveLayerEdited();
 			ArrayList snappers = ((VectorialLayerEdited)lyrEdit).getSnappers();
 			String message = new String();
