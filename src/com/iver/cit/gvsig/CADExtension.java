@@ -378,9 +378,12 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 				return false;
 			}
 
-			//if (e.getID() != KeyEvent.KEY_RELEASED)
-				//return false;
-			if (!(e.getComponent() instanceof JTextComponent)) {
+			if (e.getID() != KeyEvent.KEY_RELEASED)
+				return false;
+			//removed this line because all keys we want to process seems to come from JEditTextArea...
+			//but it's better to  keep it commented just in case it is necessary to get an event from other component...
+			//			if (!(e.getComponent() instanceof JTextComponent)) {
+			if (e.getComponent() instanceof JEditTextArea) {
 				if (e.getKeyCode() == KeyEvent.VK_DELETE)
 					cta.keyPressed("eliminar");
 				else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)

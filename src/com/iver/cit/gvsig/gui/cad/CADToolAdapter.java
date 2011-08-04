@@ -1439,14 +1439,12 @@ public class CADToolAdapter extends Behavior {
 
 					
 			} catch (Exception e) {
-				if (!(e instanceof StateUndefinedException) || !(ct instanceof CutLineCADTool || ct instanceof CutPolygonCADTool)) {  
 				e.printStackTrace();
 				View vista = (View) PluginServices.getMDIManager()
 						.getActiveWindow();
 				vista.getConsolePanel().addText(
 						"\n" + PluginServices.getText(this, "incorrect_option")
 								+ " : " + actionCommand, JConsole.ERROR);
-				}
 			}
 		} else if ((actionCommand.equals("tab"))) { //NACHOV&& (!formOpened)) {
 			CADTool ct = (CADTool) cadToolStack.peek();
