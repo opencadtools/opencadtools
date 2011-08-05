@@ -248,6 +248,11 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 				"cortar_linea",
 				CADExtension.class.getClassLoader().getResource(
 						"images/MiCortarLinea.png"));
+		PluginServices.getIconTheme().registerDefault(
+                        "cad-selection-icon",
+                        CADExtension.class.getClassLoader().getResource(
+                                        "images/cadselection.png"));
+
 	}
 
 	/**
