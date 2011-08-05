@@ -1425,6 +1425,7 @@ public class CADToolAdapter extends Behavior {
 			CADTool ct = (CADTool) cadToolStack.peek();
 			try {
 				ct.transition(actionCommand);
+				askQuestion();
 				System.out.println("InsertionCADTool");
 //				if (ct instanceof InsertionCADTool) {
 //					if (((InsertionCADTool) ct).getFormState() == InsertionCADTool.FORM_ACCEPTED) {

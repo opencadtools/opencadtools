@@ -580,6 +580,7 @@ public final class MultiPolygonCADToolContext
                     {
                         ctxt.saveTempGeometry();
 //                        ctxt.openForm();
+                        ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
                     }
                     finally
                     {

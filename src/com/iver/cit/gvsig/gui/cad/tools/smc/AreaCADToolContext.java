@@ -601,6 +601,7 @@ public final class AreaCADToolContext
                     {
                         ctxt.saveTempGeometry();
                         //ctxt.digitalizeNextGeometry();
+                        ctxt.setQuestion(PluginServices.getText(this, "insert_first_point"));
                     }
                     finally
                     {
