@@ -290,11 +290,12 @@ public class EditionPreferencePage extends AbstractPreferencePage {
                 			SnapperStatus.setVertexActivated(false);
     	                	SnapperStatus.setNearLineActivated(eielLineEIELSnapCB.isSelected());
                 		}
+                		prefs.putBoolean("snapperFinalPoint", eielVertexEIELSnapCB.isSelected());
                 	}
                 });
                 eielVertexEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
                 	public void actionPerformed(java.awt.event.ActionEvent evt) {
-                		if(eielVertexEIELSnapCB.isSelected()){
+                		if(eielLineEIELSnapCB.isSelected()){
                 			addSnapper(new EIELFinalPointSnapper());
                 			SnapperStatus.setNearLineActivated(true);
     	                	SnapperStatus.setVertexActivated(eielVertexEIELSnapCB.isSelected());
@@ -303,6 +304,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
                             SnapperStatus.setNearLineActivated(false);
     	                	SnapperStatus.setVertexActivated(eielVertexEIELSnapCB.isSelected());
                         }
+                prefs.putBoolean("snapperNearestPoint", eielLineEIELSnapCB.isSelected());
                     }
                 });
                                 

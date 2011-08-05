@@ -48,6 +48,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
@@ -91,7 +92,9 @@ import com.iver.utiles.console.jedit.JEditTextArea;
  */
 public class CADExtension extends Extension implements IPreferenceExtension{
 	private static HashMap adapters=new HashMap();
-
+	
+	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
+	
 	private static View view;
 
 	private MapControl mapControl;
@@ -181,9 +184,10 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 		registerIcons();
 		
 		//default snappers & follow geometry set to false
-		SnapperStatus.setNearLineActivated(true);
-		SnapperStatus.setVertexActivated(true);
-		FollowGeometryExtension.setActivated(false);
+		SnapperStatus.setNearLineActivated(prefs.getBoolean("snapperFinalPoint", true));
+		SnapperStatus.setVertexActivated(prefs.getBoolean("snapperNearestPoint", true));
+		FollowGeometryExtension.setActivated(prefs.getBoolean("followGeometry", false));
+		
 	}
 
 	private void registerIcons(){
