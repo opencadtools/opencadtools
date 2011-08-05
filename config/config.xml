@@ -229,7 +229,7 @@
                         active="true">
                         <menu text="geometry/modify/cut_line" action-command="_cut_line" icon="edition-geometry-cut-line"/>
                         <tool-bar name="modificar" position="31">
-                                <selectable-tool icon="edition-geometry-cut-line" action-command="_cut_line" tooltip="cortar_linea" group="vista" position="15"/>
+                                <selectable-tool icon="edition-geometry-cut-line" action-command="_cut_line" tooltip="cut_line" group="vista" position="15"/>
                         </tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.RedigitalizePolygonExtension"
@@ -245,7 +245,7 @@
 			active="true">
 			<menu text="geometry/modify/cut_polygon" action-command="_cut_polygon" icon="edition-geometry-cut-polygon"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-cut-polygon" action-command="_cut_polygon" tooltip="cortar_poligono" group="vista" position="13"/>
+				<selectable-tool icon="edition-geometry-cut-polygon" action-command="_cut_polygon" tooltip="cut_polygon" group="vista" position="13"/>
  			</tool-bar>
  		</extension>
 		<extension class-name="com.iver.cit.gvsig.InternalPolygonExtension"
