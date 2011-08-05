@@ -268,7 +268,7 @@ public final class CutLineCADToolContext
             {
                 CutLineCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(PluginServices.getText(this,"cut_insert_intersection_point"));
+                ctxt.setQuestion(PluginServices.getText(this,"cut_intersection_point"));
                 ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
