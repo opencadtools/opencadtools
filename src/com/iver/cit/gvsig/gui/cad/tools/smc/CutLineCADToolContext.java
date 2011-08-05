@@ -117,7 +117,29 @@ public final class CutLineCADToolContext
 
         protected void addOption(CutLineCADToolContext context, String s)
         {
+
+        	if (s.equalsIgnoreCase("C") || s.equals(PluginServices.getText(this, "cancel"))) {
+        		boolean loopbackFlag = context.getState().getName().equals(
+        				CutLine.SetCutPoint.getName());
+
+        		if (!loopbackFlag) {
+        			(context.getState()).Exit(context);
+        		}
+
+        		context.clearState();
+        		try {
+        			CutLineCADTool ctxt = context.getOwner();
+        			ctxt.clear();
+        		} finally {
+        			context.setState(CutLine.SetCutPoint);
+        			if (!loopbackFlag) {
+        				(context.getState()).Entry(context);
+        			}
+        		}
+        	} else {
+
             Default(context);
+        	}
         }
 
         protected void addPoint(CutLineCADToolContext context, double pointX, double pointY, InputEvent event)
@@ -205,7 +227,7 @@ public final class CutLineCADToolContext
                 CutLineCADTool ctxt = context.getOwner();
 
                 ctxt.setQuestion(PluginServices.getText(this,"cut_insert_intersection_point"));
-                ctxt.setDescription(new String[0]); //no popup menu
+                ctxt.setDescription(new String[]{"cancel"});
                 return;
             }
 
@@ -269,7 +291,7 @@ public final class CutLineCADToolContext
                 CutLineCADTool ctxt = context.getOwner();
 
                 ctxt.setQuestion(PluginServices.getText(this,"cut_intersection_point"));
-                ctxt.setDescription(new String[]{"cancel"});
+                ctxt.setDescription(new String[]{"cancel", "terminate", "change_base_geom"});
                 return;
             }
 
@@ -277,7 +299,7 @@ public final class CutLineCADToolContext
             {
                 CutLineCADTool ctxt = context.getOwner();
 
-                if (s.equals("tab"))
+                if (s.equals("tab") || s.equals(PluginServices.getText(this, "change_base_geom")))
                 {
                     CutLineCADToolState endState = context.getState();
 
@@ -291,7 +313,7 @@ public final class CutLineCADToolContext
                         context.setState(endState);
                     }
                 }
-                else if (s.equals("espacio"))//&& ctxt.checksOnEditionSinContinuidad(ctxt.getGeometriaResultante(), ctxt.getCurrentGeoid())))
+                else if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate")))//&& ctxt.checksOnEditionSinContinuidad(ctxt.getGeometriaResultante(), ctxt.getCurrentGeoid())))
                 {
 
                     (context.getState()).Exit(context);
