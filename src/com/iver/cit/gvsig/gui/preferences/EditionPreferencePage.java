@@ -656,6 +656,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			eielVertexEIELSnapCB.setSelected(SnapperStatus.isVertexActivated());
 			eielLineEIELSnapCB.setSelected(SnapperStatus.isNearLineActivated());
 			followGeometryCB.setSelected(FollowGeometryExtension.isActivated());
+			deleteButtonOptionCB.setSelected(prefs.getBoolean("isDeleteButton3", false));
 	}
 
 	/**
