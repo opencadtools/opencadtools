@@ -71,7 +71,7 @@ public class SnappersExtension extends Extension {
 				snappers.clear();
 				snapperStatus.setVertexActivated(false);
 				snapperStatus.setNearLineActivated(false);
-				message = PluginServices.getText(this, "snappers_desactivated");
+				message = PluginServices.getText(this, "snappers_deactivated");
 			} else {
 				//Creating snappers and added to the layer
 				EIELNearestPointSnapper eielNearestSnap = new EIELNearestPointSnapper();
