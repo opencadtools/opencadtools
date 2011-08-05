@@ -396,6 +396,7 @@ public final class RedigitalizeLineCADToolContext
                     finally
                     {
                         context.setState(RedigitalizeLine.NextPoint);
+                        ctxt.setDescription(new String[]{"cancel", "terminate"});
                         (context.getState()).Entry(context);
                     }
                 }
@@ -460,7 +461,7 @@ public final class RedigitalizeLineCADToolContext
                 RedigitalizeLineCADTool ctxt = context.getOwner();
 
 //               if ((((s.equals("g")||s.equals("G")))&& ctxt.checksOnEdition(ctxt.getGeometriaResultante(), ctxt.getCurrentGeoid())))
-                if (s.equals("espacio")) {
+                if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate"))) {
 
                     (context.getState()).Exit(context);
                     context.clearState();
@@ -480,7 +481,7 @@ public final class RedigitalizeLineCADToolContext
  //               {
 
                     // No actions.
-  //              }                
+  //              }
                 else
                 {
                     super.addOption(context, s);
