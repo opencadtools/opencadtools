@@ -168,13 +168,11 @@ public final class InsertVertexCADToolContext
         // Statics.
         //
         /* package */ static InsertVertex_Default.InsertVertex_SelectVertexOrDelete SelectVertexOrDelete;
-        /* package */ static InsertVertex_Default.InsertVertex_AddVertex AddVertex;
         private static InsertVertex_Default Default;
 
         static
         {
             SelectVertexOrDelete = new InsertVertex_Default.InsertVertex_SelectVertexOrDelete("InsertVertex.SelectVertexOrDelete", 0);
-            AddVertex = new InsertVertex_Default.InsertVertex_AddVertex("InsertVertex.AddVertex", 1);
             Default = new InsertVertex_Default("InsertVertex.Default", -1);
         }
 
@@ -194,64 +192,34 @@ public final class InsertVertexCADToolContext
 
         protected void addOption(InsertVertexCADToolContext context, String s)
         {
-            InsertVertexCADTool ctxt = context.getOwner();
+        	InsertVertexCADTool ctxt = context.getOwner();
 
-            if (s.equals(PluginServices.getText(this,"cancel")))
-            {
-                boolean loopbackFlag =
-                    context.getState().getName().equals(
-                        InsertVertex.SelectVertexOrDelete.getName());
+        	boolean loopbackFlag =
+        		context.getState().getName().equals(
+        				InsertVertex.SelectVertexOrDelete.getName());
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Exit(context);
-                }
+        	if (loopbackFlag == false)
+        	{
+        		(context.getState()).Exit(context);
+        	}
 
-                context.clearState();
-                try
-                {
-                    ctxt.end();
-                }
-                finally
-                {
-                    context.setState(InsertVertex.SelectVertexOrDelete);
+        	context.clearState();
+        	try
+        	{
+        		ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
+        	}
+        	finally
+        	{
+        		context.setState(InsertVertex.SelectVertexOrDelete);
 
-                    if (loopbackFlag == false)
-                    {
-                        (context.getState()).Entry(context);
-                    }
+        		if (loopbackFlag == false)
+        		{
+        			(context.getState()).Entry(context);
+        		}
 
-                }
-            }
-            else
-            {
-                boolean loopbackFlag =
-                    context.getState().getName().equals(
-                        InsertVertex.SelectVertexOrDelete.getName());
+        	}
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Exit(context);
-                }
-
-                context.clearState();
-                try
-                {
-                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
-                }
-                finally
-                {
-                    context.setState(InsertVertex.SelectVertexOrDelete);
-
-                    if (loopbackFlag == false)
-                    {
-                        (context.getState()).Entry(context);
-                    }
-
-                }
-            }
-
-            return;
+        	return;
         }
 
         protected void addValue(InsertVertexCADToolContext context, double d)
@@ -338,52 +306,8 @@ public final class InsertVertexCADToolContext
                 InsertVertexCADTool ctxt = context.getOwner();
 
                 ctxt.selection();
-                ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
-                ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
-                return;
-            }
-
-            protected void addOption(InsertVertexCADToolContext context, String s)
-            {
-                InsertVertexCADTool ctxt = context.getOwner();
-
-                if (s.equals("i") || s.equals("I") || s.equals(PluginServices.getText(this,"add")))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"add_vertex"));
-                        ctxt.setDescription(new String[]{"cancel"});
-                        ctxt.addOption(s);
-                    }
-                    finally
-                    {
-                        context.setState(InsertVertex.AddVertex);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (!s.equals("i") && !s.equals("I") && !s.equals(PluginServices.getText(this,"add")))
-                {
-                    InsertVertexCADToolState endState = context.getState();
-
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"next_previous_add_del_cancel"));
-                        ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
-                        ctxt.addOption(s);
-                    }
-                    finally
-                    {
-                        context.setState(endState);
-                    }
-                }                else
-                {
-                    super.addOption(context, s);
-                }
-
+                ctxt.setQuestion(PluginServices.getText(this,"add_vertex"));
+                ctxt.setDescription(new String[0]);
                 return;
             }
 
@@ -410,44 +334,7 @@ public final class InsertVertexCADToolContext
         //
         }
 
-        private static final class InsertVertex_AddVertex
-            extends InsertVertex_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
 
-            private InsertVertex_AddVertex(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addPoint(InsertVertexCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                InsertVertexCADTool ctxt = context.getOwner();
-
-
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"select_from_point"));
-                    //TODO Remove options...
-                    ctxt.setDescription(new String[]{"next", "previous", "add", "del", "cancel"});
-                    ctxt.addPoint(pointX, pointY, event);
-                }
-                finally
-                {
-                    context.setState(InsertVertex.SelectVertexOrDelete);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
 
     //-----------------------------------------------------------
     // Member data.
