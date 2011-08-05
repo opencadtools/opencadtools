@@ -454,12 +454,18 @@ extends statemap.FSMContext
 				super (name, id);
 			}
 
+			protected void Entry(RedigitalizePolygonCADToolContext context) {
+
+				(context.getOwner()).setDescription(new String[]{"cancel", "terminate", "change_base_geom"});
+
+			}
+
 			protected void addOption(RedigitalizePolygonCADToolContext context, String s)
 			{
 				RedigitalizePolygonCADTool ctxt = context.getOwner();
 
 // NACHOV if ((((s.equals("g")||s.equals("G")))) && ctxt.checksOnEdition(ctxt.getGeometriaResultante(), ctxt.getCurrentGeoid())))
-				if (s.equals("espacio")) {
+				if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate"))) {
 
 					(context.getState()).Exit(context);
 					context.clearState();
@@ -478,11 +484,11 @@ extends statemap.FSMContext
 
 //				// No actions.
 //				}
-				else if (s.equals("tab")) {
-					
+				else if (s.equals("tab") || s.equals(PluginServices.getText(this, "change_base_geom"))) {
+
 					RedigitalizePolygonCADToolState endState = context.getState();
 					context.clearState();
-					
+
 					try {
 						ctxt.changesPolygonPart();
 					}
@@ -545,6 +551,7 @@ extends statemap.FSMContext
 					finally
 					{
 						context.setState(RedigitalizePolygon.SecondPoint);
+						ctxt.setDescription(new String[]{"cancel"});
 						(context.getState()).Entry(context);
 					}
 				}                else
