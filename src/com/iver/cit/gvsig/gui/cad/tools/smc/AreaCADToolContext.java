@@ -182,9 +182,7 @@ public final class AreaCADToolContext
         /* package */ static Area_Default.Area_SecondPoint SecondPoint;
         /* package */ static Area_Default.Area_ThirdPoint ThirdPoint;
         /* package */ static Area_Default.Area_NextPoint NextPoint;
-        /* package */ static Area_Default.Area_NextGeometry NextGeometry;
         /* package */ static Area_Default.Area_HoleOrNextPolygon HoleOrNextPolygon;
-        /* package */ static Area_Default.Area_EditForm EditForm;
         private static Area_Default Default;
 
         static
@@ -193,9 +191,7 @@ public final class AreaCADToolContext
             SecondPoint = new Area_Default.Area_SecondPoint("Area.SecondPoint", 1);
             ThirdPoint = new Area_Default.Area_ThirdPoint("Area.ThirdPoint", 2);
             NextPoint = new Area_Default.Area_NextPoint("Area.NextPoint", 3);
-            NextGeometry = new Area_Default.Area_NextGeometry("Area.NextGeometry", 4);
             HoleOrNextPolygon = new Area_Default.Area_HoleOrNextPolygon("Area.HoleOrNextPolygon", 5);
-            EditForm = new Area_Default.Area_EditForm("Area.EditForm", 6);
             Default = new Area_Default("Area.Default", -1);
         }
 
@@ -615,7 +611,7 @@ public final class AreaCADToolContext
                     }
                     finally
                     {
-                        context.setState(Area.NextGeometry);
+                        context.setState(Area.FirstPoint);
                         (context.getState()).Entry(context);
                         ctxt.clear();
                     }
@@ -763,66 +759,7 @@ public final class AreaCADToolContext
         //
         }
 
-        private static final class Area_NextGeometry
-            extends Area_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private Area_NextGeometry(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addOption(AreaCADToolContext context, String s)
-            {
-                AreaCADTool ctxt = context.getOwner();
-
-                if (s.equals("C")||s.equals("c")||s.equals(PluginServices.getText(this,"cancel")))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.deleteFromVea();
-                        ctxt.cancel();
-                    }
-                    finally
-                    {
-                        context.setState(Area.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate")))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-//                        ctxt.updateFormConstants();
-//                        ctxt.openForm();
-                    }
-                    finally
-                    {
-                        context.setState(Area.EditForm);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.addOption(context, s);
-                }
-
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
+  
         private static final class Area_HoleOrNextPolygon
             extends Area_Default
         {
@@ -883,83 +820,7 @@ public final class AreaCADToolContext
         //
         }
 
-        private static final class Area_EditForm
-            extends Area_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
 
-            private Area_EditForm(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addOption(AreaCADToolContext context, String s)
-            {
-                AreaCADTool ctxt = context.getOwner();
-
-                if (s.equals(PluginServices.getText(this,"accept_form"))) //NACHOV && ctxt.hasNextGeometry())
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.save();
-                        //ctxt.saveNext();
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                    }
-                    finally
-                    {
-                        context.setState(Area.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (s.equals(PluginServices.getText(this,"accept_form")))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.save();
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                    }
-                    finally
-                    {
-                        context.setState(Area.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (s.equals(PluginServices.getText(this,"cancel_form")))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.cancelInsertion();
-                        ctxt.initializeFormState();
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
-                    }
-                    finally
-                    {
-                        context.setState(Area.NextPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.addOption(context, s);
-                }
-
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
 
     //-----------------------------------------------------------
     // Member data.

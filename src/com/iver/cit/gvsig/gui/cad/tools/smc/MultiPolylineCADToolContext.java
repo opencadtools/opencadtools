@@ -174,7 +174,6 @@ public final class MultiPolylineCADToolContext
         /* package */ static MultiLinea_Default.MultiLinea_FirstPoint FirstPoint;
         /* package */ static MultiLinea_Default.MultiLinea_SecondPoint SecondPoint;
         /* package */ static MultiLinea_Default.MultiLinea_NextPoint NextPoint;
-        /* package */ static MultiLinea_Default.MultiLinea_EditForm EditForm;
         private static MultiLinea_Default Default;
 
         static
@@ -182,7 +181,6 @@ public final class MultiPolylineCADToolContext
             FirstPoint = new MultiLinea_Default.MultiLinea_FirstPoint("MultiLinea.FirstPoint", 0);
             SecondPoint = new MultiLinea_Default.MultiLinea_SecondPoint("MultiLinea.SecondPoint", 1);
             NextPoint = new MultiLinea_Default.MultiLinea_NextPoint("MultiLinea.NextPoint", 2);
-            EditForm = new MultiLinea_Default.MultiLinea_EditForm("MultiLinea.EditForm", 3);
             Default = new MultiLinea_Default("MultiLinea.Default", -1);
         }
 
@@ -631,66 +629,7 @@ public final class MultiPolylineCADToolContext
         //
         }
 
-        private static final class MultiLinea_EditForm
-            extends MultiLinea_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
-
-            private MultiLinea_EditForm(String name, int id)
-            {
-                super (name, id);
-            }
-
-            protected void addOption(MultiPolylineCADToolContext context, String s)
-            {
-                MultiPolylineCADTool ctxt = context.getOwner();
-
-                if (s.equals(PluginServices.getText(this,"accept_form")))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                        ctxt.save();
-                    }
-                    finally
-                    {
-                        context.setState(MultiLinea.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (s.equals(PluginServices.getText(this,"cancel_form")))
-                {
-
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.cancelInsertion();
-                        // ctxt.initializeFormState();
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
-                    }
-                    finally
-                    {
-                        context.setState(MultiLinea.NextPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.addOption(context, s);
-                }
-
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
+ 
 
     //-----------------------------------------------------------
     // Member data.
