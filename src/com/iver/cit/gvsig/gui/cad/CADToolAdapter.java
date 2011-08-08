@@ -492,10 +492,11 @@ public class CADToolAdapter extends Behavior {
 //		PixelSnapper pixSnap = new PixelSnapper();
 
 		snappers.clear();
-		if (SnapperStatus.isNearLineActivated()) {
+	SnapperStatus snapperStatus = SnapperStatus.getSnapperStatus();
+	if (snapperStatus.isNearLineActivated()) {
 			snappers.add(eielNearestSnap);
 		}
-		if (SnapperStatus.isVertexActivated()) {
+	if (snapperStatus.isVertexActivated()) {
 			snappers.add(eielFinalSnap);
 		}
 //		snappers.add(pixSnap);
@@ -537,8 +538,9 @@ public class CADToolAdapter extends Behavior {
 		             }
 		        }
 		   }   
-		if (SnapperStatus.isVertexActivated() ||
-			SnapperStatus.isNearLineActivated() ||
+		if (snapperStatus.isVertexActivated()
+			|| snapperStatus.isNearLineActivated()
+			||
 			FollowGeometryExtension.isActivated())
                 for (int n=0; n < geoms.size(); n++) {
                     IGeometry geom = (IGeometry) geoms.get(n);

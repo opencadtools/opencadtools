@@ -46,29 +46,36 @@ public class SnapperStatus {
 	public static SnapperStatus getSnapperStatus(){
 		if (snapperStatus == null){
 			snapperStatus = new SnapperStatus();
+	    createInstance();
 		}
 		return snapperStatus;
 	}
 
-	public static boolean isVertexActivated() {
+    private synchronized static void createInstance() {
+	if (snapperStatus == null) {
+	    snapperStatus = new SnapperStatus();
+	}
+    }
+
+    public boolean isVertexActivated() {
 		return vertexActivated;
 	}
 
-	public static boolean isNearLineActivated() {
+    public boolean isNearLineActivated() {
 		return nearLineActivated;
 	}
 
-	public static void setVertexActivated(boolean activate) {
+    public void setVertexActivated(boolean activate) {
 		vertexActivated = activate;
 	toggleButton(activate);
 	}
 
-	public static void setNearLineActivated(boolean activate) {
+    public void setNearLineActivated(boolean activate) {
 		nearLineActivated = activate;
 	toggleButton(activate);
     }
 
-    private static void toggleButton(boolean pushed) {
+    private void toggleButton(boolean pushed) {
 	if (!pushed) {
 	    ((MDIFrame) PluginServices.getMainFrame()).setSelectedTool(
 		    "snappers", "_empty");

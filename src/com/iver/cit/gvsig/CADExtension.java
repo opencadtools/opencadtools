@@ -188,8 +188,11 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 
 	// get preferences of snappers (true by default) and follow geometry
 	// (false by default)
-		SnapperStatus.setNearLineActivated(prefs.getBoolean("snapperFinalPoint", true));
-		SnapperStatus.setVertexActivated(prefs.getBoolean("snapperNearestPoint", true));
+	SnapperStatus snapperStatus = SnapperStatus.getSnapperStatus();
+	snapperStatus.setNearLineActivated(prefs.getBoolean(
+		"snapperFinalPoint", true));
+	snapperStatus.setVertexActivated(prefs.getBoolean(
+		"snapperNearestPoint", true));
 		FollowGeometryExtension.setActivated(prefs.getBoolean("followGeometry", false));
 		
 	}

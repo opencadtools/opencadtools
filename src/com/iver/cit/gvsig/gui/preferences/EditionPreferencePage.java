@@ -282,28 +282,40 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
                 eielLineEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
                 	public void actionPerformed(java.awt.event.ActionEvent evt) {
-                		if(eielVertexEIELSnapCB.isSelected()){
+			    SnapperStatus snapperStatus = SnapperStatus
+				    .getSnapperStatus();
+			    if (eielVertexEIELSnapCB.isSelected()) {
                 			addSnapper(new EIELNearestPointSnapper());
-                			SnapperStatus.setVertexActivated(true);
-    	                	SnapperStatus.setNearLineActivated(eielLineEIELSnapCB.isSelected());
+				snapperStatus.setVertexActivated(true);
+				snapperStatus
+					.setNearLineActivated(eielLineEIELSnapCB
+						.isSelected());
                 		}else{
                 			deleteSnapper("EIELNearestPoint");
-                			SnapperStatus.setVertexActivated(false);
-    	                	SnapperStatus.setNearLineActivated(eielLineEIELSnapCB.isSelected());
+				snapperStatus.setVertexActivated(false);
+				snapperStatus
+					.setNearLineActivated(eielLineEIELSnapCB
+						.isSelected());
                 		}
                 		prefs.putBoolean("snapperFinalPoint", eielVertexEIELSnapCB.isSelected());
                 	}
                 });
                 eielVertexEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
                 	public void actionPerformed(java.awt.event.ActionEvent evt) {
+			    SnapperStatus snapperStatus = SnapperStatus
+				    .getSnapperStatus();
                 		if(eielLineEIELSnapCB.isSelected()){
                 			addSnapper(new EIELFinalPointSnapper());
-                			SnapperStatus.setNearLineActivated(true);
-    	                	SnapperStatus.setVertexActivated(eielVertexEIELSnapCB.isSelected());
+				snapperStatus.setNearLineActivated(true);
+				snapperStatus
+					.setVertexActivated(eielVertexEIELSnapCB
+						.isSelected());
                         }else{
                             deleteSnapper("EIELFinalPoint");
-                            SnapperStatus.setNearLineActivated(false);
-    	                	SnapperStatus.setVertexActivated(eielVertexEIELSnapCB.isSelected());
+				snapperStatus.setNearLineActivated(false);
+				snapperStatus
+					.setVertexActivated(eielVertexEIELSnapCB
+						.isSelected());
                         }
                 prefs.putBoolean("snapperNearestPoint", eielLineEIELSnapCB.isSelected());
                     }
@@ -680,8 +692,9 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 //                    }
 //            	}
 //			}
-			eielVertexEIELSnapCB.setSelected(SnapperStatus.isVertexActivated());
-			eielLineEIELSnapCB.setSelected(SnapperStatus.isNearLineActivated());
+	SnapperStatus snapperStatus = SnapperStatus.getSnapperStatus();
+	eielVertexEIELSnapCB.setSelected(snapperStatus.isVertexActivated());
+	eielLineEIELSnapCB.setSelected(snapperStatus.isNearLineActivated());
 			followGeometryCB.setSelected(FollowGeometryExtension.isActivated());
 			deleteButtonOptionCB.setSelected(prefs.getBoolean("isDeleteButton3", false));
 	}
