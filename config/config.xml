@@ -161,9 +161,9 @@
 		<extension class-name="com.iver.cit.gvsig.InsertAreaExtension"
 			description="Extensión encargada de insertar áreas en una capa en edición."
 			active="true">
-			<menu text="geometry/insert/multipolygon" action-command="_area" icon="insert-area"/>
+			<menu text="geometry/insert/multiarea" action-command="_area" icon="insert-area"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="insert-area" action-command="_area" tooltip="multipolygon" group="vista" position="7"/>
+				<selectable-tool icon="insert-area" action-command="_area" tooltip="multiarea" group="vista" position="7"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertPolygonExtension"
