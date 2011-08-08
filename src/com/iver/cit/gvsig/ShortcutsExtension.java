@@ -27,6 +27,7 @@ package com.iver.cit.gvsig;
 import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
@@ -39,6 +40,10 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 public class ShortcutsExtension extends Extension implements KeyEventPostProcessor {
 
+    private ArrayList<Integer> altKeyCodes;
+    private boolean altMode = false;
+    private boolean enabled = false;
+
 	public void execute(String actionCommand) {
 		
 	}
@@ -47,10 +52,17 @@ public class ShortcutsExtension extends Extension implements KeyEventPostProcess
 		KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		kfm.addKeyEventPostProcessor(this);
 		
+	// init altKeyCodes
+	altKeyCodes = new ArrayList<Integer>();
+	altKeyCodes.add(KeyEvent.VK_ALT);
+	altKeyCodes.add(KeyEvent.VK_ALT_GRAPH);
+	altKeyCodes.add(KeyEvent.VK_CONTROL);
+	altKeyCodes.add(KeyEvent.VK_SHIFT);
 	}
 
 	public boolean isEnabled() {
-		return PluginServices.getMDIManager().getActiveWindow() instanceof View;
+	enabled = PluginServices.getMDIManager().getActiveWindow() instanceof View;
+	return enabled;
 	}
 
 	public boolean isVisible() {
@@ -74,21 +86,32 @@ public class ShortcutsExtension extends Extension implements KeyEventPostProcess
 		
 		boolean processed = false;
 		
-		if (event.getID() == KeyEvent.KEY_RELEASED) {
-			if (event.getKeyCode() == KeyEvent.VK_F2) {
-				setTool("zoomIn", "ZOOM_IN");
-				processed = true;
-			}
-			if (event.getKeyCode() == KeyEvent.VK_F3) {
-				setTool("zoomOut", "ZOOM_OUT");
-				processed = true;	
-			}
-			if (event.getKeyCode() == KeyEvent.VK_F4) {
-				setTool("pan", "PAN");
-				processed = true;	
-			}
-		}
-		return processed;
+	if (event.getID() == KeyEvent.KEY_PRESSED) {
+	    if (altKeyCodes.contains(event.getKeyCode())) {
+		altMode = true;
+	    }
 	}
+
+	if (event.getID() == KeyEvent.KEY_RELEASED) {
+	    if (isEnabled() && !altMode) {
+		if (event.getKeyCode() == KeyEvent.VK_F2) {
+		    setTool("zoomIn", "ZOOM_IN");
+		    processed = true;
+		}
+		if (event.getKeyCode() == KeyEvent.VK_F3) {
+		    setTool("zoomOut", "ZOOM_OUT");
+		    processed = true;
+						}
+		if (event.getKeyCode() == KeyEvent.VK_F4) {
+		    setTool("pan", "PAN");
+		    processed = true;
+						}
+					}
+	    if (altKeyCodes.contains(event.getKeyCode())) {
+		altMode = false;
+	    }
+	}
+	return processed;
+    }
 
 }
