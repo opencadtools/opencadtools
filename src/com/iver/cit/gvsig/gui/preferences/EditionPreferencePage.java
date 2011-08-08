@@ -503,20 +503,31 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		VectorialLayerEdited lyrEd = (VectorialLayerEdited) edManager
 			.getLayerEdited(layerActive);
 		ArrayList layersToSnap=lyrEd.getLayersToSnap();
-		ArrayList layersVect=new ArrayList();
+	initializeSnap(tm, layersToSnap);
+    }
+
+    private void initializeSnap(TableModel tm, ArrayList layersToSnap) {
+	initializeSnap(tm, layers, layersToSnap, 0);
+    }
+
+    private int initializeSnap(TableModel tm, FLayers layers,
+	    ArrayList layersToSnap, int firstPos) {
+	int pos = firstPos;
 		for (int i = 0; i < layers.getLayersCount(); i++) {
 			FLayer layer=layers.getLayer(i);
-			if (layer instanceof FLyrVect) {
-				layersVect.add(layer);
+	    if (layer instanceof FLayers) {
+		pos = initializeSnap(tm, (FLayers) layer, layersToSnap, pos);
+	    } else if (layer instanceof FLyrVect) {
+		FLyrVect lv = (FLyrVect) layer;
+		tm.setValueAt(lv.getName(), pos, 1);
+		tm.setValueAt(layersToSnap.contains(lv), pos, 0);
+		tm.setValueAt(lv.getSpatialCache().getMaxFeatures(), pos, 2);
+		pos++;
 			}
 		}
-		for (int i = 0; i < layersVect.size(); i++) {
-			FLyrVect lv=(FLyrVect)layersVect.get(i);
-			tm.setValueAt(lv.getName(), i, 1);
-			tm.setValueAt(layersToSnap.contains(lv), i, 0);
-			tm.setValueAt(lv.getSpatialCache().getMaxFeatures(), i, 2);
-		}
+	return pos;
 	}
+
 
     /**
      * Get the <b>first</b> vectorial layer with the given name on the given
