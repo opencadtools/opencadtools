@@ -131,11 +131,11 @@
 		<extension class-name="com.iver.cit.gvsig.InsertLineExtension"
 			description="Extensión encargada de insertar líneas en una capa en edición."
 			active="true">
-			<menu text="geometry/insert/line" action-command="_line" icon="edition-insert-line"/>
+			<!-- <menu text="geometry/insert/line" action-command="_line" icon="edition-insert-line"/> -->
 			<menu text="geometry/insert/arc" action-command="_arc" icon="edition-insert-arc"/>
 
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-geometry-insert-line" action-command="_line" tooltip="line" position="3"/>
+				<!-- <selectable-tool icon="edition-geometry-insert-line" action-command="_line" tooltip="line" position="3"/> -->
 				<selectable-tool icon="edition-insert-geometry-arc" action-command="_arc" tooltip="arc" position="4"/>
 			</tool-bar>
 		</extension>
