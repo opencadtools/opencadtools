@@ -27,20 +27,11 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.EIELPolylineCADTool;
-//import com.iver.cit.gvsig.gui.cad.tools.LineaCADTool;
-//import com.iver.cit.gvsig.gui.cad.tools.smc.LineaCADToolContext.Linea;
-//import com.iver.cit.gvsig.gui.cad.tools.LineaCADTool;
-//import com.iver.cit.gvsig.gui.cad.tools.smc.LineaCADToolContext.Linea;
-//import com.iver.cit.gvsig.gui.cad.tools.smc.LineaCADToolContext.LineaCADToolState;
-//import com.iver.cit.gvsig.gui.cad.tools.LineaCADTool;
-//import com.iver.cit.gvsig.gui.cad.tools.smc.LineaCADToolContext.Linea;
-//import com.iver.cit.gvsig.gui.cad.tools.smc.LineaCADToolContext.LineaCADToolState;
-//import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
 import java.awt.event.InputEvent;
 import java.util.prefs.Preferences;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.tools.EIELPolylineCADTool;
 
 /**
  * @author Vicente Caballero Navarro
@@ -564,7 +555,7 @@ public final class EIELPolylineCADToolContext
             protected void removePoint(EIELPolylineCADToolContext context, InputEvent event, int numPoints) {
                 EIELPolylineCADTool ctxt = context.getOwner();
 
-                if (numPoints>2) {
+		if (numPoints > 1) {
                 	EIELPolylineCADToolState endState = context.getState();
                     context.clearState();
                     try {
@@ -573,7 +564,7 @@ public final class EIELPolylineCADToolContext
                         context.setState(endState);
                     }
                 }
-                else if (numPoints==2) {
+ else if (numPoints == 1) {
 
                     (context.getState()).Exit(context);
                     context.clearState();
@@ -581,7 +572,7 @@ public final class EIELPolylineCADToolContext
                         ctxt.removePoint(event);
                         
                     } finally{
-                        context.setState(Polyline.NextPointOrArcOrClose);
+			context.setState(Polyline.FirstPoint);
                         (context.getState()).Entry(context);
                     }
                 } else {
@@ -702,7 +693,7 @@ public final class EIELPolylineCADToolContext
             {
                 EIELPolylineCADTool ctxt = context.getOwner();
 
-                if (numPoints>2)
+		if (numPoints > 1)
                 {
                 	EIELPolylineCADToolState endState = context.getState();
 
@@ -716,7 +707,7 @@ public final class EIELPolylineCADToolContext
                         context.setState(endState);
                     }
                 }
-                else if (numPoints==2)
+ else if (numPoints == 1)
                 {
 
                     (context.getState()).Exit(context);
@@ -727,7 +718,7 @@ public final class EIELPolylineCADToolContext
                     }
                     finally
                     {
-                        context.setState(Polyline.NextPointOrLineOrClose);
+			context.setState(Polyline.FirstPoint);
                         (context.getState()).Entry(context);
                     }
                 }                else
