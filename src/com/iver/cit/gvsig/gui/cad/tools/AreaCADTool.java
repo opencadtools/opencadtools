@@ -59,6 +59,8 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  */
 public class AreaCADTool extends InsertionCADTool {
 
+	public static final String AREA_ACTION_COMMAND = "_area";
+
 	private AreaCADToolContext _fsm;
 
 	/**
@@ -622,7 +624,7 @@ public class AreaCADTool extends InsertionCADTool {
 	}
 
 	public String toString() {
-		return "_area";
+		return AREA_ACTION_COMMAND;
 	}
 
 	public boolean isApplicable(int shapeType) {
