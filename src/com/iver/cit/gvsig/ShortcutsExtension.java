@@ -36,13 +36,13 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 /**
  * @author Isabel Pérez-Urria Lage
  * @author Andrés Maneiro [Cartolab]
+ * @author Javier Estévez [Cartolab]
  */
 
 public class ShortcutsExtension extends Extension implements KeyEventPostProcessor {
 
     private ArrayList<Integer> altKeyCodes;
     private boolean altMode = false;
-    private boolean enabled = false;
 
 	public void execute(String actionCommand) {
 		
@@ -61,8 +61,7 @@ public class ShortcutsExtension extends Extension implements KeyEventPostProcess
 	}
 
 	public boolean isEnabled() {
-	enabled = PluginServices.getMDIManager().getActiveWindow() instanceof View;
-	return enabled;
+	return PluginServices.getMDIManager().getActiveWindow() instanceof View;
 	}
 
 	public boolean isVisible() {
