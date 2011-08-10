@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
+import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
@@ -61,7 +62,14 @@ public class ShortcutsExtension extends Extension implements KeyEventPostProcess
 	}
 
 	public boolean isEnabled() {
-	return PluginServices.getMDIManager().getActiveWindow() instanceof View;
+	if (PluginServices.getMDIManager().getActiveWindow() instanceof View) {
+	    FLayers layers = ((View) PluginServices.getMDIManager()
+		    .getActiveWindow()).getMapControl().getMapContext()
+		    .getLayers();
+	    return layers.getLayersCount() > 0;
+	} else {
+	    return false;
+	}
 	}
 
 	public boolean isVisible() {
