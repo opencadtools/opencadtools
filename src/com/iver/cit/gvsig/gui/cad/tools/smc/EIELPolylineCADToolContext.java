@@ -132,6 +132,8 @@ public final class EIELPolylineCADToolContext
         protected void Entry(EIELPolylineCADToolContext context) {}
         protected void Exit(EIELPolylineCADToolContext context) {}
 
+	protected abstract String[] getDescription();
+
         protected void addOption(EIELPolylineCADToolContext context, String s)
         {
         	Default(context);
@@ -206,6 +208,10 @@ public final class EIELPolylineCADToolContext
         {
             super (name, id);
         }
+
+	protected String[] getDescription() {
+	    return new String[] { "cancel" };
+	}
 
         protected void addOption(EIELPolylineCADToolContext context, String s)
         {
@@ -407,12 +413,16 @@ public final class EIELPolylineCADToolContext
                 super (name, id);
             }
 
+	    protected String[] getDescription() {
+		return new String[] { "cancel" };
+	    }
+
             protected void Entry(EIELPolylineCADToolContext context)
             {
                 EIELPolylineCADTool ctxt = context.getOwner();
 
                 ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                ctxt.setDescription(new String[]{"cancel"});
+		ctxt.setDescription(getDescription());
                 return;
             }
 
@@ -423,22 +433,11 @@ public final class EIELPolylineCADToolContext
 
                 (context.getState()).Exit(context);
                 context.clearState();
-                try
-                {
-		    boolean deleteButton3 = CADStatus.getCADStatus()
-			    .isDeleteButtonActivated();
-                	if (deleteButton3) {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close_del"));
-                	} else {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-                	}
-                    ctxt.setDescription(new String[]{"inter_arc", "close_polyline", "terminate", "cancel"});
-                    ctxt.addPoint(pointX, pointY, event);
-                }
-                finally
-                {
-                    context.setState(Polyline.NextPointOrArcOrClose);
-                    (context.getState()).Entry(context);
+		try {
+		    ctxt.addPoint(pointX, pointY, event);
+		} finally {
+		    context.setState(Polyline.NextPointOrArcOrClose);
+		    (context.getState()).Entry(context);
                 }
                 return;
             }
@@ -460,6 +459,26 @@ public final class EIELPolylineCADToolContext
                 super (name, id);
             }
 
+	    protected String[] getDescription() {
+		return new String[] { "inter_arc", "close_polyline",
+			"terminate", "cancel", "removePoint" };
+	    }
+
+	    protected void Entry(EIELPolylineCADToolContext context) {
+		EIELPolylineCADTool ctxt = context.getOwner();
+		boolean deleteButton3 = CADStatus.getCADStatus()
+			.isDeleteButtonActivated();
+		if (deleteButton3) {
+		    ctxt.setQuestion(PluginServices.getText(this,
+			    "insert_next_point_arc_or_close_del"));
+		} else {
+		    ctxt.setQuestion(PluginServices.getText(this,
+			    "insert_next_point_arc_or_close"));
+		}
+		ctxt.setDescription(getDescription());
+		return;
+	    }
+
             protected void addOption(EIELPolylineCADToolContext context, String s)
             {
                 EIELPolylineCADTool ctxt = context.getOwner();
@@ -471,8 +490,6 @@ public final class EIELPolylineCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
-                        ctxt.setDescription(new String[]{"inter_line", "close_polyline", "terminate", "cancel"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -534,19 +551,12 @@ public final class EIELPolylineCADToolContext
                 context.clearState();
                 try
                 {
-		    boolean deleteButton3 = CADStatus.getCADStatus()
-			    .isDeleteButtonActivated();
-                	if (deleteButton3) {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close_del"));
-                	} else {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-                	}
-                    ctxt.setDescription(new String[]{"inter_arc", "close_polyline", "terminate", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
                     context.setState(endState);
+		    (context.getState()).Entry(context);
                 }
                 return;
             }
@@ -562,6 +572,7 @@ public final class EIELPolylineCADToolContext
                         ctxt.removePoint(event);
                     } finally {
                         context.setState(endState);
+			(context.getState()).Entry(context);
                     }
                 }
  else if (numPoints == 1) {
@@ -599,6 +610,18 @@ public final class EIELPolylineCADToolContext
                 super (name, id);
             }
 
+	    protected String[] getDescription() {
+		return new String[] { "inter_arc", "close_polyline",
+			"terminate", "cancel", "removePoint" };
+	    }
+
+	    protected void Entry(EIELPolylineCADToolContext context) {
+		EIELPolylineCADTool ctxt = context.getOwner();
+		ctxt.setQuestion(PluginServices.getText(this,
+			"insert_next_point_line_or_close"));
+		ctxt.setDescription(getDescription());
+		return;
+	    }
             protected void addOption(EIELPolylineCADToolContext context, String s)
             {
                 EIELPolylineCADTool ctxt = context.getOwner();
@@ -610,14 +633,6 @@ public final class EIELPolylineCADToolContext
                     context.clearState();
                     try
                     {
-			boolean deleteButton3 = CADStatus.getCADStatus()
-				.isDeleteButtonActivated();
-                    	if (deleteButton3) {
-                    		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close_del"));
-                    	} else {
-                    		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_arc_or_close"));
-                    	}
-                        ctxt.setDescription(new String[]{"inter_arc", "close_polyline", "terminate", "cancel"});
                         ctxt.addOption(s);
                     }
                     finally
@@ -679,13 +694,12 @@ public final class EIELPolylineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_line_or_close"));
-                    ctxt.setDescription(new String[]{"inter_line", "close_polyline", "terminate", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
                 {
                     context.setState(endState);
+		    (context.getState()).Entry(context);
                 }
                 return;
             }
@@ -706,6 +720,7 @@ public final class EIELPolylineCADToolContext
                     finally
                     {
                         context.setState(endState);
+			(context.getState()).Entry(context);
                     }
                 }
  else if (numPoints == 1)
