@@ -57,6 +57,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.snapping.EIELFinalPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.EIELNearestPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.FinalPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.NearestPointSnapper;
 
@@ -279,8 +280,12 @@ public class EditionPreferencePage extends AbstractPreferencePage {
                 	public void actionPerformed(java.awt.event.ActionEvent evt) {
                 		if(eielVertexEIELSnapCB.isSelected()){
                 			addSnapper(new EIELFinalPointSnapper());
+                			SnapperStatus.setVertexActivated(true);
+    	                	SnapperStatus.setNearLineActivated(eielLineEIELSnapCB.isSelected());
                 		}else{
                 			deleteSnapper("EIELFinalPoint");
+                			SnapperStatus.setVertexActivated(false);
+    	                	SnapperStatus.setNearLineActivated(eielLineEIELSnapCB.isSelected());
                 		}
                 	}
                 });
@@ -288,8 +293,12 @@ public class EditionPreferencePage extends AbstractPreferencePage {
                 	public void actionPerformed(java.awt.event.ActionEvent evt) {
                 		if(eielVertexEIELSnapCB.isSelected()){
                 			addSnapper(new EIELFinalPointSnapper());
+                			SnapperStatus.setNearLineActivated(true);
+    	                	SnapperStatus.setVertexActivated(eielVertexEIELSnapCB.isSelected());
                         }else{
                             deleteSnapper("EIELFinalPoint");
+                            SnapperStatus.setNearLineActivated(false);
+    	                	SnapperStatus.setVertexActivated(eielVertexEIELSnapCB.isSelected());
                         }
                     }
                 });

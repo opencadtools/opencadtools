@@ -63,6 +63,7 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperGeometriesVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
+import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
 import com.iver.cit.gvsig.project.documents.view.snapping.SnappingVisitor;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.FinalPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.NearestPointSnapper;
@@ -492,8 +493,12 @@ public class CADToolAdapter extends Behavior {
 		PixelSnapper pixSnap = new PixelSnapper();
 
 		snappers.clear();
-		snappers.add(eielFinalSnap);
-		snappers.add(eielNearestSnap);
+		if (SnapperStatus.isNearLineActivated()) {
+			snappers.add(eielFinalSnap);
+		}
+		if (SnapperStatus.isVertexActivated()) {
+			snappers.add(eielNearestSnap);
+		}
 		snappers.add(pixSnap);
 		
         double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
