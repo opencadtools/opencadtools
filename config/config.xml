@@ -434,25 +434,6 @@
 			</tool-bar>
 		</extension>
 
-		<extension class-name="com.iver.cit.gvsig.ActivateFormsExtension"
-			description="Extension to activate and deactivate the forms"
-			active="true">
-			<menu text="geometry/forms" action-command="_forms" icon="activate-forms"/>
-			<tool-bar name="ed_options" position="33">
-				<selectable-tool icon="activate-forms" action-command="_forms" tooltip="forms" group="vista" position="7"/>
-			</tool-bar>
-		</extension>
-
-<!--
-		<extension class-name="com.iver.cit.gvsig.InsertMultiPolygonExtension"
-			description="Extension to insert multipolygons."
-			active="true">
-			<menu text="geometry/insert/multipolygon" action-command="_multipolygon" icon="insert-multipolygon"/>
-			<tool-bar name="insert" position="30">
-				<selectable-tool icon="insert-multipolygon" action-command="_multipolygon" tooltip="multipoligon" group="vista" position="26"/>
-			</tool-bar>
-		</extension>
--->
 
 	</extensions>
 </plugin-config>
