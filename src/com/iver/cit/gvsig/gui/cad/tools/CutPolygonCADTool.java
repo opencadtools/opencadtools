@@ -190,8 +190,9 @@ public class CutPolygonCADTool extends InsertionCADTool{
 				geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.drawingSymbol);
 
 //				Painting the vertex
+				AffineTransform at = CADExtension.getEditionManager().getMapControl().getViewPort().getAffineTransform();
 				Handler[] h = geom.getHandlers(IGeometry.SELECTHANDLER);
-				FGraphicUtilities.DrawHandlers((Graphics2D) g,new AffineTransform(),h,DefaultCADTool.drawingSymbol );
+				FGraphicUtilities.DrawHandlers((Graphics2D) g, at,h,DefaultCADTool.drawingSymbol );
 
 			}
 		}

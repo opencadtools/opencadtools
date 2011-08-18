@@ -176,9 +176,10 @@ public class CutLineCADTool extends InsertionCADTool {
 						DefaultCADTool.drawingSymbol);
 
 				// Painting the vertex
+				AffineTransform at = CADExtension.getEditionManager().getMapControl().getViewPort().getAffineTransform();
 				Handler[] h = geom.getHandlers(IGeometry.SELECTHANDLER);
 				FGraphicUtilities.DrawHandlers((Graphics2D) g,
-						new AffineTransform(), h,DefaultCADTool.drawingSymbol);
+						at, h,DefaultCADTool.drawingSymbol);
 			}
 		}
 

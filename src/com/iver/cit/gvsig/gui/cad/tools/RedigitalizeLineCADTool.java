@@ -155,8 +155,9 @@ public class RedigitalizeLineCADTool extends DefaultCADTool{
 				geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.drawingSymbol);
 
 //				Painting vertex
+				AffineTransform at = CADExtension.getEditionManager().getMapControl().getViewPort().getAffineTransform();
 				Handler[] h = geom.getHandlers(IGeometry.SELECTHANDLER);
-				FGraphicUtilities.DrawHandlers((Graphics2D) g,new AffineTransform(),h,DefaultCADTool.drawingSymbol);
+				FGraphicUtilities.DrawHandlers((Graphics2D) g, at,h,DefaultCADTool.drawingSymbol);
 			}
 		}
 		if(secondPoint!=null){
@@ -281,8 +282,9 @@ public class RedigitalizeLineCADTool extends DefaultCADTool{
 			geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.drawingSymbol);
 
 //			Painting vertex
+			AffineTransform at = CADExtension.getEditionManager().getMapControl().getViewPort().getAffineTransform();
 			Handler[] h = geom.getHandlers(IGeometry.SELECTHANDLER);
-			FGraphicUtilities.DrawHandlers((Graphics2D) g,new AffineTransform(),h,DefaultCADTool.drawingSymbol);
+			FGraphicUtilities.DrawHandlers((Graphics2D) g, at,h,DefaultCADTool.drawingSymbol);
 		}
 //		Cleaning the last point of the snapeers
 		cleanSnapper();

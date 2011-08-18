@@ -166,8 +166,9 @@ public class RedigitalizePolygonCADTool extends DefaultCADTool{
 				geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.drawingSymbol);
 
 //				Painting vertex
+				AffineTransform at = CADExtension.getEditionManager().getMapControl().getViewPort().getAffineTransform();
 				Handler[] h = geom.getHandlers(IGeometry.SELECTHANDLER);
-				FGraphicUtilities.DrawHandlers((Graphics2D) g,new AffineTransform(), h, CADTool.drawingSymbol);
+				FGraphicUtilities.DrawHandlers((Graphics2D) g, at, h, CADTool.drawingSymbol);
 			}
 		}
 		if(secondPoint!=null){
@@ -374,8 +375,9 @@ public class RedigitalizePolygonCADTool extends DefaultCADTool{
 			geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.drawingSymbol);
 
 //			Painting vertex
+			AffineTransform at = CADExtension.getEditionManager().getMapControl().getViewPort().getAffineTransform();
 			Handler[] h = geom.getHandlers(IGeometry.SELECTHANDLER);
-			FGraphicUtilities.DrawHandlers((Graphics2D) g,new AffineTransform(),h, CADTool.drawingSymbol);
+			FGraphicUtilities.DrawHandlers((Graphics2D) g, at,h, CADTool.drawingSymbol);
 
 
 
