@@ -32,6 +32,7 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -507,6 +508,18 @@ public class RedigitalizeLineCADTool extends DefaultCADTool{
 	}
 
 	public void clear(){
+
+		//clear selection to avoid some complications with selection tool...
+		try {
+			VectorialLayerEdited vle = ((VectorialLayerEdited)CADExtension.getEditionManager().getActiveLayerEdited());
+			if (vle != null) {
+				vle.clearSelection(true);
+			}
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		geometry = null;
 		firstPoint = null;
 		secondPoint = null;
