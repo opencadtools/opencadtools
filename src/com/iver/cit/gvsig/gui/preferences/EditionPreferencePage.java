@@ -1,6 +1,11 @@
-/* gvSIG. Sistema de Información Geográfica de la Generalitat Valenciana
+/*
+ * Copyright 2008 Deputación Provincial de A Coruña
+ * Copyright 2009 Deputación Provincial de Pontevedra
+ * Copyright 2010 CartoLab, Universidad de A Coruña
  *
- * Copyright (C) 2004 IVER T.I. and Generalitat Valenciana.
+ * This file is part of openCADTools, developed by the Cartography
+ * Engineering Laboratory of the University of A Coruña (CartoLab).
+ * http://www.cartolab.es
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,36 +21,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
  *
- * For more information, contact:
- *
- *  Generalitat Valenciana
- *   Conselleria d'Infraestructures i Transport
- *   Av. Blasco Ibáñez, 50
- *   46010 VALENCIA
- *   SPAIN
- *
- *      +34 963862235
- *   gvsig@gva.es
- *      www.gvsig.gva.es
- *
- *    or
- *
- *   IVER T.I. S.A
- *   Salamanca 50
- *   46005 Valencia
- *   Spain
- *
- *   +34 963163400
- *   dac@iver.es
  */
 package com.iver.cit.gvsig.gui.preferences;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -67,8 +54,19 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SingleLayerIterator;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
+import com.iver.cit.gvsig.project.documents.view.snapping.EIELFinalPointSnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.EIELNearestPointSnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.snappers.FinalPointSnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.snappers.NearestPointSnapper;
 
+/**
+ * @author gvSIG
+ * @author Laboratorio de Bases de Datos. Universidad de A Coruña
+ * @author Cartolab. Universidad de A Coruña
+ */
 public class EditionPreferencePage extends AbstractPreferencePage {
+	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 	private JLabel jLabel = null;
 	private ImageIcon icon;
 
@@ -87,7 +85,17 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	private JPanel jPanelNord = null;
 
 	private JPanel jPanelCache = null;
+	
+	VectorialLayerEdited layerEdited;
+	private JPanel jPanelSnappers = null;
+	private JCheckBox eielVertexEIELSnapCB = new JCheckBox();
+	private JCheckBox eielLineEIELSnapCB = new JCheckBox();
+	private JCheckBox vertexSnapCB = new JCheckBox();
+	private JCheckBox lineSnapCB = new JCheckBox();
 	private boolean changed = false;
+	
+	//[Cartolab]                                                                                                                                         
+    private JCheckBox deleteButtonOptionCB = new JCheckBox();
 
 	private FLayers layers;
 
@@ -245,7 +253,196 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		this.add(getJSeparator(), BorderLayout.CENTER);
 
 		this.add(getJPanelCache(), BorderLayout.CENTER);
+		
+		//Add snappers checkboxes 
+		this.add(getJPanelSnappers(), BorderLayout.SOUTH);
+	}
+	
+//  este metodo me devolvera el panel donde se permiten cambiar los snappers                                                                             
+    private JPanel getJPanelSnappers() {
+            if (jPanelSnappers == null) {
+            	JLabel snapperLabel = new JLabel();
+            	snapperLabel.setText(PluginServices.getText(this, "capas_edition_snapper"));
+                snapperLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+                snapperLabel.setPreferredSize(new java.awt.Dimension(500,20));
+                snapperLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
+                JSeparator separador = new JSeparator();
+                separador.setPreferredSize(new java.awt.Dimension(200,12));
+
+                eielVertexEIELSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_eiel_punto"));
+                eielLineEIELSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_eiel_linea"));
+                vertexSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_punto"));
+                lineSnapCB.setText(PluginServices.getText(this, "capas_edition_snapper_linea"));
+
+                eielVertexEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
+                	public void actionPerformed(java.awt.event.ActionEvent evt) {
+                		if(eielVertexEIELSnapCB.isSelected()){
+                			addSnapper(new EIELFinalPointSnapper());
+                		}else{
+                			deleteSnapper("EIELFinalPoint");
+                		}
+                	}
+                });
+                eielVertexEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
+                	public void actionPerformed(java.awt.event.ActionEvent evt) {
+                		if(eielVertexEIELSnapCB.isSelected()){
+                			addSnapper(new EIELFinalPointSnapper());
+                        }else{
+                            deleteSnapper("EIELFinalPoint");
+                        }
+                    }
+                });
+                eielLineEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
+                	public void actionPerformed(java.awt.event.ActionEvent evt) {
+                		if(eielLineEIELSnapCB.isSelected()){
+                			addSnapper(new EIELNearestPointSnapper());
+                		}else{
+                            deleteSnapper("EIELNearestPoint");
+                		}
+                    }
+                });
+                vertexSnapCB.addActionListener(new java.awt.event.ActionListener() {
+                	public void actionPerformed(java.awt.event.ActionEvent evt) {
+                		if(lineSnapCB.isSelected()){
+                			addSnapper(new FinalPointSnapper());
+                		}else{	
+                			deleteSnapper("FinalPoint");
+                		}
+                     }	
+                 });		
+                lineSnapCB.addActionListener(new java.awt.event.ActionListener() {
+                	public void actionPerformed(java.awt.event.ActionEvent evt) {
+                		if(lineSnapCB.isSelected()){
+                			addSnapper(new NearestPointSnapper());
+                		}else{
+                            deleteSnapper("NearestPoint");
+                        }
+                    }
+                });
+                // Set if the BUTTON3 of the mouse delete the last point when editing instead of popMenu()                                           
+                // popMenu() will be available with SHIFT+BUTTON3                                                                                    
+                JLabel deleteButtonLabel = new JLabel();
+                deleteButtonLabel.setText(PluginServices.getText(this, "delete_button_option"));
+                deleteButtonLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+                deleteButtonLabel.setPreferredSize(new java.awt.Dimension(500,20));
+                deleteButtonLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                
+                //TODO Language files                                                                                                                
+                deleteButtonOptionCB.setText(PluginServices.getText(this, "set_remove_vertex_option"));
+                //TODO Read current preference                                                                                                       
+                deleteButtonOptionCB.setSelected(true);
+                deleteButtonOptionCB.addActionListener(new java.awt.event.ActionListener() {
+                	public void actionPerformed(java.awt.event.ActionEvent evt) {
+                		prefs.putBoolean("isDeleteButton3", deleteButtonOptionCB.isSelected());
+                	}
+                });
+
+                jPanelSnappers = new JPanel();
+                jPanelSnappers.setLayout(new GridLayout(8,1));
+                jPanelSnappers.add(separador);
+                jPanelSnappers.add(snapperLabel);
+                jPanelSnappers.add(eielVertexEIELSnapCB);
+                jPanelSnappers.add(eielLineEIELSnapCB);
+                jPanelSnappers.add(vertexSnapCB);
+                jPanelSnappers.add(lineSnapCB);
+                jPanelSnappers.add(deleteButtonLabel);
+                jPanelSnappers.add(deleteButtonOptionCB);
+                //jPanelSnappers.add(getJScrollPane(), java.awt.BorderLayout.EAST);                                                                    
+           }
+           return jPanelSnappers;
+    }
+
+
+	
+	protected void deleteSnapper(String string) {
+		// TODO Auto-generated method stub
+		int indice = 0;
+		boolean termine = false;
+		ArrayList listaSnappers = layerEdited.getSnappers();
+		if(string.equals("EIELFinalPoint")){
+			while(!termine){
+				if((listaSnappers.get(indice) instanceof EIELFinalPointSnapper)){
+					listaSnappers.remove(indice);
+					termine=true;
+				}else{
+					if(indice<listaSnappers.size()-1){
+						indice++;
+					}else{
+						termine=true;
+					}
+				}
+			}
+		}else if(string.equals("EIELNearestPoint")){
+			while(!termine){
+				if((listaSnappers.get(indice) instanceof EIELNearestPointSnapper)){
+					listaSnappers.remove(indice);
+					termine=true;
+				}else{
+					if(indice<listaSnappers.size()-1){
+						indice++;
+					}else{
+						termine=true;
+					}
+				}
+			}
+		}else if(string.equals("FinalPoint")){
+			while(!termine){
+				if((listaSnappers.get(indice) instanceof FinalPointSnapper)){
+					listaSnappers.remove(indice);
+					termine=true;
+				}else{
+					if(indice<listaSnappers.size()-1){
+						indice++;
+					}else{
+						termine=true;
+					}
+				}
+			}
+		}else if(string.equals("NearestPoint")){
+			while(!termine){
+				if((listaSnappers.get(indice) instanceof NearestPointSnapper)){
+					listaSnappers.remove(indice);
+					termine=true;
+				}else{
+					if(indice<listaSnappers.size()-1){
+						indice++;
+					}else{
+						termine=true;
+					}
+				}
+			}
+		}
+	}
+
+	protected void addSnapper(ISnapper snapper) {
+		// TODO Auto-generated method stub
+		ArrayList listaSnappers = layerEdited.getSnappers();
+		if(listaSnappers.size()>0){
+//			en caso de que ya tenga snappers debemos comprobar la prioridad de los existentes para
+//			agregar el nuevo donde corresponda
+			int prioridadSnapper = snapper.getPriority();
+			boolean termine = false;
+			int indice = 0;
+			while(!termine){
+				if(((ISnapper)listaSnappers.get(indice)).getPriority()<prioridadSnapper){
+//					en este caso el nuevo snapper debe ir en esta posicion
+					listaSnappers.add(indice, snapper);
+					termine = true;
+				}else{
+					if(indice==listaSnappers.size()-1){
+//						en este caqso habremos llegado al final de lo snappers sin
+//						encontrar ninguno con menor prioridad, por lo que lo añadiremos al final
+						listaSnappers.add(indice+1, snapper);
+						termine = true;
+					}else{
+						indice++;
+					}
+				}
+			}
+		}else{
+			listaSnappers.add(snapper);
+		}
 	}
 
 	public String getID() {
@@ -393,6 +590,50 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		MyTableModel tm = new MyTableModel(layers);
 		getJTableSnapping().setModel(tm);
 		getJTxtTolerance().setText(String.valueOf(SelectionCADTool.tolerance));
+		
+		//[LBD]
+//		aqui miraremos la capa que esta activa y editandose para coger sus snappers
+		FLayer[] capasActivas = this.layers.getActives();
+//		ahora buscaremos la primera que se este editando de las activas
+		FLayer capaEnEdicion = null;
+		boolean termine = (capasActivas.length < 1);
+		int indice = 0;
+		while(!termine){
+			if(capasActivas[indice].isEditing()){
+				capaEnEdicion = capasActivas[indice];
+				termine=true;
+			}else{
+				indice++;
+				if(indice==capasActivas.length){
+					termine = true;
+				}
+			}
+		}
+
+
+		if(capaEnEdicion!=null){
+			layerEdited = (VectorialLayerEdited)CADExtension.getEditionManager().getLayerEdited(capaEnEdicion);
+		}
+
+//		ahora aqui comprobamos los snappers activos para la capa en edicion
+//		y activamos los checkboxes correspondientes
+		if(layerEdited!=null){
+			ArrayList snappers = layerEdited.getSnappers();
+            if(snappers!=null){
+            	for(int i=0; i<snappers.size();i++){
+            		ISnapper snapper = ((ISnapper)snappers.get(i));
+            		if(snapper instanceof EIELFinalPointSnapper){
+            			eielVertexEIELSnapCB.setSelected(true);
+            		}else if(snapper instanceof EIELNearestPointSnapper){
+            			eielLineEIELSnapCB.setSelected(true);
+            		}else if(snapper instanceof FinalPointSnapper){
+            			vertexSnapCB.setSelected(true);
+            			}else if(snapper instanceof NearestPointSnapper){
+            				lineSnapCB.setSelected(true);
+                        }
+                    }
+            	}
+			}
 	}
 
 	/**
