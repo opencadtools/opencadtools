@@ -46,6 +46,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.cad.tools.EIELPointCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 /**
@@ -56,13 +57,13 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 public class InsertPointExtension extends Extension {
    private View view;
    private MapControl mapControl;
-   private PointCADTool point;
+   private EIELPointCADTool point;
 
    /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
     public void initialize() {
-        point = new PointCADTool();
+        point = new EIELPointCADTool();
         CADExtension.addCADTool("_point", point);
     
         registerIcons();
