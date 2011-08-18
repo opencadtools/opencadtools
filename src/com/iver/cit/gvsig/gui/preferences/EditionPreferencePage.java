@@ -42,12 +42,15 @@ import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
+import org.apache.log4j.Logger;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
 import com.iver.cit.gvsig.FollowGeometryExtension;
+import com.iver.cit.gvsig.exceptions.layers.ReloadLayerException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -59,8 +62,6 @@ import com.iver.cit.gvsig.project.documents.view.snapping.EIELFinalPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.EIELNearestPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
-import com.iver.cit.gvsig.project.documents.view.snapping.snappers.FinalPointSnapper;
-import com.iver.cit.gvsig.project.documents.view.snapping.snappers.NearestPointSnapper;
 
 /**
  * @author gvSIG
@@ -505,12 +506,28 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		}
 	}
 
+    /**
+     * Get the <b>first</b> vectorial layer with the given name on the given
+     * FLayers. If there's no vectorial layer with that name, it returns null.
+     */
+    private FLyrVect getLayer(FLayers layers, String layerName) {
+	FLayer layer = layers.getLayer(layerName);
+	if (layer != null) {
+	    if (layer instanceof FLyrVect) {
+		return (FLyrVect) layer;
+	    } else if (layer instanceof FLayers) {
+		return getLayer((FLayers) layer, layerName);
+	    }
+	}
+	return null;
+    }
 	public void storeValues() throws StoreException {
 		TableModel tm = getJTableSnapping().getModel();
 		ArrayList layersToSnap = new ArrayList();
 		for (int i = 0; i < tm.getRowCount(); i++) {
 			String layerName = (String) tm.getValueAt(i, 1);
 			FLyrVect lyr = (FLyrVect) layers.getLayer(layerName);
+	    if (lyr != null) {
 			Boolean bUseCache = (Boolean) tm.getValueAt(i, 0);
 			Integer maxFeat = (Integer) tm.getValueAt(i, 2);
 
@@ -535,6 +552,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			lyr.setMaxFeaturesInEditionCache(maxFeat.intValue());
 			if (bUseCache.booleanValue())
 				layersToSnap.add(lyr);
+	    }
 		}
 		SingleLayerIterator it = new SingleLayerIterator(layers);
 		EditionManager edManager = CADExtension.getEditionManager();

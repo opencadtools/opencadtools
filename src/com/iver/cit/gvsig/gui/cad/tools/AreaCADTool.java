@@ -29,7 +29,6 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
@@ -42,13 +41,9 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-
-//import com.iver.cit.gvsig.cad.CADExtension;
-//import com.iver.cit.gvsig.cad.util.GeometryTypes;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.AreaCADToolContext;
@@ -295,8 +290,6 @@ public class AreaCADTool extends InsertionCADTool {
 
 	private void initialize(){
 		points.clear();
-		keys.clear();
-		initializeFormState();
 		virtualIndex = null;
 		numShapes = 0;
 		isHole = false;
