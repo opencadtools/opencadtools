@@ -399,8 +399,9 @@ public class CutPolygonCADTool extends InsertionCADTool{
 
 
 //			Painting vertex
+			AffineTransform at = CADExtension.getEditionManager().getMapControl().getViewPort().getAffineTransform();
 			Handler[] h = geom.getHandlers(IGeometry.SELECTHANDLER);
-			FGraphicUtilities.DrawHandlers((Graphics2D) g,new AffineTransform(),h,DefaultCADTool.drawingSymbol);
+			FGraphicUtilities.DrawHandlers((Graphics2D) g, at, h, DefaultCADTool.drawingSymbol);
 		}
 //		Cleaning the last point of the snappers
 		cleanSnapper();

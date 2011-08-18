@@ -50,8 +50,7 @@ public final class CutLineCADToolContext
         CutLine.SetCutPoint.Entry(this);
     }
 
-    public void addOption(String s)
-    {
+    public void addOption(String s) {
         _transition = "addOption";
         getState().addOption(this, s);
         _transition = "";

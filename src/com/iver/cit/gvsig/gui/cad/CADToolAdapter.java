@@ -24,6 +24,8 @@ import java.util.prefs.Preferences;
 
 import org.cresques.cts.IProjection;
 
+import statemap.StateUndefinedException;
+
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
@@ -52,6 +54,8 @@ import com.iver.cit.gvsig.fmap.layers.SpatialCache;
 import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
+import com.iver.cit.gvsig.gui.cad.tools.CutLineCADTool;
+import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.gui.preferences.SnapConfigPage;
 import com.iver.cit.gvsig.layers.ILayerEdited;
@@ -1421,13 +1425,16 @@ public class CADToolAdapter extends Behavior {
 //					}
 //				}
 
+					
 			} catch (Exception e) {
+				if (!(e instanceof StateUndefinedException) || !(ct instanceof CutLineCADTool || ct instanceof CutPolygonCADTool)) {  
 				e.printStackTrace();
 				View vista = (View) PluginServices.getMDIManager()
 						.getActiveWindow();
 				vista.getConsolePanel().addText(
 						"\n" + PluginServices.getText(this, "incorrect_option")
 								+ " : " + actionCommand, JConsole.ERROR);
+				}
 			}
 		} else if ((actionCommand.equals("tab"))) { //NACHOV&& (!formOpened)) {
 			CADTool ct = (CADTool) cadToolStack.peek();
