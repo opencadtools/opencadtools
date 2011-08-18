@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -217,6 +218,21 @@ public class CircleCADTool extends DefaultCADTool {
 			return false;
 		}
 		return true;
+	}
+
+	public void drawOperation(Graphics g, ArrayList pointList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isMultiTransition() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void transition(InputEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
@@ -137,11 +138,11 @@ public class LineCADTool extends DefaultCADTool {
             try {
             	if (((FLyrVect)getVLE().getLayer()).getShapeType() == (FShape.LINE|FShape.M)){
             		geom = ShapeMFactory.createPolyline2DM(elShape,
-            				new double[((FPolyline2D)geom.getInternalShape()).getSelectHandlers().length]);				
+            				new double[((FPolyline2D)geom.getInternalShape()).getSelectHandlers().length]);
             	}
             } catch (ReadDriverException e) {
             	NotificationManager.addError(e);
-            }            
+            }
             addGeometry(geom);
             firstPoint = (Point2D) lastPoint.clone();
         } else if (status == "Line.LenghtOrPoint") {
@@ -161,7 +162,7 @@ public class LineCADTool extends DefaultCADTool {
             try {
             	if (((FLyrVect)getVLE().getLayer()).getShapeType() == (FShape.LINE|FShape.M)){
             		geom = ShapeMFactory.createPolyline2DM(elShape,
-            				new double[((FPolyline2D)geom.getInternalShape()).getSelectHandlers().length]);				
+            				new double[((FPolyline2D)geom.getInternalShape()).getSelectHandlers().length]);
             	}
             } catch (ReadDriverException e) {
             	NotificationManager.addError(e);
@@ -245,5 +246,20 @@ public class LineCADTool extends DefaultCADTool {
 			return false;
 		}
 		return true;
+	}
+
+	public void drawOperation(Graphics g, ArrayList pointList) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public boolean isMultiTransition() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void transition(InputEvent event) {
+		// TODO Auto-generated method stub
+
 	}
 }

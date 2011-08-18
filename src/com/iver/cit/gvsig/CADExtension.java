@@ -44,6 +44,7 @@ import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
@@ -222,9 +223,21 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 				CADExtension.class.getClassLoader().getResource(
 						"images/Snapper.png"));
 		PluginServices.getIconTheme().registerDefault(
-				"cad-selection-icon",
+				"redigitalizar_linea",
 				CADExtension.class.getClassLoader().getResource(
-						"images/cadselection.png"));
+						"images/MiRedigitalizarLinea.png"));
+		PluginServices.getIconTheme().registerDefault(
+				"redigitalizar_poligono",
+				CADExtension.class.getClassLoader().getResource(
+						"images/RedigitalizarArea.png"));
+		PluginServices.getIconTheme().registerDefault(
+				"cortar_poligono",
+				CADExtension.class.getClassLoader().getResource(
+						"images/MiCortarPoligono.png"));
+		PluginServices.getIconTheme().registerDefault(
+				"cortar_linea",
+				CADExtension.class.getClassLoader().getResource(
+						"images/MiCortarLinea.png"));
 	}
 
 	/**
@@ -359,8 +372,8 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 				return false;
 			}
 
-			if (e.getID() != KeyEvent.KEY_RELEASED)
-				return false;
+			//if (e.getID() != KeyEvent.KEY_RELEASED)
+				//return false;
 			if (!(e.getComponent() instanceof JTextComponent)) {
 				if (e.getKeyCode() == KeyEvent.VK_DELETE)
 					cta.keyPressed("eliminar");
@@ -372,8 +385,16 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 					// QUE NO ES EL DE CONSOLA
 					if (!(e.getSource() instanceof JTable))
 						view.focusConsole("");
-				}
-				else if ((!e.isActionKey() && e.getKeyCode()!=KeyEvent.VK_TAB)) {
+				}else if(e.getKeyCode() == KeyEvent.VK_SPACE){
+					System.out.println("CADExtension-->>Espacio pulsado");
+					cta.keyPressed("espacio");
+				}else if(e.getKeyCode() == KeyEvent.VK_TAB){
+					//[cartolab] add next line
+			          if ((e.getModifiers () & InputEvent.ALT_MASK) == 0){
+							System.out.println("Tabulador pulsado");					
+							cta.keyPressed("tab");
+						}
+				}else if ((!e.isActionKey() && e.getKeyCode()!=KeyEvent.VK_TAB)) {
 						//if (Character.isLetterOrDigit(e.getKeyChar())) {
 							Character keyChar = new Character(e.getKeyChar());
 							if (e.getComponent().getName() != null) {

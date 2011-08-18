@@ -343,4 +343,19 @@ public class InternalPolygonCADTool extends DefaultCADTool {
 		_fsm.endPoint(x, y, event);
 	}
 
+	public void drawOperation(Graphics g, ArrayList pointList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isMultiTransition() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void transition(InputEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

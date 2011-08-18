@@ -299,5 +299,20 @@ public class SplineCADTool extends DefaultCADTool {
 //
 //    }
 
+	public void drawOperation(Graphics g, ArrayList pointList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isMultiTransition() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void transition(InputEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

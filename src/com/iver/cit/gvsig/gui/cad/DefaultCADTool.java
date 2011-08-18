@@ -41,6 +41,7 @@
 package com.iver.cit.gvsig.gui.cad;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -49,6 +50,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 
@@ -77,10 +80,12 @@ import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SpatialCache;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
+import com.iver.cit.gvsig.project.documents.view.gui.IView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.console.JConsole;
 
@@ -88,6 +93,8 @@ import com.iver.utiles.console.JConsole;
  * DOCUMENT ME!
  *
  * @author Vicente Caballero Navarro
+ * @author Laboratorio de Bases de Datos. Universidad de A Coruña
+ * @author Cartolab. Universidad de A Coruña
  */
 public abstract class DefaultCADTool implements CADTool {
 	public static ISymbol selectionSymbol = SymbologyFactory.
@@ -109,6 +116,9 @@ public abstract class DefaultCADTool implements CADTool {
 	private String tool = "selection";
 
 	private DefaultCADTool previousTool;
+	
+	private boolean multiTransition = false;
+	private boolean errorOnIntersection;
 
 	private ArrayList temporalCache = new ArrayList();
 
@@ -203,15 +213,34 @@ public abstract class DefaultCADTool implements CADTool {
 	/**
 	 * DOCUMENT ME!
 	 *
+	 * @param g
+	 *            DOCUMENT ME!
+	 * @param firstPoint
+	 *            DOCUMENT ME!
+	 * @param endPoint
+	 *            DOCUMENT ME!
+	 */
+	public void drawLine(Graphics2D g, Point2D firstPoint, Point2D endPoint) {
+		GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
+		elShape.moveTo(firstPoint.getX(), firstPoint.getY());
+		elShape.lineTo(endPoint.getX(), endPoint.getY());
+		ShapeFactory.createPolyline2D(elShape).draw(g,
+				getCadToolAdapter().getMapControl().getViewPort(),
+				CADTool.drawingSymbol);
+	}
+
+	/**
+	 * DOCUMENT ME!
+	 *
 	 * @param geometry
 	 *            DOCUMENT ME!
 	 */
 	public void addGeometry(IGeometry geometry) {
 		VectorialEditableAdapter vea = getVLE().getVEA();
 		try {
-			// Deberíamos comprobar que lo que escribimos es correcto:
+			// Deberï¿½amos comprobar que lo que escribimos es correcto:
 			// Lo hacemos en el VectorialAdapter, justo antes de
-			// añadir, borrar o modificar una feature
+			// aï¿½adir, borrar o modificar una feature
 
 			int numAttr = vea.getRecordset().getFieldCount();
 			Value[] values = new Value[numAttr];
@@ -467,9 +496,27 @@ public abstract class DefaultCADTool implements CADTool {
 		if (window instanceof View){
 			((View)window).getConsolePanel().addText(s + " : " + " X = " + x + ", Y = " + y,
 				JConsole.ERROR);
-		}
+	}
+	
+	public void throwInvalidGeometryException(String s) {
+		JOptionPane.showMessageDialog((Component) PluginServices.getMainFrame(), 
+				s,
+				PluginServices.getText(this, "error"), JOptionPane.WARNING_MESSAGE);
 	}
 
+	public void throwNoPointsException(String s) {
+		View vista = (View) PluginServices.getMDIManager().getActiveWindow();
+			vista.getConsolePanel().addText(s , JConsole.ERROR);
+	}
+	
+	public boolean isErrorOnIntersection() {
+		return errorOnIntersection;
+	}
+
+	public void setErrorOnIntersection(boolean errorOnIntersection) {
+		this.errorOnIntersection = errorOnIntersection;
+	}
+	
 	public void setPreviosTool(DefaultCADTool tool) {
 		previousTool=tool;
 	}
@@ -480,6 +527,86 @@ public abstract class DefaultCADTool implements CADTool {
 	public void endTransition(double x, double y, MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+	
+//	Permite transiciones mÃºltiples para emplear los snaps de "seguir geometrÃ­a"
+	public boolean isMultiTransition(){
+		return multiTransition;
+	}
+
+	public void setMultiTransition(boolean condicion){
+		multiTransition = condicion;
+	}
+	
+	public IView obtenerView() {
+		boolean encontrado=false;
+		IWindow[] ventanas = PluginServices.getMDIManager().getOrderedWindows();
+		int i=0;
+		IView vista = null;
+		while (!encontrado && i<ventanas.length) {
+			if (ventanas[i] instanceof IView) {
+				vista = (IView) ventanas[i];
+				encontrado=true;
+			}
+			else {
+				i++;
+			}
+		}
+		return vista;
+	}
+	
+	/** Devuelve la capa activa. Suponemos que solo hay una activa*/
+	public FLayer getActiveLayer(){
+		FLayer[] sel = obtenerView().getMapControl().getMapContext().
+		getLayers().getActives();
+		return (FLayer) sel[0];
+	}
+	
+	public void changeActiveLayer(FLayer layer){
+		FLayer activeLayer = getActiveLayer();
+		activeLayer.setActive(false);
+		layer.setActive(true);
+	}
+	
+	public boolean checksOnEdition(IGeometry Igeom, String geoid){
+		//return checksOnEdition(Igeom, geoid, true);
+		return true;
+	}
+	
+	public boolean checksOnEditionSinContinuidad(IGeometry Igeom, String geoid){
+		return checksOnEditionSinContinuidad(Igeom, geoid, true);
+	}
+	
+	public boolean checksOnEditionSinContinuidad(IGeometry Igeom, String geoid, boolean lanzaventana){
+		boolean checksOnEdition = true;
+
+		/*FLayer flyr = getActiveLayer();
+		LayerDescriptor ld = LayerManager.getInstance().getLayerDescriptor(flyr.getName());
+		LayerEditionDescriptor led = ld.getLayerEditionDescriptor();
+		Collection comprobaciones = ld.getLayerEditionDescriptor().getComprobaciones();
+
+		if(led.hayComprobaciones()){
+			try{
+				for(Iterator it = comprobaciones.iterator(); it.hasNext(); ){
+					Comprobacion comp = (Comprobacion)it.next();
+					if((comp instanceof ComprobacionViarios) || (comp instanceof ComprobacionAguas))
+						continue;
+					checksOnEdition = comp.comprobarEnEdicion(Igeom.toJTSGeometry(), geoid, lanzaventana);
+					if(!checksOnEdition)
+						break;
+				}
+
+			}catch(InternalErrorException e){
+				errorOnIntersection = true;
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(
+						(Component) PluginServices.getMDIManager().getActiveWindow(),
+						PluginServices.getText(this, "error_during_check"),
+						PluginServices.getText(this, "error_title"),
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}*/
+		return checksOnEdition;
 	}
 
 }
