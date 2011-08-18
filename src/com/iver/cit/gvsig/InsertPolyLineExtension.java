@@ -46,6 +46,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.cad.tools.EIELPolylineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SplineCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
@@ -59,14 +60,14 @@ public class InsertPolyLineExtension extends Extension {
 	protected View view;
 
 	protected MapControl mapControl;
-	protected PolylineCADTool polyline;
+	protected EIELPolylineCADTool polyline;
 	protected SplineCADTool spline;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		polyline = new PolylineCADTool();
+		polyline = new EIELPolylineCADTool();
 		spline = new SplineCADTool();
 		CADExtension.addCADTool("_polyline", polyline);
 		CADExtension.addCADTool("_spline", spline);
