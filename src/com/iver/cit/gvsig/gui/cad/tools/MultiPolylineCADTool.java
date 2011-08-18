@@ -138,7 +138,7 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 			//Ya se ha insertado alguna línea en memoria
 			if(virtualIndex != null){
 				if(numLines != 0){
-					row = (DefaultRowEdited)vea.getRow(virtualIndex.intValue());
+				    row = vea.getRow(virtualIndex.intValue());
 					IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
 					IGeometry geometry = feat.getGeometry();
 					GeneralPathX currentGp = getCurrentPath(geometry);
@@ -176,7 +176,7 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 			if(virtualIndex != null){
 				if(numLines != 0){
 					IRowEdited row;
-					row = (DefaultRowEdited)vea.getRow(virtualIndex.intValue());
+					row = vea.getRow(virtualIndex.intValue());
 					IGeometry geometry =  ((IFeature)row.getLinkedRow().cloneRow()).getGeometry();
 					GeneralPathX currentGp = getCurrentPath(geometry);
 					currentGp.append(gp.getPathIterator(null,FConverter.FLATNESS), false);
@@ -206,7 +206,7 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 		IRowEdited row=null;
 		try {
 			if(numLines > 1){
-				row = (DefaultRowEdited)vea.getRow(virtualIndex.intValue());
+			    row = vea.getRow(virtualIndex.intValue());
 				IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
 				IGeometry geometry = feat.getGeometry();
 				geometry = removeLastShape(geometry);
@@ -581,7 +581,7 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 	}
 
 	public String getName() {
-		return PluginServices.getText(this,"multilinea_");
+	    return PluginServices.getText(this,"multipolyline_");
 	}
 
 	public String toString() {
