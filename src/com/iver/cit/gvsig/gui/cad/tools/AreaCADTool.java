@@ -81,15 +81,10 @@ public class AreaCADTool extends InsertionCADTool {
 	 * carga previa a la utilización de la herramienta.
 	 */
 	public void init() {
-		super.init();
-		this.setMultiTransition(true);
-		points.clear();
-		numShapes = 0;
-		isHole = false;
-		_fsm = new AreaCADToolContext(this);
-//		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
-//		los snappers
-		getCadToolAdapter().setPreviousPoint((double[])null);
+	// clear();
+	if (_fsm == null) {
+	    _fsm = new AreaCADToolContext(this);
+	}
 	}
 	
 	public void clear() {
@@ -98,6 +93,11 @@ public class AreaCADTool extends InsertionCADTool {
 		points.clear();
 		numShapes = 0;
 		isHole = false;
+	// con esto limpio el ultimo punto pulsado para reinicializar el
+	// seguimiento de
+	// los snappers
+	getCadToolAdapter().setPreviousPoint((double[]) null);
+	_fsm = new AreaCADToolContext(this);
 	}
 
 	/* (non-Javadoc)

@@ -1,11 +1,8 @@
 package com.iver.cit.gvsig.gui.cad;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -15,7 +12,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.MemoryImageSource;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +19,6 @@ import java.util.Stack;
 import java.util.prefs.Preferences;
 
 import org.cresques.cts.IProjection;
-
-import statemap.StateUndefinedException;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
@@ -45,7 +39,6 @@ import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -55,8 +48,6 @@ import com.iver.cit.gvsig.fmap.layers.SpatialCache;
 import com.iver.cit.gvsig.fmap.tools.BehaviorException;
 import com.iver.cit.gvsig.fmap.tools.Behavior.Behavior;
 import com.iver.cit.gvsig.fmap.tools.Listeners.ToolListener;
-import com.iver.cit.gvsig.gui.cad.tools.CutLineCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.gui.preferences.SnapConfigPage;
 import com.iver.cit.gvsig.layers.ILayerEdited;
@@ -69,13 +60,8 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperGeometriesVect
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
-import com.iver.cit.gvsig.project.documents.view.snapping.SnappingVisitor;
-import com.iver.cit.gvsig.project.documents.view.snapping.snappers.FinalPointSnapper;
-import com.iver.cit.gvsig.project.documents.view.snapping.snappers.NearestPointSnapper;
-import com.iver.cit.gvsig.project.documents.view.snapping.snappers.PixelSnapper;
 import com.iver.cit.gvsig.project.documents.view.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
-import com.iver.utiles.swing.threads.Cancellable;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
@@ -1280,6 +1266,10 @@ public class CADToolAdapter extends Behavior {
 	 * @see #getCadTool()
 	 */
 	public void setCadTool(CADTool cadTool) {
+	CADTool previousTool = getCadTool();
+	if (previousTool != null && previousTool != cadTool) {
+	    previousTool.clear();
+	}
 		cadToolStack.clear();
 		pushCadTool(cadTool);
 		// askQuestion();

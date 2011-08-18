@@ -77,7 +77,10 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 	 * carga previa a la utilización de la herramienta.
 	 */
 	public void init() {
-		_fsm = new MultiPolylineCADToolContext(this);
+	// clear();
+	if (_fsm == null) {
+	    _fsm = new MultiPolylineCADToolContext(this);
+	}
 //		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
 //		los snappers
 		getCadToolAdapter().setPreviousPoint((double[])null);
@@ -346,7 +349,8 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 		if((virtualIndex != null) && (numLines > 0)){
 			getCadToolAdapter().delete(virtualIndex.intValue());
 		}
-		initialize();
+	// initialize();
+	clear();
 	}
 
 

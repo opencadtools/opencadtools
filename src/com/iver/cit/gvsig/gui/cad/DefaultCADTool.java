@@ -608,4 +608,8 @@ public abstract class DefaultCADTool implements CADTool {
 		}*/
 		return checksOnEdition;
 	}
+
+    public void clear() {
+
+    }
 }

@@ -44,15 +44,14 @@ import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LineSegment;
-
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.RedigitalizePolygonCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.RedigitalizePolygonCADToolContext.RedigitalizePolygonCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineSegment;
 
 /**
  *Tool to redigitalize polygons.
@@ -86,9 +85,10 @@ public class RedigitalizePolygonCADTool extends DefaultCADTool{
 
 	public void init() {
 		//super.init();
-		clear();
+	// clear();
+	if (_fsm == null) {
 		_fsm = new RedigitalizePolygonCADToolContext(this);
-
+	}
 	}
 
 	/* (non-Javadoc)
@@ -631,6 +631,7 @@ public class RedigitalizePolygonCADTool extends DefaultCADTool{
 		selectedEntity=null;
 		doShortPath = true;
 		multiSelected = 0;
+	_fsm = new RedigitalizePolygonCADToolContext(this);
 	}
 
 	public void removePoint(InputEvent event) {

@@ -83,32 +83,24 @@ public class EIELPolylineCADTool extends InsertionCADTool {
 	 * carga previa a la utilización de la herramienta.
 	 */
 	public void init() {       
-		super.init();
+	// clear();
+	if (_fsm == null) {
+	    _fsm = new EIELPolylineCADToolContext(this);
+	}
+	}
+
+    public void clear() {
+	super.init();
 		this.setMultiTransition(true);
 		points.clear();
 		list.clear();
 		firstPoint = null;
 		antPoint = null;
-		_fsm = new EIELPolylineCADToolContext(this);
 //		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
 //		los snappers
 		getCadToolAdapter().setPreviousPoint((double[])null);
+	_fsm = new EIELPolylineCADToolContext(this);
 	}
-
-	/**
-	 * Método que prepara la clase para una nueva digitalización.
-	 * Inicializa todas las variables
-	 * */
-	private void initialize(){
-		list.clear();
-		points.clear();
-		antPoint=firstPoint=null;
-//		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
-//		los snappers
-		getCadToolAdapter().setPreviousPoint((double[])null);
-
-	}
-
 
 	public IGeometry getGeometry() {
 		IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);

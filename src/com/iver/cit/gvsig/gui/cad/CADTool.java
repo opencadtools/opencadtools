@@ -49,8 +49,6 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
-import com.iver.cit.gvsig.fmap.core.v02.FConstant;
-import com.iver.cit.gvsig.fmap.core.v02.FSymbol;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
@@ -142,4 +140,6 @@ public interface CADTool {
 	public void setPreviosTool(DefaultCADTool tool);
 	public void restorePreviousTool();
 	public void endTransition(double x, double y, MouseEvent e);
+
+    public void clear();
 }

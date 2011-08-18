@@ -74,8 +74,14 @@ public class MultiPointCADTool extends InsertionCADTool {
      * carga previa a la utilización de la herramienta.
      */
     public void init() {
-    	_fsm = new MultiPointCADToolContext(this);
-    	points.clear();
+	if (_fsm == null) {
+	    _fsm = new MultiPointCADToolContext(this);
+	}
+    }
+
+    public void clear() {
+	points.clear();
+	_fsm = new MultiPointCADToolContext(this);
     }
 
     /**
