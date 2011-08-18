@@ -86,7 +86,7 @@ public class ExportTo extends Extension {
 	private String lastPath = null;
 	private static HashMap<FLyrVect, EndExportToCommand> exportedLayers =
 		new HashMap<FLyrVect, EndExportToCommand>();
-	private static Preferences prefs = Preferences.userRoot().node( "gvSIG.encoding.dbf" );
+	protected static Preferences prefs = Preferences.userRoot().node( "gvSIG.encoding.dbf" );
 
 	/**
 	 * This method is used to add a layer that is exported
@@ -788,7 +788,7 @@ public class ExportTo extends Extension {
 	 * @param layer
 	 * @param writer
 	 */
-	private void loadEnconding(FLyrVect layer, ShpWriter writer) {
+	protected void loadEnconding(FLyrVect layer, ShpWriter writer) {
 		String charSetName = prefs.get("dbf_encoding", DbaseFile.getDefaultCharset().toString());
 		if(layer.getSource() instanceof VectorialFileAdapter)
 			writer.loadDbfEncoding(((VectorialFileAdapter)layer.getSource()).getFile().getAbsolutePath(), Charset.forName(charSetName));
@@ -799,7 +799,7 @@ public class ExportTo extends Extension {
 		}
 	}
 
-	private IndexedShpDriver getOpenShpDriver(File fileShp) throws OpenDriverException {
+	protected IndexedShpDriver getOpenShpDriver(File fileShp) throws OpenDriverException {
 		IndexedShpDriver drv = new IndexedShpDriver();
 		if (!fileShp.exists()) {
 			try {
@@ -839,8 +839,12 @@ public class ExportTo extends Extension {
 			return false;
 		}
 
-		if (f instanceof View)
-			return true;
+		if (f instanceof View) {
+			FLayer[] layers = ((View) f).getMapControl().getMapContext().getLayers().getActives();
+			if (layers.length > 1) {
+				return true;
+			}
+		}
 		return false;
 	}
 

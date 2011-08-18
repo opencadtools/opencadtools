@@ -32,6 +32,14 @@
 			<menu text="Capa/export_to/dxf" action-command="DXF"/>
 			<menu text="Capa/export_to/postgis" action-command="POSTGIS"/>
 		</extension>
+		
+		<extension class-name="com.iver.cit.gvsig.ExportSeveralTo"
+			description="Exportar a diversos formatos"
+			active="true">
+			<menu text="Capa/export_to/shp" action-command="SHP" position="1010"/>
+			<menu text="Capa/export_to/dxf" action-command="DXF" position="1020"/>
+			<menu text="Capa/export_to/postgis" action-command="POSTGIS" position="1030"/>
+		</extension>
 
 		<!-- <extension class-name="com.iver.cit.gvsig.StopEditingToGT2Shp"
 			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma si es un shapefile."
