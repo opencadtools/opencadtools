@@ -520,8 +520,8 @@ public class RedigitalizeLineCADTool extends DefaultCADTool{
 		getCadToolAdapter().setPreviousPoint((double[])null);
 		selectedEntity=null;
 		multiSelected = 0;
+		_fsm = new RedigitalizeLineCADToolContext(this);
 	}
-
 	/**
 	 * It deletes a point of the new redigitalized
 	 * @param event
