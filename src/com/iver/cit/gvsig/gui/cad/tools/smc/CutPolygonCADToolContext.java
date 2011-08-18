@@ -20,6 +20,8 @@ public final class CutPolygonCADToolContext
 // Member methods.
 //
 
+	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
+
     public CutPolygonCADToolContext(CutPolygonCADTool owner)
     {
         super();
@@ -313,7 +315,12 @@ public final class CutPolygonCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point"));
+                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                    	if (deleteButton3) {
+                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_end"));
+                    	} else {
+                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point"));
+                    	}
                     }
                     finally
                     {
@@ -375,7 +382,12 @@ public final class CutPolygonCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point"));
+                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                    	if (deleteButton3) {
+                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point_del"));
+                    	} else {
+                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point"));
+                    	}
                     }
                     finally
                     {
@@ -391,7 +403,12 @@ public final class CutPolygonCADToolContext
                     try
                     {
                         ctxt.throwPointException(PluginServices.getText(this,"redigitaliza_incorrect_point"), pointX, pointY);
-                        ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point"));
+                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                    	if (deleteButton3) {
+                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_end"));
+                    	} else {
+                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point"));
+                    	}
                     }
                     finally
                     {
@@ -495,7 +512,12 @@ public final class CutPolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point"));
+                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                	if (deleteButton3) {
+                		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point_del"));
+                	} else {
+                		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point"));
+                	}
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -530,7 +552,12 @@ public final class CutPolygonCADToolContext
                     context.clearState();
                     try
                     {
-                        ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point"));
+                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                    	if (deleteButton3) {
+                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_end"));
+                    	} else {
+                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point"));
+                    	}
                         ctxt.removeSecondPoint(event);
                     }
                     finally

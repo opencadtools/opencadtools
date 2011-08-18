@@ -17,6 +17,8 @@ public final class MultiPointCADToolContext
 // Member methods.
 //
 
+	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
+
     public MultiPointCADToolContext(MultiPointCADTool owner)
     {
         super();
@@ -365,8 +367,12 @@ public final class MultiPointCADToolContext
 
             	context.clearState();
             	try {
-            		tool.setQuestion(PluginServices.getText(this, "insert_next_point"));
-            		tool.setDescription(new String[]{"cancel", "end"});
+                    boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                	if (deleteButton3) {
+                		tool.setQuestion(PluginServices.getText(this,"insert_next_point_del"));
+                	} else {
+                		tool.setQuestion(PluginServices.getText(this,"insert_next_point"));
+                	}
             		tool.addPoint(pointX, pointY, event);
             	}
             	finally {
@@ -396,7 +402,6 @@ public final class MultiPointCADToolContext
             {
                 MultiPointCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(PluginServices.getText(this,"insert_point_or_delete"));
                 ctxt.setDescription(new String[]{"cancel", "end"});
                 return;
             }
@@ -439,8 +444,12 @@ public final class MultiPointCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
-                    ctxt.setDescription(new String[]{"cancel", "end"});
+                    boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                	if (deleteButton3) {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_del"));
+                	} else {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
+                	}
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

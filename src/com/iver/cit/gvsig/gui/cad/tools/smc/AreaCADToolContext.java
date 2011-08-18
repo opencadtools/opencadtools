@@ -41,6 +41,8 @@ public final class AreaCADToolContext
 // Member methods.
 //
 
+	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
+
     public AreaCADToolContext(AreaCADTool owner)
     {
         super();
@@ -394,6 +396,7 @@ public final class AreaCADToolContext
 
             protected void Entry(AreaCADToolContext context)
             {
+            	super.Entry(context);
                 AreaCADTool ctxt = context.getOwner();
 
                 ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
@@ -527,7 +530,12 @@ public final class AreaCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
+                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                	if (deleteButton3) {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_hole_del"));
+                	} else {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_hole"));
+                	}
 //                    ctxt.setDescription(new String[]{"terminate", "cancel"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
@@ -627,7 +635,7 @@ public final class AreaCADToolContext
 //                        (context.getState()).Entry(context);
 //                    }
 //                }
-//                else 
+//                else
 //                if (s.equals("espacio") && ctxt.isErrorOnIntersection())
 //                {
 //
@@ -693,7 +701,12 @@ public final class AreaCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_hole"));
+                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                	if (deleteButton3) {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_hole_del"));
+                	} else {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_hole"));
+                	}
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally

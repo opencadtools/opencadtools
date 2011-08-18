@@ -19,6 +19,8 @@ public final class MultiPolylineCADToolContext
 // Member methods.
 //
 
+	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
+
     public MultiPolylineCADToolContext(MultiPolylineCADTool owner)
     {
         super();
@@ -437,7 +439,12 @@ public final class MultiPolylineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line"));
+                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                	if (deleteButton3) {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line_del"));
+                	} else {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line"));
+                	}
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -563,7 +570,12 @@ public final class MultiPolylineCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line"));
+                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+                	if (deleteButton3) {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line_del"));
+                	} else {
+                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line"));
+                	}
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
