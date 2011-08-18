@@ -182,8 +182,12 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 		kfm.addKeyEventPostProcessor(new myKeyEventPostProcessor());
 
 		registerIcons();
-		
-		//default snappers & follow geometry set to false
+    }
+
+    public void potInitialize() {
+
+	// get preferences of snappers (true by default) and follow geometry
+	// (false by default)
 		SnapperStatus.setNearLineActivated(prefs.getBoolean("snapperFinalPoint", true));
 		SnapperStatus.setVertexActivated(prefs.getBoolean("snapperNearestPoint", true));
 		FollowGeometryExtension.setActivated(prefs.getBoolean("followGeometry", false));

@@ -26,6 +26,7 @@ package com.iver.cit.gvsig;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
+import com.iver.andami.ui.mdiFrame.MDIFrame;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.tools.InsertionCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RedigitalizeLineCADTool;
@@ -60,6 +61,12 @@ public class FollowGeometryExtension extends Extension {
 	
 	public static void setActivated(boolean followGeom) {
 		activated = followGeom;
+				if (!followGeom) {
+		   			((MDIFrame)PluginServices.getMainFrame()).setSelectedTool("follow", "_empty");
+		   		} else {
+	    ((MDIFrame) PluginServices.getMainFrame()).setSelectedTool(
+		    "follow", "_follow");
+	}
 	}
 	
 	public void execute(String s) {
@@ -70,12 +77,12 @@ public class FollowGeometryExtension extends Extension {
 			String message = new String();
 			
 			if (activated) {
-				activated = false;
-				message = PluginServices.getText(this, "followGeom_deactivated");
+		message = PluginServices
+			.getText(this, "followGeom_deactivated");
 			} else {
-				activated = true;
-				message = PluginServices.getText(this, "followGeom_activated");
+		message = PluginServices.getText(this, "followGeom_activated");
 			}
+	    setActivated(!activated);
 
 			//Printing in console if the forms are activated
 			if (PluginServices.getMDIManager().getActiveWindow() instanceof View)

@@ -362,8 +362,19 @@
 			   description="Extension to activate and deactivate the Snappers"
 			   active="true">
 		  <menu text="geometry/snappers" action-command="_snappers" icon="Snapper"/>
-		  <tool-bar name="insert" position="33">
-		    <selectable-tool icon="Snapper" action-command="_snappers" tooltip="snappers" group="vista" position="5"/>
+			<tool-bar name="snappers_toolbar" position="34">
+				<selectable-tool icon="Snapper" action-command="_snappers" tooltip="snappers" group="snappers" position="5"/>
+			</tool-bar>
+		</extension>
+		
+		<extension class-name="com.iver.cit.gvsig.EmptyExtension"
+			description="Extension to activate and deactivate the Snappers"
+			active="true">
+			<tool-bar name="snappers_toolbar" position="34">
+				<selectable-tool icon="Snapper" action-command="_empty" tooltip="snappers" group="snappers" position="1"/>
+			</tool-bar>
+			<tool-bar name="follow_toolbar" position="35">
+				<selectable-tool icon="follow-geometry" action-command="_empty" tooltip="follow_geom" group="follow" position="1"/>
 		  </tool-bar>
 		</extension>
  
@@ -429,8 +440,8 @@
 			active="true">
 			<menu text="geometry/follow_geom" action-command="_follow" icon="follow-geometry"/>
 
-			<tool-bar name="ed_options" position="33">
-				<selectable-tool icon="follow-geometry" action-command="_follow" tooltip="follow_geom" group="vista" position="6"/>
+			<tool-bar name="follow_toolbar" position="35">
+				<selectable-tool icon="follow-geometry" action-command="_follow" tooltip="follow_geom" group="follow" position="6"/>
 			</tool-bar>
 		</extension>
 

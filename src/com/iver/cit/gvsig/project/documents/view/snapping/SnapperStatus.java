@@ -23,6 +23,9 @@
  */
 package com.iver.cit.gvsig.project.documents.view.snapping;
 
+import com.iver.andami.PluginServices;
+import com.iver.andami.ui.mdiFrame.MDIFrame;
+
 /**
  * @author Javier Estévez <jestevez (at) cartolab.es>
  * @author Francisco Puga <fpuga (at) cartolab.es>
@@ -57,10 +60,21 @@ public class SnapperStatus {
 
 	public static void setVertexActivated(boolean activate) {
 		vertexActivated = activate;
+	toggleButton(activate);
 	}
 
 	public static void setNearLineActivated(boolean activate) {
 		nearLineActivated = activate;
-	}
+	toggleButton(activate);
+    }
 
+    private static void toggleButton(boolean pushed) {
+	if (!pushed) {
+	    ((MDIFrame) PluginServices.getMainFrame()).setSelectedTool(
+		    "snappers", "_empty");
+	} else {
+	    ((MDIFrame) PluginServices.getMainFrame()).setSelectedTool(
+		    "snappers", "_snappers");
+	}
+	}
 }
