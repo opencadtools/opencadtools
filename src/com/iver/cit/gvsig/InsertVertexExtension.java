@@ -50,7 +50,8 @@ public class InsertVertexExtension extends Extension {
         CADExtension.addCADTool("_insertVertex", insertVertex);
         PluginServices.getIconTheme().registerDefault(
 				"edition-geometry-insert-vertex",
-				this.getClass().getClassLoader().getResource("images/InsertVertex.gif")
+		this.getClass().getClassLoader()
+			.getResource("images/icons/anhadir_vertice.png")
 			);
     }
 

@@ -44,8 +44,8 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class CutLineExtension extends Extension {
 
-	private final String iconPath = "images/CutLine.png";
-	private final String iconCode = "edition-geometry-cut-line";
+    private final String iconPath = "images/icons/cortar_linea.png";
+    private final String iconCode = "edition-cut-line";
 	private final String cadToolCode = "_cut_line";
 	private View view;
 

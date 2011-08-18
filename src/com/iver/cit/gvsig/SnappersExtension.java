@@ -52,7 +52,8 @@ public class SnappersExtension extends Extension {
 		snapperStatus = SnapperStatus.getSnapperStatus();
 
 		PluginServices.getIconTheme().registerDefault("Snapper",
-				this.getClass().getClassLoader().getResource("images/Snapper.png"));
+		this.getClass().getClassLoader()
+			.getResource("images/icons/activar_snap.png"));
 	}
 
 	/**

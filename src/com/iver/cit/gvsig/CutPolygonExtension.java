@@ -29,8 +29,8 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extension to cut polygons on edition
@@ -45,7 +45,7 @@ public class CutPolygonExtension extends Extension {
 	private MapControl mapControl;
 	private CutPolygonCADTool polygon;
 	
-	private final String iconPath = "images/CutPolygon.png";
+    private final String iconPath = "images/icons/cortar_area.png";
 	private final String iconCode = "edition-geometry-cut-polygon";
 	private final String cadToolCode = "_cut_polygon";
 

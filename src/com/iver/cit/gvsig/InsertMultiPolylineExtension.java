@@ -29,12 +29,8 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
-
-//import es.udc.lbd.eiel.cad.util.GeometryTypes;
-//import es.udc.lbd.eiel.giseiel.util.layer_manager.LayerDescriptor;
-//import es.udc.lbd.eiel.giseiel.util.layer_manager.LayerManager;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPolylineCADTool;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extensión que gestiona la inserción de polilíneas en edición.
@@ -43,8 +39,8 @@ import com.iver.cit.gvsig.gui.cad.tools.MultiPolylineCADTool;
  * @author Javier Estévez [Cartolab]
  */
 public class InsertMultiPolylineExtension extends Extension {
-	private final String iconPath = "images/MultiPolyline.png";
-	private final String iconCode = "edition-geometry-insert-multipolyline";
+    private final String iconPath = "images/icons/multipolilinea.png";
+    private final String iconCode = "edition-insert-multipolyline";
 	private final String cadToolCode = "_insert_multipolyline";
 
 	private View view;

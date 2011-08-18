@@ -115,24 +115,24 @@
 		<extension class-name="com.iver.cit.gvsig.InsertPointExtension"
 			description="Extensión encargada de insertar puntos en una capa en edición."
 			active="true">
-			<menu text="geometry/insert/point" action-command="_point" icon="edition-insert-geometry-point"/>
+			<menu text="geometry/insert/point" action-command="_point" icon="edition-insert-point"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-point" action-command="_point" tooltip="point" position="1"/>
+				<selectable-tool icon="edition-insert-point" action-command="_point" tooltip="point" position="1"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertMultiPointExtension"
 			description="Extensión encargada de insertar multipuntos en una capa en edición."
 			active="true">
-			<menu text="geometry/insert/multipoint" action-command="_multipoint" icon="edition-insert-geometry-multipoint"/>
+			<menu text="geometry/insert/multipoint" action-command="_multipoint" icon="edition-insert-multipoint"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-multipoint" action-command="_multipoint" tooltip="multipoint" position="2"/>
+				<selectable-tool icon="edition-insert-multipoint" action-command="_multipoint" tooltip="multipoint" position="2"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertLineExtension"
 			description="Extensión encargada de insertar líneas en una capa en edición."
 			active="true">
-			<menu text="geometry/insert/line" action-command="_line" icon="edition-geometry-insert-line"/>
-			<menu text="geometry/insert/arc" action-command="_arc" icon="edition-insert-geometry-arc"/>
+			<menu text="geometry/insert/line" action-command="_line" icon="edition-insert-line"/>
+			<menu text="geometry/insert/arc" action-command="_arc" icon="edition-insert-arc"/>
 
 			<tool-bar name="insert" position="30">
 				<selectable-tool icon="edition-geometry-insert-line" action-command="_line" tooltip="line" position="3"/>
@@ -146,16 +146,16 @@
 			<!--menu text="geometry/insert/spline" action-command="_spline" icon="edition-insert-geometry-spline"/-->
 
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-polyline" action-command="_polyline" tooltip="polyline" position="5"/>
+				<selectable-tool icon="edition-insert-polyline" action-command="_polyline" tooltip="polyline" position="5"/>
 				<!--selectable-tool icon="edition-insert-geometry-spline" action-command="_spline" tooltip="spline" position="5"/-->
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertMultiPolylineExtension"
 			description="Extension to insert multipolylines."
 			active="true">
-			<menu text="geometry/insert/multipolyline" action-command="_insert_multipolyline" icon="edition-geometry-insert-multipolyline"/>
+			<menu text="geometry/insert/multipolyline" action-command="_insert_multipolyline" icon="edition-insert-multipolyline"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-geometry-insert-multipolyline" action-command="_insert_multipolyline" tooltip="multipolyline" group="vista" position="6"/>
+				<selectable-tool icon="edition-insert-multipolyline" action-command="_insert_multipolyline" tooltip="multipolyline" group="vista" position="6"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.InsertAreaExtension"
@@ -169,16 +169,16 @@
 		<extension class-name="com.iver.cit.gvsig.InsertPolygonExtension"
 			description="Extensión encargada de insertar poligonos en una capa en edición."
 			active="true">
-			<menu text="geometry/insert/polygon" action-command="_polygon" icon="edition-insert-geometry-polygon"/>
-			<menu text="geometry/insert/rectangle" action-command="_rectangle" icon="edition-insert-geometry-rectangle"/>
-			<menu text="geometry/insert/circle" action-command="_circle" icon="edition-insert-geometry-circle"/>
-			<menu text="geometry/insert/ellipse" action-command="_ellipse" icon="edition-insert-geometry-ellipse"/>
+			<menu text="geometry/insert/polygon" action-command="_polygon" icon="edition-insert-polygon"/>
+			<menu text="geometry/insert/rectangle" action-command="_rectangle" icon="edition-insert-rectangle"/>
+			<menu text="geometry/insert/circle" action-command="_circle" icon="edition-insert-circle"/>
+			<menu text="geometry/insert/ellipse" action-command="_ellipse" icon="edition-insert-ellipse"/>
 			<menu text="geometry/modify/edit_vertex" action-command="_editvertex" icon="edition-geometry-edit-vertex"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-insert-geometry-polygon" action-command="_polygon" tooltip="polygon" position="8"/>
-				<selectable-tool icon="edition-insert-geometry-rectangle" action-command="_rectangle" tooltip="rectangle" position="9"/>
-				<selectable-tool icon="edition-insert-geometry-circle" action-command="_circle" tooltip="circle" position="10"/>
-				<selectable-tool icon="edition-insert-geometry-ellipse" action-command="_ellipse" tooltip="ellipse" position="11"/>
+				<selectable-tool icon="edition-insert-polygon" action-command="_polygon" tooltip="polygon" position="8"/>
+				<selectable-tool icon="edition-insert-rectangle" action-command="_rectangle" tooltip="rectangle" position="9"/>
+				<selectable-tool icon="edition-insert-circle" action-command="_circle" tooltip="circle" position="10"/>
+				<selectable-tool icon="edition-insert-ellipse" action-command="_ellipse" tooltip="ellipse" position="11"/>
 			</tool-bar>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="edition-geometry-edit-vertex" action-command="_editvertex" tooltip="edit_vertex" position="8"/>
@@ -187,7 +187,7 @@
 		<extension class-name="com.iver.cit.gvsig.InsertVertexExtension"
 			description="Extension to insert new vertex on the geometries"
 			active="true">
-			<menu text="geometry/modify/add_vertex" action-command="_insertVertex" icon="images/InsertVertex.gif"/>
+			<menu text="geometry/modify/add_vertex" action-command="_insertVertex" icon="edition-geometry-insert-vertex"/>
 			<tool-bar name="modificar" position="31">
 				<selectable-tool icon="edition-geometry-insert-vertex" action-command="_insertVertex" tooltip="add_vertex" group="vista" position="10"/>
 			</tool-bar>
@@ -227,7 +227,7 @@
 		<extension class-name="com.iver.cit.gvsig.CutLineExtension"
                         description="Extension to cut lines."
                         active="true">
-                        <menu text="geometry/modify/cut_line" action-command="_cut_line" icon="edition-geometry-cut-line"/>
+                        <menu text="geometry/modify/cut_line" action-command="_cut_line" icon="edition-cut-line"/>
                         <tool-bar name="modificar" position="31">
                                 <selectable-tool icon="edition-geometry-cut-line" action-command="_cut_line" tooltip="cut_line" group="vista" position="15"/>
                         </tool-bar>

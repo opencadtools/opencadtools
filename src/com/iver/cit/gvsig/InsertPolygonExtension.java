@@ -85,23 +85,27 @@ public class InsertPolygonExtension extends Extension {
 
 	private void registerIcons(){
 		PluginServices.getIconTheme().registerDefault(
-				"edition-insert-geometry-polygon",
-				this.getClass().getClassLoader().getResource("images/Poligon.png")
+		"edition-insert-polygon",
+		this.getClass().getClassLoader()
+			.getResource("images/icons/poligono.png")
 			);
 
 		PluginServices.getIconTheme().registerDefault(
-				"edition-insert-geometry-rectangle",
-				this.getClass().getClassLoader().getResource("images/Rectangle.png")
+		"edition-insert-rectangle",
+		this.getClass().getClassLoader()
+			.getResource("images/icons/rectangulo.png")
 			);
 
 		PluginServices.getIconTheme().registerDefault(
-				"edition-insert-geometry-circle",
-				this.getClass().getClassLoader().getResource("images/Circle.png")
+		"edition-insert-circle",
+		this.getClass().getClassLoader()
+			.getResource("images/icons/circulo.png")
 			);
 
 		PluginServices.getIconTheme().registerDefault(
-				"edition-insert-geometry-ellipse",
-				this.getClass().getClassLoader().getResource("images/Ellipse.png")
+		"edition-insert-ellipse",
+		this.getClass().getClassLoader()
+			.getResource("images/icons/elipse.png")
 			);
 
 		PluginServices.getIconTheme().registerDefault(

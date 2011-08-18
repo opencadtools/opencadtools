@@ -30,13 +30,8 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
-
-/*import es.udc.lbd.eiel.cad.util.GeometryTypes;
-import es.udc.lbd.eiel.giseiel.util.layer_manager.LayerDescriptor;
-import es.udc.lbd.eiel.giseiel.util.layer_manager.LayerManager;
-*/
 import com.iver.cit.gvsig.gui.cad.tools.RedigitalizeLineCADTool;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extension to redigitalize lines on edition
@@ -45,7 +40,7 @@ import com.iver.cit.gvsig.gui.cad.tools.RedigitalizeLineCADTool;
  * @author Pablo Sanxiao [Cartolab]
  */
 public class RedigitalizeLineExtension extends Extension {
-	private final String iconPath = "images/RedigitalizeLine.png";
+    private final String iconPath = "images/icons/redigit_linea.png";
 	private final String iconCode = "edition-geometry-redigitalize-line";
 	private final String cadToolCode = "_redigitalize_line";
 	

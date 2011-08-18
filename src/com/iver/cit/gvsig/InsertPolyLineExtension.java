@@ -47,7 +47,6 @@ import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.EIELPolylineCADTool;
-import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SplineCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -77,8 +76,9 @@ public class InsertPolyLineExtension extends Extension {
 
 	private void registerIcons(){
 		PluginServices.getIconTheme().registerDefault(
-				"edition-insert-geometry-polyline",
-				this.getClass().getClassLoader().getResource("images/Line.png")
+		"edition-insert-polyline",
+		this.getClass().getClassLoader()
+			.getResource("images/icons/polilinea.png")
 			);
 		
 		PluginServices.getIconTheme().registerDefault(

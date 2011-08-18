@@ -51,7 +51,8 @@ public class InsertAreaExtension extends Extension {
 		CADExtension.addCADTool("_area", area);
         PluginServices.getIconTheme().registerDefault(
 				"insert-area",
-				this.getClass().getClassLoader().getResource("images/MiArea.png")
+		this.getClass().getClassLoader()
+			.getResource("images/icons/area.png")
 			);
 	}
 

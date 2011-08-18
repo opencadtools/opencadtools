@@ -49,7 +49,8 @@ public class FollowGeometryExtension extends Extension {
 		activated = true;
         PluginServices.getIconTheme().registerDefault(
 				"follow-geometry",
-				this.getClass().getClassLoader().getResource("images/FollowGeom.png")
+		this.getClass().getClassLoader()
+			.getResource("images/icons/seg_geometria.png")
 			);
 	}
 

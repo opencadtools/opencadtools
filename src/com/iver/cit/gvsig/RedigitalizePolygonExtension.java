@@ -29,8 +29,8 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.cit.gvsig.gui.cad.tools.RedigitalizePolygonCADTool;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 
 /**
@@ -41,7 +41,7 @@ import com.iver.cit.gvsig.gui.cad.tools.RedigitalizePolygonCADTool;
  * @author Pablo Sanxiao [CartoLab]
  */
 public class RedigitalizePolygonExtension extends Extension {
-	private final String iconPath = "images/RedigitalizePolygon.png";
+    private final String iconPath = "images/icons/redigit_poligono.png";
 	private final String iconCode = "edition-geometry-redigitalize-polygon";
 	private final String cadToolCode = "_redigitalize_polygon";
 	private View view;

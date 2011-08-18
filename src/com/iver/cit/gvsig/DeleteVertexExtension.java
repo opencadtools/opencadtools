@@ -40,7 +40,7 @@ import com.iver.cit.gvsig.gui.cad.tools.DeleteVertexCADTool;
 public class DeleteVertexExtension extends Extension {
    private DeleteVertexCADTool deleteVertex;
 
-   private final String iconPath = "images/DeleteVertex.gif";
+    private final String iconPath = "images/icons/eliminar_vertice.png";
    private final String iconCode = "edition-geometry-delete-vertex";
    private final String cadToolCode = "_deleteVertex";
 
