@@ -934,12 +934,20 @@ public class CutPolygonCADTool extends InsertionCADTool{
 							}
 						}
 
-						//Point digitalized by the user
+						//Point digitalized by the user (the order depends on reversePath)
 						if (newPoints!=null && newPoints.size()>0){
-							for (int i=0; i<newPoints.size(); i++){
-								Point2D point = (Point2D) newPoints.get(i);
-								System.out.println("lineTo: "+ point.getX() + ", " + point.getY());
-								gpx.lineTo(point.getX(),point.getY());
+							if (reversePath) {
+								for(int i=0; i<newPoints.size(); i++) {
+									Point2D point = (Point2D) newPoints.get(i);
+									System.out.println("lineTo: "+ point.getX() + ", " + point.getY());
+									gpx.lineTo(point.getX(),point.getY());
+								}
+							} else {
+								for (int i=newPoints.size()-1; i>=0; i--) {
+									Point2D point = (Point2D) newPoints.get(i);
+									System.out.println("lineTo: "+ point.getX() + ", " + point.getY());
+									gpx.lineTo(point.getX(),point.getY());
+								}
 							}
 						}
 						gpx.closePath();
