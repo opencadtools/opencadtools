@@ -714,7 +714,7 @@ public class CutPolygonCADTool extends InsertionCADTool{
 		if (selectedRow!=null){
 			int resp = JOptionPane.NO_OPTION;
 			resp = JOptionPane.showConfirmDialog((Component) PluginServices.getMainFrame(),
-					PluginServices.getText(this, "cut_new_line_with_rest"),
+					PluginServices.getText(this, "keep_remaining_feature"),
 					PluginServices.getText(this, "cut_line"), JOptionPane.YES_NO_OPTION);
 
 			System.out.println("--->>> Salving changes in cutted geometry");

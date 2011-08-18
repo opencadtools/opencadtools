@@ -391,7 +391,7 @@ public class CutLineCADTool extends InsertionCADTool {
 			int resp = JOptionPane.NO_OPTION;
 			resp = JOptionPane.showConfirmDialog((Component) PluginServices
 					.getMainFrame(), PluginServices.getText(this,
-					"cut_new_line_with_rest"), PluginServices
+					"keep_remaining_feature"), PluginServices
 					.getText(this, "cut_line"),
 					JOptionPane.YES_NO_OPTION);
 
