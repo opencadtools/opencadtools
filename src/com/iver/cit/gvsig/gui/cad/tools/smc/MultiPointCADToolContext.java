@@ -5,9 +5,10 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.MultiPointCADTool;
 import java.awt.event.InputEvent;
+
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.tools.MultiPointCADTool;
 
 public final class MultiPointCADToolContext
     extends statemap.FSMContext
@@ -21,8 +22,8 @@ public final class MultiPointCADToolContext
         super();
 
         _owner = owner;
-        setState(MultiPoint.InsertPoint);
-        MultiPoint.InsertPoint.Entry(this);
+        setState(MultiPoint.FirstPoint);
+        MultiPoint.FirstPoint.Entry(this);
     }
 
     public void addOption(String s)
@@ -45,6 +46,14 @@ public final class MultiPointCADToolContext
     {
         _transition = "addValue";
         getState().addValue(this, d);
+        _transition = "";
+        return;
+    }
+
+    public void removePoint(InputEvent event, int numPoints)
+    {
+        _transition = "removePoint";
+        getState().removePoint(this, event, numPoints);
         _transition = "";
         return;
     }
@@ -106,6 +115,10 @@ public final class MultiPointCADToolContext
             Default(context);
         }
 
+        protected void removePoint(MultiPointCADToolContext context, InputEvent event, int numPoints) {
+        	Default(context);
+        }
+
         protected void Default(MultiPointCADToolContext context)
         {
             throw (
@@ -136,11 +149,13 @@ public final class MultiPointCADToolContext
         //
         /* package */ static MultiPoint_Default.MultiPoint_InsertPoint InsertPoint;
         private static MultiPoint_Default Default;
+        private static MultiPoint_Default.MultiPoint_FirstPoint FirstPoint;
 
         static
         {
             InsertPoint = new MultiPoint_Default.MultiPoint_InsertPoint("MultiPoint.InsertPoint", 0);
             Default = new MultiPoint_Default("MultiPoint.Default", -1);
+            FirstPoint = new MultiPoint_Default.MultiPoint_FirstPoint("MultiPoint.FirstPoint", 0);
         }
 
     }
@@ -161,7 +176,7 @@ public final class MultiPointCADToolContext
         {
             MultiPointCADTool ctxt = context.getOwner();
 
-            if (s.equals(PluginServices.getText(this,"cancel")))
+            if (s.equals(PluginServices.getText(this,"cancel")) || s.equalsIgnoreCase("c"))
             {
                 boolean loopbackFlag =
                     context.getState().getName().equals(
@@ -281,9 +296,88 @@ public final class MultiPointCADToolContext
             return;
         }
 
+        protected void removePoint(MultiPointCADToolContext context, InputEvent event, int numPoints) {
+
+        	MultiPointCADTool tool = context.getOwner();
+
+        	boolean loopbackFlag =
+        		context.getState().getName().equals(
+        				MultiPoint.FirstPoint.getName());
+
+        	if (!loopbackFlag) {
+        		(context.getState()).Exit(context);
+        	}
+
+        	context.clearState();
+        	try {
+        		tool.throwNoPointsException(PluginServices.getText(this, "no_points"));
+        	} finally {
+        		context.setState(MultiPoint.FirstPoint);
+        		if (!loopbackFlag) {
+        			(context.getState()).Entry(context);
+        		}
+        	}
+
+        }
+
     //-----------------------------------------------------------
     // Inner classse.
     //
+
+        private static final class MultiPoint_FirstPoint
+        	extends MultiPoint_Default
+        {
+
+        	private MultiPoint_FirstPoint(String name, int id) {
+        		super (name, id);
+        	}
+
+            protected void Entry(MultiPointCADToolContext context)
+            {
+                MultiPointCADTool ctxt = context.getOwner();
+
+                ctxt.setQuestion(PluginServices.getText(this,"insert_point"));
+                ctxt.setDescription(new String[]{"cancel", });
+                return;
+            }
+
+            protected void addOption(MultiPointCADToolContext context, String s) {
+
+            	if (s.equals("espacio") || s.equals(PluginServices.getText(this, "end"))) {
+
+            		MultiPointCADToolState endState = context.getState();
+            		MultiPointCADTool tool = context.getOwner();
+
+            		context.clearState();
+            		try {
+            			tool.throwInvalidGeometryException(PluginServices.getText(this,"incorrect_geometry"));
+            		}
+            		finally
+            		{
+            			context.setState(endState);
+            		}
+            	}
+            }
+
+            protected void addPoint(MultiPointCADToolContext context, double pointX, double pointY, InputEvent event) {
+
+            	MultiPointCADTool tool = context.getOwner();
+
+            	context.clearState();
+            	try {
+            		tool.setQuestion(PluginServices.getText(this, "insert_next_point"));
+            		tool.setDescription(new String[]{"cancel", "end"});
+            		tool.addPoint(pointX, pointY, event);
+            	}
+            	finally {
+            		context.setState(MultiPoint.InsertPoint);
+            		(context.getState()).Entry(context);
+            	}
+
+
+            }
+
+        }
 
 
         private static final class MultiPoint_InsertPoint
@@ -302,8 +396,8 @@ public final class MultiPointCADToolContext
             {
                 MultiPointCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(PluginServices.getText(this,"insert_point"));
-                ctxt.setDescription(new String[]{"cancel", });
+                ctxt.setQuestion(PluginServices.getText(this,"insert_point_or_delete"));
+                ctxt.setDescription(new String[]{"cancel", "end"});
                 return;
             }
 
@@ -311,7 +405,7 @@ public final class MultiPointCADToolContext
             {
                 MultiPointCADTool ctxt = context.getOwner();
 
-                if (s.equalsIgnoreCase(PluginServices.getText(this,"MultipointCADTool.end")) || s.equals(PluginServices.getText(this,"end")))
+                if (s.equalsIgnoreCase("espacio") || s.equals(PluginServices.getText(this,"end")))
                 {
                     MultiPointCADToolState endState = context.getState();
 
@@ -345,10 +439,7 @@ public final class MultiPointCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_point")+" "+
-	    			PluginServices.getText(this,"cad.or")+" "+
-	    			PluginServices.getText(this,"end")+
-	   				"["+PluginServices.getText(this,"MultipointCADTool.end")+"]");
+                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
                     ctxt.setDescription(new String[]{"cancel", "end"});
                     ctxt.addPoint(pointX, pointY, event);
                 }
@@ -357,6 +448,39 @@ public final class MultiPointCADToolContext
                     context.setState(endState);
                 }
                 return;
+            }
+
+            protected void removePoint(MultiPointCADToolContext context, InputEvent event, int numPoints) {
+
+            	MultiPointCADTool tool = context.getOwner();
+
+            	if (numPoints>1) {
+            		MultiPointCADToolState endState = context.getState();
+
+            		context.clearState();
+            		try {
+            			tool.removePoint(event);
+            		} finally
+                    {
+                        context.setState(endState);
+                    }
+
+            	} else if (numPoints == 1) {
+                    (context.getState()).Exit(context);
+                    context.clearState();
+                    try
+                    {
+                        tool.removePoint(event);
+                    }
+                    finally
+                    {
+                    	context.setState(MultiPoint.FirstPoint);
+                    	(context.getState()).Entry(context);
+                    }
+            	} else {
+            		super.removePoint(context, event, numPoints);
+            	}
+
             }
 
         //-------------------------------------------------------

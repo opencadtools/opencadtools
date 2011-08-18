@@ -75,6 +75,7 @@ public class MultiPointCADTool extends DefaultCADTool {
      */
     public void init() {
     	_fsm = new MultiPointCADToolContext(this);
+    	points.clear();
     }
 
     /**
@@ -115,10 +116,20 @@ public class MultiPointCADTool extends DefaultCADTool {
         MultiPointCADToolState actualState = (MultiPointCADToolState) _fsm.getPreviousState();
         String status = actualState.getName();
 
-        if (status.equals("MultiPoint.InsertPoint")) {
             points.add(new double[] {x,y});
         	//addGeometry(ShapeFactory.createPoint2D(x, y));
-        }
+    }
+
+    public void removePoint(InputEvent event) {
+
+    	MultiPointCADToolState currentState = (MultiPointCADToolState) _fsm.getPreviousState();
+    	String status = currentState.getName();
+
+    	if (status.equals("MultiPoint.FirstPoint")) {
+    		points.clear();
+    	} else {
+    		points.remove(points.size()-1);
+    	}
     }
 
     /**
@@ -199,7 +210,7 @@ public class MultiPointCADTool extends DefaultCADTool {
 
 	public void drawOperation(Graphics g, ArrayList pointList) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean isMultiTransition() {
@@ -208,7 +219,6 @@ public class MultiPointCADTool extends DefaultCADTool {
 	}
 
 	public void transition(InputEvent event) {
-		// TODO Auto-generated method stub
-		
+		_fsm.removePoint(event, points.size());
 	}
 }
