@@ -38,6 +38,8 @@ import com.iver.cit.gvsig.gui.cad.tools.EIELPolylineCADTool;
 //import com.iver.cit.gvsig.gui.cad.tools.smc.LineaCADToolContext.LineaCADToolState;
 //import com.iver.cit.gvsig.gui.cad.tools.PolylineCADTool;
 import java.awt.event.InputEvent;
+import java.util.prefs.Preferences;
+
 import com.iver.andami.PluginServices;
 
 /**

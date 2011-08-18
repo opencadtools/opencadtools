@@ -4,6 +4,8 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
 import java.awt.event.InputEvent;
+import java.util.prefs.Preferences;
+
 import com.iver.andami.PluginServices;
 
 

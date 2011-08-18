@@ -27,7 +27,6 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import com.iver.cit.gvsig.ActivateFormsExtension;
-import com.iver.cit.gvsig.OpenFormsExtension;
 import com.iver.cit.gvsig.gui.cad.tools.EIELPointCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EIELPolylineCADToolContext.Polyline;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
@@ -242,7 +241,7 @@ extends statemap.FSMContext
                 
                     if (ActivateFormsExtension.getActivated()) {
                     	VectorialLayerEdited vle=ctxt.getVLE();
-                    	OpenFormsExtension.openForm(vle);                   
+                    	// OpenFormsExtension.openForm(vle);                   
                 	}
                 
 
@@ -432,7 +431,7 @@ extends statemap.FSMContext
 						(context.getState()).Entry(context);
 						if (ActivateFormsExtension.getActivated()) {
 	                    	VectorialLayerEdited vle=ctxt.getVLE();
-	                    	OpenFormsExtension.openForm(vle);                   
+	                    	// OpenFormsExtension.openForm(vle);                   
 	                	}
 					}
 				}

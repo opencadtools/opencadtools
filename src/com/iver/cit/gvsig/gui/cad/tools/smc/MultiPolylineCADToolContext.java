@@ -8,6 +8,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 //import com.iver.cit.gvsig.ActivateFormsExtension;
 //import com.iver.cit.gvsig.OpenFormsExtension;
 import java.awt.event.InputEvent;
+import java.util.prefs.Preferences;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPolylineCADTool;
@@ -670,7 +671,7 @@ public final class MultiPolylineCADToolContext
                     try
                     {
                         ctxt.cancelInsertion();
-                        ctxt.initializeFormState();
+                        // ctxt.initializeFormState();
                         ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
                     }
                     finally
