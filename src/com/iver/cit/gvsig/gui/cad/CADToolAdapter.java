@@ -15,6 +15,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.MemoryImageSource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +29,10 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.ui.mdiFrame.MainFrame;
 import com.iver.andami.ui.mdiManager.IWindow;
+import com.iver.andami.ui.mdiManager.MDIManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
+import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.ViewPort;
@@ -39,6 +42,7 @@ import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.fmap.core.v02.FConstant;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
+import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
@@ -53,6 +57,8 @@ import com.iver.cit.gvsig.gui.preferences.SnapConfigPage;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.project.documents.view.snapping.EIELFinalPointSnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.EIELNearestPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperGeometriesVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
@@ -60,6 +66,7 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.SnappingVisitor;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.FinalPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.NearestPointSnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.snappers.PixelSnapper;
 import com.iver.cit.gvsig.project.documents.view.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
 import com.iver.utiles.swing.threads.Cancellable;
@@ -211,6 +218,11 @@ public class CADToolAdapter extends Behavior {
 	 * @see ViewPort#fromMapPoint(Point2D)
 	 */
 	private Point2D adjustedPoint;
+	
+	/**
+	 *  Point2D Array with points retrieved by  snappers
+	 */	
+	private ArrayList otherMapAdjustedPoints;
 
 	/**
 	 * Determines if the snap tools are enabled or disabled.
@@ -285,7 +297,7 @@ public class CADToolAdapter extends Behavior {
 	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#paintComponent(java.awt.Graphics)
 	 */
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
+	/*	super.paintComponent(g);
 		if (CADExtension.getCADToolAdapter()!=this)
 			return;
 
@@ -301,7 +313,28 @@ public class CADToolAdapter extends Behavior {
 					.drawOperation(g, p.getX(), p.getY());
 		}
 		drawCursor(g);
+		getGrid().drawGrid(g); */
+		super.paintComponent(g);
+		if (CADExtension.getCADToolAdapter() != this)
+			return;
+		drawCursor(g);
 		getGrid().drawGrid(g);
+		if (adjustedPoint != null) {
+			Point2D p = null;
+			if (mapAdjustedPoint != null) {
+				p = mapAdjustedPoint;
+			} else {
+				p = getMapControl().getViewPort().toMapPoint(adjustedPoint);
+			}
+
+			if (otherMapAdjustedPoints == null || otherMapAdjustedPoints.size() == 1) {
+				
+				((CADTool) cadToolStack.peek()).drawOperation(g, p.getX(), p.getY());
+			} else {
+				// Calling to the special drawOperation with a list of points
+				((CADTool) cadToolStack.peek()).drawOperation(g, otherMapAdjustedPoints);
+			}
+		}
 	}
 
 	/**
@@ -319,7 +352,15 @@ public class CADToolAdapter extends Behavior {
 	 */
 	public void mouseClicked(MouseEvent e) throws BehaviorException {
 		if (e.getButton() == MouseEvent.BUTTON3) {
-			CADExtension.showPopup(e);
+			//CADExtension.showPopup(e);
+			boolean deleteButton3Option = prefs.getBoolean("isDeleteButton3", true);
+			if (deleteButton3Option) {
+				//TODO  if SHIFHT is pressed do:
+				// CADExtension.showPopup(e); 
+				transition(e);
+			}else { 
+				CADExtension.showPopup(e);
+			}
 		}else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2){
 			questionAsked = true;
 			if (!cadToolStack.isEmpty()) {
@@ -360,7 +401,7 @@ public class CADToolAdapter extends Behavior {
 	 * @see com.iver.cit.gvsig.fmap.tools.Behavior.Behavior#mousePressed(java.awt.event.MouseEvent)
 	 */
 	public void mousePressed(MouseEvent e) throws BehaviorException {
-		if (e.getButton() == MouseEvent.BUTTON1) {
+		/*if (e.getButton() == MouseEvent.BUTTON1) {
 			ViewPort vp = getMapControl().getMapContext().getViewPort();
 			Point2D p;
 
@@ -370,6 +411,40 @@ public class CADToolAdapter extends Behavior {
 				p = vp.toMapPoint(adjustedPoint);
 			}
 			transition(new double[] { p.getX(), p.getY() }, e, ABSOLUTE);
+		}*/
+		if (e.getButton() == MouseEvent.BUTTON1) {
+
+			if (otherMapAdjustedPoints == null
+					|| otherMapAdjustedPoints.size() == 0
+					|| !getCadTool().isMultiTransition()) {
+
+				ViewPort vp = getMapControl().getMapContext().getViewPort();
+				Point2D p;
+
+				if (mapAdjustedPoint != null) {
+					p = mapAdjustedPoint;
+				} else {
+					p = vp.toMapPoint(adjustedPoint);
+				}
+				transition(new double[] { p.getX(), p.getY() }, e, ABSOLUTE);
+			} else {
+				
+				// Wait cursor, it can take long time...
+				MDIManager manager = PluginServices.getMDIManager();
+				manager.setWaitCursor();
+
+				// Do a transicion for each point
+				//y posiblemente haya que usar el swingworker??
+				for (int i = 0; i < otherMapAdjustedPoints.size(); i++) {
+					Point2D punto = (Point2D) otherMapAdjustedPoints.get(i);
+					transition(new double[] { punto.getX(), punto.getY() }, e,
+							ABSOLUTE);
+				}
+				// PluginServices.cancelableBackgroundExecution(new
+				// EvalOperatorsTask());
+				manager.restoreCursor();
+
+			}
 		}
 	}
 
@@ -412,7 +487,15 @@ public class CADToolAdapter extends Behavior {
 //        snappers.add(defaultSnap);
 //        snappers.add(nearestSnap);
 //        // snappers.add(pixSnap);
+        EIELFinalPointSnapper eielFinalSnap = new EIELFinalPointSnapper();
+		EIELNearestPointSnapper eielNearestSnap = new EIELNearestPointSnapper();
+		PixelSnapper pixSnap = new PixelSnapper();
 
+		snappers.clear();
+		snappers.add(eielFinalSnap);
+		snappers.add(eielNearestSnap);
+		snappers.add(pixSnap);
+		
         double mapTolerance = vp.toMapDistance(SelectionCADTool.tolerance);
         double minDist = mapTolerance;
 //        double rw = getMapControl().getViewPort().toMapDistance(5);
@@ -436,20 +519,21 @@ public class CADToolAdapter extends Behavior {
             {
                 // La lista de snappers está siempre ordenada por prioridad. Los de mayor
                 // prioridad están primero.
-            	long t1 = System.currentTimeMillis();
+		// long t1 = System.currentTimeMillis();
                 List geoms = cache.query(e);
-                long t2 = System.currentTimeMillis();
-                // System.out.println("T cache snapping = " + (t2-t1) + " numGeoms=" + geoms.size());
-                for (int i = 0; i < snappers.size(); i++)
-                {
-                    ISnapper theSnapper = (ISnapper) snappers.get(i);
-                    if (theSnapper instanceof ISnapperVectorial)
-                    {
-                    	if (theSnapper instanceof ISnapperGeometriesVectorial){
-                    		((ISnapperGeometriesVectorial)theSnapper).setGeometries(geoms);
-                    	}
-                    }
-                }                
+		// long t2 = System.currentTimeMillis();
+		// System.out.println("T cache snapping = " + (t2-t1) + " numGeoms=" + geoms.size());
+		for (int i = 0; i < snappers.size(); i++) 
+		  {
+		       ISnapper theSnapper = (ISnapper) snappers.get(i);
+		       if (theSnapper instanceof ISnapperVectorial)
+		       {
+		             if (theSnapper instanceof ISnapperGeometriesVectorial){
+		                  ((ISnapperGeometriesVectorial)theSnapper).setGeometries(geoms);
+		             }
+		        }
+		   }   
+
                 for (int n=0; n < geoms.size(); n++) {
                     IGeometry geom = (IGeometry) geoms.get(n);
                     for (int i = 0; i < snappers.size(); i++)
@@ -475,10 +559,10 @@ public class CADToolAdapter extends Behavior {
 //                            // System.out.println("Cache size = " + cache.size());
 //                            cache.query(e, snapVisitor);
 //                            theSnappedPoint = snapVisitor.getSnapPoint();
-//                        	long t3 = System.currentTimeMillis();
+//                             long t3 = System.currentTimeMillis();
                             theSnappedPoint = ((ISnapperVectorial) theSnapper).getSnapPoint(point, geom, mapTolerance, lastPoint);
-//                            long t4 = System.currentTimeMillis();
-//                            System.out.println("Tiempo snapping " + theSnapper.getToolTipText() + " " + (t4-t3));
+			    //                            long t4 = System.currentTimeMillis();
+			    //                            System.out.println("Tiempo snapping " + theSnapper.getToolTipText() + " " + (t4-t3));
                         }
                         if (theSnapper instanceof ISnapperRaster)
                         {
@@ -500,10 +584,17 @@ public class CADToolAdapter extends Behavior {
                 } // for n
             } // visible
         }
-        if (usedSnap != null)
+        /*if (usedSnap != null)
             return minDist;
-        return Double.MAX_VALUE;
+        return Double.MAX_VALUE; */
 
+        if (usedSnap != null) {
+			otherMapAdjustedPoints = usedSnap.getSnappedPoints();
+			return minDist;
+		}
+		otherMapAdjustedPoints = null;
+		return Double.MAX_VALUE;
+        
     }
 	/*
 	 * (non-Javadoc)
@@ -605,18 +696,19 @@ public class CADToolAdapter extends Behavior {
 
 		getMapControl().setCursor(transparentCursor);
 	}
-	
-	/**
-	 * Uses like a mouse pointer the image that provides the
-	 * selected tool.
-	 */
-	private void setToolMouse(){
-		Image cursor = PluginServices.getIconTheme().get("cad-selection-icon").getImage();
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Cursor c = toolkit.createCustomCursor(cursor , 
-				new Point(16, 16), "img");
-		getMapControl().setCursor (c);
-	}
+       
+       /**
+        * Uses like a mouse pointer the image that provides the
+        * selected tool.
+        */
+           private void setToolMouse(){
+                   Image cursor = PluginServices.getIconTheme().get("cad-selection-icon").getImage();
+                   Toolkit toolkit = Toolkit.getDefaultToolkit();
+                   Cursor c = toolkit.createCustomCursor(cursor , 
+                                  new Point(16, 16), "img");
+                   getMapControl().setCursor (c);
+           }
+
 
 	/**
 	 * <p>Draws a 31x31 pixels cross round the mouse's cursor with an small geometry centered:
@@ -986,6 +1078,29 @@ public class CADToolAdapter extends Behavior {
 		configureMenu();
 		PluginServices.getMainFrame().enableControls();
 	}
+	
+	/**
+	 * [LBD] DOCUMENT ME!
+	 *
+	 * @param text
+	 *            DOCUMENT ME!
+	 * @param source
+	 *            DOCUMENT ME!
+	 * @param sel
+	 *            DOCUMENT ME!
+	 * @param values
+	 *            DOCUMENT ME!
+	 */
+	private void transition(InputEvent event) {
+		questionAsked = true;
+		if (!cadToolStack.isEmpty()) {
+			CADTool ct = (CADTool) cadToolStack.peek();
+			ct.transition(event);
+			askQuestion();
+		}
+		configureMenu();
+		PluginServices.getMainFrame().enableControls();
+	}
 
 	/**
 	 * Shows or hides a grid on the <code>ViewPort</code> of the associated <code>MapControl</code>.
@@ -1199,6 +1314,30 @@ public class CADToolAdapter extends Behavior {
 		 */
 		refreshEditedLayer();
 	}
+	
+	/**
+	 * [LBD method] Elimina la feature de la línea indicada
+	 */
+	public void delete(int index) {
+		ILayerEdited aux = CADExtension.getEditionManager()
+				.getActiveLayerEdited();
+		if (!(aux instanceof VectorialLayerEdited))
+			return;
+		VectorialLayerEdited vle = (VectorialLayerEdited) aux;
+		VectorialEditableAdapter vea = vle.getVEA();
+		try {
+			vea.removeRow(index, PluginServices
+					.getText(this, "deleted_feature"), EditionEvent.GRAPHIC);
+
+		} catch (ExpansionFileReadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ReadDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		refreshEditedLayer();
+	}
 
 	/**
 	 * @see CADGrid#setAdjustGrid(boolean)
@@ -1260,6 +1399,44 @@ public class CADToolAdapter extends Behavior {
 				// askQuestion();
 			} else {
 				getMapControl().setPrevTool();
+			}
+		}else if (actionCommand.equals("espacio")) {
+			CADTool ct = (CADTool) cadToolStack.peek();
+			try {
+				ct.transition(actionCommand);
+				System.out.println("InsertionCADTool");
+//				if (ct instanceof InsertionCADTool) {
+//					if (((InsertionCADTool) ct).getFormState() == InsertionCADTool.FORM_ACCEPTED) {
+//						ct.transition(PluginServices.getText(this,
+//								"accept_form"));
+//						askQuestion();
+//					} else if (((InsertionCADTool) ct).getFormState() == InsertionCADTool.FORM_CANCELLED) {
+//						ct.transition(PluginServices.getText(this,
+//								"cancel_form"));
+//					}
+//				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				View vista = (View) PluginServices.getMDIManager()
+						.getActiveWindow();
+				vista.getConsolePanel().addText(
+						"\n" + PluginServices.getText(this, "incorrect_option")
+								+ " : " + actionCommand, JConsole.ERROR);
+			}
+		} else if ((actionCommand.equals("tab"))) { //NACHOV&& (!formOpened)) {
+			CADTool ct = (CADTool) cadToolStack.peek();
+			try {
+				ct.transition(actionCommand);
+				askQuestion();
+			} catch (Exception e) {
+				e.printStackTrace();
+				View vista = (View) PluginServices.getMDIManager()
+						.getActiveWindow();
+				vista.getConsolePanel().addText(
+						"\n" + PluginServices.getText(this, "incorrect_option")
+								+ " : " + actionCommand, JConsole.ERROR);
+
 			}
 		}
 
@@ -1431,6 +1608,15 @@ public class CADToolAdapter extends Behavior {
 		}
 		return type;
 	}
-}
+	
+//	[LBD comment] con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
+//	los snappers
+	public void setPreviousPoint(double[] previousPoint) {
+		this.previousPoint = previousPoint;
+	}
 
-// [eiel-gestion-conexiones]
+	public void setPreviousPoint(Point2D punto) {
+		double puntoPrevio[] = { punto.getX(), punto.getY() };
+		this.previousPoint = puntoPrevio;
+	}
+} // [eiel-gestion-conexiones]
