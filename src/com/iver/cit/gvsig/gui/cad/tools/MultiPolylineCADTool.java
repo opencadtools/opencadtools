@@ -29,12 +29,12 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
+import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -43,21 +43,13 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
-import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
-
-import com.iver.cit.gvsig.CADExtension;
-//import es.udc.lbd.eiel.cad.util.GeometryTypes;
-//import es.udc.lbd.eiel.gui.cad.CADTool;
-//import es.udc.lbd.eiel.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MultiPolylineCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MultiPolylineCADToolContext.MultiLineaCADToolState;
-//import es.udc.lbd.eiel.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 
@@ -67,7 +59,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * @author Isabel Pérez-Urria Lage [LBD]
  * @author Javier Estévez [Cartolab]
  */
-public class MultiPolylineCADTool extends DefaultCADTool {
+public class MultiPolylineCADTool extends InsertionCADTool {
 	private MultiPolylineCADToolContext _fsm;
 	private Point2D firstPoint;
 	private Point2D antPoint;

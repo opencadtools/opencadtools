@@ -61,7 +61,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.RectangleCADToolContext.RectangleCAD
  *
  * @author Vicente Caballero Navarro
  */
-public class RectangleCADTool extends DefaultCADTool {
+public class RectangleCADTool extends InsertionCADTool {
     protected RectangleCADToolContext _fsm;
     protected Point2D firstPoint;
     protected Point2D lastPoint;

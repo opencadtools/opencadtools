@@ -59,7 +59,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.MultiPointCADToolContext.MultiPointC
  *
  * @author Vicente Caballero Navarro
  */
-public class MultiPointCADTool extends DefaultCADTool {
+public class MultiPointCADTool extends InsertionCADTool {
     private MultiPointCADToolContext _fsm;
     protected ArrayList points=new ArrayList();
     /**

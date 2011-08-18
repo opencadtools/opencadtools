@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolState;
@@ -58,7 +57,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolStat
  *
  * @author Vicente Caballero Navarro
  */
-public class PointCADTool extends DefaultCADTool {
+public class PointCADTool extends InsertionCADTool {
     protected PointCADToolContext _fsm;
 
     /**

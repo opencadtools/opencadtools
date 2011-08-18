@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
 import com.iver.cit.gvsig.fmap.core.FShape;
@@ -44,16 +43,12 @@ import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
-import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.edition.UtilFunctions;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EIELPolylineCADToolContext;
-import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EIELPolylineCADToolContext.EIELPolylineCADToolState;
-//import com.iver.cit.gvsig.gui.cad.tools.smc.LineaCADToolContext.LineaCADToolState;
-//import com.iver.cit.gvsig.gui.cad.tools.smc.PolylineCADToolContext.PolylineCADToolState;
 
 
 /**
@@ -107,9 +102,6 @@ public class EIELPolylineCADTool extends InsertionCADTool {
 	private void initialize(){
 		list.clear();
 		points.clear();
-		keys.clear();
-		initializeFormState();
-		virtualIndex = null;
 		antPoint=firstPoint=null;
 //		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
 //		los snappers

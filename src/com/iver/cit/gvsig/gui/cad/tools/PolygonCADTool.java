@@ -66,7 +66,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.PolygonCADToolContext.PolygonCADTool
  *
  * @author Vicente Caballero Navarro
  */
-public class PolygonCADTool extends DefaultCADTool {
+public class PolygonCADTool extends InsertionCADTool {
     protected PolygonCADToolContext _fsm;
     protected Point2D center;
     protected int numLines = 5;

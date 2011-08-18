@@ -60,7 +60,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext.EllipseCADTool
  *
  * @author Vicente Caballero Navarro
  */
-public class EllipseCADTool extends DefaultCADTool {
+public class EllipseCADTool extends InsertionCADTool {
     protected EllipseCADToolContext _fsm;
     protected Point2D startAxis;
     protected Point2D endAxis;

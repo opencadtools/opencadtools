@@ -61,7 +61,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext.CircleCADToolSt
  *
  * @author Vicente Caballero Navarro
  */
-public class CircleCADTool extends DefaultCADTool {
+public class CircleCADTool extends InsertionCADTool {
     protected CircleCADToolContext _fsm;
     protected Point2D center;
     protected Point2D firstPoint;
