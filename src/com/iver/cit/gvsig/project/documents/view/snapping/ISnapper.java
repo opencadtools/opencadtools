@@ -2,6 +2,7 @@ package com.iver.cit.gvsig.project.documents.view.snapping;
 
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import com.iver.andami.ui.mdiManager.IWindow;
 
@@ -29,5 +30,10 @@ public interface ISnapper {
 	public void setEnabled(boolean enabled);
 	public void setPriority(int priority);
 	IWindow getConfigurator();
+	
+	/**
+	 * Return a list of Point2D of special snappers
+	 */
+	public ArrayList getSnappedPoints();
 
 }

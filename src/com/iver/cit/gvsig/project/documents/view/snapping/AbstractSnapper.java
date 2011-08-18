@@ -1,6 +1,7 @@
 package com.iver.cit.gvsig.project.documents.view.snapping;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import com.iver.andami.ui.mdiManager.IWindow;
 
@@ -46,6 +47,11 @@ public abstract class AbstractSnapper implements ISnapper {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+	public ArrayList getSnappedPoints(){
+		return null;
+	}
+	
 	 /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getPriority()
      */
