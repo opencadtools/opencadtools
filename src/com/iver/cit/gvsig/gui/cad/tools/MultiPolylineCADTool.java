@@ -67,7 +67,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * @author Isabel Pérez-Urria Lage [LBD]
  * @author Javier Estévez [Cartolab]
  */
-public class MultiPolylineCADTool extends InsertionCADTool {
+public class MultiPolylineCADTool extends DefaultCADTool {
 	private MultiPolylineCADToolContext _fsm;
 	private Point2D firstPoint;
 	private Point2D antPoint;
@@ -75,6 +75,10 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 	private ArrayList points = new ArrayList();
 	private int numLines;
 
+	/**
+	 * Index of the last feature introduced in VEA.
+	 */
+	private Integer virtualIndex;
 
 	/**
 	 * Método de incio, para poner el código de todo lo que se requiera de una
@@ -325,14 +329,14 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 	 * Acción que abre el formulario de edición de las propiedades para
 	 * el punto introducido
 	 */
-	public void openForm(){
-//		keys = openInsertEntityForm();
-		if (keys.size() == 0){
-			setFormState(InsertionCADTool.FORM_CANCELLED);
-		}else{
-			setFormState(InsertionCADTool.FORM_ACCEPTED);
-		}
-	}
+//	public void openForm(){
+////		keys = openInsertEntityForm();
+//		if (keys.size() == 0){
+//			setFormState(InsertionCADTool.FORM_CANCELLED);
+//		}else{
+//			setFormState(InsertionCADTool.FORM_ACCEPTED);
+//		}
+//	}
 
 	/**
 	 * Acción que guarda en base de datos la geometría
@@ -357,9 +361,9 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 	private void initialize(){
 		list.clear();
 		points.clear();
-		keys.clear();
+//		keys.clear();
 		antPoint=firstPoint=null;
-		initializeFormState();
+//		initializeFormState();
 		virtualIndex = null;
 		numLines = 0;
 //		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de

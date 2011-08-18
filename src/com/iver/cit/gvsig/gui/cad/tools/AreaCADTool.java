@@ -75,7 +75,11 @@ public class AreaCADTool extends InsertionCADTool {
 	private int numShapes;
 
 	private boolean isHole;
-
+	 
+	/**
+	 * Index of the last feature introduced in VEA.
+	 */
+	private Integer virtualIndex;
 
 	/**
 	 * Método de incio, para poner el código de todo lo que se requiera de una

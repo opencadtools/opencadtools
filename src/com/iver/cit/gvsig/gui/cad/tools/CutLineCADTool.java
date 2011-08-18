@@ -357,7 +357,7 @@ public class CutLineCADTool extends InsertionCADTool {
 	}
 
 	public void clear() {
-		keys.clear();
+//		keys.clear();
 		geometry = null;
 		keepFirstPiece = true;
 		oldPoints = null;
@@ -583,13 +583,13 @@ public class CutLineCADTool extends InsertionCADTool {
 
 
 
-	/**
-	 * Accion that will be executed when the insertion form is canceled.
-	 * It deletes the last row added to the VectorialEditableAdapter.
-	 */
-	public void cancelInsertion() {
-		getCadToolAdapter().delete(virtualIndex.intValue());
-	}
+//	/**
+//	 * Accion that will be executed when the insertion form is canceled.
+//	 * It deletes the last row added to the VectorialEditableAdapter.
+//	 */
+//	public void cancelInsertion() {
+//		getCadToolAdapter().delete(virtualIndex.intValue());
+//	}
 
 	public boolean isMultiTransition() {
 		// TODO Auto-generated method stub

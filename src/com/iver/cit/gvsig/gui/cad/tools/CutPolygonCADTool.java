@@ -72,7 +72,7 @@ import com.vividsolutions.jts.geom.LineSegment;
  * @author Nacho Varela [Cartolab]
  * @author Pablo Sanxiao [CartoLab]
 */
-public class CutPolygonCADTool extends InsertionCADTool{
+public class CutPolygonCADTool extends DefaultCADTool{
 
 	private CutPolygonCADToolContext _fsm;
 	private IGeometry selectedGeom; // [LBD] Storing the geometry which contains the first point
@@ -651,7 +651,7 @@ public class CutPolygonCADTool extends InsertionCADTool{
 		selectedRow=null;
 		doShortPath = true;
 		multiSelected = 0;
-		keys.clear();
+//		keys.clear();
 
 	}
 
@@ -804,13 +804,13 @@ public class CutPolygonCADTool extends InsertionCADTool{
 
 
 
-	/**
-	 * Accion that is executed when we cancel the insertion form
-	 * Deleting the last row added to the VectorialEditableAdapter
-	 * */
-	public void cancelInsertion(){
-		getCadToolAdapter().delete(virtualIndex.intValue());
-	}
+//	/**
+//	 * Accion that is executed when we cancel the insertion form
+//	 * Deleting the last row added to the VectorialEditableAdapter
+//	 * */
+//	public void cancelInsertion(){
+//		getCadToolAdapter().delete(virtualIndex.intValue());
+//	}
 
 
 	public IGeometry getCuttedGeometry() {
