@@ -115,7 +115,11 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 	 */
 	public void transition(String s) throws CommandException {
 		if (!super.changeCommand(s)){
-			_fsm.addOption(s);
+			if(s.equals(PluginServices.getText(this, "removePoint"))) {
+				_fsm.removePoint(null, points.size());
+			} else {
+				_fsm.addOption(s);
+			}
 		}
 	}
 

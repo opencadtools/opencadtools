@@ -424,7 +424,7 @@ public final class MultiPolylineCADToolContext
             }
 
             protected String[] getDescription() {
-            	return new String[]{"terminate", "next", "cancel"};
+            	return new String[]{"terminate", "next", "cancel", "removePoint"};
             }
 
             protected void addPoint(MultiPolylineCADToolContext context, double pointX, double pointY, InputEvent event)
@@ -491,7 +491,7 @@ public final class MultiPolylineCADToolContext
             }
 
             protected String[] getDescription() {
-            	return new String[]{"terminate", "next", "cancel"};
+            	return new String[]{"terminate", "next", "cancel", "removePoint"};
             }
 
             protected void addOption(MultiPolylineCADToolContext context, String s)
