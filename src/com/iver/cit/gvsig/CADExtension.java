@@ -69,6 +69,7 @@ import com.iver.cit.gvsig.gui.accelerators.ForceCursorAccelerator;
 import com.iver.cit.gvsig.gui.accelerators.GridAccelerator;
 import com.iver.cit.gvsig.gui.accelerators.OrtoAccelerator;
 import com.iver.cit.gvsig.gui.accelerators.RefentAccelerator;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.tools.CopyCADTool;
@@ -77,7 +78,6 @@ import com.iver.cit.gvsig.gui.cad.tools.ScaleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.SymmetryCADTool;
 import com.iver.cit.gvsig.gui.preferences.EditingPage;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
-import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
 import com.iver.cit.gvsig.project.documents.view.snapping.Snapping;
 import com.iver.cit.gvsig.project.documents.view.toc.MenuEntry;
 import com.iver.utiles.console.JConsole;
@@ -188,13 +188,8 @@ public class CADExtension extends Extension implements IPreferenceExtension{
 
 	// get preferences of snappers (true by default) and follow geometry
 	// (false by default)
-	SnapperStatus snapperStatus = SnapperStatus.getSnapperStatus();
-	snapperStatus.setNearLineActivated(prefs.getBoolean(
-		"snapperFinalPoint", true));
-	snapperStatus.setVertexActivated(prefs.getBoolean(
-		"snapperNearestPoint", true));
-		FollowGeometryExtension.setActivated(prefs.getBoolean("followGeometry", false));
-		
+	CADStatus cadStatus = CADStatus.getCADStatus();
+	cadStatus.load();
 	}
 
 	private void registerIcons(){

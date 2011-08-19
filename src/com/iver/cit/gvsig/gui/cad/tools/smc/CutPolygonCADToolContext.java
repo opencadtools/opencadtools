@@ -2,11 +2,11 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
 import java.awt.event.InputEvent;
-import java.util.prefs.Preferences;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
+import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
 
 
 /**
@@ -21,8 +21,6 @@ public final class CutPolygonCADToolContext
 //---------------------------------------------------------------
 // Member methods.
 //
-
-	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 
     public CutPolygonCADToolContext(CutPolygonCADTool owner)
     {
@@ -317,7 +315,8 @@ public final class CutPolygonCADToolContext
                     context.clearState();
                     try
                     {
-                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
                     	if (deleteButton3) {
                     		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_end"));
                     	} else {
@@ -384,7 +383,8 @@ public final class CutPolygonCADToolContext
                     context.clearState();
                     try
                     {
-                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
                     	if (deleteButton3) {
                     		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point_del"));
                     	} else {
@@ -405,7 +405,8 @@ public final class CutPolygonCADToolContext
                     try
                     {
                         ctxt.throwPointException(PluginServices.getText(this,"redigitaliza_incorrect_point"), pointX, pointY);
-                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
                     	if (deleteButton3) {
                     		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_end"));
                     	} else {
@@ -514,7 +515,8 @@ public final class CutPolygonCADToolContext
                 context.clearState();
                 try
                 {
-                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+		    boolean deleteButton3 = CADStatus.getCADStatus()
+			    .isDeleteButtonActivated();
                 	if (deleteButton3) {
                 		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point_del"));
                 	} else {
@@ -554,7 +556,8 @@ public final class CutPolygonCADToolContext
                     context.clearState();
                     try
                     {
-                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
                     	if (deleteButton3) {
                     		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_end"));
                     	} else {

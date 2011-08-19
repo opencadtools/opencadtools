@@ -8,9 +8,9 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 //import com.iver.cit.gvsig.ActivateFormsExtension;
 //import com.iver.cit.gvsig.OpenFormsExtension;
 import java.awt.event.InputEvent;
-import java.util.prefs.Preferences;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPolylineCADTool;
 
 public final class MultiPolylineCADToolContext
@@ -19,8 +19,6 @@ public final class MultiPolylineCADToolContext
 //---------------------------------------------------------------
 // Member methods.
 //
-
-	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 
     public MultiPolylineCADToolContext(MultiPolylineCADTool owner)
     {
@@ -198,7 +196,7 @@ public final class MultiPolylineCADToolContext
             super (name, id);
         }
 
-        protected void Entry(MultiPolygonCADToolContext context) {
+	protected void Entry(MultiPolylineCADToolContext context) {
         	context.getOwner().setDescription(getDescription());
         }
 
@@ -438,7 +436,8 @@ public final class MultiPolylineCADToolContext
                 context.clearState();
                 try
                 {
-                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+		    boolean deleteButton3 = CADStatus.getCADStatus()
+			    .isDeleteButtonActivated();
                 	if (deleteButton3) {
                 		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line_del"));
                 	} else {
@@ -570,7 +569,8 @@ public final class MultiPolylineCADToolContext
                 context.clearState();
                 try
                 {
-                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+		    boolean deleteButton3 = CADStatus.getCADStatus()
+			    .isDeleteButtonActivated();
                 	if (deleteButton3) {
                 		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line_del"));
                 	} else {

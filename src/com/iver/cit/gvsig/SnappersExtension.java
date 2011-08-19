@@ -27,12 +27,12 @@ import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.project.documents.view.snapping.EIELFinalPointSnapper;
-import com.iver.cit.gvsig.project.documents.view.snapping.EIELNearestPointSnapper;
-import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.project.documents.view.snapping.EIELFinalPointSnapper;
+import com.iver.cit.gvsig.project.documents.view.snapping.EIELNearestPointSnapper;
 import com.iver.utiles.console.JConsole;
 
 /**
@@ -43,13 +43,14 @@ import com.iver.utiles.console.JConsole;
  */
 public class SnappersExtension extends Extension {
 
-	private SnapperStatus snapperStatus = null;
+
+    private CADStatus cadStatus = null;
 
 	/**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
 	 */
 	public void initialize() {
-		snapperStatus = SnapperStatus.getSnapperStatus();
+	    cadStatus = CADStatus.getCADStatus();
 
 		PluginServices.getIconTheme().registerDefault("Snapper",
 		this.getClass().getClassLoader()
@@ -68,10 +69,11 @@ public class SnappersExtension extends Extension {
 			ArrayList snappers = ((VectorialLayerEdited)lyrEdit).getSnappers();
 			String message = new String();
 
-			if (snapperStatus.isVertexActivated() || snapperStatus.isNearLineActivated()){
+	    if (cadStatus.isVertexActivated()
+		    || cadStatus.isNearLineActivated()) {
 				snappers.clear();
-				snapperStatus.setVertexActivated(false);
-				snapperStatus.setNearLineActivated(false);
+				cadStatus.setVertexActivated(false);
+				cadStatus.setNearLineActivated(false);
 				message = PluginServices.getText(this, "snappers_deactivated");
 			} else {
 				//Creating snappers and added to the layer
@@ -81,8 +83,8 @@ public class SnappersExtension extends Extension {
 				snappers.clear();
 				snappers.add(eielFinalSnap);
 				snappers.add(eielNearestSnap);
-				snapperStatus.setVertexActivated(true);
-				snapperStatus.setNearLineActivated(true);
+				cadStatus.setVertexActivated(true);
+				cadStatus.setNearLineActivated(true);
 
 				message = PluginServices.getText(this, "snappers_activated");
 			}

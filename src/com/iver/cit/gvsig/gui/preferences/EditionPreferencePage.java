@@ -29,7 +29,6 @@ import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.prefs.Preferences;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -49,19 +48,18 @@ import com.iver.andami.preferences.AbstractPreferencePage;
 import com.iver.andami.preferences.StoreException;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
-import com.iver.cit.gvsig.FollowGeometryExtension;
 import com.iver.cit.gvsig.exceptions.layers.ReloadLayerException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SingleLayerIterator;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.snapping.EIELFinalPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.EIELNearestPointSnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
-import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
 
 /**
  * @author gvSIG
@@ -69,7 +67,7 @@ import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
  * @author Cartolab. Universidad de A Coruña
  */
 public class EditionPreferencePage extends AbstractPreferencePage {
-	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
+
 	private JLabel jLabel = null;
 	private ImageIcon icon;
 
@@ -282,48 +280,45 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
                 eielLineEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
                 	public void actionPerformed(java.awt.event.ActionEvent evt) {
-			    SnapperStatus snapperStatus = SnapperStatus
-				    .getSnapperStatus();
+			    CADStatus cadStatus = CADStatus.getCADStatus();
 			    if (eielVertexEIELSnapCB.isSelected()) {
                 			addSnapper(new EIELNearestPointSnapper());
-				snapperStatus.setVertexActivated(true);
-				snapperStatus
+				cadStatus.setVertexActivated(true);
+				cadStatus
 					.setNearLineActivated(eielLineEIELSnapCB
 						.isSelected());
                 		}else{
                 			deleteSnapper("EIELNearestPoint");
-				snapperStatus.setVertexActivated(false);
-				snapperStatus
+				cadStatus.setVertexActivated(false);
+				cadStatus
 					.setNearLineActivated(eielLineEIELSnapCB
 						.isSelected());
                 		}
-                		prefs.putBoolean("snapperFinalPoint", eielVertexEIELSnapCB.isSelected());
                 	}
                 });
                 eielVertexEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
                 	public void actionPerformed(java.awt.event.ActionEvent evt) {
-			    SnapperStatus snapperStatus = SnapperStatus
-				    .getSnapperStatus();
+			    CADStatus cadStatus = CADStatus.getCADStatus();
                 		if(eielLineEIELSnapCB.isSelected()){
                 			addSnapper(new EIELFinalPointSnapper());
-				snapperStatus.setNearLineActivated(true);
-				snapperStatus
+				cadStatus.setNearLineActivated(true);
+				cadStatus
 					.setVertexActivated(eielVertexEIELSnapCB
 						.isSelected());
                         }else{
                             deleteSnapper("EIELFinalPoint");
-				snapperStatus.setNearLineActivated(false);
-				snapperStatus
+				cadStatus.setNearLineActivated(false);
+				cadStatus
 					.setVertexActivated(eielVertexEIELSnapCB
 						.isSelected());
                         }
-                prefs.putBoolean("snapperNearestPoint", eielLineEIELSnapCB.isSelected());
                     }
                 });
                                 
                 followGeometryCB.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                		FollowGeometryExtension.setActivated(followGeometryCB.isSelected());
+			CADStatus cadStatus = CADStatus.getCADStatus();
+			cadStatus.setFollowGeometryActivated(followGeometryCB.isSelected()); 
                     }
                  });
 //                eielLineEIELSnapCB.addActionListener(new java.awt.event.ActionListener() {
@@ -367,7 +362,8 @@ public class EditionPreferencePage extends AbstractPreferencePage {
                 deleteButtonOptionCB.setSelected(true);
                 deleteButtonOptionCB.addActionListener(new java.awt.event.ActionListener() {
                 	public void actionPerformed(java.awt.event.ActionEvent evt) {
-                		prefs.putBoolean("isDeleteButton3", deleteButtonOptionCB.isSelected());
+			    CADStatus cadStatus = CADStatus.getCADStatus();
+			    cadStatus.setDeleteButtonActivated(deleteButtonOptionCB.isSelected());
                 	}
                 });
 
@@ -703,11 +699,11 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 //                    }
 //            	}
 //			}
-	SnapperStatus snapperStatus = SnapperStatus.getSnapperStatus();
-	eielVertexEIELSnapCB.setSelected(snapperStatus.isVertexActivated());
-	eielLineEIELSnapCB.setSelected(snapperStatus.isNearLineActivated());
-			followGeometryCB.setSelected(FollowGeometryExtension.isActivated());
-			deleteButtonOptionCB.setSelected(prefs.getBoolean("isDeleteButton3", false));
+	CADStatus cadStatus = CADStatus.getCADStatus();
+	eielVertexEIELSnapCB.setSelected(cadStatus.isVertexActivated());
+	eielLineEIELSnapCB.setSelected(cadStatus.isNearLineActivated());
+	followGeometryCB.setSelected(cadStatus.isFollowGeometryActivated());
+	deleteButtonOptionCB.setSelected(cadStatus.isDeleteButtonActivated());
 	}
 
 	/**

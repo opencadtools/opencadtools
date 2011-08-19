@@ -6,9 +6,9 @@
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
 import java.awt.event.InputEvent;
-import java.util.prefs.Preferences;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPointCADTool;
 
 public final class MultiPointCADToolContext
@@ -17,8 +17,6 @@ public final class MultiPointCADToolContext
 //---------------------------------------------------------------
 // Member methods.
 //
-
-	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 
     public MultiPointCADToolContext(MultiPointCADTool owner)
     {
@@ -368,7 +366,8 @@ public final class MultiPointCADToolContext
 
             	context.clearState();
             	try {
-                    boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+		    boolean deleteButton3 = CADStatus.getCADStatus()
+			    .isDeleteButtonActivated();
                 	if (deleteButton3) {
                 		tool.setQuestion(PluginServices.getText(this,"insert_next_point_del"));
                 	} else {
@@ -446,7 +445,8 @@ public final class MultiPointCADToolContext
                 context.clearState();
                 try
                 {
-                    boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+		    boolean deleteButton3 = CADStatus.getCADStatus()
+			    .isDeleteButtonActivated();
                 	if (deleteButton3) {
                 		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_del"));
                 	} else {

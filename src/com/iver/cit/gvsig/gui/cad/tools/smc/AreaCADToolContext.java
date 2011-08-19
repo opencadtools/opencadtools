@@ -25,12 +25,11 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.AreaCADTool;
-
 import java.awt.event.InputEvent;
-import java.util.prefs.Preferences;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
+import com.iver.cit.gvsig.gui.cad.tools.AreaCADTool;
 
 /**
  * @author Isabel P?rez-Urria Lage [LBD]
@@ -43,7 +42,6 @@ public final class AreaCADToolContext
 // Member methods.
 //
 
-	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 
     public AreaCADToolContext(AreaCADTool owner)
     {
@@ -528,7 +526,8 @@ public final class AreaCADToolContext
                 context.clearState();
                 try
                 {
-                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+		    boolean deleteButton3 = CADStatus.getCADStatus()
+			    .isDeleteButtonActivated();
                 	if (deleteButton3) {
                 		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_hole_del"));
                 	} else {
@@ -700,7 +699,8 @@ public final class AreaCADToolContext
                 context.clearState();
                 try
                 {
-                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+		    boolean deleteButton3 = CADStatus.getCADStatus()
+			    .isDeleteButtonActivated();
                 	if (deleteButton3) {
                 		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_hole_del"));
                 	} else {

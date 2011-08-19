@@ -28,7 +28,6 @@ import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.MDIManager;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.EditionManager;
-import com.iver.cit.gvsig.FollowGeometryExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.MapContext;
 import com.iver.cit.gvsig.fmap.MapControl;
@@ -59,7 +58,6 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperGeometriesVectorial;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperVectorial;
-import com.iver.cit.gvsig.project.documents.view.snapping.SnapperStatus;
 import com.iver.cit.gvsig.project.documents.view.toolListeners.StatusBarListener;
 import com.iver.utiles.console.JConsole;
 import com.vividsolutions.jts.geom.Envelope;
@@ -321,8 +319,8 @@ public class CADToolAdapter extends Behavior {
 				((CADTool) cadToolStack.peek()).drawOperation(g, p.getX(), p.getY());
 			} else {
 				// Calling to the special drawOperation with a list of points
-				((CADTool) cadToolStack.peek()).drawOperation(g, otherMapAdjustedPoints);
-				if (FollowGeometryExtension.isActivated()) {
+		CADStatus cadStatus = CADStatus.getCADStatus();
+		if (cadStatus.isFollowGeometryActivated()) {
 				    ((CADTool) cadToolStack.peek()).drawOperation(g, otherMapAdjustedPoints);
 				} else {
 				    ((CADTool) cadToolStack.peek()).drawOperation(g, p.getX(), p.getY());
@@ -409,13 +407,15 @@ public class CADToolAdapter extends Behavior {
 			transition(new double[] { p.getX(), p.getY() }, e, ABSOLUTE);
 		}*/
 		if (e.getButton() == MouseEvent.BUTTON1) {
+	    boolean followActivated = CADStatus.getCADStatus()
+		    .isFollowGeometryActivated();
 		    System.out.println("multi: " +
 			    getCadTool().isMultiTransition() + " follow: " +
-			    FollowGeometryExtension.isActivated());
+ followActivated);
 			if (otherMapAdjustedPoints == null
 					|| otherMapAdjustedPoints.size() == 0
 						|| !getCadTool().isMultiTransition()
-						|| !FollowGeometryExtension.isActivated()) {
+ || !followActivated) {
 					
 
 				ViewPort vp = getMapControl().getMapContext().getViewPort();
@@ -492,11 +492,11 @@ public class CADToolAdapter extends Behavior {
 //		PixelSnapper pixSnap = new PixelSnapper();
 
 		snappers.clear();
-	SnapperStatus snapperStatus = SnapperStatus.getSnapperStatus();
-	if (snapperStatus.isNearLineActivated()) {
+		CADStatus cadStatus = CADStatus.getCADStatus();
+		if (cadStatus.isNearLineActivated()) {
 			snappers.add(eielNearestSnap);
 		}
-	if (snapperStatus.isVertexActivated()) {
+		if (cadStatus.isVertexActivated()) {
 			snappers.add(eielFinalSnap);
 		}
 //		snappers.add(pixSnap);
@@ -516,6 +516,9 @@ public class CADToolAdapter extends Behavior {
         {
             lastPoint = new Point2D.Double(previousPoint[0], previousPoint[1]);
         }
+        if (cadStatus.isVertexActivated() ||
+        cadStatus.isNearLineActivated() ||
+        cadStatus.isFollowGeometryActivated()) {
         for (int j = 0; j < layersToSnap.size(); j++)
         {
             FLyrVect lyrVect = (FLyrVect) layersToSnap.get(j);
@@ -538,10 +541,7 @@ public class CADToolAdapter extends Behavior {
 		             }
 		        }
 		   }   
-		if (snapperStatus.isVertexActivated()
-			|| snapperStatus.isNearLineActivated()
-			||
-			FollowGeometryExtension.isActivated())
+
                 for (int n=0; n < geoms.size(); n++) {
                     IGeometry geom = (IGeometry) geoms.get(n);
                     for (int i = 0; i < snappers.size(); i++)
@@ -593,6 +593,7 @@ public class CADToolAdapter extends Behavior {
                 } // for n
             } // visible
         }
+	}
         /*if (usedSnap != null)
             return minDist;
         return Double.MAX_VALUE; */

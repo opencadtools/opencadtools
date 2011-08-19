@@ -26,7 +26,7 @@ package com.iver.cit.gvsig;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
-import com.iver.andami.ui.mdiFrame.MDIFrame;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.tools.InsertionCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.RedigitalizeLineCADTool;
@@ -37,17 +37,14 @@ import com.iver.utiles.console.JConsole;
 
 /**
  * Extensión que gestiona la inserción de poligonos en edición.
- *
+ * 
  * @author Isabel Pérez-Urria [LBD]
  * @author Francisco Puga <fpuga (at) cartolab.es>
+ * @author Javier Estévez Valiñas
  */
 public class FollowGeometryExtension extends Extension {
 
-	private static boolean activated;
-	
-
 	public void initialize() {
-		activated = true;
         PluginServices.getIconTheme().registerDefault(
 				"follow-geometry",
 		this.getClass().getClassLoader()
@@ -55,25 +52,12 @@ public class FollowGeometryExtension extends Extension {
 			);
 	}
 
-	public static boolean isActivated() {
-		return activated;
-	}
-	
-	public static void setActivated(boolean followGeom) {
-		activated = followGeom;
-				if (!followGeom) {
-		   			((MDIFrame)PluginServices.getMainFrame()).setSelectedTool("follow", "_empty");
-		   		} else {
-	    ((MDIFrame) PluginServices.getMainFrame()).setSelectedTool(
-		    "follow", "_follow");
-	}
-	}
-	
 	public void execute(String s) {
 		
 		CADExtension.initFocus();
 		if (s.equals("_follow")) {
-			
+	    CADStatus snappers = CADStatus.getCADStatus();
+	    boolean activated = snappers.isFollowGeometryActivated();
 			String message = new String();
 			
 			if (activated) {
@@ -82,8 +66,8 @@ public class FollowGeometryExtension extends Extension {
 			} else {
 		message = PluginServices.getText(this, "followGeom_activated");
 			}
-	    setActivated(!activated);
 
+	    snappers.setFollowGeometryActivated(!activated);
 			//Printing in console if the forms are activated
 			if (PluginServices.getMDIManager().getActiveWindow() instanceof View)
 			{

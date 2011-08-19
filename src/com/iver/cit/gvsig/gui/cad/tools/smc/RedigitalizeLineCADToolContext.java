@@ -26,11 +26,11 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.RedigitalizeLineCADTool;
 import java.awt.event.InputEvent;
-import java.util.prefs.Preferences;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
+import com.iver.cit.gvsig.gui.cad.tools.RedigitalizeLineCADTool;
 
 /**
  * @author José Ignacio Lamas Fonte [LBD]
@@ -44,8 +44,6 @@ public final class RedigitalizeLineCADToolContext
 //---------------------------------------------------------------
 // Member methods.
 //
-
-	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 
     public RedigitalizeLineCADToolContext(RedigitalizeLineCADTool owner)
     {
@@ -340,7 +338,8 @@ public final class RedigitalizeLineCADToolContext
                     context.clearState();
                     try
                     {
-                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
                     	if (deleteButton3) {
                     		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_del"));
                     	} else {
@@ -400,7 +399,8 @@ public final class RedigitalizeLineCADToolContext
                     context.clearState();
                     try
                     {
-                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
                     	if (deleteButton3) {
                     		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_other_point_del"));
                     	} else {
@@ -422,7 +422,8 @@ public final class RedigitalizeLineCADToolContext
                     try
                     {
                         ctxt.throwPointException(PluginServices.getText(this,"redigitaliza_incorrect_point"), pointX, pointY);
-                        boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
                     	if (deleteButton3) {
                     		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_del"));
                     	} else {
@@ -518,7 +519,8 @@ public final class RedigitalizeLineCADToolContext
                 context.clearState();
                 try
                 {
-                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+		    boolean deleteButton3 = CADStatus.getCADStatus()
+			    .isDeleteButtonActivated();
                 	if (deleteButton3) {
                 		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_other_point_del"));
                 	} else {
@@ -559,7 +561,8 @@ public final class RedigitalizeLineCADToolContext
                     try
                     {
                         ctxt.removeSecondPoint(event);
-                        boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
                     	if (deleteButton3) {
                     		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_del"));
                     	} else {

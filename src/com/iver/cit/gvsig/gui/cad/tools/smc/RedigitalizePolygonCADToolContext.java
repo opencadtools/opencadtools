@@ -25,12 +25,11 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.RedigitalizePolygonCADTool;
-
 import java.awt.event.InputEvent;
-import java.util.prefs.Preferences;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.CADStatus;
+import com.iver.cit.gvsig.gui.cad.tools.RedigitalizePolygonCADTool;
 
 /**
  * @author Jose Ignacio Lamas Fonte [LBD]
@@ -42,8 +41,6 @@ extends statemap.FSMContext
 {
 //	---------------------------------------------------------------
 //	Member methods.
-
-	private static Preferences prefs = Preferences.userRoot().node( "cadtooladapter" );
 
 	public RedigitalizePolygonCADToolContext(RedigitalizePolygonCADTool owner)
 	{
@@ -338,7 +335,8 @@ extends statemap.FSMContext
 					context.clearState();
 					try
 					{
-	                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
 	                	if (deleteButton3) {
 	                		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_del"));
 	                	} else {
@@ -398,7 +396,8 @@ extends statemap.FSMContext
 					context.clearState();
 					try
 					{
-                    	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
                     	if (deleteButton3) {
                     		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point_del"));
                     	} else {
@@ -419,7 +418,8 @@ extends statemap.FSMContext
 					try
 					{
 						ctxt.throwPointException(PluginServices.getText(this,"redigitaliza_incorrect_point"), pointX, pointY);
-						boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
 	                	if (deleteButton3) {
 	                		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_del"));
 	                	} else {
@@ -528,7 +528,8 @@ extends statemap.FSMContext
 				context.clearState();
 				try
 				{
-                	boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+		    boolean deleteButton3 = CADStatus.getCADStatus()
+			    .isDeleteButtonActivated();
                 	if (deleteButton3) {
                 		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point_del"));
                 	} else {
@@ -568,7 +569,8 @@ extends statemap.FSMContext
 					context.clearState();
 					try
 					{
-						boolean deleteButton3 = prefs.getBoolean("isDeleteButton3", true);
+			boolean deleteButton3 = CADStatus.getCADStatus()
+				.isDeleteButtonActivated();
 	                	if (deleteButton3) {
 	                		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_del"));
 	                	} else {
