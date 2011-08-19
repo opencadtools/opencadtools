@@ -369,8 +369,7 @@ public final class AreaCADToolContext
 
 		@Override
 		protected String[] getDescription() {
-			// TODO Auto-generated method stub
-			return new String[]{"cancel"};
+	    return new String[] { "cancel", "removePoint" };
 		}
 
     //-----------------------------------------------------------
@@ -439,6 +438,9 @@ public final class AreaCADToolContext
                 return;
             }
 
+	    protected String[] getDescription() {
+		return new String[] { "cancel" };
+	    }
         //-------------------------------------------------------
         // Member data.
         //
@@ -582,7 +584,8 @@ public final class AreaCADToolContext
             }
 
             protected String[] getDescription() {
-            	return new String[]{"terminate", "next", "cancel"};
+		return new String[] { "terminate", "next", "cancel",
+			"removePoint" };
             }
 
 //            protected void Entry(AreaCADToolContext context)
@@ -816,6 +819,9 @@ public final class AreaCADToolContext
                 return;
             }
 
+	    protected String[] getDescription() {
+		return new String[] { "cancel" };
+	    }
         //-------------------------------------------------------
         // Member data.
         //
