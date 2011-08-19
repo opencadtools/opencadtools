@@ -313,21 +313,9 @@ public final class CutPolygonCADToolContext
 
                     (context.getState()).Exit(context);
                     context.clearState();
-                    try
-                    {
-			boolean deleteButton3 = CADStatus.getCADStatus()
-				.isDeleteButtonActivated();
-                    	if (deleteButton3) {
-                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_end"));
-                    	} else {
-                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point"));
-                    	}
-                    }
-                    finally
-                    {
-                        context.setState(CutPolygon.SecondPoint);
+		    context.setState(CutPolygon.SecondPoint);
                         (context.getState()).Entry(context);
-                    }
+
                 }
                 else
                 {
@@ -369,6 +357,15 @@ public final class CutPolygonCADToolContext
 
             	CutPolygonCADTool tool = context.getOwner();
             	tool.setDescription(new String[]{"cancel"});
+		boolean deleteButton3 = CADStatus.getCADStatus()
+			.isDeleteButtonActivated();
+		if (deleteButton3) {
+		    tool.setQuestion(PluginServices.getText(this,
+			    "redigitaliza_insert_second_point_end"));
+		} else {
+		    tool.setQuestion(PluginServices.getText(this,
+			    "redigitaliza_insert_second_point"));
+		}
 
             }
 
@@ -381,21 +378,8 @@ public final class CutPolygonCADToolContext
 
                     (context.getState()).Exit(context);
                     context.clearState();
-                    try
-                    {
-			boolean deleteButton3 = CADStatus.getCADStatus()
-				.isDeleteButtonActivated();
-                    	if (deleteButton3) {
-                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point_del"));
-                    	} else {
-                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point"));
-                    	}
-                    }
-                    finally
-                    {
                         context.setState(CutPolygon.NextPoint);
                         (context.getState()).Entry(context);
-                    }
                 }
                 else
                 {
@@ -405,13 +389,7 @@ public final class CutPolygonCADToolContext
                     try
                     {
                         ctxt.throwPointException(PluginServices.getText(this,"redigitaliza_incorrect_point"), pointX, pointY);
-			boolean deleteButton3 = CADStatus.getCADStatus()
-				.isDeleteButtonActivated();
-                    	if (deleteButton3) {
-                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_end"));
-                    	} else {
-                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point"));
-                    	}
+
                     }
                     finally
                     {
@@ -431,7 +409,6 @@ public final class CutPolygonCADToolContext
                 context.clearState();
                 try
                 {
-                    ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_first_point"));
                     ctxt.removeFirstPoint(event);
                 }
                 finally
@@ -463,6 +440,15 @@ public final class CutPolygonCADToolContext
 
             	CutPolygonCADTool tool = context.getOwner();
             	tool.setDescription(new String[]{"cancel", "terminate", "change_base_geom"});
+		boolean deleteButton3 = CADStatus.getCADStatus()
+			.isDeleteButtonActivated();
+		if (deleteButton3) {
+		    tool.setQuestion(PluginServices.getText(this,
+			    "redigitaliza_poligono_insert_other_point_del"));
+		} else {
+		    tool.setQuestion(PluginServices.getText(this,
+			    "redigitaliza_poligono_insert_other_point"));
+		}
             }
 
             protected void addOption(CutPolygonCADToolContext context, String s)
@@ -475,7 +461,6 @@ public final class CutPolygonCADToolContext
                     (context.getState()).Exit(context);
                     context.clearState();
                     try {
-                        ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_first_point"));
                         ctxt.saveChanges();
                         ctxt.clear();
                     }
@@ -515,13 +500,6 @@ public final class CutPolygonCADToolContext
                 context.clearState();
                 try
                 {
-		    boolean deleteButton3 = CADStatus.getCADStatus()
-			    .isDeleteButtonActivated();
-                	if (deleteButton3) {
-                		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point_del"));
-                	} else {
-                		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_poligono_insert_other_point"));
-                	}
                     ctxt.addPoint(pointX, pointY, event);
                 }
                 finally
@@ -556,13 +534,6 @@ public final class CutPolygonCADToolContext
                     context.clearState();
                     try
                     {
-			boolean deleteButton3 = CADStatus.getCADStatus()
-				.isDeleteButtonActivated();
-                    	if (deleteButton3) {
-                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point_end"));
-                    	} else {
-                    		ctxt.setQuestion(PluginServices.getText(this,"redigitaliza_insert_second_point"));
-                    	}
                         ctxt.removeSecondPoint(event);
                     }
                     finally
