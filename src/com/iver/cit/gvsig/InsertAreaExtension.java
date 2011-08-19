@@ -52,7 +52,7 @@ public class InsertAreaExtension extends Extension {
         PluginServices.getIconTheme().registerDefault(
 				"insert-area",
 		this.getClass().getClassLoader()
-			.getResource("images/icons/area.png")
+			.getResource("images/icons/multipoligono.png")
 			);
 	}
 
