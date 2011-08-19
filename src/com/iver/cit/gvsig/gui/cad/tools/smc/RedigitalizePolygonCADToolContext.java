@@ -384,6 +384,15 @@ extends statemap.FSMContext
 			{
 				super (name, id);
 			}
+			
+			
+
+			protected void Entry(RedigitalizePolygonCADToolContext context) {
+				RedigitalizePolygonCADTool ctxt = context.getOwner();
+				ctxt.setDescription(new String[]{"cancel", "removePoint"});
+			}
+
+
 
 			protected void addPoint(RedigitalizePolygonCADToolContext context, double pointX, double pointY, InputEvent event)
 			{
@@ -474,7 +483,7 @@ extends statemap.FSMContext
 
 			protected void Entry(RedigitalizePolygonCADToolContext context) {
 
-				(context.getOwner()).setDescription(new String[]{"cancel", "terminate", "change_base_geom"});
+				(context.getOwner()).setDescription(new String[]{"cancel", "terminate", "change_base_geom", "removePoint"});
 
 			}
 
