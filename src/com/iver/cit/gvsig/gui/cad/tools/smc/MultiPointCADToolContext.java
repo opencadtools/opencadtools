@@ -402,7 +402,7 @@ public final class MultiPointCADToolContext
             {
                 MultiPointCADTool ctxt = context.getOwner();
 
-                ctxt.setDescription(new String[]{"cancel", "end"});
+                ctxt.setDescription(new String[]{"cancel", "end", "removePoint"});
                 return;
             }
 
