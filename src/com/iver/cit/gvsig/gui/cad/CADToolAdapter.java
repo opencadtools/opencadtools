@@ -347,7 +347,8 @@ public class CADToolAdapter extends Behavior {
 	public void mouseClicked(MouseEvent e) throws BehaviorException {
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			//CADExtension.showPopup(e);
-			boolean deleteButton3Option = prefs.getBoolean("isDeleteButton3", true);
+	    boolean deleteButton3Option = CADStatus.getCADStatus()
+		    .isDeleteButtonActivated();
 			if (deleteButton3Option) {
 				//TODO  if SHIFHT is pressed do:
 				// CADExtension.showPopup(e); 
