@@ -410,7 +410,7 @@ public final class RedigitalizeLineCADToolContext
                     finally
                     {
                         context.setState(RedigitalizeLine.NextPoint);
-                        ctxt.setDescription(new String[]{"cancel", "terminate"});
+                        ctxt.setDescription(new String[]{"cancel", "terminate", "removePoint"});
                         (context.getState()).Entry(context);
                     }
                 }

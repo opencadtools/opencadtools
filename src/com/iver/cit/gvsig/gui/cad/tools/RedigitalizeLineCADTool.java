@@ -103,7 +103,15 @@ public class RedigitalizeLineCADTool extends DefaultCADTool{
 	 */
 	public void transition(String s) throws CommandException {
 		if (!super.changeCommand(s)){
-			_fsm.addOption(s);
+			if (s.equals(PluginServices.getText(this, "removePoint"))) {
+				if (newPoints != null) {
+					_fsm.removePoint(null, newPoints.size());
+				} else {
+					_fsm.removePoint(null, 0);
+				}
+			} else {
+				_fsm.addOption(s);
+			}
 		}
 	}
 
