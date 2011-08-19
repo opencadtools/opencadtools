@@ -715,7 +715,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 			int resp = JOptionPane.NO_OPTION;
 			resp = JOptionPane.showConfirmDialog((Component) PluginServices.getMainFrame(),
 					PluginServices.getText(this, "keep_remaining_feature"),
-					PluginServices.getText(this, "cut_line"), JOptionPane.YES_NO_OPTION);
+					PluginServices.getText(this, "cut_polygon"), JOptionPane.YES_NO_OPTION);
 
 			System.out.println("--->>> Salving changes in cutted geometry");
 			((IFeature)selectedRow.getLinkedRow()).setGeometry(getCuttedGeometry());
@@ -740,7 +740,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 			int resp = JOptionPane.NO_OPTION;
 			resp = JOptionPane.showConfirmDialog((Component) PluginServices.getMainFrame(),
 					PluginServices.getText(this, "cortar_linea_restante_fuera"),
-					PluginServices.getText(this, "cortar_linea"), JOptionPane.YES_NO_OPTION);
+					PluginServices.getText(this, "cut_polygon"), JOptionPane.YES_NO_OPTION);
 			if (resp != JOptionPane.YES_OPTION) { // CANCEL DELETE
 
 			}else{
