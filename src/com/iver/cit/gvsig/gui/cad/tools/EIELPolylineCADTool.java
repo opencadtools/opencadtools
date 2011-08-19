@@ -61,11 +61,11 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.EIELPolylineCADToolContext.EIELPolyl
 public class EIELPolylineCADTool extends InsertionCADTool {
 	private static Logger logger = Logger.getLogger(EIELPolylineCADTool.class.getName());
 	private EIELPolylineCADToolContext _fsm;
-	private Point2D firstPoint;
-	private Point2D antPoint;
-	private Point2D antantPoint;
-	private Point2D antCenter;
-	private Point2D antInter;
+    protected Point2D firstPoint;
+    protected Point2D antPoint;
+    protected Point2D antantPoint;
+    protected Point2D antCenter;
+    protected Point2D antInter;
 	private ArrayList list = new ArrayList();
 	private boolean close=false;
 
