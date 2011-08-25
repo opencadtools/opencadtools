@@ -185,7 +185,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 //			Painting the line so that user choose the next point
 			if (secondPoint==null) {
 				GeneralPathX gpx=new GeneralPathX();
-				for(int i = 0; i<oldPoints.size(); i++){
+		for (int i = 0; i < oldPoints.size() - 1; i++) {
 					Point2D point = (Point2D) oldPoints.get(i);
 					if (i==0) {
 						gpx.moveTo(point.getX(),point.getY());
@@ -193,6 +193,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 						gpx.lineTo(point.getX(),point.getY());
 					}
 				}
+		gpx.closePath();
 				IGeometry geom=ShapeFactory.createPolygon2D(gpx);
 				geom.draw((Graphics2D)g,CADExtension.getEditionManager().getMapControl().getViewPort(),DefaultCADTool.drawingSymbol);
 
@@ -539,7 +540,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 						multiSelected = numberMultiActual;
 						isInside = true;
 					}
-					oldPoints.add(index,new Point2D.Double(first.x, first.y));
+		    oldPoints.add(index, new Point2D.Double(first.x, first.y));
 					from = first;
 					break;
 
@@ -901,9 +902,9 @@ public class CutPolygonCADTool extends DefaultCADTool{
 							// reverse = T y condition = T
 //							We have to cover first the points between the second and the first
 //							index and then the introduced by the user
-							for (int i = oldPoints.size()-1;i>=secondCutIndex;i--) {
+			    for (int i = oldPoints.size() - 2; i >= secondCutIndex; i--) {
 								Point2D point = (Point2D) oldPoints.get(i);
-								if (i==oldPoints.size()-1){
+				if (i == oldPoints.size() - 2) {
 									System.out.println("moveTo: "+ point.getX() + ", " + point.getY());
 									gpx.moveTo(point.getX(),point.getY());
 								} else{
@@ -948,12 +949,13 @@ public class CutPolygonCADTool extends DefaultCADTool{
 							}
 						} else {
 							// [NachoV] reverse = F y condition = T
-							for (int i = secondCutIndex;i<oldPoints.size();i++){
+			    for (int i = secondCutIndex; i < oldPoints.size() - 1; i++) {
 								Point2D point = (Point2D) oldPoints.get(i);
 								System.out.println(point.getX() + ", " + point.getY());
 								gpx.lineTo(point.getX(),point.getY());
 							}
 						}
+			gpx.closePath();
 
 					} else {
 						// condition = F
@@ -1020,9 +1022,11 @@ public class CutPolygonCADTool extends DefaultCADTool{
 		}
 
 //		Checking if the points are well ordered
-		if(gpx.isCCW()){
-			gpx.flip();
-		}
+	// fpuga: This lines should be carefully checked if the nodes seems
+	// unordered
+	// if(gpx.isCCW()){
+	// gpx.flip();
+	// }
 
 		IGeometry geom=ShapeFactory.createPolygon2D(gpx);
 		return geom;
