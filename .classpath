@@ -14,7 +14,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/appgvSIG"/>
 	<classpathentry kind="lib" path="lib/gt2-postgis.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extJDBC"/>
-	<classpathentry kind="lib" path="/_fwAndami/lib/log4j-1.2.8.jar"/>
 	<classpathentry kind="lib" path="/_fwAndami/lib/JWizardComponent.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extScripting"/>
 	<classpathentry kind="lib" path="/extScripting/lib/bsf-2.3.0rc1.jar"/>
@@ -26,5 +25,6 @@
 	<classpathentry kind="lib" path="/_fwAndami/lib/org.gvsig.exceptions.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/jts-1.9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/_fwAndami/lib/log4j-1.2.14.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
