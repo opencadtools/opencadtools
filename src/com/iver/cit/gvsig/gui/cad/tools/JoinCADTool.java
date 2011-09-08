@@ -179,17 +179,22 @@ public class JoinCADTool extends DefaultCADTool {
     		}
     		boolean first=true;
     		Value[] values=null;
+    		String fid = null;
+    		int index = -1;
     		Iterator<DefaultRowEdited> iterator=shorted.iterator();
         	while (iterator.hasNext()) {
     			DefaultRowEdited dre = (DefaultRowEdited) iterator.next();
     			DefaultFeature df = (DefaultFeature) dre.getLinkedRow()
     				.cloneRow();
+    			IGeometry geom=df.getGeometry();
     			if (first){
     				values=df.getAttributes();
+    				fid = df.getID();
+    				index = dre.getIndex();
     				first=false;
+    			}else{    			    
+    			    vea.removeRow(dre.getIndex(), getName(), EditionEvent.GRAPHIC);
     			}
-    			IGeometry geom=df.getGeometry();
-   				vea.removeRow(dre.getIndex(), getName(), EditionEvent.GRAPHIC);
 
     			if (geomTotal==null){
     				geomTotal=geom.toJTSGeometry();
@@ -199,17 +204,19 @@ public class JoinCADTool extends DefaultCADTool {
     			}
     		}
         	shorted.clear();
-    		String newFID = vea.getNewFID();
+//    		String newFID = vea.getNewFID();
     		IGeometry geom = FConverter.jts_to_igeometry(geomTotal);
-    		DefaultFeature df1 = new DefaultFeature(geom, values, newFID);
+//    		DefaultFeature df1 = new DefaultFeature(geom, values, newFID);
+    		DefaultFeature df1 = new DefaultFeature(geom, values, fid);
     		joinedGeometry = geom;
     		joinedFeature = (IFeature) df1.cloneRow();
-    		int index1 = vea.addRow(df1, PluginServices.getText(this, "join"),
-    				EditionEvent.GRAPHIC);
+//    		int index1 = vea.addRow(df1, PluginServices.getText(this, "join"),
+//    				EditionEvent.GRAPHIC);
+    		int index1 = vea.modifyRow(index, df1, PluginServices.getText(this, "join"), EditionEvent.GRAPHIC);
     		selectedRowAux.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED,
     				vea.getInversedIndex(index1)));
     		vea.endComplexRow(getName());
-    		vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
+//    		vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
     		refresh();
 	    fireEndGeometry(JOIN_ACTION_COMMAND);
     	} catch (ReadDriverException e) {
