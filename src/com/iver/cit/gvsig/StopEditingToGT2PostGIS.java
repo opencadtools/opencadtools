@@ -35,6 +35,11 @@ import com.iver.cit.gvsig.writers.WriterGT2;
  *
  * @author Vicente Caballero Navarro
  */
+/**
+ * fpuga. This class seems not be used anywere
+ * 
+ */
+@Deprecated
 public class StopEditingToGT2PostGIS extends Extension {
 	static PostgisDataStoreFactory postGisFactory = new PostgisDataStoreFactory();
     /**
@@ -90,8 +95,9 @@ public class StopEditingToGT2PostGIS extends Extension {
 	            dlg.setModal(true);
 	            dlg.setVisible(true);
 	            ConnectionSettings cs = dlg.getConnSettings();
-	            if (cs == null)
-	                return;
+	            if (cs == null) {
+			return;
+		    }
 
 	    	    PostgisDataStore dataStore;
 	            HashMap params = new HashMap();
@@ -151,8 +157,9 @@ public class StopEditingToGT2PostGIS extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
     public boolean isVisible() {
-        if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-        	return true;
+        if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
+	}
        	return false;
 
     }

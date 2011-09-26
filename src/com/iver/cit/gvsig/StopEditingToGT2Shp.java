@@ -32,6 +32,12 @@ import com.iver.utiles.SimpleFileFilter;
  *
  * @author Vicente Caballero Navarro
  */
+
+/**
+ * fpuga. This class seems not be used anywere
+ *
+ */
+@Deprecated
 public class StopEditingToGT2Shp extends Extension {
     /**
 	 * @see com.iver.andami.plugins.IExtension#initialize()
@@ -129,8 +135,9 @@ public class StopEditingToGT2Shp extends Extension {
 	 * @see com.iver.andami.plugins.IExtension#isVisible()
 	 */
     public boolean isVisible() {
-        if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-        	return true;
+        if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
+	}
       	return false;
 
     }
