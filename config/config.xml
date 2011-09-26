@@ -41,11 +41,6 @@
 			<menu text="Capa/export_to/postgis" action-command="POSTGIS" position="1030"/>
 		</extension>
 
-		<!-- <extension class-name="com.iver.cit.gvsig.StopEditingToGT2Shp"
-			description="Extensión encargada de terminar la edición sobre la capa activa y guardarla sobre sí misma si es un shapefile."
-			active="true">
-			<menu text="Capa/stop_edition/GT2shp" action-command="STOPEDITING"/>
-		</extension> -->
 		<extension class-name="com.iver.cit.gvsig.RedoViewExtension"
 			description="Extensión encargada de rehacer la edición sobre la capa activa."
 			active="true">
@@ -313,42 +308,6 @@
 			</tool-bar>
 		</extension>
 
-		<!-- <extension class-name="com.iver.cit.gvsig.InsertAreaExtension"
-			description="Extensión encargada de insertar áreas en una capa en edición."
-			active="true">
-			<menu text="geometry/insert/area" action-command="_area" icon="insert-area"/>
-			<tool-bar name="insert" position="30">
-				<selectable-tool icon="insert-area" action-command="_area" tooltip="area" group="vista" position="21"/>
-			</tool-bar>
-		</extension>
-
-		<extension class-name="com.iver.cit.gvsig.RedigitalizeLineExtension"
-			description="Extension to redigitalize lines."
-			active="true">
-			<menu text="geometry/insert/redigitalize_line" action-command="_redigitalize_line" icon="edition-geometry-redigitalize-line"/>
-			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-redigitalize-line" action-command="_redigitalize_line" tooltip="redigitalizar_linea" group="vista" position="20"/>
-			</tool-bar>
-		</extension>
-
-		<extension class-name="com.iver.cit.gvsig.RedigitalizePolygonExtension"
-			description="Extension to redigitalize polygons."
-			active="true">
-			<menu text="geometry/insert/redigitalize_polygon" action-command="_redigitalize_polygon" icon="edition-geometry-redigitalize-polygon"/>
-			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-redigitalize-polygon" action-command="_redigitalize_polygon" tooltip="redigitalize_polygon" group="vista" position="18"/>
-			</tool-bar>
-		</extension>
-
-		<extension class-name="com.iver.cit.gvsig.CutLineExtension"
-                        description="Extension to cut lines."
-                        active="true">
-                        <menu text="geometry/insert/cut_line" action-command="_cut_line" icon="edition-geometry-cut-line"/>
-                        <tool-bar name="modificar" position="31">
-                                <selectable-tool icon="edition-geometry-cut-line" action-command="_cut_line" tooltip="cortar_linea" group="vista" position="21"/>
-                        </tool-bar>
-		</extension> -->
-
 		<extension class-name="com.iver.cit.gvsig.CutPolygonExtension"
 			description="Extension to cut polygons."
 			active="true">
@@ -392,49 +351,11 @@
 			</tool-bar>
 		 </extension>
 
-<!--
-		<extension class-name="com.iver.cit.gvsig.DeleteVertexExtension"
-			description="Extension to delete vertex on the geometries"
-			active="true">
-			<menu text="geometry/delete/vertex" action-command="_deleteVertex" icon="edition-geometry-delete-vertex"/>
-			<tool-bar name="modificar" position="51">
-				<selectable-tool icon="edition-geometry-delete-vertex" action-command="_deleteVertex" tooltip="Delete Vertex" group="vista" position="51"/>
-			</tool-bar>
-		</extension>
--->
-
-
-		<!--extension class-name="com.iver.cit.gvsig.LayerPropertiesExtension"
-			description="Abre el diálogo de propiedades de la capa."
-			active="true" >
-			<menu text="Capa/Propiedades" action-command="PROPERTIES"/>
-		</extension-->
-
-<!--
-		<extension class-name="com.iver.cit.gvsig.InsertVertexExtension"
-			description="Extension to insert new vertex on the geometries"
-			active="true">
-			<menu text="geometry/insert/vertex" action-command="_insertVertex" icon="images/InsertVertex.gif"/>
-			<tool-bar name="modificar" position="50">
-				<selectable-tool icon="edition-geometry-insert-vertex" action-command="_insertVertex" tooltip="Insert Vertex" group="vista" position="50"/>
-			</tool-bar>
-		</extension>
--->
 		<extension class-name="com.iver.cit.gvsig.ShortcutsExtension"
 			description="Extension to activate shortcuts"
 			active="true">
 		</extension>
 
-<!--
-		<extension class-name="com.iver.cit.gvsig.InsertMultiPolylineExtension"
-			description="Extension to insert multipolylines."
-			active="true">
-			<menu text="geometry/insert/multipolyline" action-command="_insert_multipolyline" icon="edition-geometry-insert-multipolyline"/>
-			<tool-bar name="insert" position="31">
-				<selectable-tool icon="edition-geometry-insert-multipolyline" action-command="_insert_multipolyline" tooltip="multipolyline" group="vista" position="24"/>
-			</tool-bar>
-		</extension>
--->
 		<extension class-name="com.iver.cit.gvsig.FollowGeometryExtension"
 			description="Extension to follow the geometry that is being digitalized before picking another tool."
 			active="true">
