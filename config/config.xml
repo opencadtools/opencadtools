@@ -216,7 +216,7 @@
 			active="true">
 			<menu text="geometry/modify/redigitalize_line" action-command="_redigitalize_line" icon="edition-geometry-redigitalize-line"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-redigitalize-line" action-command="_redigitalize_line" tooltip="redigitalizar_linea"  position="14"/>
+				<selectable-tool icon="edition-geometry-redigitalize-line" action-command="_redigitalize_line" tooltip="redigitalizar_linea"  position="13"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.CutLineExtension"
@@ -224,7 +224,7 @@
                         active="true">
                         <menu text="geometry/modify/cut_line" action-command="_cut_line" icon="edition-cut-line"/>
                         <tool-bar name="modificar" position="31">
-                                <selectable-tool icon="edition-cut-line" action-command="_cut_line" tooltip="cut_line"  position="15"/>
+                                <selectable-tool icon="edition-cut-line" action-command="_cut_line" tooltip="cut_line"  position="14"/>
                         </tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.RedigitalizePolygonExtension"
@@ -232,7 +232,7 @@
 			active="true">
 			<menu text="geometry/modify/redigitalize_polygon" action-command="_redigitalize_polygon" icon="edition-geometry-redigitalize-polygon"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-redigitalize-polygon" action-command="_redigitalize_polygon" tooltip="redigitalize_polygon"  position="16"/>
+				<selectable-tool icon="edition-geometry-redigitalize-polygon" action-command="_redigitalize_polygon" tooltip="redigitalize_polygon"  position="15"/>
 			</tool-bar>
 		</extension>
 		<extension class-name="com.iver.cit.gvsig.CutPolygonExtension"
@@ -240,7 +240,7 @@
 			active="true">
 			<menu text="geometry/modify/cut_polygon" action-command="_cut_polygon" icon="edition-geometry-cut-polygon"/>
 			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-cut-polygon" action-command="_cut_polygon" tooltip="cut_polygon"  position="13"/>
+				<selectable-tool icon="edition-geometry-cut-polygon" action-command="_cut_polygon" tooltip="cut_polygon"  position="16"/>
  			</tool-bar>
  		</extension>
 		<extension class-name="com.iver.cit.gvsig.InternalPolygonExtension"
@@ -305,15 +305,6 @@
 			<menu text="geometry/insert/autopolygon" action-command="AUTOCOMPLETE_POLYGON" icon="edition-geometry-autocompletepolygon"/>
 			<tool-bar name="insert" position="30">
 				<selectable-tool icon="edition-geometry-autocompletepolygon" action-command="AUTOCOMPLETE_POLYGON" tooltip="autocomplete-polygon" position="20"/>
-			</tool-bar>
-		</extension>
-
-		<extension class-name="com.iver.cit.gvsig.CutPolygonExtension"
-			description="Extension to cut polygons."
-			active="true">
-			<menu text="geometry/insert/cut_polygon" action-command="_cut_polygon" icon="edition-geometry-cut-polygon"/>
-			<tool-bar name="modificar" position="31">
-				<selectable-tool icon="edition-geometry-cut-polygon" action-command="_cut_polygon" tooltip="cortar_poligono" group="vista" position="19"/>
 			</tool-bar>
 		</extension>
 
