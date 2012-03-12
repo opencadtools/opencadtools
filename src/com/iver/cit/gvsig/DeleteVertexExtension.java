@@ -29,6 +29,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.DeleteVertexCADTool;
+import com.iver.cit.gvsig.layers.ILayerEdited;
 
 /**
  * Extension to delete a vertex on a geometry of a layer in edition. Layer's geometry can not be a point or
@@ -79,8 +80,11 @@ public class DeleteVertexExtension extends Extension {
     	boolean enabled = false;
     	try {
 			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE){
-
-				FLyrVect lv=(FLyrVect) CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
+				ILayerEdited lyr = CADExtension.getEditionManager().getActiveLayerEdited();
+				if (lyr == null) {
+					return false;
+				}
+				FLyrVect lv=(FLyrVect) lyr.getLayer();
 
 				if (deleteVertex.isApplicable(lv.getShapeType())){
 					enabled = true;

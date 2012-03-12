@@ -171,8 +171,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					continue;
 				}
 				IGeometry geomReproject=geom.cloneGeometry();
-				if (ct!=null)
-					geomReproject.reProject(ct);
+				if (ct!=null) {
+				    geomReproject.reProject(ct);
+				}
 				if (geomReproject.intersects(rect)) { // , 0.1)){
 					selection.set(feats[i].getIndex(), true);
 					selectedRow.add(feats[i]);
@@ -244,8 +245,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					continue;
 				}
 				IGeometry geomReproject=geom.cloneGeometry();
-				if (ct!=null)
-					geomReproject.reProject(ct);
+				if (ct!=null) {
+				    geomReproject.reProject(ct);
+				}
 				if (firstPoint.getX() < lastPoint.getX()) {
 					if (rect.contains(geomReproject.getBounds2D())) {
 						selectedRow.add(feats[i]);
@@ -299,8 +301,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					continue;
 				}
 				IGeometry geomReproject=geom.cloneGeometry();
-				if (ct!=null)
-					geomReproject.reProject(ct);
+				if (ct!=null) {
+				    geomReproject.reProject(ct);
+				}
 				if (contains(polygon,geomReproject)) {
 					selectedRow.add(feats[i]);
 					selection.set(feats[i].getIndex(), true);
@@ -345,8 +348,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					continue;
 				}
 				IGeometry geomReproject=geom.cloneGeometry();
-				if (ct!=null)
-					geomReproject.reProject(ct);
+				if (ct!=null) {
+				    geomReproject.reProject(ct);
+				}
 				if (contains(polygon,geomReproject) || intersects(polygon,geomReproject)) {
 					selectedRow.add(feats[i]);
 					selection.set(feats[i].getIndex(), true);
@@ -387,8 +391,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 					continue;
 				}
 				IGeometry geomReproject=geom.cloneGeometry();
-				if (ct!=null)
-					geomReproject.reProject(ct);
+				if (ct!=null) {
+				    geomReproject.reProject(ct);
+				}
 				if (!contains(polygon,geomReproject) && !intersects(polygon,geomReproject)) {
 					selectedRow.add(rowEd);
 					selection.set(rowEd.getIndex(), true);
@@ -424,8 +429,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 				IRowEdited rowEd=vea.getRow(i);
 				IGeometry geom = ((IFeature)rowEd.getLinkedRow())
 						.getGeometry();
-				if (ct!=null)
-					geom.reProject(ct);
+				if (ct!=null) {
+				    geom.reProject(ct);
+				}
 				addSelectionCache((DefaultRowEdited)rowEd);
 				selection.set(rowEd.getIndex(), true);
 				geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
@@ -499,8 +505,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 		return getVEA().getHandlersImage();
 	}
 	public VectorialEditableAdapter getVEA(){
-		if (((FLyrVect)getLayer()).getSource() instanceof VectorialEditableAdapter)
-			return (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
+		if (((FLyrVect)getLayer()).getSource() instanceof VectorialEditableAdapter) {
+		    return (VectorialEditableAdapter)((FLyrVect)getLayer()).getSource();
+		}
 		return null;
 	}
 
@@ -539,13 +546,17 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 	private static boolean contains(IGeometry g1,IGeometry g2) {
 		Geometry geometry1=g1.toJTSGeometry();
 		Geometry geometry2=g2.toJTSGeometry();
-		if (geometry1==null || geometry2==null)return false;
+		if (geometry1==null || geometry2==null) {
+		    return false;
+		}
 		return geometry1.contains(geometry2);
 	}
 	private static boolean intersects(IGeometry g1,IGeometry g2) {
 		Geometry geometry1=g1.toJTSGeometry();
 		Geometry geometry2=g2.toJTSGeometry();
-		if (geometry1==null || geometry2==null)return false;
+		if (geometry1==null || geometry2==null) {
+		    return false;
+		}
 		return geometry1.intersects(geometry2);
 	}
 
@@ -632,8 +643,11 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements LayerDra
 
 	public void selectionChanged(SelectionEvent e) {
 		try {
-			if (getVEA()!=null && getVEA().getSelection().isEmpty())
-				clearSelection(NOTSAVEPREVIOUS);
+	    if (getVEA() != null) {
+			if (getVEA().getSelection().isEmpty()) {
+			    clearSelection(NOTSAVEPREVIOUS);
+			}
+		    }
 		} catch (ReadDriverException e1) {
 			NotificationManager.addError(e1.getMessage(),e1);
 		}

@@ -126,7 +126,7 @@ public class ExportTo extends Extension {
 
 			setInitialStep(0);
 			setDeterminatedProcess(true);
-			setStatusMessage(PluginServices.getText(this, "exportando_features"));
+			setStatusMessage(PluginServices.getText(this, "exportando_features") + " ");
 
 			va = lyrVect.getSource();
 			sds = lyrVect.getRecordset();
