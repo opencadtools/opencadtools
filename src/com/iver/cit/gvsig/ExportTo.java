@@ -38,8 +38,6 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FLabel;
-import com.iver.cit.gvsig.fmap.drivers.ConnectionFactory;
-import com.iver.cit.gvsig.fmap.drivers.DBException;
 import com.iver.cit.gvsig.fmap.drivers.DBLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.DriverAttributes;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
@@ -70,10 +68,9 @@ import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.iver.cit.gvsig.fmap.layers.VectorialFileAdapter;
+import com.iver.cit.gvsig.gui.cad.panels.ChooseSchemaAndTable;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
-import com.iver.cit.gvsig.vectorialdb.ConnectionSettings;
-import com.iver.cit.gvsig.vectorialdb.DlgConnection;
 import com.iver.utiles.PostProcessSupport;
 import com.iver.utiles.SimpleFileFilter;
 import com.iver.utiles.swing.threads.AbstractMonitorableTask;
@@ -81,7 +78,7 @@ import com.prodevelop.cit.gvsig.vectorialdb.wizard.ConnectionChooserPanel;
 
 
 public class ExportTo extends Extension {
-	
+
 	private static Logger logger = Logger.getLogger(ExportTo.class.getName());
 	private String lastPath = null;
 	private static HashMap<FLyrVect, EndExportToCommand> exportedLayers =
@@ -133,10 +130,11 @@ public class ExportTo extends Extension {
 
 			bitSet = sds.getSelection();
 
-			if (bitSet.cardinality() == 0)
-				rowCount = va.getShapeCount();
-			else
-				rowCount = bitSet.cardinality();
+			if (bitSet.cardinality() == 0) {
+			    rowCount = va.getShapeCount();
+			} else {
+			    rowCount = bitSet.cardinality();
+			}
 
 			setFinalStep(rowCount);
 
@@ -164,8 +162,9 @@ public class ExportTo extends Extension {
 					((ShpWriter)writer).loadDbfEncoding(((VectorialFileAdapter)lyrVect.getSource()).getFile().getAbsolutePath(), Charset.forName(charSetName));
 				} else {
 					Object s = lyrVect.getProperty("DBFFile");
-					if(s != null && s instanceof String)
-						((ShpWriter)writer).loadDbfEncoding((String)s, Charset.forName(charSetName));
+					if(s != null && s instanceof String) {
+					    ((ShpWriter)writer).loadDbfEncoding((String)s, Charset.forName(charSetName));
+					}
 				}
 			}
 
@@ -175,8 +174,9 @@ public class ExportTo extends Extension {
 			if (bitSet.cardinality() == 0) {
 				rowCount = va.getShapeCount();
 				for (int i = 0; i < rowCount; i++) {
-					if (isCanceled())
-						break;
+					if (isCanceled()) {
+					    break;
+					}
 					IGeometry geom = va.getShape(i);
 					if (geom == null) {
 						reportStep();
@@ -186,17 +186,20 @@ public class ExportTo extends Extension {
 						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
 						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
 					}
-					if (isCanceled())
-						break;
+					if (isCanceled()) {
+					    break;
+					}
 					if (ct != null) {
-						if (bMustClone)
-							geom = geom.cloneGeometry();
+						if (bMustClone) {
+						    geom = geom.cloneGeometry();
+						}
 						geom.reProject(ct);
 					}
 					reportStep();
 					setNote(PluginServices.getText(this, "exporting_") + i);
-					if (isCanceled())
-						break;
+					if (isCanceled()) {
+					    break;
+					}
 
 					if (geom != null) {
 						Value[] values = sds.getRow(i);
@@ -210,8 +213,9 @@ public class ExportTo extends Extension {
 				int counter = 0;
 				for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
 				.nextSetBit(i + 1)) {
-					if (isCanceled())
-						break;
+					if (isCanceled()) {
+					    break;
+					}
 					IGeometry geom = va.getShape(i);
 					if (geom == null) {
 						reportStep();
@@ -221,17 +225,20 @@ public class ExportTo extends Extension {
 						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
 						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
 					}
-					if (isCanceled())
-						break;
+					if (isCanceled()) {
+					    break;
+					}
 					if (ct != null) {
-						if (bMustClone)
-							geom = geom.cloneGeometry();
+						if (bMustClone) {
+						    geom = geom.cloneGeometry();
+						}
 						geom.reProject(ct);
 					}
 					reportStep();
 					setNote(PluginServices.getText(this, "exporting_") + counter);
-					if (isCanceled())
-						break;
+					if (isCanceled()) {
+					    break;
+					}
 
 					if (geom != null) {
 						Value[] values = sds.getRow(i);
@@ -356,47 +363,21 @@ public class ExportTo extends Extension {
 
 	public void saveToPostGIS(MapContext mapContext, FLyrVect layer){
 		try {
-			String tableName = null;
-			boolean tableNameNotFilled = true;
 
-			// show the input tableName dialog until user cancel or enter a valid identifier
-			do {
-				tableName = JOptionPane.showInputDialog(PluginServices.getText(this, "intro_tablename"));
-				if (tableName == null) {
-					return;
-				}
-				tableNameNotFilled = (tableName.trim().length() == 0);
-				if (tableNameNotFilled) {
-					JOptionPane.showMessageDialog(null,
-							PluginServices.getText(this,"intro_tablename_blank"),
-							PluginServices.getText(this,"warning"),
-							JOptionPane.WARNING_MESSAGE);
-				}
-			} while (tableNameNotFilled);
+		               ConnectionWithParams cwp = getConnectionWithParams();
 
-			CharSequence seq = "\\/=.:,;¿?*{}´$%&()@#|!¬";
-			for (int i = 0; i < seq.length(); i++) {
-				char c = seq.charAt(i);
-				if(tableName != null && tableName.indexOf(c) != -1) {
-					NotificationManager.showMessageInfo(PluginServices.getText(this, "wrong_characters"), null);
-					break;
-				}
-			}
+               if (cwp == null) {
+                   logger.error("Selected CWP is null (?) Export canceled.");
+                   return;
+               }
 
-			ConnectionChooserPanel ccp = new ConnectionChooserPanel(PostGisDriver.NAME);
-            PluginServices.getMDIManager().addWindow(ccp);
+	    ChooseSchemaAndTable chooseSchemaAndTable = new ChooseSchemaAndTable(
+		    cwp);
+           PluginServices.getMDIManager().addWindow(chooseSchemaAndTable);
+           if (!chooseSchemaAndTable.isOKPressed()) {
+                   return;
+               }
 
-            if (!ccp.isOkPressed()) {
-            	logger.warn("User cancelled connection dlg, export is canceled.");
-                return;
-            }
-
-            ConnectionWithParams cwp = ccp.getSelectedCWP();
-
-            if (cwp == null) {
-            	logger.error("Selected CWP is null (?) Export canceled.");
-                return;
-            }
 
 			IConnection _conex = cwp.getConnection();
 
@@ -413,10 +394,10 @@ public class ExportTo extends Extension {
 			dbLayerDef.setCatalogName("");
 
 			// Añadimos el schema dentro del layer definition para poder tenerlo en cuenta.
-			dbLayerDef.setSchema(cwp.getSchema());
+			dbLayerDef.setSchema(chooseSchemaAndTable.getSchema());
 
-			dbLayerDef.setTableName(tableName);
-			dbLayerDef.setName(tableName);
+			dbLayerDef.setTableName(chooseSchemaAndTable.getTable());
+			dbLayerDef.setName(chooseSchemaAndTable.getTable());
 			dbLayerDef.setShapeType(layer.getShapeType());
 			SelectableDataSource sds = layer.getRecordset();
 
@@ -508,6 +489,17 @@ public class ExportTo extends Extension {
 
 	}
 
+           private ConnectionWithParams getConnectionWithParams() {
+	           ConnectionChooserPanel ccp = new ConnectionChooserPanel(PostGisDriver.NAME);
+	           PluginServices.getMDIManager().addWindow(ccp);
+
+               if (!ccp.isOkPressed()) {
+                   return null;
+               }
+           return ccp.getSelectedCWP();
+       }
+
+
 	/**
 	 * Lanza un thread en background que escribe las features. Cuando termina, pregunta al usuario si quiere
 	 * añadir la nueva capa a la vista. Para eso necesita un driver de lectura ya configurado.
@@ -554,10 +546,11 @@ public class ExportTo extends Extension {
 		int rowCount;
 		FBitSet bitSet = layer.getRecordset().getSelection();
 
-		if (bitSet.cardinality() == 0)
-			rowCount = va.getShapeCount();
-		else
-			rowCount = bitSet.cardinality();
+		if (bitSet.cardinality() == 0) {
+		    rowCount = va.getShapeCount();
+		} else {
+		    rowCount = bitSet.cardinality();
+		}
 
 		ProgressMonitor progress = new ProgressMonitor(
 				(JComponent) PluginServices.getMDIManager().getActiveWindow(),
@@ -574,8 +567,9 @@ public class ExportTo extends Extension {
 				IGeometry geom = va.getShape(i);
 
 				progress.setProgress(i);
-				if (progress.isCanceled())
-					break;
+				if (progress.isCanceled()) {
+				    break;
+				}
 
 				if (geom != null) {
 					Value[] values = sds.getRow(i);
@@ -592,8 +586,9 @@ public class ExportTo extends Extension {
 				IGeometry geom = va.getShape(i);
 
 				progress.setProgress(counter++);
-				if (progress.isCanceled())
-					break;
+				if (progress.isCanceled()) {
+				    break;
+				}
 
 				if (geom != null) {
 					Value[] values = sds.getRow(i);
@@ -790,12 +785,13 @@ public class ExportTo extends Extension {
 	 */
 	protected void loadEnconding(FLyrVect layer, ShpWriter writer) {
 		String charSetName = prefs.get("dbf_encoding", DbaseFile.getDefaultCharset().toString());
-		if(layer.getSource() instanceof VectorialFileAdapter)
-			writer.loadDbfEncoding(((VectorialFileAdapter)layer.getSource()).getFile().getAbsolutePath(), Charset.forName(charSetName));
-		else {
+		if(layer.getSource() instanceof VectorialFileAdapter) {
+		    writer.loadDbfEncoding(((VectorialFileAdapter)layer.getSource()).getFile().getAbsolutePath(), Charset.forName(charSetName));
+		} else {
 			Object s = layer.getProperty("DBFFile");
-			if(s != null && s instanceof String)
-				writer.loadDbfEncoding((String)s, Charset.forName(charSetName));
+			if(s != null && s instanceof String) {
+			    writer.loadDbfEncoding((String)s, Charset.forName(charSetName));
+			}
 		}
 	}
 
