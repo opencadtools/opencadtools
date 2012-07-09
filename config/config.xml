@@ -259,30 +259,7 @@
 				<selectable-tool icon="edition-geometry-stretch" action-command="_stretch" tooltip="stretch"  position="19"/>
 			</tool-bar>
 		</extension>
-		<extension class-name="com.iver.cit.gvsig.ComplexSelectionGeometryExtension"
-			description="Extensión encargada de la selección compleja de geometrías."
-			active="true">
-			<menu text="geometry/seleccion_compleja" action-command="_complex_selection" icon="edition-complex-selection"/>
-			<tool-bar name="ed_options" position="33">
-				<selectable-tool icon="edition-complex-selection" action-command="_complex_selection" tooltip="complex_selection"  position="11"/>
-			</tool-bar>
-		</extension>
-		<extension class-name="com.iver.cit.gvsig.SelectionGeometryExtension"
-			description="Extensión encargada de seleccionar las geometrías."
-			active="true">
-			<menu text="geometry/seleccionar" action-command="_selection" icon="edition-geometry-select"/>
-			<tool-bar name="ed_options" position="31">
-				<selectable-tool icon="edition-geometry-select" action-command="_selection" tooltip="selection" position="100"/>
-			</tool-bar>
-		</extension>
-		<extension class-name="com.iver.cit.gvsig.MatrixExtension"
-			description="Extensión encargada de crear una matriz a partir de la geometría seleccionada."
-			active="true">
-			<menu text="geometry/matrix" action-command="_matrix" icon="edition-geometry-matrix"/>
-			<tool-bar name="ed_options" position="33">
-				<selectable-tool icon="edition-geometry-matrix" action-command="_matrix" tooltip="matrix"  position="102"/>
-			</tool-bar>
-		</extension>
+
 		<!--extension class-name="com.iver.cit.gvsig.EquidistanceExtension"
 			description="Extensión encargada de crear una geometría equidistante a otra."
 			active="true">
@@ -291,14 +268,7 @@
 				<selectable-tool icon="edition-geometry-equidistance" action-command="_equidistance" tooltip="equidistance" position="18"/>
 			</tool-bar>
 		</extension-->
-		<extension class-name="com.iver.cit.gvsig.PreviousSelectionExtension"
-			description="Extensión encargada de restablecer la selección anterior."
-			active="true">
-			<menu text="geometry/previous_selection" action-command="previous_selection" icon="previous-selection"/>
-			<tool-bar name="ed_options" position="33">
-				<action-tool icon="previous-selection" action-command="previous_selection" tooltip="previous_selection" position="103"/>
-			</tool-bar>
-		</extension>
+
 		<extension class-name="com.iver.cit.gvsig.AutoCompletePolygonExtension"
 			description="Extensión encargada de restablecer la selección anterior."
 			active="true">
@@ -307,27 +277,6 @@
 				<selectable-tool icon="edition-geometry-autocompletepolygon" action-command="AUTOCOMPLETE_POLYGON" tooltip="autocomplete-polygon" position="20"/>
 			</tool-bar>
 		</extension>
-
-		<extension class-name="com.iver.cit.gvsig.SnappersExtension"
-			   description="Extension to activate and deactivate the Snappers"
-			   active="true">
-		  <menu text="geometry/snappers" action-command="_snappers" icon="Snapper"/>
-			<tool-bar name="ed_options" position="34">
-				<selectable-tool icon="Snapper" action-command="_snappers" tooltip="snappers" group="snappers" position="5"/>
-			</tool-bar>
-		</extension>
-		
-		<extension class-name="com.iver.cit.gvsig.EmptyExtension"
-			description="Extension to activate and deactivate the Snappers"
-			active="true">
-			<tool-bar name="ed_options" position="34">
-				<selectable-tool icon="Snapper" action-command="_empty" tooltip="snappers" group="snappers" position="1"/>
-			</tool-bar>
-			<tool-bar name="ed_options" position="35">
-				<selectable-tool icon="follow-geometry" action-command="_empty" tooltip="follow_geom" group="follow" position="1"/>
-		  </tool-bar>
-		</extension>
- 
 
  		<extension class-name="com.iver.cit.gvsig.SplitGeometryCADToolExtension"
 			description="herramienta para dividir una geometria con una linea"
@@ -347,12 +296,58 @@
 			active="true">
 		</extension>
 
+		
+
+		<extension class-name="com.iver.cit.gvsig.SelectionGeometryExtension"
+			description="Extensión encargada de seleccionar las geometrías."
+			active="true">
+			<menu text="geometry/seleccionar" action-command="_selection" icon="edition-geometry-select"/>
+			<tool-bar name="ed_options" position="33">
+				<selectable-tool icon="edition-geometry-select" action-command="_selection" tooltip="selection" position="1"/>
+			</tool-bar>
+		</extension>
+
+		<extension class-name="com.iver.cit.gvsig.ComplexSelectionGeometryExtension"
+			description="Extensión encargada de la selección compleja de geometrías."
+			active="true">
+			<menu text="geometry/seleccion_compleja" action-command="_complex_selection" icon="edition-complex-selection"/>
+			<tool-bar name="ed_options">
+				<selectable-tool icon="edition-complex-selection" action-command="_complex_selection" tooltip="complex_selection"  position="2"/>
+			</tool-bar>
+		</extension>
+
+				<extension class-name="com.iver.cit.gvsig.PreviousSelectionExtension"
+			description="Extensión encargada de restablecer la selección anterior."
+			active="true">
+			<menu text="geometry/previous_selection" action-command="previous_selection" icon="previous-selection"/>
+			<tool-bar name="ed_options">
+				<action-tool icon="previous-selection" action-command="previous_selection" tooltip="previous_selection" position="3"/>
+			</tool-bar>
+		</extension>
+		
+		<extension class-name="com.iver.cit.gvsig.MatrixExtension"
+			description="Extensión encargada de crear una matriz a partir de la geometría seleccionada."
+			active="true">
+			<menu text="geometry/matrix" action-command="_matrix" icon="edition-geometry-matrix"/>
+			<tool-bar name="ed_options">
+				<selectable-tool icon="edition-geometry-matrix" action-command="_matrix" tooltip="matrix"  position="4"/>
+			</tool-bar>
+		</extension>
+
+		<extension class-name="com.iver.cit.gvsig.SnappersExtension"
+			   description="Extension to activate and deactivate the Snappers"
+			   active="true">
+		  <menu text="geometry/snappers" action-command="_snappers" icon="Snapper"/>
+			<tool-bar name="ed_options">
+				<selectable-tool icon="Snapper" action-command="_snappers" tooltip="snappers" group="snappers" position="5"/>
+			</tool-bar>
+		</extension>
+
 		<extension class-name="com.iver.cit.gvsig.FollowGeometryExtension"
 			description="Extension to follow the geometry that is being digitalized before picking another tool."
 			active="true">
 			<menu text="geometry/follow_geom" action-command="_follow" icon="follow-geometry"/>
-
-			<tool-bar name="ed_options" position="35">
+			<tool-bar name="ed_options">
 				<selectable-tool icon="follow-geometry" action-command="_follow" tooltip="follow_geom" group="follow" position="6"/>
 			</tool-bar>
 		</extension>
