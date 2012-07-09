@@ -738,6 +738,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 	    geomsArray.clear();
 	    geomsArray.add(baseGeometry);
 			modifyFeature(selectedRow.getIndex(),(IFeature)selectedRow.getLinkedRow());
+	    fireEndGeometry(CUT_ACTION_COMMAND);
 
 
 			if (resp == JOptionPane.YES_OPTION) {
