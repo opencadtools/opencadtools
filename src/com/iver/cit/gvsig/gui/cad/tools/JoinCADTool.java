@@ -74,6 +74,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Vicente Caballero Navarro
  */
 public class JoinCADTool extends DefaultCADTool {
+    private IGeometry joinedGeometry;
     public static final String JOIN_ACTION_COMMAND = "_join";
     protected JoinCADToolContext _fsm;
     private TreeSet<DefaultRowEdited> shorted = new TreeSet<DefaultRowEdited>(new Comparator<DefaultRowEdited>(){
@@ -93,6 +94,10 @@ public class JoinCADTool extends DefaultCADTool {
      */
     public void init() {
         _fsm = new JoinCADToolContext(this);
+    }
+
+    public IGeometry getJoinedGeometry() {
+	return joinedGeometry;
     }
 
     /* (non-Javadoc)
@@ -190,6 +195,7 @@ public class JoinCADTool extends DefaultCADTool {
         	shorted.clear();
     		String newFID = vea.getNewFID();
     		IGeometry geom = FConverter.jts_to_igeometry(geomTotal);
+	    joinedGeometry = geom;
     		DefaultFeature df1 = new DefaultFeature(geom, values, newFID);
     		int index1 = vea.addRow(df1, PluginServices.getText(this, "join"),
     				EditionEvent.GRAPHIC);

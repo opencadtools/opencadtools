@@ -79,6 +79,7 @@ public class AreaCADTool extends InsertionCADTool {
 	private Integer virtualIndex;
 
     private IGeometry insertedGeometry;
+    private IRowEdited rowEdited;
 
 	/**
 	 * Método de incio, para poner el código de todo lo que se requiera de una
@@ -206,6 +207,7 @@ public class AreaCADTool extends InsertionCADTool {
 				if(numShapes != 0){
 					if(virtualIndex != null){
 						row = (DefaultRowEdited)vea.getRow(virtualIndex.intValue());
+			rowEdited = row;
 						IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
 						IGeometry geometry = feat.getGeometry();
 						geometry = addHoleToGeom(geometry, (Point2D[])points.toArray(new Point2D[0]));
@@ -220,6 +222,7 @@ public class AreaCADTool extends InsertionCADTool {
 		    addGeometry(insertedGeometry);
 
 					virtualIndex = new Integer(vea.getRowCount()-1);
+		    rowEdited = vea.getRow(virtualIndex.intValue());
 				}
 				numShapes++;
 			}
@@ -237,6 +240,14 @@ public class AreaCADTool extends InsertionCADTool {
 
     public IGeometry getInsertedGeometry() {
 	return insertedGeometry;
+    }
+
+    public IRowEdited getRowEdited() {
+	return rowEdited;
+    }
+
+    public int getVirtualIndex() {
+	return virtualIndex;
     }
 
 
