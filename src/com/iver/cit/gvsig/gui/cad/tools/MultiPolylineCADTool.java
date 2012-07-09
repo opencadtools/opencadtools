@@ -96,6 +96,8 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 		numLines = 0;
 	virtualIndex = null;
 	_fsm = new MultiPolylineCADToolContext(this);
+	virtualIndex = null;
+	_fsm = new MultiPolylineCADToolContext(this);
 	}
 
 	/* (non-Javadoc)
