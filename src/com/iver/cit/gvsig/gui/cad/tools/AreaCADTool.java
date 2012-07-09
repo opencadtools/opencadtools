@@ -78,6 +78,8 @@ public class AreaCADTool extends InsertionCADTool {
 	 */
 	private Integer virtualIndex;
 
+    private IGeometry insertedGeometry;
+
 	/**
 	 * Método de incio, para poner el código de todo lo que se requiera de una
 	 * carga previa a la utilización de la herramienta.
@@ -209,10 +211,14 @@ public class AreaCADTool extends InsertionCADTool {
 						geometry = addHoleToGeom(geometry, (Point2D[])points.toArray(new Point2D[0]));
 						feat.setGeometry(geometry);
 						modifyFeature(virtualIndex.intValue(), feat);
+			insertedGeometry = geometry;
 					}
 
 				}else{
-					addGeometry(createNewPolygon((Point2D[])points.toArray(new Point2D[0])));
+		    insertedGeometry = createNewPolygon((Point2D[]) points
+			    .toArray(new Point2D[0]));
+		    addGeometry(insertedGeometry);
+
 					virtualIndex = new Integer(vea.getRowCount()-1);
 				}
 				numShapes++;
@@ -228,6 +234,10 @@ public class AreaCADTool extends InsertionCADTool {
 			e.printStackTrace();
 		}
 	}
+
+    public IGeometry getInsertedGeometry() {
+	return insertedGeometry;
+    }
 
 
 	/**
