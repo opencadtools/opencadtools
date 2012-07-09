@@ -38,6 +38,7 @@ import javax.swing.JOptionPane;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.Value;
+import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.CADExtension;
@@ -97,6 +98,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 	private int multiSelected;
 
 	double PROXIMITY_THRESHOLD = 0.000001;
+	private Value[] values;
 
 	public void init() {
 		//super.init();
@@ -407,6 +409,9 @@ public class CutPolygonCADTool extends DefaultCADTool{
 		cleanSnapper();
 	}
 
+	public IRowEdited getSelectedRow(){
+	    return selectedRow;
+	}
 
 	public String getName() {
 		return PluginServices.getText(this, "cut_polygon_");
@@ -723,19 +728,19 @@ public class CutPolygonCADTool extends DefaultCADTool{
 
 
 			if (resp == JOptionPane.YES_OPTION) {
-
-				addNewElement(getRemainingGeometry(), selectedRow);
-
+			    fireEndGeometry("_cut_polygon_the_new_geom");
+			    Value[] values = getParametrizableValues();
+			    addGeometryWithParametrizedValues(getRemainingGeometry(), values);
 			}
 
 		} else{
 
 			//TODO Delete when we check that this branch never is called
-			System.out.println("%$%·$/$·/%$·/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
-			System.out.println("%$%·$/$·/%$·/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
-			System.out.println("%$%·$/$·/%$·/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
-			System.out.println("%$%·$/$·/%$·/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
-			System.out.println("%$%·$/$·/%$·/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
+			System.out.println("%$%ï¿½$/$ï¿½/%$ï¿½/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
+			System.out.println("%$%ï¿½$/$ï¿½/%$ï¿½/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
+			System.out.println("%$%ï¿½$/$ï¿½/%$ï¿½/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
+			System.out.println("%$%ï¿½$/$ï¿½/%$ï¿½/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
+			System.out.println("%$%ï¿½$/$ï¿½/%$ï¿½/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
 
 			int resp = JOptionPane.NO_OPTION;
 			resp = JOptionPane.showConfirmDialog((Component) PluginServices.getMainFrame(),
@@ -754,6 +759,18 @@ public class CutPolygonCADTool extends DefaultCADTool{
 //		}
 	}
 
+	public void setParametrizableValues(Value[] newValues){
+	    values = newValues;
+	}
+	
+	private Value[] getParametrizableValues() {
+	    if(values != null){
+		return values;
+	    } else {
+		values = selectedRow.getAttributes().clone();
+		return values;
+	    }
+	}
 
 	/**
 	 * DOCUMENT ME! Copied from NewTankCADTool

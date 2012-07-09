@@ -279,7 +279,63 @@ public abstract class DefaultCADTool implements CADTool {
 		}
 		draw(geometry.cloneGeometry());
 	}
+	
+	        /**
+     * TODO. This is a provisory solution. We use the same listener to warn
+     * about all changes, which can be differentiated by means of the key used
+     * in the listener. Likely a better solution will be having several
+     * listener. How that could be implemented should be discussed (several
+     * listeners shared for all cadtools, especific listeners for every cadtool,
+     * etc).
+     * 
+     * Example (not to use in production code, please, first check types and
+     * so):
+     * 
+     * public class YourClass implements EndGeometryListener {
+     * 
+     * public void endGeometry(FLayer layer, String cadToolKey){ CADTool cadTool
+     * = CADExtension.getCADTool(); Value[] values = getYourValuesAsYouWant();
+     * ((CutPolygonCADTool) cadTool).setParametrizableValues(values); }
+     * 
+     * }
+     */
+	public void addGeometryWithParametrizedValues(IGeometry geometry, Value[] values) {
+		VectorialEditableAdapter vea = getVLE().getVEA();
+		try {
+			// Deber�amos comprobar que lo que escribimos es correcto:
+			// Lo hacemos en el VectorialAdapter, justo antes de
+			// a�adir, borrar o modificar una feature
+			String newFID = vea.getNewFID();
+			DefaultFeature df = new DefaultFeature(geometry, values, newFID);
+			int index = vea.addRow(df, getName(), EditionEvent.GRAPHIC);
+			VectorialLayerEdited vle = getVLE();
+			clearSelection();
+			//ArrayList selectedRow = vle.getSelectedRow();
 
+
+			ViewPort vp = vle.getLayer().getMapContext().getViewPort();
+			BufferedImage selectionImage = new BufferedImage(vp
+					.getImageWidth(), vp.getImageHeight(),
+					BufferedImage.TYPE_INT_ARGB);
+			Graphics2D gs = selectionImage.createGraphics();
+			int inversedIndex=vea.getInversedIndex(index);
+			vle.addSelectionCache(new DefaultRowEdited(df,
+					IRowEdited.STATUS_ADDED, inversedIndex ));
+			vea.getSelection().set(inversedIndex);
+			IGeometry geom = df.getGeometry();
+			geom.cloneGeometry().draw(gs, vp, DefaultCADTool.selectionSymbol);
+			vle.drawHandlers(geom.cloneGeometry(), gs, vp);
+			vea.setSelectionImage(selectionImage);
+			insertSpatialCache(geom);
+		} catch (ReadDriverException e) {
+			NotificationManager.addError(e.getMessage(),e);
+			return;
+		} catch (ValidateRowException e) {
+			NotificationManager.addError(e.getMessage(),e);
+			return;
+		}
+		draw(geometry.cloneGeometry());
+	}
 
 
 	/**
