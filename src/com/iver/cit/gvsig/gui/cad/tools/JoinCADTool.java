@@ -197,7 +197,7 @@ public class JoinCADTool extends DefaultCADTool {
     		vea.endComplexRow(getName());
     		vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
     		refresh();
-	    fireEndGeometry();
+	    fireEndGeometry("_join");
     	} catch (ReadDriverException e) {
     		NotificationManager.addError(e.getMessage(),e);
     	} catch (ValidateRowException e) {

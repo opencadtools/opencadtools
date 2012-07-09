@@ -20,14 +20,14 @@ public class CADListenerManager {
 	}
 
 
-	public static void endGeometry(FLayer layer) {
+    public static void endGeometry(FLayer layer, String cadToolKey) {
 
 		Set<String> keys = endGeometryListeners.keySet();
 		Iterator<String> iterator = keys.iterator();
 
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			endGeometryListeners.get(key).endGeometry(layer);
+	    endGeometryListeners.get(key).endGeometry(layer, cadToolKey);
 		}
 	}
 

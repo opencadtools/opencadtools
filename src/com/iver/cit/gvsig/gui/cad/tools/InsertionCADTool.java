@@ -42,6 +42,7 @@ public abstract class InsertionCADTool extends DefaultCADTool{
      * EndGeometryListener.
      */
     public void fireEndGeometry() {
-	CADListenerManager.endGeometry(getActiveLayer());
+	CADListenerManager.endGeometry(getActiveLayer(),
+		"cad-tool-non-specified");
     }
 }

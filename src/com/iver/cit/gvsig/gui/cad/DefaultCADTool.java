@@ -610,8 +610,8 @@ public abstract class DefaultCADTool implements CADTool {
 		return checksOnEdition;
 	}
 
-    public void fireEndGeometry() {
-	CADListenerManager.endGeometry(getActiveLayer());
+    public void fireEndGeometry(String cadToolKey) {
+	CADListenerManager.endGeometry(getActiveLayer(), cadToolKey);
     }
 
     public void clear() {
