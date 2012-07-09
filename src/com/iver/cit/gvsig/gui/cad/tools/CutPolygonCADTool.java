@@ -75,6 +75,10 @@ import com.vividsolutions.jts.geom.LineSegment;
 */
 public class CutPolygonCADTool extends DefaultCADTool{
 
+    public static final String CUT_ACTION_COMMAND = "_cut_polygon";
+    public static final String CUT_END = "_cut_polygon_end";
+    public static final String CUT_END_FIRST_POLYGON = "_cut_polygon_end_first_geom";
+
 	private CutPolygonCADToolContext _fsm;
 	private IGeometry selectedGeom; // [LBD] Storing the geometry which contains the first point
 	private Point2D firstPoint;
@@ -628,8 +632,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 	}
 
 	public String toString() {
-		// TODO Auto-generated method stub
-		return "_cut_polygon";
+	return CUT_ACTION_COMMAND;
 	}
 
 	public boolean isApplicable(int shapeType) {
@@ -728,7 +731,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 
 
 			if (resp == JOptionPane.YES_OPTION) {
-			    fireEndGeometry("_cut_polygon_the_new_geom");
+		fireEndGeometry(CUT_END_FIRST_POLYGON);
 			    Value[] values = getParametrizableValues();
 			    addGeometryWithParametrizedValues(getRemainingGeometry(), values);
 			}

@@ -74,6 +74,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Vicente Caballero Navarro
  */
 public class JoinCADTool extends DefaultCADTool {
+    public static final String JOIN_ACTION_COMMAND = "_join";
     protected JoinCADToolContext _fsm;
     private TreeSet<DefaultRowEdited> shorted = new TreeSet<DefaultRowEdited>(new Comparator<DefaultRowEdited>(){
 		public int compare(DefaultRowEdited o1, DefaultRowEdited o2) {
@@ -124,8 +125,8 @@ public class JoinCADTool extends DefaultCADTool {
        ArrayList selectedRows=getSelectedRows();
         if (selectedRows.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
             CADExtension.setCADTool("_selection",false);
-            ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
-                "_join");
+	    ((SelectionCADTool) CADExtension.getCADTool())
+		    .setNextTool(JOIN_ACTION_COMMAND);
         }
     }
 
@@ -197,7 +198,7 @@ public class JoinCADTool extends DefaultCADTool {
     		vea.endComplexRow(getName());
     		vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
     		refresh();
-	    fireEndGeometry("_join");
+	    fireEndGeometry(JOIN_ACTION_COMMAND);
     	} catch (ReadDriverException e) {
     		NotificationManager.addError(e.getMessage(),e);
     	} catch (ValidateRowException e) {
