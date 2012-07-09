@@ -632,7 +632,6 @@ public class InsertVertexCADTool extends DefaultCADTool {
 
 	}
 
-	@Override
 	public void transition(InputEvent event) {
 		// TODO Auto-generated method stub
 		
