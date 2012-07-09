@@ -55,6 +55,7 @@ import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
 import com.iver.cit.gvsig.fmap.core.DefaultFeature;
 import com.iver.cit.gvsig.fmap.core.FShape;
+import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
@@ -75,6 +76,7 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class JoinCADTool extends DefaultCADTool {
     private IGeometry joinedGeometry;
+    private IFeature joinedFeature;
     public static final String JOIN_ACTION_COMMAND = "_join";
     protected JoinCADToolContext _fsm;
     private TreeSet<DefaultRowEdited> shorted = new TreeSet<DefaultRowEdited>(new Comparator<DefaultRowEdited>(){
@@ -100,6 +102,10 @@ public class JoinCADTool extends DefaultCADTool {
 	return joinedGeometry;
     }
 
+    public IFeature getJoinedFeature(){
+	return joinedFeature;
+    }
+    
     /* (non-Javadoc)
      * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
      */
@@ -195,8 +201,9 @@ public class JoinCADTool extends DefaultCADTool {
         	shorted.clear();
     		String newFID = vea.getNewFID();
     		IGeometry geom = FConverter.jts_to_igeometry(geomTotal);
-	    joinedGeometry = geom;
     		DefaultFeature df1 = new DefaultFeature(geom, values, newFID);
+    		joinedGeometry = geom;
+    		joinedFeature = (IFeature) df1.cloneRow();
     		int index1 = vea.addRow(df1, PluginServices.getText(this, "join"),
     				EditionEvent.GRAPHIC);
     		selectedRowAux.add(new DefaultRowEdited(df1, IRowEdited.STATUS_ADDED,
