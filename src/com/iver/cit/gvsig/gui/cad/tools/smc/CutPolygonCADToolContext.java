@@ -463,7 +463,6 @@ public final class CutPolygonCADToolContext
                     try {
                         ctxt.saveChanges();
                         ctxt.clear();
-			ctxt.fireEndGeometry(CutPolygonCADTool.CUT_END);
                     }
                     finally   {
                         context.setState(CutPolygon.FirstPoint);

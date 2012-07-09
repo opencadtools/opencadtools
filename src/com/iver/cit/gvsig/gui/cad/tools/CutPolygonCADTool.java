@@ -75,9 +75,11 @@ import com.vividsolutions.jts.geom.LineSegment;
 */
 public class CutPolygonCADTool extends DefaultCADTool{
 
-    public static final String CUT_ACTION_COMMAND = "_cut_polygon";
-    public static final String CUT_END = "_cut_polygon_end";
-    public static final String CUT_END_FIRST_POLYGON = "_cut_polygon_end_first_geom";
+private static final String CUT_ACTION_COMMAND = "_cut_polygon";
+public static final String CUT_LISTENER_END_SECOND_POLYGON = "_cut_polygon_end";
+public static final String CUT_LISTENER_END_FIRST_POLYGON = "_cut_polygon_end_first_geom";
+public static final String CUT_LISTENER_DELETE_SECOND_POLYGON = "_cut_polygon_delete_second";
+
 
 	private CutPolygonCADToolContext _fsm;
 	private IGeometry selectedGeom; // [LBD] Storing the geometry which contains the first point
@@ -739,19 +741,21 @@ public class CutPolygonCADTool extends DefaultCADTool{
 	    geomsArray.clear();
 	    geomsArray.add(baseGeometry);
 			modifyFeature(selectedRow.getIndex(),(IFeature)selectedRow.getLinkedRow());
-	    fireEndGeometry(CUT_ACTION_COMMAND);
+	    
 
 
 			if (resp == JOptionPane.YES_OPTION) {
-		fireEndGeometry(CUT_END_FIRST_POLYGON);
+		fireEndGeometry(CUT_LISTENER_END_FIRST_POLYGON);
 			    Value[] values = getParametrizableValues();
 		IGeometry newGeometry = getRemainingGeometry();
 		geomsArray.add(newGeometry);
 		addGeometryWithParametrizedValues(newGeometry, values);
-
-			}
-
+		fireEndGeometry(CutPolygonCADTool.CUT_LISTENER_END_SECOND_POLYGON);
 		} else{
+		fireEndGeometry(CUT_LISTENER_DELETE_SECOND_POLYGON);
+		}
+
+} else{
 
 			//TODO Delete when we check that this branch never is called
 			System.out.println("%$%�$/$�/%$�/   CREO QUE ESTA RAMA NUNCA ES LLAMADA   ");
