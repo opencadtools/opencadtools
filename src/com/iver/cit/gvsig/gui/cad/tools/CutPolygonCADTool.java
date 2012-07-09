@@ -95,6 +95,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 	private boolean firstPointContentVertex = true;
 	private boolean secondPointContentVertex = true;
 	private IRowEdited selectedRow;
+    private ArrayList<IGeometry> geomsArray = null;
 
 //	Storing the part of the polygon that we keep
 	private boolean doShortPath = true;
@@ -108,7 +109,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 		//super.init();
 		clear();
 		_fsm = new CutPolygonCADToolContext(this);
-
+	geomsArray = new ArrayList<IGeometry>();
 	}
 
 	/* (non-Javadoc)
@@ -417,6 +418,10 @@ public class CutPolygonCADTool extends DefaultCADTool{
 	    return selectedRow;
 	}
 
+    public ArrayList<IGeometry> getGeometriesCreated() {
+	return geomsArray;
+    }
+
 	public String getName() {
 		return PluginServices.getText(this, "cut_polygon_");
 	}
@@ -551,6 +556,7 @@ public class CutPolygonCADTool extends DefaultCADTool{
 		getCadToolAdapter().setPreviousPoint((double[])null);
 		return isInside;
 	}
+
 
 	/**
 	 * It detects if the point is inside the outline of the selected geometry at this
@@ -727,13 +733,20 @@ public class CutPolygonCADTool extends DefaultCADTool{
 
 			System.out.println("--->>> Salving changes in cutted geometry");
 			((IFeature)selectedRow.getLinkedRow()).setGeometry(getCuttedGeometry());
+	    IGeometry baseGeometry = ((IFeature) selectedRow.getLinkedRow())
+		    .getGeometry();
+	    geomsArray.clear();
+	    geomsArray.add(baseGeometry);
 			modifyFeature(selectedRow.getIndex(),(IFeature)selectedRow.getLinkedRow());
 
 
 			if (resp == JOptionPane.YES_OPTION) {
 		fireEndGeometry(CUT_END_FIRST_POLYGON);
 			    Value[] values = getParametrizableValues();
-			    addGeometryWithParametrizedValues(getRemainingGeometry(), values);
+		IGeometry newGeometry = getRemainingGeometry();
+		geomsArray.add(newGeometry);
+		addGeometryWithParametrizedValues(newGeometry, values);
+
 			}
 
 		} else{
