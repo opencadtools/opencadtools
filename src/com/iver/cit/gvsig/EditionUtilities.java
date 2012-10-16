@@ -42,6 +42,9 @@ public class EditionUtilities {
         if (f instanceof View) {
         	View vista = (View) f;
         	IProjectView model = vista.getModel();
+        	if (model == null) {
+        	    return status;
+        	}
         	MapContext mapa = model.getMapContext();
 
         	FLayers capas = mapa.getLayers();
