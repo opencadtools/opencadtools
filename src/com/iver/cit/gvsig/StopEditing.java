@@ -213,7 +213,7 @@ public class StopEditing extends Extension {
 	}
 
 
-	private void saveLayer(FLyrVect layer) throws ReadDriverException, InitializeWriterException, StopWriterVisitorException{
+	public void saveLayer(FLyrVect layer) throws ReadDriverException, InitializeWriterException, StopWriterVisitorException{
 		
 		layer.setWaitTodraw(true);
 		
