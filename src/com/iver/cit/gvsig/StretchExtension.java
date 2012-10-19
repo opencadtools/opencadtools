@@ -53,81 +53,84 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
- * Extensión que gestiona la simplificación de una geometría compuesta en otras más sencillas.
- *
+ * Extensión que gestiona la simplificación de una geometría compuesta en otras
+ * más sencillas.
+ * 
  * @author Vicente Caballero Navarro
  */
 public class StretchExtension extends Extension {
-	private View view;
+    private View view;
 
-	private MapControl mapControl;
-	private StretchCADTool stretch;
+    private MapControl mapControl;
+    private StretchCADTool stretch;
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		stretch=new StretchCADTool();
-		CADExtension.addCADTool("_stretch",stretch);
-		
-		registerIcons();
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    public void initialize() {
+	stretch = new StretchCADTool();
+	CADExtension.addCADTool("_stretch", stretch);
+
+	registerIcons();
+    }
+
+    private void registerIcons() {
+	PluginServices.getIconTheme().registerDefault(
+		"edition-geometry-stretch",
+		this.getClass().getClassLoader()
+			.getResource("images/Stretch.png"));
+
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals("_stretch")) {
+	    CADExtension.setCADTool(s, true);
 	}
-	
-	private void registerIcons(){
-		PluginServices.getIconTheme().registerDefault(
-				"edition-geometry-stretch",
-				this.getClass().getClassLoader().getResource("images/Stretch.png")
-			);
-		
-	}
-	
+	CADExtension.getEditionManager().setMapControl(mapControl);
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals("_stretch")) {
-        	CADExtension.setCADTool(s,true);
-        }
-		CADExtension.getEditionManager().setMapControl(mapControl);
-		CADExtension.getCADToolAdapter().configureMenu();
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    public boolean isEnabled() {
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-
-		try {
-			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-				view = (View) PluginServices.getMDIManager().getActiveWindow();
-				mapControl = view.getMapControl();
-				EditionManager em=CADExtension.getEditionManager();
-				if (em.getActiveLayerEdited()==null)
-					return false;
-				VectorialLayerEdited vle=(VectorialLayerEdited)em.getActiveLayerEdited();
-				FLyrVect lv=(FLyrVect)vle.getLayer();
-				ArrayList selectedRows=vle.getSelectedRow();
-				if (selectedRows.size()<1) {
-					return false;
-				}
-				if (stretch.isApplicable(lv.getShapeType())){
-					return true;
-				}
-			}
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
+	try {
+	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+		view = (View) PluginServices.getMDIManager().getActiveWindow();
+		mapControl = view.getMapControl();
+		EditionManager em = CADExtension.getEditionManager();
+		if (em.getActiveLayerEdited() == null) {
+		    return false;
 		}
-		return false;
+		VectorialLayerEdited vle = (VectorialLayerEdited) em
+			.getActiveLayerEdited();
+		FLyrVect lv = (FLyrVect) vle.getLayer();
+		ArrayList selectedRows = vle.getSelectedRow();
+		if (selectedRows.size() < 1) {
+		    return false;
+		}
+		if (stretch.isApplicable(lv.getShapeType())) {
+		    return true;
+		}
+	    }
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
 	}
+	return false;
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
 	}
+	return false;
+    }
 }

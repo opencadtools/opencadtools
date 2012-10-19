@@ -27,15 +27,13 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.listeners.CADListenerManager;
 
-
 /**
  * Insertion tools are grouped with this class
  * 
  * @author Isabel Pérez-Urria Lage [LBD]
  * @author Javier Estévez [Cartolab]
  */
-public abstract class InsertionCADTool extends DefaultCADTool{
-
+public abstract class InsertionCADTool extends DefaultCADTool {
 
     /**
      * Throws end geometry event to every class listening to an

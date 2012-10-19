@@ -26,44 +26,46 @@ import com.vividsolutions.jts.geomgraph.EdgeEnd;
 import com.vividsolutions.jts.geomgraph.Node;
 
 /**
- * Custom node type. Does nothing special by now but to force the use of {@link SplitEdgeStar}
- * instances as the node's list of incident edges and allow to remove edges from its list of
- * incident edges.
+ * Custom node type. Does nothing special by now but to force the use of
+ * {@link SplitEdgeStar} instances as the node's list of incident edges and
+ * allow to remove edges from its list of incident edges.
  * 
  * @author Gabriel Roldán, Axios Engineering
  * @author Mauricio Pazos, Axios Engineering
  * @since 1.1.0
  */
 class SplitGraphNode extends Node {
-    public SplitGraphNode( Coordinate coord, SplitEdgeStar incidentEdges ) {
-        super(coord, incidentEdges);
+    public SplitGraphNode(Coordinate coord, SplitEdgeStar incidentEdges) {
+	super(coord, incidentEdges);
     }
 
-    public void add( DirectedEdge edge ) {
-        super.add(edge);
+    public void add(DirectedEdge edge) {
+	super.add(edge);
     }
 
     @Override
-    public void add( EdgeEnd edge ) {
-        add((DirectedEdge) edge);
+    public void add(EdgeEnd edge) {
+	add((DirectedEdge) edge);
     }
 
     /**
-     * Removes the given <code>edge</code> from this node's {@link #getEdges() edge list}.
+     * Removes the given <code>edge</code> from this node's {@link #getEdges()
+     * edge list}.
      * 
      * @param edge
      */
-    public void remove( DirectedEdge edge ) {
-        SplitEdgeStar edges = (SplitEdgeStar) getEdges();
-        edges.remove(edge);
+    public void remove(DirectedEdge edge) {
+	SplitEdgeStar edges = (SplitEdgeStar) getEdges();
+	edges.remove(edge);
     }
 
+    @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer("Node[");
-        sb.append(coord.x).append(":").append(coord.y);
-        sb.append(", ").append(label);
-        sb.append(", ").append(getEdges());
-        sb.append("]");
-        return sb.toString();
+	StringBuffer sb = new StringBuffer("Node[");
+	sb.append(coord.x).append(":").append(coord.y);
+	sb.append(", ").append(label);
+	sb.append(", ").append(getEdges());
+	sb.append("]");
+	return sb.toString();
     }
 }

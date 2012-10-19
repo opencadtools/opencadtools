@@ -69,11 +69,10 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.SymmetryCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SymmetryCADToolContext.SymmetryCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
-
 /**
  * Herramienta para crear una geometría simétrica a otra, con la posibilidad de
  * borrar la original.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class SymmetryCADTool extends DefaultCADTool {
@@ -91,217 +90,245 @@ public class SymmetryCADTool extends DefaultCADTool {
      * Método de inicio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
      */
+    @Override
     public void init() {
-        _fsm = new SymmetryCADToolContext(this);
+	_fsm = new SymmetryCADToolContext(this);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double, double)
      */
     public void transition(double x, double y, InputEvent event) {
-        _fsm.addPoint(x, y, event);
+	_fsm.addPoint(x, y, event);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double)
      */
     public void transition(double d) {
-        _fsm.addValue(d);
+	_fsm.addValue(d);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, java.lang.String)
      */
     public void transition(String s) throws CommandException {
-    	if (!super.changeCommand(s)){
-    		_fsm.addOption(s);
-    	}
+	if (!super.changeCommand(s)) {
+	    _fsm.addOption(s);
+	}
     }
 
     /**
      * DOCUMENT ME!
      */
     public void selection() {
-       ArrayList selectedRows=getSelectedRows();
-        if (selectedRows.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
-            CADExtension.setCADTool("_selection",false);
-            ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
-                "_symmetry");
-        }
+	ArrayList selectedRows = getSelectedRows();
+	if (selectedRows.size() == 0
+		&& !CADExtension
+			.getCADTool()
+			.getClass()
+			.getName()
+			.equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
+	    CADExtension.setCADTool("_selection", false);
+	    ((SelectionCADTool) CADExtension.getCADTool())
+		    .setNextTool("_symmetry");
+	}
     }
 
     /**
      * Equivale al transition del prototipo pero sin pasarle como parámetro el
      * editableFeatureSource que ya estará creado.
-     *
-     * @param x parámetro x del punto que se pase en esta transición.
-     * @param y parámetro y del punto que se pase en esta transición.
+     * 
+     * @param x
+     *            parámetro x del punto que se pase en esta transición.
+     * @param y
+     *            parámetro y del punto que se pase en esta transición.
      */
-    public void addPoint(double x, double y,InputEvent event) {
-        SymmetryCADToolState actualState = (SymmetryCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
-        if (status.equals("Symmetry.FirstPoint")) {
-        	firstPoint = new Point2D.Double(x, y);
-    	} else if (status.equals("Symmetry.SecondPoint")) {
-    		secondPoint = new Point2D.Double(x,y);
-    	}
+    public void addPoint(double x, double y, InputEvent event) {
+	SymmetryCADToolState actualState = (SymmetryCADToolState) _fsm
+		.getPreviousState();
+	String status = actualState.getName();
+	if (status.equals("Symmetry.FirstPoint")) {
+	    firstPoint = new Point2D.Double(x, y);
+	} else if (status.equals("Symmetry.SecondPoint")) {
+	    secondPoint = new Point2D.Double(x, y);
+	}
     }
 
     /**
      * Método para dibujar la lo necesario para el estado en el que nos
      * encontremos.
-     *
-     * @param g Graphics sobre el que dibujar.
-     * @param x parámetro x del punto que se pase para dibujar.
-     * @param y parámetro x del punto que se pase para dibujar.
+     * 
+     * @param g
+     *            Graphics sobre el que dibujar.
+     * @param x
+     *            parámetro x del punto que se pase para dibujar.
+     * @param y
+     *            parámetro x del punto que se pase para dibujar.
      */
     public void drawOperation(Graphics g, double x, double y) {
-        SymmetryCADToolState actualState = _fsm.getState();
-        String status = actualState.getName();
+	SymmetryCADToolState actualState = _fsm.getState();
+	String status = actualState.getName();
 
-        if (status.equals("Symmetry.SecondPoint")) {
-        	Point2D pAux=new Point2D.Double(x,y);
-        	drawSymmetry(g,pAux);
-		}else if (status.equals("Symmetry.CutOrCopy")){
-			drawSymmetry(g,secondPoint);
-		}
-    }
-private void drawSymmetry(Graphics g,Point2D pAux) {
-	ArrayList selectedRow=getSelectedRows();
-    VectorialLayerEdited vle=getVLE();
-	ViewPort vp=vle.getLayer().getMapContext().getViewPort();
-
-	GeneralPathX gpx=new GeneralPathX();
-	gpx.moveTo(firstPoint.getX(),firstPoint.getY());
-	gpx.lineTo(pAux.getX(),pAux.getY());
-	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D)g,vp,DefaultCADTool.axisReferencesSymbol);
-	for (int i = 0; i < selectedRow.size(); i++) {
-		DefaultRowEdited row=(DefaultRowEdited) selectedRow.get(i);
-		DefaultFeature fea = (DefaultFeature) row.getLinkedRow();
-
-		IGeometry geom = fea.getGeometry().cloneGeometry();
-		Handler[] handlers = geom.getHandlers(IGeometry.SELECTHANDLER);
-
-			for (int j = 0; j < handlers.length; j++) {
-				Handler h = (Handler) handlers[j];
-				Point2D p = h.getPoint();
-				Point2D[] ps = UtilFunctions.getPerpendicular(firstPoint,
-						pAux, p);
-				Point2D inter = UtilFunctions.getIntersection(ps[0],
-						ps[1], firstPoint, pAux);
-				if (inter!=null) {
-					Point2D dif = new Point2D.Double(inter.getX() -
-							p.getX(), inter.getY() - p.getY());
-					h.set(inter.getX() + dif.getX(),
-							inter.getY() + dif.getY());
-				}
-			}
-			geom.draw((Graphics2D)g,vp,DefaultCADTool.selectionSymbol);
+	if (status.equals("Symmetry.SecondPoint")) {
+	    Point2D pAux = new Point2D.Double(x, y);
+	    drawSymmetry(g, pAux);
+	} else if (status.equals("Symmetry.CutOrCopy")) {
+	    drawSymmetry(g, secondPoint);
 	}
-}
+    }
+
+    private void drawSymmetry(Graphics g, Point2D pAux) {
+	ArrayList selectedRow = getSelectedRows();
+	VectorialLayerEdited vle = getVLE();
+	ViewPort vp = vle.getLayer().getMapContext().getViewPort();
+
+	GeneralPathX gpx = new GeneralPathX();
+	gpx.moveTo(firstPoint.getX(), firstPoint.getY());
+	gpx.lineTo(pAux.getX(), pAux.getY());
+	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D) g, vp,
+		DefaultCADTool.axisReferencesSymbol);
+	for (int i = 0; i < selectedRow.size(); i++) {
+	    DefaultRowEdited row = (DefaultRowEdited) selectedRow.get(i);
+	    DefaultFeature fea = (DefaultFeature) row.getLinkedRow();
+
+	    IGeometry geom = fea.getGeometry().cloneGeometry();
+	    Handler[] handlers = geom.getHandlers(IGeometry.SELECTHANDLER);
+
+	    for (int j = 0; j < handlers.length; j++) {
+		Handler h = (Handler) handlers[j];
+		Point2D p = h.getPoint();
+		Point2D[] ps = UtilFunctions.getPerpendicular(firstPoint, pAux,
+			p);
+		Point2D inter = UtilFunctions.getIntersection(ps[0], ps[1],
+			firstPoint, pAux);
+		if (inter != null) {
+		    Point2D dif = new Point2D.Double(inter.getX() - p.getX(),
+			    inter.getY() - p.getY());
+		    h.set(inter.getX() + dif.getX(), inter.getY() + dif.getY());
+		}
+	    }
+	    geom.draw((Graphics2D) g, vp, DefaultCADTool.selectionSymbol);
+	}
+    }
 
     /**
-	 * Add a diferent option.
-	 *
-	 * @param s
-	 *            Diferent option.
-	 */
+     * Add a diferent option.
+     * 
+     * @param s
+     *            Diferent option.
+     */
     public void addOption(String s) {
-    	 SymmetryCADToolState actualState = (SymmetryCADToolState) _fsm
-				.getPreviousState();
-		String status = actualState.getName();
-		ArrayList selectedRow = getSelectedRows();
-		ArrayList selectedRowAux=new ArrayList();
-		VectorialLayerEdited vle = getVLE();
-		VectorialEditableAdapter vea = vle.getVEA();
-		if (status.equals("Symmetry.CutOrCopy")) {
-			PluginServices.getMDIManager().setWaitCursor();
-			try {
-				vea.startComplexRow();
-				for (int i = 0; i < selectedRow.size(); i++) {
-					DefaultRowEdited row = (DefaultRowEdited) selectedRow
-							.get(i);
-					DefaultFeature fea = (DefaultFeature) row.getLinkedRow()
-							.cloneRow();
+	SymmetryCADToolState actualState = (SymmetryCADToolState) _fsm
+		.getPreviousState();
+	String status = actualState.getName();
+	ArrayList selectedRow = getSelectedRows();
+	ArrayList selectedRowAux = new ArrayList();
+	VectorialLayerEdited vle = getVLE();
+	VectorialEditableAdapter vea = vle.getVEA();
+	if (status.equals("Symmetry.CutOrCopy")) {
+	    PluginServices.getMDIManager().setWaitCursor();
+	    try {
+		vea.startComplexRow();
+		for (int i = 0; i < selectedRow.size(); i++) {
+		    DefaultRowEdited row = (DefaultRowEdited) selectedRow
+			    .get(i);
+		    DefaultFeature fea = (DefaultFeature) row.getLinkedRow()
+			    .cloneRow();
 
-					IGeometry geom = fea.getGeometry();
-					Handler[] handlers = geom
-							.getHandlers(IGeometry.SELECTHANDLER);
+		    IGeometry geom = fea.getGeometry();
+		    Handler[] handlers = geom
+			    .getHandlers(IGeometry.SELECTHANDLER);
 
-					for (int j = 0; j < handlers.length; j++) {
-						Handler h = (Handler) handlers[j];
-						Point2D p = h.getPoint();
-						Point2D[] ps = UtilFunctions.getPerpendicular(
-								firstPoint, secondPoint, p);
-						Point2D inter = UtilFunctions.getIntersection(ps[0],
-								ps[1], firstPoint, secondPoint);
-						Point2D dif = new Point2D.Double(inter.getX()
-								- p.getX(), inter.getY() - p.getY());
-						h.set(inter.getX() + dif.getX(), inter.getY()
-								+ dif.getY());
-					}
+		    for (int j = 0; j < handlers.length; j++) {
+			Handler h = (Handler) handlers[j];
+			Point2D p = h.getPoint();
+			Point2D[] ps = UtilFunctions.getPerpendicular(
+				firstPoint, secondPoint, p);
+			Point2D inter = UtilFunctions.getIntersection(ps[0],
+				ps[1], firstPoint, secondPoint);
+			Point2D dif = new Point2D.Double(inter.getX()
+				- p.getX(), inter.getY() - p.getY());
+			h.set(inter.getX() + dif.getX(),
+				inter.getY() + dif.getY());
+		    }
 
-					if (s.equals(PluginServices.getText(this, "cut"))
-							|| s.equals("s") || s.equals("S")) {
-						vea.modifyRow(row.getIndex(), fea,
-								getName(), EditionEvent.GRAPHIC);
+		    if (s.equals(PluginServices.getText(this, "cut"))
+			    || s.equals("s") || s.equals("S")) {
+			vea.modifyRow(row.getIndex(), fea, getName(),
+				EditionEvent.GRAPHIC);
 
-						selectedRowAux.add(new DefaultRowEdited(fea,
-								IRowEdited.STATUS_MODIFIED, row.getIndex()));
-					} else {
-						int index=addGeometry(geom,fea.getAttributes());
-						selectedRowAux.add(new DefaultRowEdited(fea,
-								IRowEdited.STATUS_ADDED, index));
-						refresh();
-					}
+			selectedRowAux.add(new DefaultRowEdited(fea,
+				IRowEdited.STATUS_MODIFIED, row.getIndex()));
+		    } else {
+			int index = addGeometry(geom, fea.getAttributes());
+			selectedRowAux.add(new DefaultRowEdited(fea,
+				IRowEdited.STATUS_ADDED, index));
+			refresh();
+		    }
 
-				}
-
-				vea.endComplexRow(getName());
-				vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS, selectedRowAux);
-				//clearSelection();
-				//selectedRow.addAll(selectedRowAux);
-			} catch (ValidateRowException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			} catch (ExpansionFileWriteException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			} catch (ReadDriverException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
-			PluginServices.getMDIManager().restoreCursor();
 		}
+
+		vea.endComplexRow(getName());
+		vle.setSelectionCache(VectorialLayerEdited.SAVEPREVIOUS,
+			selectedRowAux);
+		// clearSelection();
+		// selectedRow.addAll(selectedRowAux);
+	    } catch (ValidateRowException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    } catch (ExpansionFileWriteException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    } catch (ReadDriverException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    }
+	    PluginServices.getMDIManager().restoreCursor();
+	}
     }
 
     /*
-	 * (non-Javadoc)
-	 *
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
-	 */
+     * (non-Javadoc)
+     * 
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
+     */
     public void addValue(double d) {
 
     }
 
-	public String getName() {
-		return PluginServices.getText(this,"symmetry_");
-	}
+    public String getName() {
+	return PluginServices.getText(this, "symmetry_");
+    }
 
-	public String toString() {
-		return "_symmetry";
-	}
+    @Override
+    public String toString() {
+	return "_symmetry";
+    }
 
-	public void drawOperation(Graphics g, ArrayList pointList) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void drawOperation(Graphics g, ArrayList pointList) {
+	// TODO Auto-generated method stub
 
-	public boolean isMultiTransition() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    }
 
-	public void transition(InputEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public boolean isMultiTransition() {
+	// TODO Auto-generated method stub
+	return false;
+    }
+
+    public void transition(InputEvent event) {
+	// TODO Auto-generated method stub
+
+    }
 
 }

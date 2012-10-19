@@ -50,26 +50,26 @@ import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
 /**
  * @author fjp
- *
+ * 
  */
 public class RefentAccelerator implements KeyEventDispatcher {
 
-	public boolean dispatchKeyEvent(KeyEvent e) {
-		if (e.getID() == KeyEvent.KEY_PRESSED)
-			return false;
-		
-		IWindow v = PluginServices.getMDIManager().getActiveWindow();
-		if (!(v instanceof com.iver.cit.gvsig.project.documents.view.gui.View))
-			return false;
-		
-		CADToolAdapter adapTool = CADExtension.getCADToolAdapter();
-		adapTool.setRefentEnabled(!adapTool.isRefentEnabled());
-		
-		System.err.println("Ponemos REFENT a " + adapTool.isRefentEnabled());
-		
-		return false;
+    public boolean dispatchKeyEvent(KeyEvent e) {
+	if (e.getID() == KeyEvent.KEY_PRESSED) {
+	    return false;
 	}
 
+	IWindow v = PluginServices.getMDIManager().getActiveWindow();
+	if (!(v instanceof com.iver.cit.gvsig.project.documents.view.gui.View)) {
+	    return false;
+	}
+
+	CADToolAdapter adapTool = CADExtension.getCADToolAdapter();
+	adapTool.setRefentEnabled(!adapTool.isRefentEnabled());
+
+	System.err.println("Ponemos REFENT a " + adapTool.isRefentEnabled());
+
+	return false;
+    }
+
 }
-
-

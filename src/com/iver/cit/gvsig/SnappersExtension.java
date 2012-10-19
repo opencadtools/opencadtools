@@ -37,84 +37,85 @@ import com.iver.utiles.console.JConsole;
 
 /**
  * Extension to manage the activation and deactivation of the snappers
- *
+ * 
  * @author Jose Ignacio Lamas [LBD]
  * @author Javier Estévez [Cartolab]
  */
 public class SnappersExtension extends Extension {
 
-
     private CADStatus cadStatus = null;
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-	    cadStatus = CADStatus.getCADStatus();
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    public void initialize() {
+	cadStatus = CADStatus.getCADStatus();
 
-		PluginServices.getIconTheme().registerDefault("Snapper",
+	PluginServices.getIconTheme().registerDefault(
+		"Snapper",
 		this.getClass().getClassLoader()
 			.getResource("images/icons/activar_snap.png"));
-	}
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    public void execute(String s) {
+	CADExtension.initFocus();
 
-		if (s.equals("_snappers")) {
-		        ILayerEdited lyrEdit = CADExtension.getEditionManager()
-			.getActiveLayerEdited();
-			ArrayList snappers = ((VectorialLayerEdited)lyrEdit).getSnappers();
-			String message = new String();
+	if (s.equals("_snappers")) {
+	    ILayerEdited lyrEdit = CADExtension.getEditionManager()
+		    .getActiveLayerEdited();
+	    ArrayList snappers = ((VectorialLayerEdited) lyrEdit).getSnappers();
+	    String message = new String();
 
 	    if (cadStatus.isVertexActivated()
 		    || cadStatus.isNearLineActivated()) {
-				snappers.clear();
-				cadStatus.setVertexActivated(false);
-				cadStatus.setNearLineActivated(false);
-				message = PluginServices.getText(this, "snappers_deactivated");
-			} else {
-				//Creating snappers and added to the layer
-				EIELNearestPointSnapper eielNearestSnap = new EIELNearestPointSnapper();
-				EIELFinalPointSnapper eielFinalSnap = new EIELFinalPointSnapper();
+		snappers.clear();
+		cadStatus.setVertexActivated(false);
+		cadStatus.setNearLineActivated(false);
+		message = PluginServices.getText(this, "snappers_deactivated");
+	    } else {
+		// Creating snappers and added to the layer
+		EIELNearestPointSnapper eielNearestSnap = new EIELNearestPointSnapper();
+		EIELFinalPointSnapper eielFinalSnap = new EIELFinalPointSnapper();
 
-				snappers.clear();
-				snappers.add(eielFinalSnap);
-				snappers.add(eielNearestSnap);
-				cadStatus.setVertexActivated(true);
-				cadStatus.setNearLineActivated(true);
+		snappers.clear();
+		snappers.add(eielFinalSnap);
+		snappers.add(eielNearestSnap);
+		cadStatus.setVertexActivated(true);
+		cadStatus.setNearLineActivated(true);
 
-				message = PluginServices.getText(this, "snappers_activated");
-			}
+		message = PluginServices.getText(this, "snappers_activated");
+	    }
 
-			//Printing in console if the snapper is activated
-			if (PluginServices.getMDIManager().getActiveWindow() instanceof View)
-			{
-				View vista = (View) PluginServices.getMDIManager().getActiveWindow();
-				vista.getConsolePanel().addText("\n" +message, JConsole.INSERT);
-			}
-		}
+	    // Printing in console if the snapper is activated
+	    if (PluginServices.getMDIManager().getActiveWindow() instanceof View) {
+		View vista = (View) PluginServices.getMDIManager()
+			.getActiveWindow();
+		vista.getConsolePanel()
+			.addText("\n" + message, JConsole.INSERT);
+	    }
 	}
+    }
 
+    public boolean isEnabled() {
 
-	public boolean isEnabled() {
-
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-			if (CADExtension.getEditionManager().getActiveLayerEdited()==null){
-				return false;
-			}
-			return true;
-		}
-
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
 		return false;
+	    }
+	    return true;
 	}
 
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
+	return false;
+    }
+
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
 	}
+	return false;
+    }
 
 }

@@ -1,7 +1,5 @@
-
 //
 // Vicente Caballero Navarro
-
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
@@ -11,496 +9,452 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPointCADTool;
 
-public final class MultiPointCADToolContext
-    extends statemap.FSMContext
-{
-//---------------------------------------------------------------
-// Member methods.
-//
+public final class MultiPointCADToolContext extends statemap.FSMContext {
+    // ---------------------------------------------------------------
+    // Member methods.
+    //
 
-    public MultiPointCADToolContext(MultiPointCADTool owner)
-    {
-        super();
+    public MultiPointCADToolContext(MultiPointCADTool owner) {
+	super();
 
-        _owner = owner;
-        setState(MultiPoint.FirstPoint);
-        MultiPoint.FirstPoint.Entry(this);
+	_owner = owner;
+	setState(MultiPoint.FirstPoint);
+	MultiPoint.FirstPoint.Entry(this);
     }
 
-    public void addOption(String s)
-    {
-        _transition = "addOption";
-        getState().addOption(this, s);
-        _transition = "";
-        return;
+    public void addOption(String s) {
+	_transition = "addOption";
+	getState().addOption(this, s);
+	_transition = "";
+	return;
     }
 
-    public void addPoint(double pointX, double pointY, InputEvent event)
-    {
-        _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY, event);
-        _transition = "";
-        return;
+    public void addPoint(double pointX, double pointY, InputEvent event) {
+	_transition = "addPoint";
+	getState().addPoint(this, pointX, pointY, event);
+	_transition = "";
+	return;
     }
 
-    public void addValue(double d)
-    {
-        _transition = "addValue";
-        getState().addValue(this, d);
-        _transition = "";
-        return;
+    public void addValue(double d) {
+	_transition = "addValue";
+	getState().addValue(this, d);
+	_transition = "";
+	return;
     }
 
-    public void removePoint(InputEvent event, int numPoints)
-    {
-        _transition = "removePoint";
-        getState().removePoint(this, event, numPoints);
-        _transition = "";
-        return;
+    public void removePoint(InputEvent event, int numPoints) {
+	_transition = "removePoint";
+	getState().removePoint(this, event, numPoints);
+	_transition = "";
+	return;
     }
 
     public MultiPointCADToolState getState()
-        throws statemap.StateUndefinedException
-    {
-        if (_state == null)
-        {
-            throw(
-                new statemap.StateUndefinedException());
-        }
+	    throws statemap.StateUndefinedException {
+	if (_state == null) {
+	    throw (new statemap.StateUndefinedException());
+	}
 
-        return ((MultiPointCADToolState) _state);
+	return ((MultiPointCADToolState) _state);
     }
 
-    protected MultiPointCADTool getOwner()
-    {
-        return (_owner);
+    protected MultiPointCADTool getOwner() {
+	return (_owner);
     }
 
-//---------------------------------------------------------------
-// Member data.
-//
+    // ---------------------------------------------------------------
+    // Member data.
+    //
 
     transient private MultiPointCADTool _owner;
 
-//---------------------------------------------------------------
-// Inner classes.
-//
-
-    public static abstract class MultiPointCADToolState
-        extends statemap.State
-    {
-    //-----------------------------------------------------------
-    // Member methods.
+    // ---------------------------------------------------------------
+    // Inner classes.
     //
 
-        protected MultiPointCADToolState(String name, int id)
-        {
-            super (name, id);
-        }
+    public static abstract class MultiPointCADToolState extends statemap.State {
+	// -----------------------------------------------------------
+	// Member methods.
+	//
 
-        protected void Entry(MultiPointCADToolContext context) {}
-        protected void Exit(MultiPointCADToolContext context) {}
+	protected MultiPointCADToolState(String name, int id) {
+	    super(name, id);
+	}
 
-        protected void addOption(MultiPointCADToolContext context, String s)
-        {
-            Default(context);
-        }
+	protected void Entry(MultiPointCADToolContext context) {
+	}
 
-        protected void addPoint(MultiPointCADToolContext context, double pointX, double pointY, InputEvent event)
-        {
-            Default(context);
-        }
+	protected void Exit(MultiPointCADToolContext context) {
+	}
 
-        protected void addValue(MultiPointCADToolContext context, double d)
-        {
-            Default(context);
-        }
+	protected void addOption(MultiPointCADToolContext context, String s) {
+	    Default(context);
+	}
 
-        protected void removePoint(MultiPointCADToolContext context, InputEvent event, int numPoints) {
-        	Default(context);
-        }
+	protected void addPoint(MultiPointCADToolContext context,
+		double pointX, double pointY, InputEvent event) {
+	    Default(context);
+	}
 
-        protected void Default(MultiPointCADToolContext context)
-        {
-            throw (
-                new statemap.TransitionUndefinedException(
-                    "State: " +
-                    context.getState().getName() +
-                    ", Transition: " +
-                    context.getTransition()));
-        }
+	protected void addValue(MultiPointCADToolContext context, double d) {
+	    Default(context);
+	}
 
-    //-----------------------------------------------------------
-    // Member data.
-    //
+	protected void removePoint(MultiPointCADToolContext context,
+		InputEvent event, int numPoints) {
+	    Default(context);
+	}
+
+	protected void Default(MultiPointCADToolContext context) {
+	    throw (new statemap.TransitionUndefinedException("State: "
+		    + context.getState().getName() + ", Transition: "
+		    + context.getTransition()));
+	}
+
+	// -----------------------------------------------------------
+	// Member data.
+	//
     }
 
-    /* package */ static abstract class MultiPoint
-    {
-    //-----------------------------------------------------------
-    // Member methods.
-    //
+    /* package */static abstract class MultiPoint {
+	// -----------------------------------------------------------
+	// Member methods.
+	//
 
-    //-----------------------------------------------------------
-    // Member data.
-    //
+	// -----------------------------------------------------------
+	// Member data.
+	//
 
-        //-------------------------------------------------------
-        // Statics.
-        //
-        /* package */ static MultiPoint_Default.MultiPoint_InsertPoint InsertPoint;
-        private static MultiPoint_Default Default;
-        private static MultiPoint_Default.MultiPoint_FirstPoint FirstPoint;
+	// -------------------------------------------------------
+	// Statics.
+	//
+	/* package */static MultiPoint_Default.MultiPoint_InsertPoint InsertPoint;
+	private static MultiPoint_Default Default;
+	private static MultiPoint_Default.MultiPoint_FirstPoint FirstPoint;
 
-        static
-        {
-            InsertPoint = new MultiPoint_Default.MultiPoint_InsertPoint("MultiPoint.InsertPoint", 0);
-            Default = new MultiPoint_Default("MultiPoint.Default", -1);
-            FirstPoint = new MultiPoint_Default.MultiPoint_FirstPoint("MultiPoint.FirstPoint", 0);
-        }
+	static {
+	    InsertPoint = new MultiPoint_Default.MultiPoint_InsertPoint(
+		    "MultiPoint.InsertPoint", 0);
+	    Default = new MultiPoint_Default("MultiPoint.Default", -1);
+	    FirstPoint = new MultiPoint_Default.MultiPoint_FirstPoint(
+		    "MultiPoint.FirstPoint", 0);
+	}
 
     }
 
-    protected static class MultiPoint_Default
-        extends MultiPointCADToolState
-    {
-    //-----------------------------------------------------------
-    // Member methods.
-    //
+    protected static class MultiPoint_Default extends MultiPointCADToolState {
+	// -----------------------------------------------------------
+	// Member methods.
+	//
 
-        protected MultiPoint_Default(String name, int id)
-        {
-            super (name, id);
-        }
+	protected MultiPoint_Default(String name, int id) {
+	    super(name, id);
+	}
 
-        protected void addOption(MultiPointCADToolContext context, String s)
-        {
-            MultiPointCADTool ctxt = context.getOwner();
+	@Override
+	protected void addOption(MultiPointCADToolContext context, String s) {
+	    MultiPointCADTool ctxt = context.getOwner();
 
-            if (s.equals(PluginServices.getText(this,"cancel")) || s.equalsIgnoreCase("c"))
-            {
-                boolean loopbackFlag =
-                    context.getState().getName().equals(
-                        MultiPoint.InsertPoint.getName());
+	    if (s.equals(PluginServices.getText(this, "cancel"))
+		    || s.equalsIgnoreCase("c")) {
+		boolean loopbackFlag = context.getState().getName()
+			.equals(MultiPoint.InsertPoint.getName());
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Exit(context);
-                }
+		if (loopbackFlag == false) {
+		    (context.getState()).Exit(context);
+		}
 
-                context.clearState();
-                try
-                {
-                    ctxt.end();
-                }
-                finally
-                {
-                    context.setState(MultiPoint.InsertPoint);
+		context.clearState();
+		try {
+		    ctxt.end();
+		} finally {
+		    context.setState(MultiPoint.InsertPoint);
 
-                    if (loopbackFlag == false)
-                    {
-                        (context.getState()).Entry(context);
-                    }
+		    if (loopbackFlag == false) {
+			(context.getState()).Entry(context);
+		    }
 
-                }
-            }
-            else
-            {
-                boolean loopbackFlag =
-                    context.getState().getName().equals(
-                        MultiPoint.InsertPoint.getName());
+		}
+	    } else {
+		boolean loopbackFlag = context.getState().getName()
+			.equals(MultiPoint.InsertPoint.getName());
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Exit(context);
-                }
+		if (loopbackFlag == false) {
+		    (context.getState()).Exit(context);
+		}
 
-                context.clearState();
-                try
-                {
-                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
-                }
-                finally
-                {
-                    context.setState(MultiPoint.InsertPoint);
+		context.clearState();
+		try {
+		    ctxt.throwOptionException(
+			    PluginServices.getText(this, "incorrect_option"), s);
+		} finally {
+		    context.setState(MultiPoint.InsertPoint);
 
-                    if (loopbackFlag == false)
-                    {
-                        (context.getState()).Entry(context);
-                    }
+		    if (loopbackFlag == false) {
+			(context.getState()).Entry(context);
+		    }
 
-                }
-            }
+		}
+	    }
 
-            return;
-        }
+	    return;
+	}
 
-        protected void addValue(MultiPointCADToolContext context, double d)
-        {
-            MultiPointCADTool ctxt = context.getOwner();
+	@Override
+	protected void addValue(MultiPointCADToolContext context, double d) {
+	    MultiPointCADTool ctxt = context.getOwner();
 
-            boolean loopbackFlag =
-                context.getState().getName().equals(
-                    MultiPoint.InsertPoint.getName());
+	    boolean loopbackFlag = context.getState().getName()
+		    .equals(MultiPoint.InsertPoint.getName());
 
-            if (loopbackFlag == false)
-            {
-                (context.getState()).Exit(context);
-            }
+	    if (loopbackFlag == false) {
+		(context.getState()).Exit(context);
+	    }
 
-            context.clearState();
-            try
-            {
-                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
-            }
-            finally
-            {
-                context.setState(MultiPoint.InsertPoint);
+	    context.clearState();
+	    try {
+		ctxt.throwValueException(
+			PluginServices.getText(this, "incorrect_value"), d);
+	    } finally {
+		context.setState(MultiPoint.InsertPoint);
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Entry(context);
-                }
+		if (loopbackFlag == false) {
+		    (context.getState()).Entry(context);
+		}
 
-            }
-            return;
-        }
+	    }
+	    return;
+	}
 
-        protected void addPoint(MultiPointCADToolContext context, double pointX, double pointY, InputEvent event)
-        {
-            MultiPointCADTool ctxt = context.getOwner();
+	@Override
+	protected void addPoint(MultiPointCADToolContext context,
+		double pointX, double pointY, InputEvent event) {
+	    MultiPointCADTool ctxt = context.getOwner();
 
-            boolean loopbackFlag =
-                context.getState().getName().equals(
-                    MultiPoint.InsertPoint.getName());
+	    boolean loopbackFlag = context.getState().getName()
+		    .equals(MultiPoint.InsertPoint.getName());
 
-            if (loopbackFlag == false)
-            {
-                (context.getState()).Exit(context);
-            }
+	    if (loopbackFlag == false) {
+		(context.getState()).Exit(context);
+	    }
 
-            context.clearState();
-            try
-            {
-                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
-            }
-            finally
-            {
-                context.setState(MultiPoint.InsertPoint);
+	    context.clearState();
+	    try {
+		ctxt.throwPointException(
+			PluginServices.getText(this, "incorrect_point"),
+			pointX, pointY);
+	    } finally {
+		context.setState(MultiPoint.InsertPoint);
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Entry(context);
-                }
+		if (loopbackFlag == false) {
+		    (context.getState()).Entry(context);
+		}
 
-            }
-            return;
-        }
+	    }
+	    return;
+	}
 
-        protected void removePoint(MultiPointCADToolContext context, InputEvent event, int numPoints) {
+	@Override
+	protected void removePoint(MultiPointCADToolContext context,
+		InputEvent event, int numPoints) {
 
-        	MultiPointCADTool tool = context.getOwner();
+	    MultiPointCADTool tool = context.getOwner();
 
-        	boolean loopbackFlag =
-        		context.getState().getName().equals(
-        				MultiPoint.FirstPoint.getName());
+	    boolean loopbackFlag = context.getState().getName()
+		    .equals(MultiPoint.FirstPoint.getName());
 
-        	if (!loopbackFlag) {
-        		(context.getState()).Exit(context);
-        	}
+	    if (!loopbackFlag) {
+		(context.getState()).Exit(context);
+	    }
 
-        	context.clearState();
-        	try {
-        		tool.throwNoPointsException(PluginServices.getText(this, "no_points"));
-        	} finally {
-        		context.setState(MultiPoint.FirstPoint);
-        		if (!loopbackFlag) {
-        			(context.getState()).Entry(context);
-        		}
-        	}
+	    context.clearState();
+	    try {
+		tool.throwNoPointsException(PluginServices.getText(this,
+			"no_points"));
+	    } finally {
+		context.setState(MultiPoint.FirstPoint);
+		if (!loopbackFlag) {
+		    (context.getState()).Entry(context);
+		}
+	    }
 
-        }
+	}
 
-    //-----------------------------------------------------------
-    // Inner classse.
-    //
+	// -----------------------------------------------------------
+	// Inner classse.
+	//
 
-        private static final class MultiPoint_FirstPoint
-        	extends MultiPoint_Default
-        {
+	private static final class MultiPoint_FirstPoint extends
+		MultiPoint_Default {
 
-        	private MultiPoint_FirstPoint(String name, int id) {
-        		super (name, id);
-        	}
+	    private MultiPoint_FirstPoint(String name, int id) {
+		super(name, id);
+	    }
 
-            protected void Entry(MultiPointCADToolContext context)
-            {
-                MultiPointCADTool ctxt = context.getOwner();
+	    @Override
+	    protected void Entry(MultiPointCADToolContext context) {
+		MultiPointCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(PluginServices.getText(this,"insert_point"));
-                ctxt.setDescription(new String[]{"cancel", });
-                return;
-            }
+		ctxt.setQuestion(PluginServices.getText(this, "insert_point"));
+		ctxt.setDescription(new String[] { "cancel", });
+		return;
+	    }
 
-            protected void addOption(MultiPointCADToolContext context, String s) {
+	    @Override
+	    protected void addOption(MultiPointCADToolContext context, String s) {
 
-            	if (s.equals("espacio") || s.equals(PluginServices.getText(this, "end"))) {
+		if (s.equals("espacio")
+			|| s.equals(PluginServices.getText(this, "end"))) {
 
-            		MultiPointCADToolState endState = context.getState();
-            		MultiPointCADTool tool = context.getOwner();
+		    MultiPointCADToolState endState = context.getState();
+		    MultiPointCADTool tool = context.getOwner();
 
-            		context.clearState();
-            		try {
-            			tool.throwInvalidGeometryException(PluginServices.getText(this,"incorrect_geometry"));
-            		}
-            		finally
-            		{
-            			context.setState(endState);
-            		}
-            	}
-            }
+		    context.clearState();
+		    try {
+			tool.throwInvalidGeometryException(PluginServices
+				.getText(this, "incorrect_geometry"));
+		    } finally {
+			context.setState(endState);
+		    }
+		}
+	    }
 
-            protected void addPoint(MultiPointCADToolContext context, double pointX, double pointY, InputEvent event) {
+	    @Override
+	    protected void addPoint(MultiPointCADToolContext context,
+		    double pointX, double pointY, InputEvent event) {
 
-            	MultiPointCADTool tool = context.getOwner();
+		MultiPointCADTool tool = context.getOwner();
 
-            	context.clearState();
-            	try {
+		context.clearState();
+		try {
 		    boolean deleteButton3 = CADStatus.getCADStatus()
 			    .isDeleteButtonActivated();
-                	if (deleteButton3) {
-                		tool.setQuestion(PluginServices.getText(this,"insert_next_point_del"));
-                	} else {
-                		tool.setQuestion(PluginServices.getText(this,"insert_next_point"));
-                	}
-            		tool.addPoint(pointX, pointY, event);
-            	}
-            	finally {
-            		context.setState(MultiPoint.InsertPoint);
-            		(context.getState()).Entry(context);
-            	}
+		    if (deleteButton3) {
+			tool.setQuestion(PluginServices.getText(this,
+				"insert_next_point_del"));
+		    } else {
+			tool.setQuestion(PluginServices.getText(this,
+				"insert_next_point"));
+		    }
+		    tool.addPoint(pointX, pointY, event);
+		} finally {
+		    context.setState(MultiPoint.InsertPoint);
+		    (context.getState()).Entry(context);
+		}
 
+	    }
 
-            }
+	}
 
-        }
+	private static final class MultiPoint_InsertPoint extends
+		MultiPoint_Default {
+	    // -------------------------------------------------------
+	    // Member methods.
+	    //
 
+	    private MultiPoint_InsertPoint(String name, int id) {
+		super(name, id);
+	    }
 
-        private static final class MultiPoint_InsertPoint
-            extends MultiPoint_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
+	    @Override
+	    protected void Entry(MultiPointCADToolContext context) {
+		MultiPointCADTool ctxt = context.getOwner();
 
-            private MultiPoint_InsertPoint(String name, int id)
-            {
-                super (name, id);
-            }
+		ctxt.setDescription(new String[] { "cancel", "end",
+			"removePoint" });
+		return;
+	    }
 
-            protected void Entry(MultiPointCADToolContext context)
-            {
-                MultiPointCADTool ctxt = context.getOwner();
+	    @Override
+	    protected void addOption(MultiPointCADToolContext context, String s) {
+		MultiPointCADTool ctxt = context.getOwner();
 
-                ctxt.setDescription(new String[]{"cancel", "end", "removePoint"});
-                return;
-            }
+		if (s.equalsIgnoreCase("espacio")
+			|| s.equals(PluginServices.getText(this, "end"))) {
+		    MultiPointCADToolState endState = context.getState();
 
-            protected void addOption(MultiPointCADToolContext context, String s)
-            {
-                MultiPointCADTool ctxt = context.getOwner();
+		    context.clearState();
+		    try {
+			ctxt.setQuestion(PluginServices.getText(this,
+				"insert_point"));
+			ctxt.setDescription(new String[] { "cancel" });
+			ctxt.addOption(s);
+			ctxt.endGeometry();
+			ctxt.fireEndGeometry();
+		    } finally {
+			context.setState(endState);
+		    }
+		} else {
+		    super.addOption(context, s);
+		}
 
-                if (s.equalsIgnoreCase("espacio") || s.equals(PluginServices.getText(this,"end")))
-                {
-                    MultiPointCADToolState endState = context.getState();
+		return;
+	    }
 
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_point"));
-                        ctxt.setDescription(new String[]{"cancel"});
-                        ctxt.addOption(s);
-                        ctxt.endGeometry();
-                        ctxt.fireEndGeometry();
-                    }
-                    finally
-                    {
-                        context.setState(endState);
-                    }
-                }
-                else
-                {
-                    super.addOption(context, s);
-                }
+	    @Override
+	    protected void addPoint(MultiPointCADToolContext context,
+		    double pointX, double pointY, InputEvent event) {
+		MultiPointCADTool ctxt = context.getOwner();
 
-                return;
-            }
+		MultiPointCADToolState endState = context.getState();
 
-            protected void addPoint(MultiPointCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                MultiPointCADTool ctxt = context.getOwner();
-
-                MultiPointCADToolState endState = context.getState();
-
-                context.clearState();
-                try
-                {
+		context.clearState();
+		try {
 		    boolean deleteButton3 = CADStatus.getCADStatus()
 			    .isDeleteButtonActivated();
-                	if (deleteButton3) {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_del"));
-                	} else {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
-                	}
-                    ctxt.addPoint(pointX, pointY, event);
-                }
-                finally
-                {
-                    context.setState(endState);
-                }
-                return;
-            }
+		    if (deleteButton3) {
+			ctxt.setQuestion(PluginServices.getText(this,
+				"insert_next_point_del"));
+		    } else {
+			ctxt.setQuestion(PluginServices.getText(this,
+				"insert_next_point"));
+		    }
+		    ctxt.addPoint(pointX, pointY, event);
+		} finally {
+		    context.setState(endState);
+		}
+		return;
+	    }
 
-            protected void removePoint(MultiPointCADToolContext context, InputEvent event, int numPoints) {
+	    @Override
+	    protected void removePoint(MultiPointCADToolContext context,
+		    InputEvent event, int numPoints) {
 
-            	MultiPointCADTool tool = context.getOwner();
+		MultiPointCADTool tool = context.getOwner();
 
-            	if (numPoints>1) {
-            		MultiPointCADToolState endState = context.getState();
+		if (numPoints > 1) {
+		    MultiPointCADToolState endState = context.getState();
 
-            		context.clearState();
-            		try {
-            			tool.removePoint(event);
-            		} finally
-                    {
-                        context.setState(endState);
-                    }
+		    context.clearState();
+		    try {
+			tool.removePoint(event);
+		    } finally {
+			context.setState(endState);
+		    }
 
-            	} else if (numPoints == 1) {
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        tool.removePoint(event);
-                    }
-                    finally
-                    {
-                    	context.setState(MultiPoint.FirstPoint);
-                    	(context.getState()).Entry(context);
-                    }
-            	} else {
-            		super.removePoint(context, event, numPoints);
-            	}
+		} else if (numPoints == 1) {
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			tool.removePoint(event);
+		    } finally {
+			context.setState(MultiPoint.FirstPoint);
+			(context.getState()).Entry(context);
+		    }
+		} else {
+		    super.removePoint(context, event, numPoints);
+		}
 
-            }
+	    }
 
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
+	    // -------------------------------------------------------
+	    // Member data.
+	    //
+	}
 
-    //-----------------------------------------------------------
-    // Member data.
-    //
+	// -----------------------------------------------------------
+	// Member data.
+	//
     }
 }

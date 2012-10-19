@@ -35,79 +35,80 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extension to redigitalize lines on edition
- *
+ * 
  * @author Jose Ignacio Lamas [LBD]
  * @author Pablo Sanxiao [Cartolab]
  */
 public class RedigitalizeLineExtension extends Extension {
     private final String iconPath = "images/icons/redigit_linea.png";
-	private final String iconCode = "edition-geometry-redigitalize-line";
-	private final String cadToolCode = "_redigitalize_line";
-	
-	private View view;
+    private final String iconCode = "edition-geometry-redigitalize-line";
+    private final String cadToolCode = "_redigitalize_line";
 
-	private MapControl mapControl;
-	private RedigitalizeLineCADTool line;
+    private View view;
 
-	
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		line = new RedigitalizeLineCADTool();
-		CADExtension.addCADTool("_redigitalize_line", line);
-		registerIcon();
+    private MapControl mapControl;
+    private RedigitalizeLineCADTool line;
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    public void initialize() {
+	line = new RedigitalizeLineCADTool();
+	CADExtension.addCADTool("_redigitalize_line", line);
+	registerIcon();
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals("_redigitalize_line")) {
+	    CADExtension.setCADTool("_redigitalize_line", true);
+	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals("_redigitalize_line")) {
-			CADExtension.setCADTool("_redigitalize_line",true);
-			CADExtension.getEditionManager().setMapControl(mapControl);
-		}
-		CADExtension.getCADToolAdapter().configureMenu();
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    public boolean isEnabled() {
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-			view = (View) PluginServices.getMDIManager().getActiveWindow();
-			mapControl = view.getMapControl();
-			if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
-				return false;
-			FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-
-				try {
-					if (line.isApplicable(lv.getShapeType()))
-						return true;
-				} catch (ReadDriverException e) {
-					NotificationManager.addError(e.getMessage(), e);
-				}
-
-		}
-
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    mapControl = view.getMapControl();
+	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
 		return false;
+	    }
+	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
+		    .getActiveLayerEdited().getLayer();
+
+	    try {
+		if (line.isApplicable(lv.getShapeType())) {
+		    return true;
+		}
+	    } catch (ReadDriverException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    }
+
 	}
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
+	return false;
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
 	}
-	
-	private void registerIcon(){
-		PluginServices.getIconTheme().registerDefault(
-				iconCode,
-				this.getClass().getClassLoader().getResource(iconPath)
-			);
-	}
+	return false;
+    }
+
+    private void registerIcon() {
+	PluginServices.getIconTheme().registerDefault(iconCode,
+		this.getClass().getClassLoader().getResource(iconPath));
+    }
 }

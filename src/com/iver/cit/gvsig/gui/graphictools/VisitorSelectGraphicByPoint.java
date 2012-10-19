@@ -50,47 +50,47 @@ import com.vividsolutions.jts.index.ItemVisitor;
 
 /**
  * @author fjp
- *
+ * 
  * @deprecated Use queryByRect
  */
-public class VisitorSelectGraphicByPoint implements ItemVisitor{
+@Deprecated
+public class VisitorSelectGraphicByPoint implements ItemVisitor {
 
-	private Point2D mapPoint;
-	private double tol;
-	private FBitSet selection = new FBitSet();
-	private int numReg;
-	Rectangle2D recPoint;
-	
-	public VisitorSelectGraphicByPoint(Point2D mapPoint, double tolerance)
-	{
-		this.mapPoint = mapPoint;
-		this.tol = tolerance;
-		this.numReg = 0;
-		
-        recPoint = new Rectangle2D.Double(mapPoint.getX() - (tolerance / 2),
-        		mapPoint.getY() - (tolerance / 2), tolerance, tolerance);
+    private Point2D mapPoint;
+    private double tol;
+    private FBitSet selection = new FBitSet();
+    private int numReg;
+    Rectangle2D recPoint;
 
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.vividsolutions.jts.index.ItemVisitor#visitItem(java.lang.Object)
-	 * TODO: VENDRIA BIEN SABER EL NUMERO DE REGISTRO PARA PODER MARCARLO COMO SELECCIONADO
-	 */
-	public void visitItem(Object item) {
-		FGraphic graf = (FGraphic) item;
-		IGeometry geom = graf.getGeom();
-		if (geom.intersects(recPoint))
-		{
-			selection.set(numReg);
-		}
-		numReg++;
-			
-	}
+    public VisitorSelectGraphicByPoint(Point2D mapPoint, double tolerance) {
+	this.mapPoint = mapPoint;
+	this.tol = tolerance;
+	this.numReg = 0;
 
-	public FBitSet getSelection() {
-		return selection;
+	recPoint = new Rectangle2D.Double(mapPoint.getX() - (tolerance / 2),
+		mapPoint.getY() - (tolerance / 2), tolerance, tolerance);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vividsolutions.jts.index.ItemVisitor#visitItem(java.lang.Object)
+     * TODO: VENDRIA BIEN SABER EL NUMERO DE REGISTRO PARA PODER MARCARLO COMO
+     * SELECCIONADO
+     */
+    public void visitItem(Object item) {
+	FGraphic graf = (FGraphic) item;
+	IGeometry geom = graf.getGeom();
+	if (geom.intersects(recPoint)) {
+	    selection.set(numReg);
 	}
+	numReg++;
+
+    }
+
+    public FBitSet getSelection() {
+	return selection;
+    }
 
 }
-
-

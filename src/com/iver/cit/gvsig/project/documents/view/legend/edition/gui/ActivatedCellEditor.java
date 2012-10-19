@@ -50,62 +50,63 @@ import javax.swing.table.TableCellEditor;
 
 import com.iver.cit.gvsig.fmap.rendering.EditionManagerLegend;
 
-
-
 /**
- * Cell Editor de iconos. Controla los eventos de edición que se realicen
- * sobre la columna de iconos.
- *
+ * Cell Editor de iconos. Controla los eventos de edición que se realicen sobre
+ * la columna de iconos.
+ * 
  * @author Vicente Caballero Navarro
  */
-public class ActivatedCellEditor extends IconOptionCellEditor implements TableCellEditor {
-	public ActivatedCellEditor(EditionManagerLegend el,JTable tab,ImageIcon sel, ImageIcon notSel) {
-		super(el,tab,sel,notSel);
-		addMouseListener(new MouseListener(){
+public class ActivatedCellEditor extends IconOptionCellEditor implements
+	TableCellEditor {
+    public ActivatedCellEditor(EditionManagerLegend el, JTable tab,
+	    ImageIcon sel, ImageIcon notSel) {
+	super(el, tab, sel, notSel);
+	addMouseListener(new MouseListener() {
 
-			public void mouseClicked(MouseEvent e) {
-//				if (e.getClickCount()==2){
-					int index=table.getSelectedRow();
-					if (eml.isActived(index)) {
-						setIcon(getNotSel());
-						eml.setActived(index,false);
+	    public void mouseClicked(MouseEvent e) {
+		// if (e.getClickCount()==2){
+		int index = table.getSelectedRow();
+		if (eml.isActived(index)) {
+		    setIcon(getNotSel());
+		    eml.setActived(index, false);
 
-					}else {
-						eml.setActived(index,true);
-						setIcon(getSel());
-					}
-					stopCellEditing();
-//				}
-				table.repaint();
-			}
-
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			public void mouseExited(MouseEvent e) {
-			}
-
-			public void mousePressed(MouseEvent e) {
-			}
-
-			public void mouseReleased(MouseEvent e) {
-			}
-
-		});
-	}
-
-	//Implement the one method defined by TableCellEditor.
-	public Component getTableCellEditorComponent(JTable table, Object value,
-		boolean isSelected, int row, int column) {
-//		if (table.getSelectedRow()==row)
-//			setSelected(true);
-//		else
-			setSelected(isSelected);
-		if (eml.isActived(row)) {
-			setIcon(getSel());
-		}else {
-			setIcon(getNotSel());
+		} else {
+		    eml.setActived(index, true);
+		    setIcon(getSel());
 		}
-		return this;
+		stopCellEditing();
+		// }
+		table.repaint();
+	    }
+
+	    public void mouseEntered(MouseEvent e) {
+	    }
+
+	    public void mouseExited(MouseEvent e) {
+	    }
+
+	    public void mousePressed(MouseEvent e) {
+	    }
+
+	    public void mouseReleased(MouseEvent e) {
+	    }
+
+	});
+    }
+
+    // Implement the one method defined by TableCellEditor.
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value,
+	    boolean isSelected, int row, int column) {
+	// if (table.getSelectedRow()==row)
+	// setSelected(true);
+	// else
+	setSelected(isSelected);
+	if (eml.isActived(row)) {
+	    setIcon(getSel());
+	} else {
+	    setIcon(getNotSel());
 	}
+	return this;
+    }
 }

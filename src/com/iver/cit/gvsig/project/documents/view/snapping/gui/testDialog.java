@@ -52,55 +52,57 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.iver.cit.gvsig.project.documents.view.snapping.snappers.FinalPointSnapper;
 
 public class testDialog {
-	public static void main(String[] args) {
-		
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		JDialog dlg = new JDialog();
+    public static void main(String[] args) {
 
-		ArrayList list = new ArrayList();
-		for (int i=0; i < 20; i++)
-			list.add(new FinalPointSnapper());
-		SnapConfig panel = new SnapConfig();
-		panel.setSnappers(list);
-		Action act = new AbstractAction(){
-			public void actionPerformed(java.awt.event.ActionEvent arg0) {
-				System.out.println("HOla");
-//				HashPrintRequestAttributeSet att = new HashPrintRequestAttributeSet();
-//				
-//				PrinterJob job = PrinterJob.getPrinterJob();
-//				PageFormat defaulFormat = job.defaultPage();
-//				// PageFormat selectedFormat = job.pageDialog(defaulFormat);
-//				Paper paper = new Paper();
-//				paper.setSize(MediaSize.ISO.A5.getX(MediaSize.INCH),MediaSize.ISO.A5.getY(MediaSize.INCH));
-//				defaulFormat.setPaper(paper);
-//				job.defaultPage(defaulFormat);
-//				if (job.printDialog()) {
-//					// System.out.println(job.)
-//				}				
-			};
-		};
-		JButton btnPrint = new JButton(act);
-		
-		dlg.getContentPane().add(panel);
-		// dlg.getContentPane().add(btnPrint);
-		// dlg.getContentPane().setSize(panel.getSize());
-		dlg.pack();
-		dlg.show(true);
+	try {
+	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	} catch (ClassNotFoundException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (InstantiationException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (IllegalAccessException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (UnsupportedLookAndFeelException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
+
+	JDialog dlg = new JDialog();
+
+	ArrayList list = new ArrayList();
+	for (int i = 0; i < 20; i++) {
+	    list.add(new FinalPointSnapper());
+	}
+	SnapConfig panel = new SnapConfig();
+	panel.setSnappers(list);
+	Action act = new AbstractAction() {
+	    public void actionPerformed(java.awt.event.ActionEvent arg0) {
+		System.out.println("HOla");
+		// HashPrintRequestAttributeSet att = new
+		// HashPrintRequestAttributeSet();
+		//
+		// PrinterJob job = PrinterJob.getPrinterJob();
+		// PageFormat defaulFormat = job.defaultPage();
+		// // PageFormat selectedFormat = job.pageDialog(defaulFormat);
+		// Paper paper = new Paper();
+		// paper.setSize(MediaSize.ISO.A5.getX(MediaSize.INCH),MediaSize.ISO.A5.getY(MediaSize.INCH));
+		// defaulFormat.setPaper(paper);
+		// job.defaultPage(defaulFormat);
+		// if (job.printDialog()) {
+		// // System.out.println(job.)
+		// }
+	    };
+	};
+	JButton btnPrint = new JButton(act);
+
+	dlg.getContentPane().add(panel);
+	// dlg.getContentPane().add(btnPrint);
+	// dlg.getContentPane().setSize(panel.getSize());
+	dlg.pack();
+	dlg.show(true);
+    }
 
 }

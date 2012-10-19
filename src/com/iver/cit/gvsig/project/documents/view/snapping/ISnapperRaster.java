@@ -46,8 +46,7 @@ import com.iver.cit.gvsig.fmap.MapControl;
 
 public interface ISnapperRaster extends ISnapper {
 
-	Point2D getSnapPoint(MapControl mapControl, Point2D point, double mapTolerance, Point2D lastPoint);
+    Point2D getSnapPoint(MapControl mapControl, Point2D point,
+	    double mapTolerance, Point2D lastPoint);
 
 }
-
-

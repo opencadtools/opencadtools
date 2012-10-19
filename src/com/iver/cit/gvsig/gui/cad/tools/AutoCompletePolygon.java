@@ -20,8 +20,8 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class AutoCompletePolygon extends EIELPolylineCADTool {
 
-	@Override
-	 /**
+    @Override
+    /**
      * Método para dibujar la lo necesario para el estado en el que nos
      * encontremos.
      *
@@ -30,80 +30,84 @@ public class AutoCompletePolygon extends EIELPolylineCADTool {
      * @param x parámetro x del punto que se pase para dibujar.
      * @param y parámetro x del punto que se pase para dibujar.
      */
-    public void drawOperation(Graphics g, double x,
-        double y) {
-        IGeometry geom=getGeometry();
-        if (geom.getHandlers(IGeometry.SELECTHANDLER).length ==0 && firstPoint!=null) {
-        	GeneralPathX gpx = new GeneralPathX();
-        	gpx.moveTo(firstPoint.getX(), firstPoint.getY());
-        	gpx.lineTo(x, y);
-        	ShapeFactory.createPolyline2D(gpx).draw((Graphics2D) g,
-        			getCadToolAdapter().getMapControl().getViewPort(),
-        			DefaultCADTool.geometrySelectSymbol);
-        }
-        else if (geom.getHandlers(IGeometry.SELECTHANDLER).length > 1) {
-        	GeneralPathX gpxGeom=new GeneralPathX();
-        	gpxGeom.moveTo(x,y);
-        	gpxGeom.append(geom.getPathIterator(null,FConverter.FLATNESS), true);
+    public void drawOperation(Graphics g, double x, double y) {
+	IGeometry geom = getGeometry();
+	if (geom.getHandlers(IGeometry.SELECTHANDLER).length == 0
+		&& firstPoint != null) {
+	    GeneralPathX gpx = new GeneralPathX();
+	    gpx.moveTo(firstPoint.getX(), firstPoint.getY());
+	    gpx.lineTo(x, y);
+	    ShapeFactory.createPolyline2D(gpx).draw((Graphics2D) g,
+		    getCadToolAdapter().getMapControl().getViewPort(),
+		    DefaultCADTool.geometrySelectSymbol);
+	} else if (geom.getHandlers(IGeometry.SELECTHANDLER).length > 1) {
+	    GeneralPathX gpxGeom = new GeneralPathX();
+	    gpxGeom.moveTo(x, y);
+	    gpxGeom.append(geom.getPathIterator(null, FConverter.FLATNESS),
+		    true);
 
-        	gpxGeom.closePath();
-        	IGeometry newGeom = ShapeFactory.createPolygon2D(gpxGeom);
-        	newGeom.draw((Graphics2D) g,
-        			getCadToolAdapter().getMapControl().getViewPort(),
-        			DefaultCADTool.geometrySelectSymbol);
-        }
+	    gpxGeom.closePath();
+	    IGeometry newGeom = ShapeFactory.createPolygon2D(gpxGeom);
+	    newGeom.draw((Graphics2D) g, getCadToolAdapter().getMapControl()
+		    .getViewPort(), DefaultCADTool.geometrySelectSymbol);
+	}
     }
 
-
-	private IGeometry autoComplete(IGeometry digitizedGeom) {
-		Geometry jtsGeom = digitizedGeom.toJTSGeometry();
-		FLyrVect lyrVect = (FLyrVect) getVLE().getLayer();
-		// Se supone que debe ser rápido, ya que está indexado
-		try {
-			FBitSet selected = lyrVect.queryByShape(digitizedGeom,
-					DefaultStrategy.INTERSECTS);
-			for (int i = selected.nextSetBit(0); i >= 0; i = selected
-					.nextSetBit(i + 1)) {
-				IGeometry aux = lyrVect.getSource().getShape(i);
-				Geometry jtsAux = aux.toJTSGeometry();
-				jtsGeom = jtsGeom.difference(jtsAux);
-			}
-
-		} catch (ReadDriverException e) {
-			NotificationManager.showMessageError(
-					PluginServices.getText(this, "Error_in_Autocomplete_Polygon_Tool_")
-					+ " " + e.getLocalizedMessage(),
-					e);
-		} catch (VisitorException e) {
-			NotificationManager.showMessageError(
-					PluginServices.getText(this, "Error_in_Autocomplete_Polygon_Tool_")
-					+ " " + e.getLocalizedMessage(),
-					e);
-		} catch (com.vividsolutions.jts.geom.TopologyException e) {
-			NotificationManager.showMessageError(
-					PluginServices.getText(this, "Error_in_Autocomplete_Polygon_Tool_")
-					+ " " + e.getLocalizedMessage(),
-					e);
-		} catch (Exception e) {
-			NotificationManager.showMessageError(
-					PluginServices.getText(this, "Error_in_Autocomplete_Polygon_Tool_")
-					+ " " + e.getLocalizedMessage(),
-					e);
-		}
-
-		return FConverter.jts_to_igeometry(jtsGeom);
-	}
-
-	@Override
-	public void addGeometry(IGeometry geometry) {
-		IGeometry newGeom = autoComplete(geometry);
-		super.addGeometry(newGeom);
-	}
-	 public boolean isApplicable(int shapeType) {
-	        switch (shapeType) {
-	        case FShape.POLYGON:
-	            return true;
-	        }
-	        return false;
+    private IGeometry autoComplete(IGeometry digitizedGeom) {
+	Geometry jtsGeom = digitizedGeom.toJTSGeometry();
+	FLyrVect lyrVect = (FLyrVect) getVLE().getLayer();
+	// Se supone que debe ser rápido, ya que está indexado
+	try {
+	    FBitSet selected = lyrVect.queryByShape(digitizedGeom,
+		    DefaultStrategy.INTERSECTS);
+	    for (int i = selected.nextSetBit(0); i >= 0; i = selected
+		    .nextSetBit(i + 1)) {
+		IGeometry aux = lyrVect.getSource().getShape(i);
+		Geometry jtsAux = aux.toJTSGeometry();
+		jtsGeom = jtsGeom.difference(jtsAux);
 	    }
+
+	} catch (ReadDriverException e) {
+	    NotificationManager.showMessageError(
+		    PluginServices.getText(this,
+			    "Error_in_Autocomplete_Polygon_Tool_")
+			    + " "
+			    + e.getLocalizedMessage(), e);
+	} catch (VisitorException e) {
+	    NotificationManager.showMessageError(
+		    PluginServices.getText(this,
+			    "Error_in_Autocomplete_Polygon_Tool_")
+			    + " "
+			    + e.getLocalizedMessage(), e);
+	} catch (com.vividsolutions.jts.geom.TopologyException e) {
+	    NotificationManager.showMessageError(
+		    PluginServices.getText(this,
+			    "Error_in_Autocomplete_Polygon_Tool_")
+			    + " "
+			    + e.getLocalizedMessage(), e);
+	} catch (Exception e) {
+	    NotificationManager.showMessageError(
+		    PluginServices.getText(this,
+			    "Error_in_Autocomplete_Polygon_Tool_")
+			    + " "
+			    + e.getLocalizedMessage(), e);
+	}
+
+	return FConverter.jts_to_igeometry(jtsGeom);
+    }
+
+    @Override
+    public void addGeometry(IGeometry geometry) {
+	IGeometry newGeom = autoComplete(geometry);
+	super.addGeometry(newGeom);
+    }
+
+    @Override
+    public boolean isApplicable(int shapeType) {
+	switch (shapeType) {
+	case FShape.POLYGON:
+	    return true;
+	}
+	return false;
+    }
 }

@@ -54,119 +54,124 @@ import javax.swing.table.TableCellEditor;
 
 import com.iver.cit.gvsig.fmap.rendering.EditionManagerLegend;
 
-
-
 /**
- * Cell Editor de iconos. Controla los eventos de edición que se realicen
- * sobre la columna de iconos.
- *
+ * Cell Editor de iconos. Controla los eventos de edición que se realicen sobre
+ * la columna de iconos.
+ * 
  * @author Vicente Caballero Navarro
  */
-public class IconOptionCellEditor extends PreviewIcon implements TableCellEditor {
-	private ArrayList listeners = new ArrayList();
-	private ImageIcon sel;
-	private ImageIcon notSel;
-	protected EditionManagerLegend eml;
-	protected JTable table;
+public class IconOptionCellEditor extends PreviewIcon implements
+	TableCellEditor {
+    private ArrayList listeners = new ArrayList();
+    private ImageIcon sel;
+    private ImageIcon notSel;
+    protected EditionManagerLegend eml;
+    protected JTable table;
 
-	public IconOptionCellEditor(EditionManagerLegend el,JTable tab,ImageIcon sel, ImageIcon notSel) {
-		this.eml=el;
-		this.table=tab;
-		this.sel=sel;
-		this.notSel=notSel;
-			addKeyListener(new KeyAdapter() {
-				public void keyReleased(KeyEvent e) {
-					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-						stopCellEditing();
-					} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-						cancelCellEditing();
-					}
-				}
-			});
-	}
-
-	//Implement the one CellEditor method that AbstractCellEditor doesn't.
-	public Object getCellEditorValue() {
-		return getIcon();
-	}
-
-	//Implement the one method defined by TableCellEditor.
-	public Component getTableCellEditorComponent(JTable table, Object value,
-		boolean isSelected, int row, int column) {
-		return this;
-	}
-
-	/**
-	 * DOCUMENT ME!
-	 */
-	public void cancelCellEditing() {
-		for (int i = 0; i < listeners.size(); i++) {
-			CellEditorListener l = (CellEditorListener) listeners.get(i);
-			ChangeEvent evt = new ChangeEvent(this);
-			l.editingCanceled(evt);
+    public IconOptionCellEditor(EditionManagerLegend el, JTable tab,
+	    ImageIcon sel, ImageIcon notSel) {
+	this.eml = el;
+	this.table = tab;
+	this.sel = sel;
+	this.notSel = notSel;
+	addKeyListener(new KeyAdapter() {
+	    @Override
+	    public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		    stopCellEditing();
+		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		    cancelCellEditing();
 		}
-	}
+	    }
+	});
+    }
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return DOCUMENT ME!
-	 */
-	public boolean stopCellEditing() {
-//		for (int i = 0; i < listeners.size(); i++) {
-//			CellEditorListener l = (CellEditorListener) listeners.get(i);
-//			ChangeEvent evt = new ChangeEvent(this);
-//			l.editingStopped(evt);
-//		}
+    // Implement the one CellEditor method that AbstractCellEditor doesn't.
+    public Object getCellEditorValue() {
+	return getIcon();
+    }
 
-		return true;
-	}
+    // Implement the one method defined by TableCellEditor.
+    public Component getTableCellEditorComponent(JTable table, Object value,
+	    boolean isSelected, int row, int column) {
+	return this;
+    }
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param anEvent DOCUMENT ME!
-	 *
-	 * @return DOCUMENT ME!
-	 */
-	public boolean isCellEditable(EventObject anEvent) {
-		return true;
+    /**
+     * DOCUMENT ME!
+     */
+    public void cancelCellEditing() {
+	for (int i = 0; i < listeners.size(); i++) {
+	    CellEditorListener l = (CellEditorListener) listeners.get(i);
+	    ChangeEvent evt = new ChangeEvent(this);
+	    l.editingCanceled(evt);
 	}
+    }
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param anEvent DOCUMENT ME!
-	 *
-	 * @return DOCUMENT ME!
-	 */
-	public boolean shouldSelectCell(EventObject anEvent) {
-		return true;
-	}
+    /**
+     * DOCUMENT ME!
+     * 
+     * @return DOCUMENT ME!
+     */
+    public boolean stopCellEditing() {
+	// for (int i = 0; i < listeners.size(); i++) {
+	// CellEditorListener l = (CellEditorListener) listeners.get(i);
+	// ChangeEvent evt = new ChangeEvent(this);
+	// l.editingStopped(evt);
+	// }
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param l DOCUMENT ME!
-	 */
-	public void addCellEditorListener(CellEditorListener l) {
-		listeners.add(l);
-	}
+	return true;
+    }
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param l DOCUMENT ME!
-	 */
-	public void removeCellEditorListener(CellEditorListener l) {
-		listeners.remove(l);
-	}
+    /**
+     * DOCUMENT ME!
+     * 
+     * @param anEvent
+     *            DOCUMENT ME!
+     * 
+     * @return DOCUMENT ME!
+     */
+    public boolean isCellEditable(EventObject anEvent) {
+	return true;
+    }
 
-	public ImageIcon getSel() {
-		return sel;
-	}
+    /**
+     * DOCUMENT ME!
+     * 
+     * @param anEvent
+     *            DOCUMENT ME!
+     * 
+     * @return DOCUMENT ME!
+     */
+    public boolean shouldSelectCell(EventObject anEvent) {
+	return true;
+    }
 
-	public ImageIcon getNotSel() {
-		return notSel;
-	}
+    /**
+     * DOCUMENT ME!
+     * 
+     * @param l
+     *            DOCUMENT ME!
+     */
+    public void addCellEditorListener(CellEditorListener l) {
+	listeners.add(l);
+    }
+
+    /**
+     * DOCUMENT ME!
+     * 
+     * @param l
+     *            DOCUMENT ME!
+     */
+    public void removeCellEditorListener(CellEditorListener l) {
+	listeners.remove(l);
+    }
+
+    public ImageIcon getSel() {
+	return sel;
+    }
+
+    public ImageIcon getNotSel() {
+	return notSel;
+    }
 }

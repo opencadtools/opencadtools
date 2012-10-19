@@ -14,7 +14,7 @@ import com.iver.utiles.extensionPoints.ExtensionPointsSingleton;
 
 /**
  * DOCUMENT ME!
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class Snapping {
@@ -22,16 +22,26 @@ public class Snapping {
      * DOCUMENT ME!
      */
     public static void register() {
-    	ExtensionPoints extensionPoints = ExtensionPointsSingleton.getInstance();
-    	extensionPoints.add("Snapper","FinalPointSnapper", FinalPointSnapper.class);
-    	extensionPoints.add("Snapper","NearestPointSnapper", NearestPointSnapper.class);
-    	extensionPoints.add("Snapper","PixelSnapper", PixelSnapper.class);
-    	extensionPoints.add("Snapper","CentralPointSnapper", CentralPointSnapper.class);
-    	extensionPoints.add("Snapper","QuadrantPointSnapper", QuadrantPointSnapper.class);
-//    	extensionPoints.add("Snapper","InsertPointSnapper", InsertPointSnapper.class);
-    	extensionPoints.add("Snapper","IntersectionPointSnapper", IntersectionPointSnapper.class);
-    	extensionPoints.add("Snapper","MediumPointSnapper", MediumPointSnapper.class);
-    	extensionPoints.add("Snapper","PerpendicularPointSnapper", PerpendicularPointSnapper.class);
-    	extensionPoints.add("Snapper","TangentPointSnapper", TangentPointSnapper.class);
+	ExtensionPoints extensionPoints = ExtensionPointsSingleton
+		.getInstance();
+	extensionPoints.add("Snapper", "FinalPointSnapper",
+		FinalPointSnapper.class);
+	extensionPoints.add("Snapper", "NearestPointSnapper",
+		NearestPointSnapper.class);
+	extensionPoints.add("Snapper", "PixelSnapper", PixelSnapper.class);
+	extensionPoints.add("Snapper", "CentralPointSnapper",
+		CentralPointSnapper.class);
+	extensionPoints.add("Snapper", "QuadrantPointSnapper",
+		QuadrantPointSnapper.class);
+	// extensionPoints.add("Snapper","InsertPointSnapper",
+	// InsertPointSnapper.class);
+	extensionPoints.add("Snapper", "IntersectionPointSnapper",
+		IntersectionPointSnapper.class);
+	extensionPoints.add("Snapper", "MediumPointSnapper",
+		MediumPointSnapper.class);
+	extensionPoints.add("Snapper", "PerpendicularPointSnapper",
+		PerpendicularPointSnapper.class);
+	extensionPoints.add("Snapper", "TangentPointSnapper",
+		TangentPointSnapper.class);
     }
 }

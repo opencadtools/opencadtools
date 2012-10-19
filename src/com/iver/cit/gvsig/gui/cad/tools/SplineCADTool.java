@@ -61,17 +61,17 @@ import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SplineCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SplineCADToolContext.SplineCADToolState;
 
-
 /**
  * CADTool Spline
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class SplineCADTool extends DefaultCADTool {
-	private static Logger logger = Logger.getLogger(SplineCADTool.class.getName());
+    private static Logger logger = Logger.getLogger(SplineCADTool.class
+	    .getName());
     protected SplineCADToolContext _fsm;
     protected ArrayList list = new ArrayList();
-	protected boolean close=false;
+    protected boolean close = false;
 
     /**
      * Crea un nuevo SplineCADTool.
@@ -84,235 +84,285 @@ public class SplineCADTool extends DefaultCADTool {
      * Método de incio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
      */
+    @Override
     public void init() {
-        _fsm = new SplineCADToolContext(this);
+	_fsm = new SplineCADToolContext(this);
     }
 
     public void endGeometry() {
-        try {
-			if (getVLE().getVEA().getShapeType()==FShape.POLYGON && !close){
-				closeGeometry();
-			}
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
+	try {
+	    if (getVLE().getVEA().getShapeType() == FShape.POLYGON && !close) {
+		closeGeometry();
+	    }
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	}
 
-        // No queremos guardar FGeometryCollections:
-        IGeometry newGeom = ShapeFactory.createSpline2D((Point2D[])list.toArray(new Point2D[0]));
-        addGeometry(newGeom);
-        _fsm = new SplineCADToolContext(this);
-        list.clear();
-        clearTemporalCache();
-        close=false;
+	// No queremos guardar FGeometryCollections:
+	IGeometry newGeom = ShapeFactory.createSpline2D((Point2D[]) list
+		.toArray(new Point2D[0]));
+	addGeometry(newGeom);
+	_fsm = new SplineCADToolContext(this);
+	list.clear();
+	clearTemporalCache();
+	close = false;
     }
-    public void closeGeometry(){
-    	close=true;
-        Point2D endPoint=new Point2D.Double(((Point2D)list.get(0)).getX(),((Point2D)list.get(0)).getY());
-        list.add(endPoint);
+
+    public void closeGeometry() {
+	close = true;
+	Point2D endPoint = new Point2D.Double(((Point2D) list.get(0)).getX(),
+		((Point2D) list.get(0)).getY());
+	list.add(endPoint);
     }
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double, double)
      */
     public void transition(double x, double y, InputEvent event) {
-        _fsm.addPoint(x, y, event);
+	_fsm.addPoint(x, y, event);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double)
      */
     public void transition(double d) {
-        _fsm.addValue(d);
+	_fsm.addValue(d);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, java.lang.String)
      */
     public void transition(String s) throws CommandException {
-        if (!super.changeCommand(s)){
-            _fsm.addOption(s);
-        }
+	if (!super.changeCommand(s)) {
+	    _fsm.addOption(s);
+	}
     }
 
     /**
      * Equivale al transition del prototipo pero sin pasarle como parámetro el
      * editableFeatureSource que ya estará creado.
-     *
-     * @param sel Bitset con las geometrías que estén seleccionadas.
-     * @param x parámetro x del punto que se pase en esta transición.
-     * @param y parámetro y del punto que se pase en esta transición.
+     * 
+     * @param sel
+     *            Bitset con las geometrías que estén seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase en esta transición.
+     * @param y
+     *            parámetro y del punto que se pase en esta transición.
      */
-    public void addPoint(double x, double y,InputEvent event) {
-        SplineCADToolState actualState = (SplineCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
-        if (status.equals("Spline.NextPoint") || status.equals("Spline.FirstPoint")) {
-           list.add(new Point2D.Double(x,y));
-           IGeometry spline=ShapeFactory.createSpline2D((Point2D[])list.toArray(new Point2D[0]));
-           addTemporalCache(spline);
-        }
+    public void addPoint(double x, double y, InputEvent event) {
+	SplineCADToolState actualState = (SplineCADToolState) _fsm
+		.getPreviousState();
+	String status = actualState.getName();
+	if (status.equals("Spline.NextPoint")
+		|| status.equals("Spline.FirstPoint")) {
+	    list.add(new Point2D.Double(x, y));
+	    IGeometry spline = ShapeFactory.createSpline2D((Point2D[]) list
+		    .toArray(new Point2D[0]));
+	    addTemporalCache(spline);
+	}
     }
 
     /**
      * Método para dibujar lo necesario para el estado en el que nos
      * encontremos.
-     *
-     * @param g Graphics sobre el que dibujar.
-     * @param selectedGeometries BitSet con las geometrías seleccionadas.
-     * @param x parámetro x del punto que se pase para dibujar.
-     * @param y parámetro x del punto que se pase para dibujar.
+     * 
+     * @param g
+     *            Graphics sobre el que dibujar.
+     * @param selectedGeometries
+     *            BitSet con las geometrías seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase para dibujar.
+     * @param y
+     *            parámetro x del punto que se pase para dibujar.
      */
-    public void drawOperation(Graphics g, double x,
-        double y) {
-        SplineCADToolState actualState = _fsm.getState();
-        String status = actualState.getName();
-        if (status.equals("Spline.NextPoint") || status.equals("Spline.FirstPoint")) {
-        	ArrayList points=new ArrayList();
-        	points.addAll(list);
-        	points.add(new Point2D.Double(x,y));
-        	IGeometry spline=ShapeFactory.createSpline2D((Point2D[])points.toArray(new Point2D[0]).clone());
-        	ViewPort vp=getCadToolAdapter().getMapControl().getViewPort();
-        	spline.draw((Graphics2D)g,vp,DefaultCADTool.selectionSymbol);
-        }
+    public void drawOperation(Graphics g, double x, double y) {
+	SplineCADToolState actualState = _fsm.getState();
+	String status = actualState.getName();
+	if (status.equals("Spline.NextPoint")
+		|| status.equals("Spline.FirstPoint")) {
+	    ArrayList points = new ArrayList();
+	    points.addAll(list);
+	    points.add(new Point2D.Double(x, y));
+	    IGeometry spline = ShapeFactory.createSpline2D((Point2D[]) points
+		    .toArray(new Point2D[0]).clone());
+	    ViewPort vp = getCadToolAdapter().getMapControl().getViewPort();
+	    spline.draw((Graphics2D) g, vp, DefaultCADTool.selectionSymbol);
+	}
     }
 
     /**
      * Dibuja el arco sobre el graphics.
-     *
-     * @param point Puntero del ratón.
-     * @param lastp Último punto de la polilinea.
-     * @param antp Punto antepenultimo.
-     * @param g Graphics sobre el que se dibuja.
+     * 
+     * @param point
+     *            Puntero del ratón.
+     * @param lastp
+     *            Último punto de la polilinea.
+     * @param antp
+     *            Punto antepenultimo.
+     * @param g
+     *            Graphics sobre el que se dibuja.
      */
-//    private void drawSpline(ArrayList ps, double x, double y, Graphics g) {
-//    	int num=ps.size()+1;
-//    	ArrayList points=new ArrayList();
-//    	points.addAll(list);
-//    	points.add(new Point2D.Double(x,y));
-//    	double[] px=new double[num];
-//    	double[] py=new double[num];
-//    	for (int i=0;i<num;i++) {
-//    		Point2D p=(Point2D)points.get(i);
-//    		px[i]=p.getX();
-//    		py[i]=p.getY();
-//
-//    	}
-//    	Spline splineX = new Spline(px);
-//        Spline splineY = new Spline(py);
-//        double x0 = 0;
-//        double y0 = 0;
-//        ViewPort vp=getCadToolAdapter().getMapControl().getViewPort();
-//        for (int i = 0; i < px.length - 1; i++) {
-//            x0 = splineX.fn(i, 0);
-//            y0 = splineY.fn(i, 0);
-//            Point2D p0=vp.fromMapPoint(x0,y0);
-//            g.fillRect((int)p0.getX() - 4, (int)p0.getY() - 4, 8, 8);
-//            for (int t = 1; t < 31; t++) {
-//                double x1 = splineX.fn(i, ((double) t) / 30.0);
-//                double y1 = splineY.fn(i, ((double) t) / 30.0);
-//                Point2D p1=vp.fromMapPoint(x1,y1);
-//                g.drawLine((int)p0.getX(), (int)p0.getY(), (int)p1.getX(), (int)p1.getY());
-//                p0=p1;
-//                //x0 = x1;
-//                //y0 = y1;
-//            }
-//        }
-//    }
+    // private void drawSpline(ArrayList ps, double x, double y, Graphics g) {
+    // int num=ps.size()+1;
+    // ArrayList points=new ArrayList();
+    // points.addAll(list);
+    // points.add(new Point2D.Double(x,y));
+    // double[] px=new double[num];
+    // double[] py=new double[num];
+    // for (int i=0;i<num;i++) {
+    // Point2D p=(Point2D)points.get(i);
+    // px[i]=p.getX();
+    // py[i]=p.getY();
+    //
+    // }
+    // Spline splineX = new Spline(px);
+    // Spline splineY = new Spline(py);
+    // double x0 = 0;
+    // double y0 = 0;
+    // ViewPort vp=getCadToolAdapter().getMapControl().getViewPort();
+    // for (int i = 0; i < px.length - 1; i++) {
+    // x0 = splineX.fn(i, 0);
+    // y0 = splineY.fn(i, 0);
+    // Point2D p0=vp.fromMapPoint(x0,y0);
+    // g.fillRect((int)p0.getX() - 4, (int)p0.getY() - 4, 8, 8);
+    // for (int t = 1; t < 31; t++) {
+    // double x1 = splineX.fn(i, ((double) t) / 30.0);
+    // double y1 = splineY.fn(i, ((double) t) / 30.0);
+    // Point2D p1=vp.fromMapPoint(x1,y1);
+    // g.drawLine((int)p0.getX(), (int)p0.getY(), (int)p1.getX(),
+    // (int)p1.getY());
+    // p0=p1;
+    // //x0 = x1;
+    // //y0 = y1;
+    // }
+    // }
+    // }
 
     /**
      * Add a diferent option.
-     *
-     * @param sel DOCUMENT ME!
-     * @param s Diferent option.
+     * 
+     * @param sel
+     *            DOCUMENT ME!
+     * @param s
+     *            Diferent option.
      */
     public void addOption(String s) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
     public void addValue(double d) {
     }
 
-    public void cancel(){
-        list.clear();
-        clearTemporalCache();
-        close=false;
+    public void cancel() {
+	list.clear();
+	clearTemporalCache();
+	close = false;
     }
 
+    @Override
     public void end() {
-        /* CADExtension.setCADTool("Spline");
-        PluginServices.getMainFrame().setSelectedTool("Spline"); */
+	/*
+	 * CADExtension.setCADTool("Spline");
+	 * PluginServices.getMainFrame().setSelectedTool("Spline");
+	 */
     }
 
     public String getName() {
-        return PluginServices.getText(this,"Spline_");
+	return PluginServices.getText(this, "Spline_");
     }
 
+    @Override
     public String toString() {
-        return "_Spline";
+	return "_Spline";
     }
+
+    @Override
     public boolean isApplicable(int shapeType) {
-        switch (shapeType) {
-        case FShape.POINT:
-        case FShape.MULTIPOINT:
-            return false;
-        }
-        return true;
+	switch (shapeType) {
+	case FShape.POINT:
+	case FShape.MULTIPOINT:
+	    return false;
+	}
+	return true;
     }
+
+    @Override
     public void endTransition(double x, double y, MouseEvent event) {
-		_fsm.endPoint(x, y, event);
-	}
-//    private class Spline {
-//    	private double y[];
-//    	private double y2[];
-//
-//    	/**
-//    	 * The constructor calculates the second derivatives of the interpolating function
-//    	 * at the tabulated points xi, with xi = (i, y[i]).
-//    	 * Based on numerical recipes in C, http://www.library.cornell.edu/nr/bookcpdf/c3-3.pdf .
-//    	 * @param y Array of y coordinates for cubic-spline interpolation.
-//    	 */
-//    	public Spline(double y[]) {
-//    		this.y = y;
-//    		int n = y.length;
-//    		y2 = new double[n];
-//    		double u[] = new double[n];
-//    		for (int i = 1; i < n - 1; i++) {
-//    			y2[i] = -1.0 / (4.0 + y2[i - 1]);
-//    			u[i] = (6.0 * (y[i + 1] - 2.0 * y[i] + y[i - 1]) - u[i - 1]) / (4.0 + y2[i - 1]);
-//    		}
-//    		for (int i = n - 2; i >= 0; i--) {
-//    			y2[i] = y2[i] * y2[i + 1] + u[i];
-//    		}
-//    	}
-//
-//    	/**
-//    	 * Returns a cubic-spline interpolated value y for the point between
-//    	 * point (n, y[n]) and (n+1, y[n+1), with t ranging from 0 for (n, y[n])
-//    	 * to 1 for (n+1, y[n+1]).
-//    	 * @param n The start point.
-//    	 * @param t The distance to the next point (0..1).
-//    	 * @return A cubic-spline interpolated value.
-//    	 */
-//    	public double fn(int n, double t) {
-//    		return t * y[n + 1] - ((t - 1.0) * t * ((t - 2.0) * y2[n] - (t + 1.0) * y2[n + 1])) / 6.0 + y[n] - t * y[n];
-//    	}
-//
-//    }
+	_fsm.endPoint(x, y, event);
+    }
 
-	public void drawOperation(Graphics g, ArrayList pointList) {
-		// TODO Auto-generated method stub
-		
-	}
+    // private class Spline {
+    // private double y[];
+    // private double y2[];
+    //
+    // /**
+    // * The constructor calculates the second derivatives of the interpolating
+    // function
+    // * at the tabulated points xi, with xi = (i, y[i]).
+    // * Based on numerical recipes in C,
+    // http://www.library.cornell.edu/nr/bookcpdf/c3-3.pdf .
+    // * @param y Array of y coordinates for cubic-spline interpolation.
+    // */
+    // public Spline(double y[]) {
+    // this.y = y;
+    // int n = y.length;
+    // y2 = new double[n];
+    // double u[] = new double[n];
+    // for (int i = 1; i < n - 1; i++) {
+    // y2[i] = -1.0 / (4.0 + y2[i - 1]);
+    // u[i] = (6.0 * (y[i + 1] - 2.0 * y[i] + y[i - 1]) - u[i - 1]) / (4.0 +
+    // y2[i - 1]);
+    // }
+    // for (int i = n - 2; i >= 0; i--) {
+    // y2[i] = y2[i] * y2[i + 1] + u[i];
+    // }
+    // }
+    //
+    // /**
+    // * Returns a cubic-spline interpolated value y for the point between
+    // * point (n, y[n]) and (n+1, y[n+1), with t ranging from 0 for (n, y[n])
+    // * to 1 for (n+1, y[n+1]).
+    // * @param n The start point.
+    // * @param t The distance to the next point (0..1).
+    // * @return A cubic-spline interpolated value.
+    // */
+    // public double fn(int n, double t) {
+    // return t * y[n + 1] - ((t - 1.0) * t * ((t - 2.0) * y2[n] - (t + 1.0) *
+    // y2[n + 1])) / 6.0 + y[n] - t * y[n];
+    // }
+    //
+    // }
 
-	public boolean isMultiTransition() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public void drawOperation(Graphics g, ArrayList pointList) {
+	// TODO Auto-generated method stub
 
-	public void transition(InputEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
+    @Override
+    public boolean isMultiTransition() {
+	// TODO Auto-generated method stub
+	return false;
+    }
+
+    public void transition(InputEvent event) {
+	// TODO Auto-generated method stub
+
+    }
 
 }

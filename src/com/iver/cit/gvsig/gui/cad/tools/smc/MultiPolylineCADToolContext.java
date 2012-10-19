@@ -1,7 +1,5 @@
-
 //
 // Vicente Caballero Navarro
-
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
@@ -13,627 +11,557 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPolylineCADTool;
 
-public final class MultiPolylineCADToolContext
-    extends statemap.FSMContext
-{
-//---------------------------------------------------------------
-// Member methods.
-//
+public final class MultiPolylineCADToolContext extends statemap.FSMContext {
+    // ---------------------------------------------------------------
+    // Member methods.
+    //
 
-    public MultiPolylineCADToolContext(MultiPolylineCADTool owner)
-    {
-        super();
+    public MultiPolylineCADToolContext(MultiPolylineCADTool owner) {
+	super();
 
-        _owner = owner;
-        switch (_owner.getPointsCount()) {
-        case 0 :
-        	setState(MultiLinea.FirstPoint);
-        	MultiLinea.FirstPoint.Entry(this);
-        	break;
-        case 1 :
-        	setState(MultiLinea.SecondPoint);
-        	MultiLinea.SecondPoint.Entry(this);
-        	break;
-        default :
-        	setState(MultiLinea.NextPoint);
-    		MultiLinea.NextPoint.Entry(this);
-    		break;
-        }
-
+	_owner = owner;
+	switch (_owner.getPointsCount()) {
+	case 0:
+	    setState(MultiLinea.FirstPoint);
+	    MultiLinea.FirstPoint.Entry(this);
+	    break;
+	case 1:
+	    setState(MultiLinea.SecondPoint);
+	    MultiLinea.SecondPoint.Entry(this);
+	    break;
+	default:
+	    setState(MultiLinea.NextPoint);
+	    MultiLinea.NextPoint.Entry(this);
+	    break;
+	}
 
     }
 
-    public void addOption(String s)
-    {
-        _transition = "addOption";
-        getState().addOption(this, s);
-        _transition = "";
-        return;
+    public void addOption(String s) {
+	_transition = "addOption";
+	getState().addOption(this, s);
+	_transition = "";
+	return;
     }
 
-    public void addPoint(double pointX, double pointY, InputEvent event)
-    {
-        _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY, event);
-        _transition = "";
-        return;
+    public void addPoint(double pointX, double pointY, InputEvent event) {
+	_transition = "addPoint";
+	getState().addPoint(this, pointX, pointY, event);
+	_transition = "";
+	return;
     }
 
-    public void addValue(double d)
-    {
-        _transition = "addValue";
-        getState().addValue(this, d);
-        _transition = "";
-        return;
+    public void addValue(double d) {
+	_transition = "addValue";
+	getState().addValue(this, d);
+	_transition = "";
+	return;
     }
 
-    public void removePoint(InputEvent event, int numPoints)
-    {
-        _transition = "removePoint";
-        getState().removePoint(this, event, numPoints);
-        _transition = "";
-        return;
+    public void removePoint(InputEvent event, int numPoints) {
+	_transition = "removePoint";
+	getState().removePoint(this, event, numPoints);
+	_transition = "";
+	return;
     }
 
     public MultiLineaCADToolState getState()
-        throws statemap.StateUndefinedException
-    {
-        if (_state == null)
-        {
-            throw(
-                new statemap.StateUndefinedException());
-        }
+	    throws statemap.StateUndefinedException {
+	if (_state == null) {
+	    throw (new statemap.StateUndefinedException());
+	}
 
-        return ((MultiLineaCADToolState) _state);
+	return ((MultiLineaCADToolState) _state);
     }
 
-    protected MultiPolylineCADTool getOwner()
-    {
-        return (_owner);
+    protected MultiPolylineCADTool getOwner() {
+	return (_owner);
     }
 
-//---------------------------------------------------------------
-// Member data.
-//
+    // ---------------------------------------------------------------
+    // Member data.
+    //
 
     transient private MultiPolylineCADTool _owner;
 
-//---------------------------------------------------------------
-// Inner classes.
-//
-
-    public static abstract class MultiLineaCADToolState
-        extends statemap.State
-    {
-    //-----------------------------------------------------------
-    // Member methods.
+    // ---------------------------------------------------------------
+    // Inner classes.
     //
 
-        protected MultiLineaCADToolState(String name, int id)
-        {
-            super (name, id);
-        }
+    public static abstract class MultiLineaCADToolState extends statemap.State {
+	// -----------------------------------------------------------
+	// Member methods.
+	//
 
-        protected void Entry(MultiPolylineCADToolContext context) {
-        	context.getOwner().setDescription(getDescription());
-            }
-        protected void Exit(MultiPolylineCADToolContext context) {}
-
-        protected abstract String[] getDescription();
-
-        protected void addOption(MultiPolylineCADToolContext context, String s)
-        {
-            Default(context);
-        }
-
-        protected void addPoint(MultiPolylineCADToolContext context, double pointX, double pointY, InputEvent event)
-        {
-            Default(context);
-        }
-
-        protected void addValue(MultiPolylineCADToolContext context, double d)
-        {
-            Default(context);
-        }
-
-        protected void removePoint(MultiPolylineCADToolContext context, InputEvent event, int numPoints)
-        {
-            Default(context);
-        }
-
-        protected void Default(MultiPolylineCADToolContext context)
-        {
-            throw (
-                new statemap.TransitionUndefinedException(
-                    "State: " +
-                    context.getState().getName() +
-                    ", Transition: " +
-                    context.getTransition()));
-        }
-
-    //-----------------------------------------------------------
-    // Member data.
-    //
-    }
-
-    /* package */ static abstract class MultiLinea
-    {
-    //-----------------------------------------------------------
-    // Member methods.
-    //
-
-    //-----------------------------------------------------------
-    // Member data.
-    //
-
-        //-------------------------------------------------------
-        // Statics.
-        //
-        /* package */ static MultiLinea_Default.MultiLinea_FirstPoint FirstPoint;
-        /* package */ static MultiLinea_Default.MultiLinea_SecondPoint SecondPoint;
-        /* package */ static MultiLinea_Default.MultiLinea_NextPoint NextPoint;
-        private static MultiLinea_Default Default;
-
-        static
-        {
-            FirstPoint = new MultiLinea_Default.MultiLinea_FirstPoint("MultiLinea.FirstPoint", 0);
-            SecondPoint = new MultiLinea_Default.MultiLinea_SecondPoint("MultiLinea.SecondPoint", 1);
-            NextPoint = new MultiLinea_Default.MultiLinea_NextPoint("MultiLinea.NextPoint", 2);
-            Default = new MultiLinea_Default("MultiLinea.Default", -1);
-        }
-
-    }
-
-    protected static class MultiLinea_Default
-        extends MultiLineaCADToolState
-    {
-    //-----------------------------------------------------------
-    // Member methods.
-    //
-
-        protected MultiLinea_Default(String name, int id)
-        {
-            super (name, id);
-        }
+	protected MultiLineaCADToolState(String name, int id) {
+	    super(name, id);
+	}
 
 	protected void Entry(MultiPolylineCADToolContext context) {
-        	context.getOwner().setDescription(getDescription());
-        }
+	    context.getOwner().setDescription(getDescription());
+	}
 
-        protected String[] getDescription() {
-        	return new String[]{"cancelar"};
-        }
+	protected void Exit(MultiPolylineCADToolContext context) {
+	}
 
-        protected void addOption(MultiPolylineCADToolContext context, String s)
-        {
-            MultiPolylineCADTool ctxt = context.getOwner();
+	protected abstract String[] getDescription();
 
-            if (s.equals("espacio")|| s.equals(PluginServices.getText(this, "terminate")))
-            {
-                MultiLineaCADToolState endState = context.getState();
+	protected void addOption(MultiPolylineCADToolContext context, String s) {
+	    Default(context);
+	}
 
-                context.clearState();
-                try
-                {
-                    ctxt.throwInvalidGeometryException(PluginServices.getText(this,"two_points_at_least"));
-                }
-                finally
-                {
-                    context.setState(endState);
-                }
-            }
-            else if (s.equals("C")||s.equals("c")||s.equals(PluginServices.getText(this,"cancel")))
-            {
-                boolean loopbackFlag =
-                    context.getState().getName().equals(
-                        MultiLinea.FirstPoint.getName());
+	protected void addPoint(MultiPolylineCADToolContext context,
+		double pointX, double pointY, InputEvent event) {
+	    Default(context);
+	}
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Exit(context);
-                }
+	protected void addValue(MultiPolylineCADToolContext context, double d) {
+	    Default(context);
+	}
 
-                context.clearState();
-                try
-                {
-                    ctxt.cancel();
-                }
-                finally
-                {
-                    context.setState(MultiLinea.FirstPoint);
+	protected void removePoint(MultiPolylineCADToolContext context,
+		InputEvent event, int numPoints) {
+	    Default(context);
+	}
 
-                    if (loopbackFlag == false)
-                    {
-                        (context.getState()).Entry(context);
-                    }
+	protected void Default(MultiPolylineCADToolContext context) {
+	    throw (new statemap.TransitionUndefinedException("State: "
+		    + context.getState().getName() + ", Transition: "
+		    + context.getTransition()));
+	}
 
-                }
-            }
-            else
-            {
-                MultiLineaCADToolState endState = context.getState();
+	// -----------------------------------------------------------
+	// Member data.
+	//
+    }
 
-                context.clearState();
-                try
-                {
-                    ctxt.throwOptionException(PluginServices.getText(this,"incorrect_option"), s);
-                }
-                finally
-                {
-                    context.setState(endState);
-                }
-            }
+    /* package */static abstract class MultiLinea {
+	// -----------------------------------------------------------
+	// Member methods.
+	//
 
-            return;
-        }
+	// -----------------------------------------------------------
+	// Member data.
+	//
 
-        protected void addValue(MultiPolylineCADToolContext context, double d)
-        {
-            MultiPolylineCADTool ctxt = context.getOwner();
+	// -------------------------------------------------------
+	// Statics.
+	//
+	/* package */static MultiLinea_Default.MultiLinea_FirstPoint FirstPoint;
+	/* package */static MultiLinea_Default.MultiLinea_SecondPoint SecondPoint;
+	/* package */static MultiLinea_Default.MultiLinea_NextPoint NextPoint;
+	private static MultiLinea_Default Default;
 
-            boolean loopbackFlag =
-                context.getState().getName().equals(
-                    MultiLinea.FirstPoint.getName());
+	static {
+	    FirstPoint = new MultiLinea_Default.MultiLinea_FirstPoint(
+		    "MultiLinea.FirstPoint", 0);
+	    SecondPoint = new MultiLinea_Default.MultiLinea_SecondPoint(
+		    "MultiLinea.SecondPoint", 1);
+	    NextPoint = new MultiLinea_Default.MultiLinea_NextPoint(
+		    "MultiLinea.NextPoint", 2);
+	    Default = new MultiLinea_Default("MultiLinea.Default", -1);
+	}
 
-            if (loopbackFlag == false)
-            {
-                (context.getState()).Exit(context);
-            }
+    }
 
-            context.clearState();
-            try
-            {
-                ctxt.throwValueException(PluginServices.getText(this,"incorrect_value"), d);
-            }
-            finally
-            {
-                context.setState(MultiLinea.FirstPoint);
+    protected static class MultiLinea_Default extends MultiLineaCADToolState {
+	// -----------------------------------------------------------
+	// Member methods.
+	//
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Entry(context);
-                }
+	protected MultiLinea_Default(String name, int id) {
+	    super(name, id);
+	}
 
-            }
-            return;
-        }
+	@Override
+	protected void Entry(MultiPolylineCADToolContext context) {
+	    context.getOwner().setDescription(getDescription());
+	}
 
-        protected void addPoint(MultiPolylineCADToolContext context, double pointX, double pointY, InputEvent event)
-        {
-            MultiPolylineCADTool ctxt = context.getOwner();
+	@Override
+	protected String[] getDescription() {
+	    return new String[] { "cancelar" };
+	}
 
-            boolean loopbackFlag =
-                context.getState().getName().equals(
-                    MultiLinea.FirstPoint.getName());
+	@Override
+	protected void addOption(MultiPolylineCADToolContext context, String s) {
+	    MultiPolylineCADTool ctxt = context.getOwner();
 
-            if (loopbackFlag == false)
-            {
-                (context.getState()).Exit(context);
-            }
+	    if (s.equals("espacio")
+		    || s.equals(PluginServices.getText(this, "terminate"))) {
+		MultiLineaCADToolState endState = context.getState();
 
-            context.clearState();
-            try
-            {
-                ctxt.throwPointException(PluginServices.getText(this,"incorrect_point"), pointX, pointY);
-            }
-            finally
-            {
-                context.setState(MultiLinea.FirstPoint);
+		context.clearState();
+		try {
+		    ctxt.throwInvalidGeometryException(PluginServices.getText(
+			    this, "two_points_at_least"));
+		} finally {
+		    context.setState(endState);
+		}
+	    } else if (s.equals("C") || s.equals("c")
+		    || s.equals(PluginServices.getText(this, "cancel"))) {
+		boolean loopbackFlag = context.getState().getName()
+			.equals(MultiLinea.FirstPoint.getName());
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Entry(context);
-                }
+		if (loopbackFlag == false) {
+		    (context.getState()).Exit(context);
+		}
 
-            }
-            return;
-        }
+		context.clearState();
+		try {
+		    ctxt.cancel();
+		} finally {
+		    context.setState(MultiLinea.FirstPoint);
 
-        protected void removePoint(MultiPolylineCADToolContext context, InputEvent event, int numPoints)
-        {
-            MultiPolylineCADTool ctxt = context.getOwner();
+		    if (loopbackFlag == false) {
+			(context.getState()).Entry(context);
+		    }
 
-            boolean loopbackFlag =
-                context.getState().getName().equals(
-                    MultiLinea.FirstPoint.getName());
+		}
+	    } else {
+		MultiLineaCADToolState endState = context.getState();
 
-            if (loopbackFlag == false)
-            {
-                (context.getState()).Exit(context);
-            }
+		context.clearState();
+		try {
+		    ctxt.throwOptionException(
+			    PluginServices.getText(this, "incorrect_option"), s);
+		} finally {
+		    context.setState(endState);
+		}
+	    }
 
-            context.clearState();
-            try
-            {
-                ctxt.throwNoPointsException(PluginServices.getText(this,"no_points"));
-            }
-            finally
-            {
-                context.setState(MultiLinea.FirstPoint);
+	    return;
+	}
 
-                if (loopbackFlag == false)
-                {
-                    (context.getState()).Entry(context);
-                }
+	@Override
+	protected void addValue(MultiPolylineCADToolContext context, double d) {
+	    MultiPolylineCADTool ctxt = context.getOwner();
 
-            }
-            return;
-        }
+	    boolean loopbackFlag = context.getState().getName()
+		    .equals(MultiLinea.FirstPoint.getName());
 
-    //-----------------------------------------------------------
-    // Inner classse.
-    //
+	    if (loopbackFlag == false) {
+		(context.getState()).Exit(context);
+	    }
 
+	    context.clearState();
+	    try {
+		ctxt.throwValueException(
+			PluginServices.getText(this, "incorrect_value"), d);
+	    } finally {
+		context.setState(MultiLinea.FirstPoint);
 
-        private static final class MultiLinea_FirstPoint
-            extends MultiLinea_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
+		if (loopbackFlag == false) {
+		    (context.getState()).Entry(context);
+		}
 
-            private MultiLinea_FirstPoint(String name, int id)
-            {
-                super (name, id);
-            }
+	    }
+	    return;
+	}
 
-            protected void Entry(MultiPolylineCADToolContext context)
-            {
-                MultiPolylineCADTool ctxt = context.getOwner();
+	@Override
+	protected void addPoint(MultiPolylineCADToolContext context,
+		double pointX, double pointY, InputEvent event) {
+	    MultiPolylineCADTool ctxt = context.getOwner();
 
-                ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                ctxt.setDescription(getDescription());
-                return;
-            }
+	    boolean loopbackFlag = context.getState().getName()
+		    .equals(MultiLinea.FirstPoint.getName());
 
-            protected void addPoint(MultiPolylineCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                MultiPolylineCADTool ctxt = context.getOwner();
+	    if (loopbackFlag == false) {
+		(context.getState()).Exit(context);
+	    }
 
+	    context.clearState();
+	    try {
+		ctxt.throwPointException(
+			PluginServices.getText(this, "incorrect_point"),
+			pointX, pointY);
+	    } finally {
+		context.setState(MultiLinea.FirstPoint);
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_next_point"));
-                    ctxt.addPoint(pointX, pointY, event);
-                }
-                finally
-                {
-                    context.setState(MultiLinea.SecondPoint);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
+		if (loopbackFlag == false) {
+		    (context.getState()).Entry(context);
+		}
 
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
+	    }
+	    return;
+	}
 
-        private static final class MultiLinea_SecondPoint
-            extends MultiLinea_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
+	@Override
+	protected void removePoint(MultiPolylineCADToolContext context,
+		InputEvent event, int numPoints) {
+	    MultiPolylineCADTool ctxt = context.getOwner();
 
-            private MultiLinea_SecondPoint(String name, int id)
-            {
-                super (name, id);
-            }
+	    boolean loopbackFlag = context.getState().getName()
+		    .equals(MultiLinea.FirstPoint.getName());
 
-            protected String[] getDescription() {
-            	return new String[]{"terminate", "next", "cancel", "removePoint"};
-            }
+	    if (loopbackFlag == false) {
+		(context.getState()).Exit(context);
+	    }
 
-            protected void addPoint(MultiPolylineCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                MultiPolylineCADTool ctxt = context.getOwner();
+	    context.clearState();
+	    try {
+		ctxt.throwNoPointsException(PluginServices.getText(this,
+			"no_points"));
+	    } finally {
+		context.setState(MultiLinea.FirstPoint);
 
+		if (loopbackFlag == false) {
+		    (context.getState()).Entry(context);
+		}
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
+	    }
+	    return;
+	}
+
+	// -----------------------------------------------------------
+	// Inner classse.
+	//
+
+	private static final class MultiLinea_FirstPoint extends
+		MultiLinea_Default {
+	    // -------------------------------------------------------
+	    // Member methods.
+	    //
+
+	    private MultiLinea_FirstPoint(String name, int id) {
+		super(name, id);
+	    }
+
+	    @Override
+	    protected void Entry(MultiPolylineCADToolContext context) {
+		MultiPolylineCADTool ctxt = context.getOwner();
+
+		ctxt.setQuestion(PluginServices.getText(this,
+			"insert_first_point"));
+		ctxt.setDescription(getDescription());
+		return;
+	    }
+
+	    @Override
+	    protected void addPoint(MultiPolylineCADToolContext context,
+		    double pointX, double pointY, InputEvent event) {
+		MultiPolylineCADTool ctxt = context.getOwner();
+
+		(context.getState()).Exit(context);
+		context.clearState();
+		try {
+		    ctxt.setQuestion(PluginServices.getText(this,
+			    "insert_next_point"));
+		    ctxt.addPoint(pointX, pointY, event);
+		} finally {
+		    context.setState(MultiLinea.SecondPoint);
+		    (context.getState()).Entry(context);
+		}
+		return;
+	    }
+
+	    // -------------------------------------------------------
+	    // Member data.
+	    //
+	}
+
+	private static final class MultiLinea_SecondPoint extends
+		MultiLinea_Default {
+	    // -------------------------------------------------------
+	    // Member methods.
+	    //
+
+	    private MultiLinea_SecondPoint(String name, int id) {
+		super(name, id);
+	    }
+
+	    @Override
+	    protected String[] getDescription() {
+		return new String[] { "terminate", "next", "cancel",
+			"removePoint" };
+	    }
+
+	    @Override
+	    protected void addPoint(MultiPolylineCADToolContext context,
+		    double pointX, double pointY, InputEvent event) {
+		MultiPolylineCADTool ctxt = context.getOwner();
+
+		(context.getState()).Exit(context);
+		context.clearState();
+		try {
 		    boolean deleteButton3 = CADStatus.getCADStatus()
 			    .isDeleteButtonActivated();
-                	if (deleteButton3) {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line_del"));
-                	} else {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line"));
-                	}
-                    ctxt.addPoint(pointX, pointY, event);
-                }
-                finally
-                {
-                    context.setState(MultiLinea.NextPoint);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
+		    if (deleteButton3) {
+			ctxt.setQuestion(PluginServices.getText(this,
+				"insert_next_point_or_line_del"));
+		    } else {
+			ctxt.setQuestion(PluginServices.getText(this,
+				"insert_next_point_or_line"));
+		    }
+		    ctxt.addPoint(pointX, pointY, event);
+		} finally {
+		    context.setState(MultiLinea.NextPoint);
+		    (context.getState()).Entry(context);
+		}
+		return;
+	    }
 
-            protected void removePoint(MultiPolylineCADToolContext context, InputEvent event, int numPoints)
-            {
-                MultiPolylineCADTool ctxt = context.getOwner();
+	    @Override
+	    protected void removePoint(MultiPolylineCADToolContext context,
+		    InputEvent event, int numPoints) {
+		MultiPolylineCADTool ctxt = context.getOwner();
 
+		(context.getState()).Exit(context);
+		context.clearState();
+		try {
+		    ctxt.setQuestion(PluginServices.getText(this,
+			    "insert_first_point"));
+		    ctxt.removePoint(event);
+		} finally {
+		    context.setState(MultiLinea.FirstPoint);
+		    (context.getState()).Entry(context);
+		}
+		return;
+	    }
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                    ctxt.removePoint(event);
-                }
-                finally
-                {
-                    context.setState(MultiLinea.FirstPoint);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
+	    // -------------------------------------------------------
+	    // Member data.
+	    //
+	}
 
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
+	private static final class MultiLinea_NextPoint extends
+		MultiLinea_Default {
+	    // -------------------------------------------------------
+	    // Member methods.
+	    //
 
-        private static final class MultiLinea_NextPoint
-            extends MultiLinea_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
+	    private MultiLinea_NextPoint(String name, int id) {
+		super(name, id);
+	    }
 
-            private MultiLinea_NextPoint(String name, int id)
-            {
-                super (name, id);
-            }
+	    @Override
+	    protected String[] getDescription() {
+		return new String[] { "terminate", "next", "cancel",
+			"removePoint" };
+	    }
 
-            protected String[] getDescription() {
-            	return new String[]{"terminate", "next", "cancel", "removePoint"};
-            }
+	    @Override
+	    protected void addOption(MultiPolylineCADToolContext context,
+		    String s) {
+		MultiPolylineCADTool ctxt = context.getOwner();
 
-            protected void addOption(MultiPolylineCADToolContext context, String s)
-            {
-                MultiPolylineCADTool ctxt = context.getOwner();
+		if (s.equals("espacio")
+			|| s.equals(PluginServices.getText(this, "terminate"))) // &&
+										// ctxt.checksOnInsertion(ctxt.getCurrentGeom()))
+		{
 
-                if (s.equals("espacio")|| s.equals(PluginServices.getText(this, "terminate"))) //&& ctxt.checksOnInsertion(ctxt.getCurrentGeom()))
-                {
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			ctxt.saveTempGeometry();
+			// ctxt.updateFormConstants();
+			// ctxt.openForm();
+			ctxt.fireEndGeometry();
+		    } finally {
+			context.setState(MultiLinea.FirstPoint);
+			(context.getState()).Entry(context);
+			// if (ActivateFormsExtension.getActivated()) {
+			// VectorialLayerEdited vle=ctxt.getVLE();
+			// OpenFormsExtension.openForm(vle);
+			// }
+			ctxt.clear();
+		    }
+		} else if (s.equalsIgnoreCase("c")
+			|| s.equals(PluginServices.getText(this, "cancel"))) {
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.saveTempGeometry();
-//                        ctxt.updateFormConstants();
-//                        ctxt.openForm();
-                        ctxt.fireEndGeometry();
-                    }
-                    finally
-                    {
-                        context.setState(MultiLinea.FirstPoint);
-                        (context.getState()).Entry(context);
-//                        if (ActivateFormsExtension.getActivated()) {
-//                        	VectorialLayerEdited vle=ctxt.getVLE();
-//                        	OpenFormsExtension.openForm(vle);
-//                    	}
-                        ctxt.clear();
-                    }
-                }
-                else if (s.equalsIgnoreCase("c")|| s.equals(PluginServices.getText(this, "cancel")))
-                {
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			ctxt.cancel();
+		    } finally {
+			context.setState(MultiLinea.FirstPoint);
+			(context.getState()).Entry(context);
+		    }
+		} else if (s.equals("tab")
+			|| s.equals(PluginServices.getText(this, "next"))) {
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.cancel();
-                    }
-                    finally
-                    {
-                        context.setState(MultiLinea.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else if (s.equals("tab")|| s.equals(PluginServices.getText(this, "next")))
-                {
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			ctxt.saveTempGeometry();
+			ctxt.clearPoints();
+			ctxt.setQuestion(PluginServices.getText(this,
+				"insert_first_point"));
+		    } finally {
+			context.setState(MultiLinea.FirstPoint);
+			(context.getState()).Entry(context);
+		    }
+		} else {
+		    super.addOption(context, s);
+		}
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.saveTempGeometry();
-                        ctxt.clearPoints();
-                        ctxt.setQuestion(PluginServices.getText(this,"insert_first_point"));
-                    }
-                    finally
-                    {
-                        context.setState(MultiLinea.FirstPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.addOption(context, s);
-                }
+		return;
+	    }
 
-                return;
-            }
+	    @Override
+	    protected void addPoint(MultiPolylineCADToolContext context,
+		    double pointX, double pointY, InputEvent event) {
+		MultiPolylineCADTool ctxt = context.getOwner();
 
-            protected void addPoint(MultiPolylineCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                MultiPolylineCADTool ctxt = context.getOwner();
+		MultiLineaCADToolState endState = context.getState();
 
-                MultiLineaCADToolState endState = context.getState();
-
-                context.clearState();
-                try
-                {
+		context.clearState();
+		try {
 		    boolean deleteButton3 = CADStatus.getCADStatus()
 			    .isDeleteButtonActivated();
-                	if (deleteButton3) {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line_del"));
-                	} else {
-                		ctxt.setQuestion(PluginServices.getText(this,"insert_next_point_or_line"));
-                	}
-                    ctxt.addPoint(pointX, pointY, event);
-                }
-                finally
-                {
-                    context.setState(endState);
-                }
-                return;
-            }
+		    if (deleteButton3) {
+			ctxt.setQuestion(PluginServices.getText(this,
+				"insert_next_point_or_line_del"));
+		    } else {
+			ctxt.setQuestion(PluginServices.getText(this,
+				"insert_next_point_or_line"));
+		    }
+		    ctxt.addPoint(pointX, pointY, event);
+		} finally {
+		    context.setState(endState);
+		}
+		return;
+	    }
 
-            protected void removePoint(MultiPolylineCADToolContext context, InputEvent event, int numPoints)
-            {
-                MultiPolylineCADTool ctxt = context.getOwner();
+	    @Override
+	    protected void removePoint(MultiPolylineCADToolContext context,
+		    InputEvent event, int numPoints) {
+		MultiPolylineCADTool ctxt = context.getOwner();
 
-                if (numPoints>2)
-                {
-                    MultiLineaCADToolState endState = context.getState();
+		if (numPoints > 2) {
+		    MultiLineaCADToolState endState = context.getState();
 
-                    context.clearState();
-                    try
-                    {
-                        ctxt.removePoint(event);
-                    }
-                    finally
-                    {
-                        context.setState(endState);
-                    }
-                }
-                else if (numPoints==2)
-                {
+		    context.clearState();
+		    try {
+			ctxt.removePoint(event);
+		    } finally {
+			context.setState(endState);
+		    }
+		} else if (numPoints == 2) {
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.removePoint(event);
-                    }
-                    finally
-                    {
-                        context.setState(MultiLinea.SecondPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.removePoint(context, event, numPoints);
-                }
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			ctxt.removePoint(event);
+		    } finally {
+			context.setState(MultiLinea.SecondPoint);
+			(context.getState()).Entry(context);
+		    }
+		} else {
+		    super.removePoint(context, event, numPoints);
+		}
 
-                return;
-            }
+		return;
+	    }
 
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
+	    // -------------------------------------------------------
+	    // Member data.
+	    //
+	}
 
- 
-
-    //-----------------------------------------------------------
-    // Member data.
-    //
+	// -----------------------------------------------------------
+	// Member data.
+	//
     }
 }
