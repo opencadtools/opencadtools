@@ -8,32 +8,35 @@ import com.iver.andami.ui.mdiManager.IWindow;
 
 /**
  * @author fjp
- *
+ * 
  */
 public interface ISnapper {
 
+    // void setSnapPoint(Point2D snapPoint);
 
-	// void setSnapPoint(Point2D snapPoint);
+    void draw(Graphics g, Point2D pPixels);
 
-	void draw(Graphics g, Point2D pPixels);
+    String getToolTipText();
 
-	String getToolTipText();
+    /**
+     * Implement this if you need a Snapper more important than the others.
+     * Default value is 0 (no prority).
+     * 
+     * @return
+     */
+    int getPriority();
 
-	/**
-	 * Implement this if you need a Snapper more important than the others.
-	 * Default value is 0 (no prority).
-	 * @return
-	 */
-	int getPriority();
+    boolean isEnabled();
 
-	boolean isEnabled();
-	public void setEnabled(boolean enabled);
-	public void setPriority(int priority);
-	IWindow getConfigurator();
-	
-	/**
-	 * Return a list of Point2D of special snappers
-	 */
-	public ArrayList getSnappedPoints();
+    public void setEnabled(boolean enabled);
+
+    public void setPriority(int priority);
+
+    IWindow getConfigurator();
+
+    /**
+     * Return a list of Point2D of special snappers
+     */
+    public ArrayList getSnappedPoints();
 
 }

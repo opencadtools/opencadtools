@@ -52,27 +52,28 @@ import com.iver.cit.gvsig.gui.preferences.GridPage;
 
 /**
  * @author fjp
- *
+ * 
  */
 public class ForceCursorAccelerator implements KeyEventDispatcher {
 
-	public boolean dispatchKeyEvent(KeyEvent e) {
-		if (e.getID() == KeyEvent.KEY_PRESSED)
-			return false;
-
-		IWindow v = PluginServices.getMDIManager().getActiveWindow();
-		if (!(v instanceof com.iver.cit.gvsig.project.documents.view.gui.View))
-			return false;
-
-		CADToolAdapter toolAdap = CADExtension.getCADToolAdapter();
-		toolAdap.setAdjustGrid(!toolAdap.getGrid().isAdjustGrid());
-
-		System.err.println("Ponemos ForceCursor a " + toolAdap.getGrid().isAdjustGrid());
-		Preferences prefs=GridPage.prefs;
-		prefs.putBoolean("grid.adjustgrid",toolAdap.getGrid().isAdjustGrid());
-		return false;
+    public boolean dispatchKeyEvent(KeyEvent e) {
+	if (e.getID() == KeyEvent.KEY_PRESSED) {
+	    return false;
 	}
 
+	IWindow v = PluginServices.getMDIManager().getActiveWindow();
+	if (!(v instanceof com.iver.cit.gvsig.project.documents.view.gui.View)) {
+	    return false;
+	}
+
+	CADToolAdapter toolAdap = CADExtension.getCADToolAdapter();
+	toolAdap.setAdjustGrid(!toolAdap.getGrid().isAdjustGrid());
+
+	System.err.println("Ponemos ForceCursor a "
+		+ toolAdap.getGrid().isAdjustGrid());
+	Preferences prefs = GridPage.prefs;
+	prefs.putBoolean("grid.adjustgrid", toolAdap.getGrid().isAdjustGrid());
+	return false;
+    }
+
 }
-
-

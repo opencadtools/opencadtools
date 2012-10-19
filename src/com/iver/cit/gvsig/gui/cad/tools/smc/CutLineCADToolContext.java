@@ -24,9 +24,10 @@
 
 package com.iver.cit.gvsig.gui.cad.tools.smc;
 
-import com.iver.cit.gvsig.gui.cad.tools.CutLineCADTool;
 import java.awt.event.InputEvent;
+
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.tools.CutLineCADTool;
 
 /**
  * @author José Ignacio Lamas Fonte [LBD]
@@ -34,375 +35,340 @@ import com.iver.andami.PluginServices;
  * @author Pablo Sanxiao [CartoLab]
  */
 
-public final class CutLineCADToolContext
-    extends statemap.FSMContext
-{
-//---------------------------------------------------------------
-// Member methods.
-//
+public final class CutLineCADToolContext extends statemap.FSMContext {
+    // ---------------------------------------------------------------
+    // Member methods.
+    //
 
-    public CutLineCADToolContext(CutLineCADTool owner)
-    {
-        super();
+    public CutLineCADToolContext(CutLineCADTool owner) {
+	super();
 
-        _owner = owner;
-        setState(CutLine.SetCutPoint);
-        CutLine.SetCutPoint.Entry(this);
+	_owner = owner;
+	setState(CutLine.SetCutPoint);
+	CutLine.SetCutPoint.Entry(this);
     }
 
     public void addOption(String s) {
-        _transition = "addOption";
-        getState().addOption(this, s);
-        _transition = "";
-        return;
+	_transition = "addOption";
+	getState().addOption(this, s);
+	_transition = "";
+	return;
     }
 
-    public void addPoint(double pointX, double pointY, InputEvent event)
-    {
-        _transition = "addPoint";
-        getState().addPoint(this, pointX, pointY, event);
-        _transition = "";
-        return;
+    public void addPoint(double pointX, double pointY, InputEvent event) {
+	_transition = "addPoint";
+	getState().addPoint(this, pointX, pointY, event);
+	_transition = "";
+	return;
     }
 
-    public void removeCutPoint(InputEvent event)
-    {
-        _transition = "removeCutPoint";
-        getState().removeCutPoint(this, event);
-        _transition = "";
-        return;
+    public void removeCutPoint(InputEvent event) {
+	_transition = "removeCutPoint";
+	getState().removeCutPoint(this, event);
+	_transition = "";
+	return;
     }
 
     public CutLineCADToolState getState()
-        throws statemap.StateUndefinedException
-    {
-        if (_state == null)
-        {
-            throw(
-                new statemap.StateUndefinedException());
-        }
+	    throws statemap.StateUndefinedException {
+	if (_state == null) {
+	    throw (new statemap.StateUndefinedException());
+	}
 
-        return ((CutLineCADToolState) _state);
+	return ((CutLineCADToolState) _state);
     }
 
-    protected CutLineCADTool getOwner()
-    {
-        return (_owner);
+    protected CutLineCADTool getOwner() {
+	return (_owner);
     }
 
-//---------------------------------------------------------------
-// Member data.
-//
+    // ---------------------------------------------------------------
+    // Member data.
+    //
 
     transient private CutLineCADTool _owner;
 
-//---------------------------------------------------------------
-// Inner classes.
-//
-
-    public static abstract class CutLineCADToolState
-        extends statemap.State
-    {
-    //-----------------------------------------------------------
-    // Member methods.
+    // ---------------------------------------------------------------
+    // Inner classes.
     //
 
-        protected CutLineCADToolState(String name, int id)
-        {
-            super (name, id);
-        }
+    public static abstract class CutLineCADToolState extends statemap.State {
+	// -----------------------------------------------------------
+	// Member methods.
+	//
 
-        protected void Entry(CutLineCADToolContext context) {}
-        protected void Exit(CutLineCADToolContext context) {}
+	protected CutLineCADToolState(String name, int id) {
+	    super(name, id);
+	}
 
-        protected void addOption(CutLineCADToolContext context, String s)
-        {
+	protected void Entry(CutLineCADToolContext context) {
+	}
 
-        	if (s.equalsIgnoreCase("C") || s.equals(PluginServices.getText(this, "cancel"))) {
-        		boolean loopbackFlag = context.getState().getName().equals(
-        				CutLine.SetCutPoint.getName());
+	protected void Exit(CutLineCADToolContext context) {
+	}
 
-        		if (!loopbackFlag) {
-        			(context.getState()).Exit(context);
-        		}
+	protected void addOption(CutLineCADToolContext context, String s) {
 
-        		context.clearState();
-        		try {
-        			CutLineCADTool ctxt = context.getOwner();
-        			ctxt.clear();
-        		} finally {
-        			context.setState(CutLine.SetCutPoint);
-        			if (!loopbackFlag) {
-        				(context.getState()).Entry(context);
-        			}
-        		}
-        	} else {
+	    if (s.equalsIgnoreCase("C")
+		    || s.equals(PluginServices.getText(this, "cancel"))) {
+		boolean loopbackFlag = context.getState().getName()
+			.equals(CutLine.SetCutPoint.getName());
 
-            Default(context);
-        	}
-        }
+		if (!loopbackFlag) {
+		    (context.getState()).Exit(context);
+		}
 
-        protected void addPoint(CutLineCADToolContext context, double pointX, double pointY, InputEvent event)
-        {
-            Default(context);
-        }
+		context.clearState();
+		try {
+		    CutLineCADTool ctxt = context.getOwner();
+		    ctxt.clear();
+		} finally {
+		    context.setState(CutLine.SetCutPoint);
+		    if (!loopbackFlag) {
+			(context.getState()).Entry(context);
+		    }
+		}
+	    } else {
 
-        protected void removeCutPoint(CutLineCADToolContext context, InputEvent event)
-        {
-            Default(context);
-        }
+		Default(context);
+	    }
+	}
 
-        protected void Default(CutLineCADToolContext context)
-        {
-            throw (
-                new statemap.TransitionUndefinedException(
-                    "State: " +
-                    context.getState().getName() +
-                    ", Transition: " +
-                    context.getTransition()));
-        }
+	protected void addPoint(CutLineCADToolContext context, double pointX,
+		double pointY, InputEvent event) {
+	    Default(context);
+	}
 
-    //-----------------------------------------------------------
-    // Member data.
-    //
+	protected void removeCutPoint(CutLineCADToolContext context,
+		InputEvent event) {
+	    Default(context);
+	}
+
+	protected void Default(CutLineCADToolContext context) {
+	    throw (new statemap.TransitionUndefinedException("State: "
+		    + context.getState().getName() + ", Transition: "
+		    + context.getTransition()));
+	}
+
+	// -----------------------------------------------------------
+	// Member data.
+	//
     }
 
-    /* package */ static abstract class CutLine
-    {
-    //-----------------------------------------------------------
-    // Member methods.
-    //
+    /* package */static abstract class CutLine {
+	// -----------------------------------------------------------
+	// Member methods.
+	//
 
-    //-----------------------------------------------------------
-    // Member data.
-    //
+	// -----------------------------------------------------------
+	// Member data.
+	//
 
-        //-------------------------------------------------------
-        // Statics.
-        //
-        /* package */ static CutLine_Default.CutLine_SetCutPoint SetCutPoint;
-        /* package */ static CutLine_Default.CutLine_CutPointSet CutPointSet;
-        private static CutLine_Default Default;
+	// -------------------------------------------------------
+	// Statics.
+	//
+	/* package */static CutLine_Default.CutLine_SetCutPoint SetCutPoint;
+	/* package */static CutLine_Default.CutLine_CutPointSet CutPointSet;
+	private static CutLine_Default Default;
 
-        static
-        {
-            SetCutPoint = new CutLine_Default.CutLine_SetCutPoint("CutLine.SetCutPoint", 0);
-            CutPointSet = new CutLine_Default.CutLine_CutPointSet("CutLine.CutPointSet", 1);
-            Default = new CutLine_Default("CutLine.Default", -1);
-        }
+	static {
+	    SetCutPoint = new CutLine_Default.CutLine_SetCutPoint(
+		    "CutLine.SetCutPoint", 0);
+	    CutPointSet = new CutLine_Default.CutLine_CutPointSet(
+		    "CutLine.CutPointSet", 1);
+	    Default = new CutLine_Default("CutLine.Default", -1);
+	}
 
     }
 
-    protected static class CutLine_Default
-        extends CutLineCADToolState
-    {
-    //-----------------------------------------------------------
-    // Member methods.
-    //
+    protected static class CutLine_Default extends CutLineCADToolState {
+	// -----------------------------------------------------------
+	// Member methods.
+	//
 
-        protected CutLine_Default(String name, int id)
-        {
-            super (name, id);
-        }
+	protected CutLine_Default(String name, int id) {
+	    super(name, id);
+	}
 
-    //-----------------------------------------------------------
-    // Inner classse.
-    //
+	// -----------------------------------------------------------
+	// Inner classse.
+	//
 
+	private static final class CutLine_SetCutPoint extends CutLine_Default {
+	    // -------------------------------------------------------
+	    // Member methods.
+	    //
 
-        private static final class CutLine_SetCutPoint
-            extends CutLine_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
+	    private CutLine_SetCutPoint(String name, int id) {
+		super(name, id);
+	    }
 
-            private CutLine_SetCutPoint(String name, int id)
-            {
-                super (name, id);
-            }
+	    @Override
+	    protected void Entry(CutLineCADToolContext context) {
+		CutLineCADTool ctxt = context.getOwner();
 
-            protected void Entry(CutLineCADToolContext context)
-            {
-                CutLineCADTool ctxt = context.getOwner();
+		ctxt.setQuestion(PluginServices.getText(this,
+			"cut_insert_intersection_point"));
+		ctxt.setDescription(new String[] { "cancel" });
+		return;
+	    }
 
-                ctxt.setQuestion(PluginServices.getText(this,"cut_insert_intersection_point"));
-                ctxt.setDescription(new String[]{"cancel"});
-                return;
-            }
+	    @Override
+	    protected void addPoint(CutLineCADToolContext context,
+		    double pointX, double pointY, InputEvent event) {
+		CutLineCADTool ctxt = context.getOwner();
 
-            protected void addPoint(CutLineCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                CutLineCADTool ctxt = context.getOwner();
+		if (ctxt.pointInsideFeature(pointX, pointY)) {
 
-                if (ctxt.pointInsideFeature(pointX,pointY))
-                {
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			ctxt.setQuestion(PluginServices.getText(this,
+				"cut_intersection_point"));
+		    } finally {
+			context.setState(CutLine.CutPointSet);
+			(context.getState()).Entry(context);
+		    }
+		} else {
+		    CutLineCADToolState endState = context.getState();
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"cut_intersection_point"));
-                    }
-                    finally
-                    {
-                        context.setState(CutLine.CutPointSet);
-                        (context.getState()).Entry(context);
-                    }
-                }
-                else
-                {
-                    CutLineCADToolState endState = context.getState();
+		    context.clearState();
+		    try {
+			ctxt.throwPointException(PluginServices.getText(this,
+				"redigitaliza_incorrect_point"), pointX, pointY);
+			ctxt.setQuestion(PluginServices.getText(this,
+				"cut_insert_intersection_point"));
+		    } finally {
+			context.setState(endState);
+		    }
+		}
 
-                    context.clearState();
-                    try
-                    {
-                        ctxt.throwPointException(PluginServices.getText(this,"redigitaliza_incorrect_point"), pointX, pointY);
-                        ctxt.setQuestion(PluginServices.getText(this,"cut_insert_intersection_point"));
-                    }
-                    finally
-                    {
-                        context.setState(endState);
-                    }
-                }
+		return;
+	    }
 
-                return;
-            }
+	    // -------------------------------------------------------
+	    // Member data.
+	    //
+	}
 
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
+	private static final class CutLine_CutPointSet extends CutLine_Default {
+	    // -------------------------------------------------------
+	    // Member methods.
+	    //
 
-        private static final class CutLine_CutPointSet
-            extends CutLine_Default
-        {
-        //-------------------------------------------------------
-        // Member methods.
-        //
+	    private CutLine_CutPointSet(String name, int id) {
+		super(name, id);
+	    }
 
-            private CutLine_CutPointSet(String name, int id)
-            {
-                super (name, id);
-            }
+	    @Override
+	    protected void Entry(CutLineCADToolContext context) {
+		CutLineCADTool ctxt = context.getOwner();
 
-            protected void Entry(CutLineCADToolContext context)
-            {
-                CutLineCADTool ctxt = context.getOwner();
+		ctxt.setQuestion(PluginServices.getText(this,
+			"cut_intersection_point"));
+		ctxt.setDescription(new String[] { "cancel", "terminate",
+			"change_base_geom" });
+		return;
+	    }
 
-                ctxt.setQuestion(PluginServices.getText(this,"cut_intersection_point"));
-                ctxt.setDescription(new String[]{"cancel", "terminate", "change_base_geom"});
-                return;
-            }
+	    @Override
+	    protected void addOption(CutLineCADToolContext context, String s) {
+		CutLineCADTool ctxt = context.getOwner();
 
-            protected void addOption(CutLineCADToolContext context, String s)
-            {
-                CutLineCADTool ctxt = context.getOwner();
+		if (s.equals("tab")
+			|| s.equals(PluginServices.getText(this,
+				"change_base_geom"))) {
+		    CutLineCADToolState endState = context.getState();
 
-                if (s.equals("tab") || s.equals(PluginServices.getText(this, "change_base_geom")))
-                {
-                    CutLineCADToolState endState = context.getState();
+		    context.clearState();
+		    try {
+			ctxt.changePieceOfGeometry();
+		    } finally {
+			context.setState(endState);
+		    }
+		} else if (s.equals("espacio")
+			|| s.equals(PluginServices.getText(this, "terminate")))// &&
+									       // ctxt.checksOnEditionSinContinuidad(ctxt.getGeometriaResultante(),
+									       // ctxt.getCurrentGeoid())))
+		{
 
-                    context.clearState();
-                    try
-                    {
-                        ctxt.changePieceOfGeometry();
-                    }
-                    finally
-                    {
-                        context.setState(endState);
-                    }
-                }
-                else if (s.equals("espacio") || s.equals(PluginServices.getText(this, "terminate")))//&& ctxt.checksOnEditionSinContinuidad(ctxt.getGeometriaResultante(), ctxt.getCurrentGeoid())))
-                {
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			ctxt.saveChanges();
+			ctxt.setQuestion(PluginServices.getText(this,
+				"cut_insert_intersection_point"));
+			ctxt.clear();
+		    } finally {
+			context.setState(CutLine.SetCutPoint);
+			(context.getState()).Entry(context);
+		    }
+		} else {
+		    super.addOption(context, s);
+		}
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                    	ctxt.saveChanges();
-                        ctxt.setQuestion(PluginServices.getText(this,"cut_insert_intersection_point"));
-                        ctxt.clear();
-                    }
-                    finally
-                    {
-                        context.setState(CutLine.SetCutPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }                else
-                {
-                    super.addOption(context, s);
-                }
+		return;
+	    }
 
-                return;
-            }
+	    @Override
+	    protected void addPoint(CutLineCADToolContext context,
+		    double pointX, double pointY, InputEvent event) {
+		CutLineCADTool ctxt = context.getOwner();
 
-            protected void addPoint(CutLineCADToolContext context, double pointX, double pointY, InputEvent event)
-            {
-                CutLineCADTool ctxt = context.getOwner();
+		if (ctxt.pointInsideFeature(pointX, pointY)) {
+		    CutLineCADToolState endState = context.getState();
 
-                if (ctxt.pointInsideFeature(pointX,pointY))
-                {
-                    CutLineCADToolState endState = context.getState();
+		    context.clearState();
+		    try {
+			ctxt.setQuestion(PluginServices.getText(this,
+				"cut_intersection_point"));
+		    } finally {
+			context.setState(endState);
+		    }
+		} else {
 
-                    context.clearState();
-                    try
-                    {
-                        ctxt.setQuestion(PluginServices.getText(this,"cut_intersection_point"));
-                    }
-                    finally
-                    {
-                        context.setState(endState);
-                    }
-                }
-                else
-                {
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			ctxt.clear();
+			ctxt.throwPointException(PluginServices.getText(this,
+				"redigitaliza_incorrect_point"), pointX, pointY);
+			ctxt.setQuestion(PluginServices.getText(this,
+				"cut_insert_intersection_point"));
+		    } finally {
+			context.setState(CutLine.SetCutPoint);
+			(context.getState()).Entry(context);
+		    }
+		}
 
-                    (context.getState()).Exit(context);
-                    context.clearState();
-                    try
-                    {
-                        ctxt.clear();
-                        ctxt.throwPointException(PluginServices.getText(this,"redigitaliza_incorrect_point"), pointX, pointY);
-                        ctxt.setQuestion(PluginServices.getText(this,"cut_insert_intersection_point"));
-                    }
-                    finally
-                    {
-                        context.setState(CutLine.SetCutPoint);
-                        (context.getState()).Entry(context);
-                    }
-                }
+		return;
+	    }
 
-                return;
-            }
+	    @Override
+	    protected void removeCutPoint(CutLineCADToolContext context,
+		    InputEvent event) {
+		CutLineCADTool ctxt = context.getOwner();
 
-            protected void removeCutPoint(CutLineCADToolContext context, InputEvent event)
-            {
-                CutLineCADTool ctxt = context.getOwner();
+		(context.getState()).Exit(context);
+		context.clearState();
+		try {
+		    ctxt.setQuestion(PluginServices.getText(this,
+			    "cut_insert_intersection_point"));
+		    ctxt.clear();
+		} finally {
+		    context.setState(CutLine.SetCutPoint);
+		    (context.getState()).Entry(context);
+		}
+		return;
+	    }
 
+	    // -------------------------------------------------------
+	    // Member data.
+	    //
+	}
 
-                (context.getState()).Exit(context);
-                context.clearState();
-                try
-                {
-                    ctxt.setQuestion(PluginServices.getText(this,"cut_insert_intersection_point"));
-                    ctxt.clear();
-                }
-                finally
-                {
-                    context.setState(CutLine.SetCutPoint);
-                    (context.getState()).Entry(context);
-                }
-                return;
-            }
-
-        //-------------------------------------------------------
-        // Member data.
-        //
-        }
-
-    //-----------------------------------------------------------
-    // Member data.
-    //
+	// -----------------------------------------------------------
+	// Member data.
+	//
     }
 }

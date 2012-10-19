@@ -45,10 +45,8 @@ import java.awt.geom.Point2D;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 
 public interface ISnapperVectorial extends ISnapper {
-	
-	Point2D getSnapPoint(Point2D queryPoint, IGeometry geomToSnap, double tolerance, Point2D lastPointEntered);
 
+    Point2D getSnapPoint(Point2D queryPoint, IGeometry geomToSnap,
+	    double tolerance, Point2D lastPointEntered);
 
 }
-
-

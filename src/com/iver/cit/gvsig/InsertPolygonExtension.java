@@ -55,108 +55,104 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extensión que gestiona la inserción de poligonos en edición.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class InsertPolygonExtension extends Extension {
-	protected View view;
+    protected View view;
 
-	protected MapControl mapControl;
-	protected PolygonCADTool polygon;
+    protected MapControl mapControl;
+    protected PolygonCADTool polygon;
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		polygon = new PolygonCADTool();
-		CircleCADTool circle=new CircleCADTool();
-        RectangleCADTool rectangle=new RectangleCADTool();
-        EllipseCADTool ellipse=new EllipseCADTool();
-        EditVertexCADTool editvertex=new EditVertexCADTool();
-		CADExtension.addCADTool("_polygon", polygon);
-		CADExtension.addCADTool("_circle",circle);
-	    CADExtension.addCADTool("_rectangle", rectangle);
-	    CADExtension.addCADTool("_ellipse", ellipse);
-	    CADExtension.addCADTool("_editvertex",editvertex);
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    public void initialize() {
+	polygon = new PolygonCADTool();
+	CircleCADTool circle = new CircleCADTool();
+	RectangleCADTool rectangle = new RectangleCADTool();
+	EllipseCADTool ellipse = new EllipseCADTool();
+	EditVertexCADTool editvertex = new EditVertexCADTool();
+	CADExtension.addCADTool("_polygon", polygon);
+	CADExtension.addCADTool("_circle", circle);
+	CADExtension.addCADTool("_rectangle", rectangle);
+	CADExtension.addCADTool("_ellipse", ellipse);
+	CADExtension.addCADTool("_editvertex", editvertex);
 
-	    registerIcons();
-	}
+	registerIcons();
+    }
 
-	private void registerIcons(){
-		PluginServices.getIconTheme().registerDefault(
+    private void registerIcons() {
+	PluginServices.getIconTheme().registerDefault(
 		"edition-insert-polygon",
 		this.getClass().getClassLoader()
-			.getResource("images/icons/poligono.png")
-			);
+			.getResource("images/icons/poligono.png"));
 
-		PluginServices.getIconTheme().registerDefault(
+	PluginServices.getIconTheme().registerDefault(
 		"edition-insert-rectangle",
 		this.getClass().getClassLoader()
-			.getResource("images/icons/rectangulo.png")
-			);
+			.getResource("images/icons/rectangulo.png"));
 
-		PluginServices.getIconTheme().registerDefault(
+	PluginServices.getIconTheme().registerDefault(
 		"edition-insert-circle",
 		this.getClass().getClassLoader()
-			.getResource("images/icons/circulo.png")
-			);
+			.getResource("images/icons/circulo.png"));
 
-		PluginServices.getIconTheme().registerDefault(
+	PluginServices.getIconTheme().registerDefault(
 		"edition-insert-ellipse",
 		this.getClass().getClassLoader()
-			.getResource("images/icons/elipse.png")
-			);
+			.getResource("images/icons/elipse.png"));
 
-		PluginServices.getIconTheme().registerDefault(
-				"edition-geometry-edit-vertex",
-				this.getClass().getClassLoader().getResource("images/EditVertex.png")
-			);
+	PluginServices.getIconTheme().registerDefault(
+		"edition-geometry-edit-vertex",
+		this.getClass().getClassLoader()
+			.getResource("images/EditVertex.png"));
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals("_polygon") || s.equals("_circle") || s.equals("_ellipse")
+		|| s.equals("_rectangle") || s.equals("_editvertex")) {
+	    CADExtension.setCADTool(s, true);
 	}
+	CADExtension.getEditionManager().setMapControl(mapControl);
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals("_polygon")||
-				s.equals("_circle")||
-				s.equals("_ellipse")||
-				s.equals("_rectangle")||
-				s.equals("_editvertex")) {
-        	CADExtension.setCADTool(s,true);
-        }
-		CADExtension.getEditionManager().setMapControl(mapControl);
-		CADExtension.getCADToolAdapter().configureMenu();
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    public boolean isEnabled() {
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-
-		try {
-			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-				view = (View) PluginServices.getMDIManager().getActiveWindow();
-				mapControl = view.getMapControl();
-				if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
-					return false;
-				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-				if (polygon.isApplicable(lv.getShapeType())){
-					return true;
-				}
-			}
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
+	try {
+	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+		view = (View) PluginServices.getMDIManager().getActiveWindow();
+		mapControl = view.getMapControl();
+		if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
+		    return false;
 		}
-		return false;
+		FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
+			.getActiveLayerEdited().getLayer();
+		if (polygon.isApplicable(lv.getShapeType())) {
+		    return true;
+		}
+	    }
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
 	}
+	return false;
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
 	}
+	return false;
+    }
 }

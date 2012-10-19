@@ -51,56 +51,61 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 /**
  * Extensión que gestiona el poder cambiar la selección a una anterior.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class PreviousSelectionExtension extends Extension {
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		PluginServices.getIconTheme().registerDefault(
-				"previous-selection",
-				this.getClass().getClassLoader().getResource("images/previousSel.png")
-			);
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    public void initialize() {
+	PluginServices.getIconTheme().registerDefault(
+		"previous-selection",
+		this.getClass().getClassLoader()
+			.getResource("images/previousSel.png"));
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		ILayerEdited layerEdited= CADExtension.getEditionManager().getActiveLayerEdited();
-		if (layerEdited instanceof VectorialLayerEdited) {
-			try {
-				((VectorialLayerEdited)layerEdited).restorePreviousSelection();
-			} catch (ReadDriverException e) {
-				NotificationManager.addError(e.getMessage(),e);
-			}
-			VectorialEditableAdapter vea=(VectorialEditableAdapter)((FLyrVect)((VectorialLayerEdited)layerEdited).getLayer()).getSource();
-			vea.getCommandRecord().fireCommandsRepaint(null);
-		}
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    public void execute(String s) {
+	ILayerEdited layerEdited = CADExtension.getEditionManager()
+		.getActiveLayerEdited();
+	if (layerEdited instanceof VectorialLayerEdited) {
+	    try {
+		((VectorialLayerEdited) layerEdited).restorePreviousSelection();
+	    } catch (ReadDriverException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    }
+	    VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) ((VectorialLayerEdited) layerEdited)
+		    .getLayer()).getSource();
+	    vea.getCommandRecord().fireCommandsRepaint(null);
 	}
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-		ILayerEdited layerEdited= CADExtension.getEditionManager().getActiveLayerEdited();
-		if (layerEdited == null)
-			return false;
-		if (layerEdited instanceof VectorialLayerEdited) {
-			return ((VectorialLayerEdited)layerEdited).getPreviousSelection();
-		}
-		return false;
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    public boolean isEnabled() {
+	ILayerEdited layerEdited = CADExtension.getEditionManager()
+		.getActiveLayerEdited();
+	if (layerEdited == null) {
+	    return false;
 	}
+	if (layerEdited instanceof VectorialLayerEdited) {
+	    return ((VectorialLayerEdited) layerEdited).getPreviousSelection();
+	}
+	return false;
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
 	}
+	return false;
+    }
 }

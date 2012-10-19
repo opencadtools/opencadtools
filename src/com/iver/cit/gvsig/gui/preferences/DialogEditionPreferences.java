@@ -51,126 +51,135 @@ import com.iver.andami.preferences.DlgPreferences;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 
-public class DialogEditionPreferences  {
-	public class TestPref extends AbstractPreferencePage
-	{
-		String id;
-		public TestPref(String title)
-		{
-			super();
-			id = title;
-			setTitle(title);
-		}
-		public JPanel getPanel() {
-			return this;
-		}
-		public void initializeValues() {
-			// TODO Auto-generated method stub
+public class DialogEditionPreferences {
+    public class TestPref extends AbstractPreferencePage {
+	String id;
 
-		}
-		public void storeValues() {
-		}
-		public void initializeDefaults() {
-			// TODO Auto-generated method stub
-
-		}
-		public ImageIcon getIcon() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		public String getID() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		public String getTitle() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public boolean isValueChanged() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		public void setChangesApplied() {
-			// TODO Auto-generated method stub
-
-		}
-
+	public TestPref(String title) {
+	    super();
+	    id = title;
+	    setTitle(title);
 	}
-	public static void main(String[] args) {
-		try {
-			// UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			// UIManager.setLookAndFeel(Options.JGOODIES_WINDOWS_NAME);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		DialogEditionPreferences test = new DialogEditionPreferences();
-		// test.configureUI();
-		test.test();
+	public JPanel getPanel() {
+	    return this;
+	}
+
+	public void initializeValues() {
+	    // TODO Auto-generated method stub
 
 	}
 
-	   /**
+	@Override
+	public void storeValues() {
+	}
+
+	public void initializeDefaults() {
+	    // TODO Auto-generated method stub
+
+	}
+
+	public ImageIcon getIcon() {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
+
+	public String getID() {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
+
+	public String getTitle() {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
+
+	public boolean isValueChanged() {
+	    // TODO Auto-generated method stub
+	    return false;
+	}
+
+	@Override
+	public void setChangesApplied() {
+	    // TODO Auto-generated method stub
+
+	}
+
+    }
+
+    public static void main(String[] args) {
+	try {
+	    // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	    // UIManager.setLookAndFeel(Options.JGOODIES_WINDOWS_NAME);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+
+	DialogEditionPreferences test = new DialogEditionPreferences();
+	// test.configureUI();
+	test.test();
+
+    }
+
+    /**
      * Configures the UI; tries to set the system look on Mac,
      * <code>WindowsLookAndFeel</code> on general Windows, and
-     * <code>Plastic3DLookAndFeel</code> on Windows XP and all other OS.<p>
-     *
+     * <code>Plastic3DLookAndFeel</code> on Windows XP and all other OS.
+     * <p>
+     * 
      * The JGoodies Swing Suite's <code>ApplicationStarter</code>,
-     * <code>ExtUIManager</code>, and <code>LookChoiceStrategies</code>
-     * classes provide a much more fine grained algorithm to choose and
-     * restore a look and theme.
+     * <code>ExtUIManager</code>, and <code>LookChoiceStrategies</code> classes
+     * provide a much more fine grained algorithm to choose and restore a look
+     * and theme.
      */
-//    private void configureUI() {
-//        UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
-//        Options.setDefaultIconSize(new Dimension(18, 18));
-//
-//        String lafName =
-//            LookUtils.IS_OS_WINDOWS_XP
-//                ? Options.getCrossPlatformLookAndFeelClassName()
-//                : Options.getSystemLookAndFeelClassName();
-//
-//        try {
-//            UIManager.setLookAndFeel(lafName);
-//        } catch (Exception e) {
-//            System.err.println("Can't set look & feel:" + e);
-//        }
-//    }
-	private void test() {
-		JDialog dlg = new JDialog();
-		dlg.setModal(true);
-		dlg.setTitle("Preferences");
+    // private void configureUI() {
+    // UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
+    // Options.setDefaultIconSize(new Dimension(18, 18));
+    //
+    // String lafName =
+    // LookUtils.IS_OS_WINDOWS_XP
+    // ? Options.getCrossPlatformLookAndFeelClassName()
+    // : Options.getSystemLookAndFeelClassName();
+    //
+    // try {
+    // UIManager.setLookAndFeel(lafName);
+    // } catch (Exception e) {
+    // System.err.println("Can't set look & feel:" + e);
+    // }
+    // }
+    private void test() {
+	JDialog dlg = new JDialog();
+	dlg.setModal(true);
+	dlg.setTitle("Preferences");
 
-		DlgPreferences panel = DlgPreferences.getInstance();
+	DlgPreferences panel = DlgPreferences.getInstance();
 
-		for (int i=0; i< 20; i++)
-		{
-			TestPref newPref = new TestPref("Titulo " + i);
-			Random rnd = new Random();
-			if (i> 5)
-				newPref.setParentID("Titulo " + rnd.nextInt(i));
-			//panel.addPreferencePage(newPref);
+	for (int i = 0; i < 20; i++) {
+	    TestPref newPref = new TestPref("Titulo " + i);
+	    Random rnd = new Random();
+	    if (i > 5) {
+		newPref.setParentID("Titulo " + rnd.nextInt(i));
+		// panel.addPreferencePage(newPref);
+	    }
 
-		}
-
-		FLayers layers = new FLayers();//(null,null);
-		FLyrVect lyrVect = new FLyrVect();
-		lyrVect.setName("Hola");
-		layers.addLayer(lyrVect);
-
-		EditionPreferencePage edPref = new EditionPreferencePage();
-		//panel.addPreferencePage(edPref);
-		// edPref.setLayers(layers);
-
-		dlg.getContentPane().add(panel);
-		dlg.pack();
-		dlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-		dlg.setVisible(true);
-
-
-
-		System.exit(0);
 	}
+
+	FLayers layers = new FLayers();// (null,null);
+	FLyrVect lyrVect = new FLyrVect();
+	lyrVect.setName("Hola");
+	layers.addLayer(lyrVect);
+
+	EditionPreferencePage edPref = new EditionPreferencePage();
+	// panel.addPreferencePage(edPref);
+	// edPref.setLayers(layers);
+
+	dlg.getContentPane().add(panel);
+	dlg.pack();
+	dlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+	dlg.setVisible(true);
+
+	System.exit(0);
+    }
 
 }

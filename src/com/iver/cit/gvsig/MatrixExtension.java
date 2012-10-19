@@ -46,89 +46,90 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.MatrixCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
- * Extensión que gestiona la creación de una matriz a partir de la geometría seleccionada.
- *
+ * Extensión que gestiona la creación de una matriz a partir de la geometría
+ * seleccionada.
+ * 
  * @author Vicente Caballero Navarro
  */
 public class MatrixExtension extends Extension {
-	private View view;
+    private View view;
 
-	private MapControl mapControl;
-	private MatrixCADTool matrixCADTool;
+    private MapControl mapControl;
+    private MatrixCADTool matrixCADTool;
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		registerIcons();
-		matrixCADTool=new MatrixCADTool();
-		CADExtension.addCADTool("_matrix",matrixCADTool);
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    public void initialize() {
+	registerIcons();
+	matrixCADTool = new MatrixCADTool();
+	CADExtension.addCADTool("_matrix", matrixCADTool);
 
+    }
 
+    private void registerIcons() {
+	PluginServices.getIconTheme().registerDefault(
+		"edition-geometry-matrix",
+		this.getClass().getClassLoader()
+			.getResource("images/Matriz.png"));
+	PluginServices.getIconTheme().registerDefault(
+		"edition-geometrymatrix-lagxy",
+		this.getClass().getClassLoader()
+			.getResource("images/lagxy.png"));
+	PluginServices.getIconTheme().registerDefault(
+		"edition-geometrymatrix-addpoint",
+		this.getClass().getClassLoader()
+			.getResource("images/addpoint.png"));
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals("_matrix")) {
+
+	    CADExtension.setCADTool(s, true);
 	}
+	CADExtension.getEditionManager().setMapControl(mapControl);
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
 
-	private void registerIcons(){
-		PluginServices.getIconTheme().registerDefault(
-				"edition-geometry-matrix",
-				this.getClass().getClassLoader().getResource("images/Matriz.png")
-			);
-		PluginServices.getIconTheme().registerDefault(
-				"edition-geometrymatrix-lagxy",
-				this.getClass().getClassLoader().getResource("images/lagxy.png")
-			);
-		PluginServices.getIconTheme().registerDefault(
-				"edition-geometrymatrix-addpoint",
-				this.getClass().getClassLoader().getResource("images/addpoint.png")
-			);
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    public boolean isEnabled() {
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals("_matrix")) {
-
-
-			CADExtension.setCADTool(s,true);
-        }
-		CADExtension.getEditionManager().setMapControl(mapControl);
-		CADExtension.getCADToolAdapter().configureMenu();
-	}
-
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-
-		try {
-			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-				view = (View) PluginServices.getMDIManager().getActiveWindow();
-				mapControl = view.getMapControl();
-				if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
-					return false;
-				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-				if (matrixCADTool.isApplicable(lv.getShapeType())){
-					return true;
-				}
-			}
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
+	try {
+	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+		view = (View) PluginServices.getMDIManager().getActiveWindow();
+		mapControl = view.getMapControl();
+		if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
+		    return false;
 		}
-		return false;
+		FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
+			.getActiveLayerEdited().getLayer();
+		if (matrixCADTool.isApplicable(lv.getShapeType())) {
+		    return true;
+		}
+	    }
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
 	}
+	return false;
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
 	}
+	return false;
+    }
 }

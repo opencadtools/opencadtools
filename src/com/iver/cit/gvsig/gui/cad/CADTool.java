@@ -39,6 +39,7 @@
  *   dac@iver.es
  */
 package com.iver.cit.gvsig.gui.cad;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.InputEvent;
@@ -52,94 +53,125 @@ import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
-
 /**
  * DOCUMENT ME!
- *
+ * 
  * @author gvSIG
  * @author Laboratorio de Bases de Datos. Universidad de A Coruña
  */
 public interface CADTool {
 
-	public static ISymbol drawingSymbol = SymbologyFactory.createDefaultSymbolByShapeType(FShape.MULTI, new Color(200, 0, 0, 100));
-	public static ISymbol modifySymbol = SymbologyFactory.createDefaultSymbolByShapeType(FShape.MULTI, new Color(100, 100, 100, 100));
-	public static ISymbol selectSymbol = SymbologyFactory.createDefaultSymbolByShapeType(FShape.MULTI, new Color(0, 0, 200, 100));
+    public static ISymbol drawingSymbol = SymbologyFactory
+	    .createDefaultSymbolByShapeType(FShape.MULTI, new Color(200, 0, 0,
+		    100));
+    public static ISymbol modifySymbol = SymbologyFactory
+	    .createDefaultSymbolByShapeType(FShape.MULTI, new Color(100, 100,
+		    100, 100));
+    public static ISymbol selectSymbol = SymbologyFactory
+	    .createDefaultSymbolByShapeType(FShape.MULTI, new Color(0, 0, 200,
+		    100));
 
-	public static int TOPGEOMETRY = 2000;
+    public static int TOPGEOMETRY = 2000;
 
-	public void init();
-	public void end();
-	public void transition(InputEvent event);
-	public void transition(double x, double y, InputEvent event);
-	public void transition(double d);
-	public void transition(String s) throws CommandException;
-	public void addPoint(double x,double y,InputEvent event);
-	public void addValue(double d);
-	public void addOption(String s);
-	public void setQuestion(String s);
-	
-//	Methods to know if the Tool need more than one transition such Spetial Snappers, mouse clicks... 
-	public boolean isMultiTransition();
+    public void init();
 
-	/**
-	 * Recibe un graphics en el que se encuentra dibujada la
-	 * EditableFeatureSource que se pasa como parámetro. En este método, la
-	 * herramienta ha de implementar el dibujado de la operación que se está
-	 * realizando dependiendo del estado. Por ejemplo al dibujar un círculo
-	 * mediante 3 puntos, cuando la herramienta se encuentre en el estado en
-	 * el que sólo falta un punto, se dibujará el círculo teniendo en cuenta
-	 * como tercer punto el puntero del ratón (pasado en los parámetros x e
-	 * y). Este método es invocado tras cada transición y cada vez que se
-	 * mueve el ratón.
-	 *
-	 * @param g DOCUMENT ME!
-	 * @param efs DOCUMENT ME!
-	 * @param selectedGeometries DOCUMENT ME!
-	 * @param x DOCUMENT ME!
-	 * @param y DOCUMENT ME!
-	 */
-	void drawOperation(Graphics g,double x, double y);
-	
-	/**
-	 * En este método, la herramienta ha de implementar el dibujado de la operación que se está
-	 * realizando dependiendo del estado. Tendra en cuenta la lista de puntos
-	 * que nos pueden devolver los snappers
-	 *
-	 * @param g Graphic to draw
-	 * @param pointList List of points retrieved by the snappers tools
-	 */
-	public void drawOperation(Graphics g, ArrayList pointList);
+    public void end();
 
-	/**
-	 * Obtiene la pregunta que saldrá en la consola relativa al estado en el
-	 * que se encuentra la herramienta
-	 *
-	 * @return DOCUMENT ME!
-	 */
-	String getQuestion();
+    public void transition(InputEvent event);
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param cta DOCUMENT ME!
-	 */
-	public void setCadToolAdapter(CADToolAdapter cta);
+    public void transition(double x, double y, InputEvent event);
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return DOCUMENT ME!
-	 */
-	public CADToolAdapter getCadToolAdapter();
-	public String[] getDescriptions();
-	public void setDescription(String[] descriptions);
-	public String getName();
-	public VectorialLayerEdited getVLE();
-	void clearSelection() throws ReadDriverException;
-	public boolean isApplicable(int shapeType);
-	public void setPreviosTool(DefaultCADTool tool);
-	public void restorePreviousTool();
-	public void endTransition(double x, double y, MouseEvent e);
+    public void transition(double d);
+
+    public void transition(String s) throws CommandException;
+
+    public void addPoint(double x, double y, InputEvent event);
+
+    public void addValue(double d);
+
+    public void addOption(String s);
+
+    public void setQuestion(String s);
+
+    // Methods to know if the Tool need more than one transition such Spetial
+    // Snappers, mouse clicks...
+    public boolean isMultiTransition();
+
+    /**
+     * Recibe un graphics en el que se encuentra dibujada la
+     * EditableFeatureSource que se pasa como parámetro. En este método, la
+     * herramienta ha de implementar el dibujado de la operación que se está
+     * realizando dependiendo del estado. Por ejemplo al dibujar un círculo
+     * mediante 3 puntos, cuando la herramienta se encuentre en el estado en el
+     * que sólo falta un punto, se dibujará el círculo teniendo en cuenta como
+     * tercer punto el puntero del ratón (pasado en los parámetros x e y). Este
+     * método es invocado tras cada transición y cada vez que se mueve el ratón.
+     * 
+     * @param g
+     *            DOCUMENT ME!
+     * @param efs
+     *            DOCUMENT ME!
+     * @param selectedGeometries
+     *            DOCUMENT ME!
+     * @param x
+     *            DOCUMENT ME!
+     * @param y
+     *            DOCUMENT ME!
+     */
+    void drawOperation(Graphics g, double x, double y);
+
+    /**
+     * En este método, la herramienta ha de implementar el dibujado de la
+     * operación que se está realizando dependiendo del estado. Tendra en cuenta
+     * la lista de puntos que nos pueden devolver los snappers
+     * 
+     * @param g
+     *            Graphic to draw
+     * @param pointList
+     *            List of points retrieved by the snappers tools
+     */
+    public void drawOperation(Graphics g, ArrayList pointList);
+
+    /**
+     * Obtiene la pregunta que saldrá en la consola relativa al estado en el que
+     * se encuentra la herramienta
+     * 
+     * @return DOCUMENT ME!
+     */
+    String getQuestion();
+
+    /**
+     * DOCUMENT ME!
+     * 
+     * @param cta
+     *            DOCUMENT ME!
+     */
+    public void setCadToolAdapter(CADToolAdapter cta);
+
+    /**
+     * DOCUMENT ME!
+     * 
+     * @return DOCUMENT ME!
+     */
+    public CADToolAdapter getCadToolAdapter();
+
+    public String[] getDescriptions();
+
+    public void setDescription(String[] descriptions);
+
+    public String getName();
+
+    public VectorialLayerEdited getVLE();
+
+    void clearSelection() throws ReadDriverException;
+
+    public boolean isApplicable(int shapeType);
+
+    public void setPreviosTool(DefaultCADTool tool);
+
+    public void restorePreviousTool();
+
+    public void endTransition(double x, double y, MouseEvent e);
 
     public void clear();
 }

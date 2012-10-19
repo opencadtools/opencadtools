@@ -70,19 +70,18 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.StretchCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.StretchCADToolContext.StretchCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
-
 /**
  * Herramienta para estirar los handlers que seleccionemos previamente.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class StretchCADTool extends DefaultCADTool {
     private StretchCADToolContext _fsm;
     private Point2D selfirstPoint;
-	private Point2D sellastPoint;
-	private Point2D movefirstPoint;
-	private Point2D movelastPoint;
-	private Rectangle2D rect = null;
+    private Point2D sellastPoint;
+    private Point2D movefirstPoint;
+    private Point2D movelastPoint;
+    private Rectangle2D rect = null;
 
     /**
      * Crea un nuevo PolylineCADTool.
@@ -94,239 +93,282 @@ public class StretchCADTool extends DefaultCADTool {
      * Método de incio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
      */
+    @Override
     public void init() {
-        _fsm = new StretchCADToolContext(this);
+	_fsm = new StretchCADToolContext(this);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double, double)
      */
     public void transition(double x, double y, InputEvent event) {
-        _fsm.addPoint(x, y, event);
+	_fsm.addPoint(x, y, event);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double)
      */
     public void transition(double d) {
-        _fsm.addValue(d);
+	_fsm.addValue(d);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, java.lang.String)
      */
     public void transition(String s) throws CommandException {
-    	if (!super.changeCommand(s)){
-    		_fsm.addOption(s);
-    	}
+	if (!super.changeCommand(s)) {
+	    _fsm.addOption(s);
+	}
     }
 
     /**
      * DOCUMENT ME!
      */
     public void selection() {
-        ArrayList rowSelected=getSelectedRows();
-        if (rowSelected.size() == 0 && !CADExtension.getCADTool().getClass().getName().equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
-            CADExtension.setCADTool("_selection",false);
-            ((SelectionCADTool) CADExtension.getCADTool()).setNextTool(
-                "_stretch");
-        }
+	ArrayList rowSelected = getSelectedRows();
+	if (rowSelected.size() == 0
+		&& !CADExtension
+			.getCADTool()
+			.getClass()
+			.getName()
+			.equals("com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool")) {
+	    CADExtension.setCADTool("_selection", false);
+	    ((SelectionCADTool) CADExtension.getCADTool())
+		    .setNextTool("_stretch");
+	}
     }
 
     /**
      * Equivale al transition del prototipo pero sin pasarle como parámetro el
      * editableFeatureSource que ya estará creado.
-     *
-     * @param x parámetro x del punto que se pase en esta transición.
-     * @param y parámetro y del punto que se pase en esta transición.
+     * 
+     * @param x
+     *            parámetro x del punto que se pase en esta transición.
+     * @param y
+     *            parámetro y del punto que se pase en esta transición.
      */
-    public void addPoint(double x, double y,InputEvent event) {
-    	StretchCADToolState actualState = (StretchCADToolState) _fsm.getPreviousState();
-    	String status = actualState.getName();
+    public void addPoint(double x, double y, InputEvent event) {
+	StretchCADToolState actualState = (StretchCADToolState) _fsm
+		.getPreviousState();
+	String status = actualState.getName();
 
-    	if (status.equals("Stretch.SelFirstPoint")) {
-    		selfirstPoint = new Point2D.Double(x, y);
-    	} else if (status.equals("Stretch.SelLastPoint")) {
-    		sellastPoint = new Point2D.Double(x,y);
+	if (status.equals("Stretch.SelFirstPoint")) {
+	    selfirstPoint = new Point2D.Double(x, y);
+	} else if (status.equals("Stretch.SelLastPoint")) {
+	    sellastPoint = new Point2D.Double(x, y);
 
-    		double x1;
-    		double y1;
-    		double w1;
-    		double h1;
+	    double x1;
+	    double y1;
+	    double w1;
+	    double h1;
 
-    		if (selfirstPoint.getX() < sellastPoint.getX()) {
-    			x1 = selfirstPoint.getX();
-    			w1 = sellastPoint.getX() - selfirstPoint.getX();
-    		} else {
-    			x1 = sellastPoint.getX();
-    			w1 = selfirstPoint.getX() - sellastPoint.getX();
-    		}
+	    if (selfirstPoint.getX() < sellastPoint.getX()) {
+		x1 = selfirstPoint.getX();
+		w1 = sellastPoint.getX() - selfirstPoint.getX();
+	    } else {
+		x1 = sellastPoint.getX();
+		w1 = selfirstPoint.getX() - sellastPoint.getX();
+	    }
 
-    		if (selfirstPoint.getY() < sellastPoint.getY()) {
-    			y1 = selfirstPoint.getY();
-    			h1 = sellastPoint.getY() - selfirstPoint.getY();
-    		} else {
-    			y1 = sellastPoint.getY();
-    			h1 = selfirstPoint.getY() - sellastPoint.getY();
-    		}
+	    if (selfirstPoint.getY() < sellastPoint.getY()) {
+		y1 = selfirstPoint.getY();
+		h1 = sellastPoint.getY() - selfirstPoint.getY();
+	    } else {
+		y1 = sellastPoint.getY();
+		h1 = selfirstPoint.getY() - sellastPoint.getY();
+	    }
 
-    		rect = new Rectangle2D.Double(x1, y1, w1, h1);
-    	} else if (status.equals("Stretch.MoveFirstPoint")) {
-    		movefirstPoint = new Point2D.Double(x, y);
-    	} else if (status.equals("Stretch.MoveLastPoint")) {
-    		VectorialLayerEdited vle=getVLE();
-    		VectorialEditableAdapter vea=vle.getVEA();
-    		vea.startComplexRow();
-    		ArrayList selectedRow=getSelectedRows();
-    		ArrayList selectedRowAux=new ArrayList();
-    		PluginServices.getMDIManager().setWaitCursor();
-    		movelastPoint = new Point2D.Double(x, y);
+	    rect = new Rectangle2D.Double(x1, y1, w1, h1);
+	} else if (status.equals("Stretch.MoveFirstPoint")) {
+	    movefirstPoint = new Point2D.Double(x, y);
+	} else if (status.equals("Stretch.MoveLastPoint")) {
+	    VectorialLayerEdited vle = getVLE();
+	    VectorialEditableAdapter vea = vle.getVEA();
+	    vea.startComplexRow();
+	    ArrayList selectedRow = getSelectedRows();
+	    ArrayList selectedRowAux = new ArrayList();
+	    PluginServices.getMDIManager().setWaitCursor();
+	    movelastPoint = new Point2D.Double(x, y);
 
-    		Handler[] handlers = null;
+	    Handler[] handlers = null;
 
-    		//for (int i = selectedGeometries.nextSetBit(0); i >= 0;
-    		//		i = selectedGeometries.nextSetBit(i + 1)) {
-    		try {
-    			for (int i =0;i<selectedRow.size(); i++) {
-    				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
-    				DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
-    				IGeometry geometry = null;
-    				geometry = fea.getGeometry();
+	    // for (int i = selectedGeometries.nextSetBit(0); i >= 0;
+	    // i = selectedGeometries.nextSetBit(i + 1)) {
+	    try {
+		for (int i = 0; i < selectedRow.size(); i++) {
+		    IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+		    DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow()
+			    .cloneRow();
+		    IGeometry geometry = null;
+		    geometry = fea.getGeometry();
 
-    				handlers = geometry.getHandlers(IGeometry.STRETCHINGHANDLER);
+		    handlers = geometry
+			    .getHandlers(IGeometry.STRETCHINGHANDLER);
 
-    				for (int j = 0; j < handlers.length; j++) {
-    					if (rect.contains(handlers[j].getPoint())) {
-    						handlers[j].move(movelastPoint.getX() -
-    								movefirstPoint.getX(),
-    								movelastPoint.getY() - movefirstPoint.getY());
-    					}
-    				}
-    				vea.modifyRow(edRow.getIndex(),fea,getName(),EditionEvent.GRAPHIC);
-    				selectedRowAux.add(new DefaultRowEdited(fea,IRowEdited.STATUS_MODIFIED,edRow.getIndex()));
-    			}
-    			vea.endComplexRow(getName());
-    			vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS, selectedRowAux);
+		    for (int j = 0; j < handlers.length; j++) {
+			if (rect.contains(handlers[j].getPoint())) {
+			    handlers[j].move(
+				    movelastPoint.getX()
+					    - movefirstPoint.getX(),
+				    movelastPoint.getY()
+					    - movefirstPoint.getY());
+			}
+		    }
+		    vea.modifyRow(edRow.getIndex(), fea, getName(),
+			    EditionEvent.GRAPHIC);
+		    selectedRowAux.add(new DefaultRowEdited(fea,
+			    IRowEdited.STATUS_MODIFIED, edRow.getIndex()));
+		}
+		vea.endComplexRow(getName());
+		vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS,
+			selectedRowAux);
 
-    			PluginServices.getMDIManager().restoreCursor();
-    		} catch (ValidateRowException e) {
-    			NotificationManager.addError(e.getMessage(),e);
-    		} catch (ExpansionFileWriteException e) {
-    			NotificationManager.addError(e.getMessage(),e);
-    		} catch (ReadDriverException e) {
-    			NotificationManager.addError(e.getMessage(),e);
-    		} 
-    	}
+		PluginServices.getMDIManager().restoreCursor();
+	    } catch (ValidateRowException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    } catch (ExpansionFileWriteException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    } catch (ReadDriverException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    }
+	}
     }
 
     /**
      * Método para dibujar la lo necesario para el estado en el que nos
      * encontremos.
-     *
-     * @param g Graphics sobre el que dibujar.
-     * @param x parámetro x del punto que se pase para dibujar.
-     * @param y parámetro x del punto que se pase para dibujar.
+     * 
+     * @param g
+     *            Graphics sobre el que dibujar.
+     * @param x
+     *            parámetro x del punto que se pase para dibujar.
+     * @param y
+     *            parámetro x del punto que se pase para dibujar.
      */
     public void drawOperation(Graphics g, double x, double y) {
-		StretchCADToolState actualState = ((StretchCADToolContext) _fsm).getState();
-		String status = actualState.getName();
-		ArrayList selectedRow = getSelectedRows();
+	StretchCADToolState actualState = ((StretchCADToolContext) _fsm)
+		.getState();
+	String status = actualState.getName();
+	ArrayList selectedRow = getSelectedRows();
 
-		if (status.equals("Stretch.SelLastPoint")) {
-			GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-					4);
-			elShape.moveTo(selfirstPoint.getX(), selfirstPoint.getY());
-			elShape.lineTo(x, selfirstPoint.getY());
-			elShape.lineTo(x, y);
-			elShape.lineTo(selfirstPoint.getX(), y);
-			elShape.lineTo(selfirstPoint.getX(), selfirstPoint.getY());
-			ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
-				getCadToolAdapter().getMapControl().getViewPort(),
-				DefaultCADTool.axisReferencesSymbol);
-		} else if (status.equals("Stretch.MoveFirstPoint")) {
-			Handler[] handlers = null;
-			for (int i = 0;i<selectedRow.size();i++) {
-				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
-	    		DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
-				IGeometry geometry = null;
-					geometry = fea.getGeometry();
+	if (status.equals("Stretch.SelLastPoint")) {
+	    GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+		    4);
+	    elShape.moveTo(selfirstPoint.getX(), selfirstPoint.getY());
+	    elShape.lineTo(x, selfirstPoint.getY());
+	    elShape.lineTo(x, y);
+	    elShape.lineTo(selfirstPoint.getX(), y);
+	    elShape.lineTo(selfirstPoint.getX(), selfirstPoint.getY());
+	    ShapeFactory.createPolyline2D(elShape).draw((Graphics2D) g,
+		    getCadToolAdapter().getMapControl().getViewPort(),
+		    DefaultCADTool.axisReferencesSymbol);
+	} else if (status.equals("Stretch.MoveFirstPoint")) {
+	    Handler[] handlers = null;
+	    for (int i = 0; i < selectedRow.size(); i++) {
+		IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+		DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow()
+			.cloneRow();
+		IGeometry geometry = null;
+		geometry = fea.getGeometry();
 
-				handlers = geometry.getHandlers(IGeometry.STRETCHINGHANDLER);
+		handlers = geometry.getHandlers(IGeometry.STRETCHINGHANDLER);
 
-				for (int j = 0; j < handlers.length; j++) {
-					if (rect.contains(handlers[j].getPoint())) {
-							FGraphicUtilities.DrawHandlers((Graphics2D) g,getCadToolAdapter().getMapControl().getViewPort().getAffineTransform(),new Handler[] {handlers[j]},DefaultCADTool.handlerSymbol);
-					}
-				}
-			}
-		} else if (status.equals("Stretch.MoveLastPoint")) {
-			Handler[] handlers = null;
-
-			for (int i = 0;i<selectedRow.size();i++) {
-				IRowEdited edRow = (IRowEdited) selectedRow.get(i);
-	    		DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow().cloneRow();
-				IGeometry geometry = null;
-					geometry = fea.getGeometry();
-
-				handlers = geometry.getHandlers(IGeometry.STRETCHINGHANDLER);
-
-				for (int j = 0; j < handlers.length; j++) {
-					if (rect.contains(handlers[j].getPoint())) {
-						handlers[j].move(x - movefirstPoint.getX(),
-							y - movefirstPoint.getY());
-					}
-				}
-				geometry.draw((Graphics2D) g,
-					getCadToolAdapter().getMapControl().getViewPort(),
-					DefaultCADTool.axisReferencesSymbol);
-			}
+		for (int j = 0; j < handlers.length; j++) {
+		    if (rect.contains(handlers[j].getPoint())) {
+			FGraphicUtilities.DrawHandlers((Graphics2D) g,
+				getCadToolAdapter().getMapControl()
+					.getViewPort().getAffineTransform(),
+				new Handler[] { handlers[j] },
+				DefaultCADTool.handlerSymbol);
+		    }
 		}
+	    }
+	} else if (status.equals("Stretch.MoveLastPoint")) {
+	    Handler[] handlers = null;
+
+	    for (int i = 0; i < selectedRow.size(); i++) {
+		IRowEdited edRow = (IRowEdited) selectedRow.get(i);
+		DefaultFeature fea = (DefaultFeature) edRow.getLinkedRow()
+			.cloneRow();
+		IGeometry geometry = null;
+		geometry = fea.getGeometry();
+
+		handlers = geometry.getHandlers(IGeometry.STRETCHINGHANDLER);
+
+		for (int j = 0; j < handlers.length; j++) {
+		    if (rect.contains(handlers[j].getPoint())) {
+			handlers[j].move(x - movefirstPoint.getX(), y
+				- movefirstPoint.getY());
+		    }
+		}
+		geometry.draw((Graphics2D) g, getCadToolAdapter()
+			.getMapControl().getViewPort(),
+			DefaultCADTool.axisReferencesSymbol);
+	    }
 	}
+    }
 
     /**
-	 * Add a diferent option.
-	 *
-	 * @param s
-	 *            Diferent option.
-	 */
+     * Add a diferent option.
+     * 
+     * @param s
+     *            Diferent option.
+     */
     public void addOption(String s) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
     public void addValue(double d) {
     }
 
+    public String getName() {
+	return PluginServices.getText(this, "stretch_");
+    }
 
-	public String getName() {
-		return PluginServices.getText(this,"stretch_");
-	}
+    @Override
+    public String toString() {
+	return "_stretch";
+    }
 
-	public String toString() {
-		return "_stretch";
+    @Override
+    public boolean isApplicable(int shapeType) {
+	switch (shapeType) {
+	case FShape.POINT:
+	case FShape.MULTIPOINT:
+	    return false;
 	}
-	public boolean isApplicable(int shapeType) {
-		switch (shapeType) {
-		case FShape.POINT:
-		case FShape.MULTIPOINT:
-			return false;
-		}
-		return true;
-	}
+	return true;
+    }
 
-	public void drawOperation(Graphics g, ArrayList pointList) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void drawOperation(Graphics g, ArrayList pointList) {
+	// TODO Auto-generated method stub
 
-	public boolean isMultiTransition() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    }
 
-	public void transition(InputEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public boolean isMultiTransition() {
+	// TODO Auto-generated method stub
+	return false;
+    }
+
+    public void transition(InputEvent event) {
+	// TODO Auto-generated method stub
+
+    }
 }

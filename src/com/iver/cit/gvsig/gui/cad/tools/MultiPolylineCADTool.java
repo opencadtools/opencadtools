@@ -52,577 +52,609 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.MultiPolylineCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.MultiPolylineCADToolContext.MultiLineaCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
-
 /**
  * DOCUMENT ME!
- *
+ * 
  * @author Isabel Pérez-Urria Lage [LBD]
  * @author Javier Estévez [Cartolab]
  */
 public class MultiPolylineCADTool extends InsertionCADTool {
-	private MultiPolylineCADToolContext _fsm;
-	private Point2D firstPoint;
-	private Point2D antPoint;
-	private ArrayList list = new ArrayList();
-	private ArrayList points = new ArrayList();
-	private int numLines;
+    private MultiPolylineCADToolContext _fsm;
+    private Point2D firstPoint;
+    private Point2D antPoint;
+    private ArrayList list = new ArrayList();
+    private ArrayList points = new ArrayList();
+    private int numLines;
 
-	/**
-	 * Index of the last feature introduced in VEA.
-	 */
-	private Integer virtualIndex;
+    /**
+     * Index of the last feature introduced in VEA.
+     */
+    private Integer virtualIndex;
 
-	/**
-	 * Método de incio, para poner el código de todo lo que se requiera de una
-	 * carga previa a la utilización de la herramienta.
-	 */
-	public void init() {
+    /**
+     * Método de incio, para poner el código de todo lo que se requiera de una
+     * carga previa a la utilización de la herramienta.
+     */
+    @Override
+    public void init() {
 	// clear();
 	if (_fsm == null) {
 	    _fsm = new MultiPolylineCADToolContext(this);
 	}
-//		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
-//		los snappers
-		getCadToolAdapter().setPreviousPoint((double[])null);
-	}
+	// con esto limpio el ultimo punto pulsado para reinicializar el
+	// seguimiento de
+	// los snappers
+	getCadToolAdapter().setPreviousPoint((double[]) null);
+    }
 
-	public void clear() {
-		super.init();
-		this.setMultiTransition(true);
-		points.clear();
-		list.clear();
-		firstPoint = null;
-		antPoint = null;
-		numLines = 0;
+    @Override
+    public void clear() {
+	super.init();
+	this.setMultiTransition(true);
+	points.clear();
+	list.clear();
+	firstPoint = null;
+	antPoint = null;
+	numLines = 0;
 	virtualIndex = null;
 	_fsm = new MultiPolylineCADToolContext(this);
 	virtualIndex = null;
 	_fsm = new MultiPolylineCADToolContext(this);
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
-	 */
-	public void transition(double x, double y, InputEvent event) {
-		_fsm.addPoint(x, y, event);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double, double)
+     */
+    public void transition(double x, double y, InputEvent event) {
+	_fsm.addPoint(x, y, event);
+    }
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
-	 */
-	public void transition(double d) {
-		_fsm.addValue(d);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double)
+     */
+    public void transition(double d) {
+	_fsm.addValue(d);
+    }
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
-	 */
-	public void transition(String s) throws CommandException {
-		if (!super.changeCommand(s)){
-			if(s.equals(PluginServices.getText(this, "removePoint"))) {
-				_fsm.removePoint(null, points.size());
-			} else {
-				_fsm.addOption(s);
-			}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, java.lang.String)
+     */
+    public void transition(String s) throws CommandException {
+	if (!super.changeCommand(s)) {
+	    if (s.equals(PluginServices.getText(this, "removePoint"))) {
+		_fsm.removePoint(null, points.size());
+	    } else {
+		_fsm.addOption(s);
+	    }
+	}
+    }
+
+    public void transition(InputEvent event) {
+	_fsm.removePoint(event, points.size());
+    }
+
+    public void saveTempGeometry() {
+	IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
+	FGeometryCollection fgc = new FGeometryCollection(geoms);
+	VectorialEditableAdapter vea = getVLE().getVEA();
+	GeneralPathX gp = new GeneralPathX();
+	gp.append(fgc.getPathIterator(null, FConverter.FLATNESS), true);
+	IRowEdited row = null;
+
+	try {
+	    // Ya se ha insertado alguna línea en memoria
+	    if (virtualIndex != null) {
+		if (numLines != 0) {
+		    row = vea.getRow(virtualIndex.intValue());
+		    IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
+		    IGeometry geometry = feat.getGeometry();
+		    GeneralPathX currentGp = getCurrentPath(geometry);
+		    currentGp.append(
+			    gp.getPathIterator(null, FConverter.FLATNESS),
+			    false);
+		    feat.setGeometry(ShapeFactory.createPolyline2D(currentGp));
+		    modifyFeature(virtualIndex.intValue(), feat);
 		}
+		// Es la primera linea que se inserta en memoria
+	    } else {
+		addGeometry(ShapeFactory.createPolyline2D(gp));
+		virtualIndex = new Integer(vea.getRowCount() - 1);
+	    }
+	    numLines++;
+	} catch (ExpansionFileReadException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
 	}
 
-	public void transition(InputEvent event){
-		_fsm.removePoint(event, points.size());
-	}
+    }
 
+    /**
+     * Obtiene la geometria actual a partir de los puntos introducidos
+     * */
+    public IGeometry getCurrentGeom() {
+	VectorialEditableAdapter vea = getVLE().getVEA();
+	IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
+	FGeometryCollection fgc = new FGeometryCollection(geoms);
+	GeneralPathX gp = new GeneralPathX();
+	gp.append(fgc.getPathIterator(null, FConverter.FLATNESS), true);
 
-
-	public void saveTempGeometry(){
-		IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
-		FGeometryCollection fgc = new FGeometryCollection(geoms);
-		VectorialEditableAdapter vea = getVLE().getVEA();
-		GeneralPathX gp = new GeneralPathX();
-		gp.append(fgc.getPathIterator(null,FConverter.FLATNESS), true);
-		IRowEdited row = null;
-
-		try {
-			//Ya se ha insertado alguna línea en memoria
-			if(virtualIndex != null){
-				if(numLines != 0){
-				    row = vea.getRow(virtualIndex.intValue());
-					IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
-					IGeometry geometry = feat.getGeometry();
-					GeneralPathX currentGp = getCurrentPath(geometry);
-					currentGp.append(gp.getPathIterator(null,FConverter.FLATNESS), false);
-					feat.setGeometry(ShapeFactory.createPolyline2D(currentGp));
-					modifyFeature(virtualIndex.intValue(), feat);
-				}
-				//Es la primera linea que se inserta en memoria
-				}else{
-					addGeometry(ShapeFactory.createPolyline2D(gp));
-					virtualIndex = new Integer(vea.getRowCount()-1);
-			}
-			numLines++;
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(), e);
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(), e);
+	IGeometry geom = null;
+	try {
+	    if (virtualIndex != null) {
+		if (numLines != 0) {
+		    IRowEdited row;
+		    row = vea.getRow(virtualIndex.intValue());
+		    IGeometry geometry = ((IFeature) row.getLinkedRow()
+			    .cloneRow()).getGeometry();
+		    GeneralPathX currentGp = getCurrentPath(geometry);
+		    currentGp.append(
+			    gp.getPathIterator(null, FConverter.FLATNESS),
+			    false);
+		    geom = ShapeFactory.createPolyline2D(currentGp);
 		}
-
+	    } else {
+		geom = ShapeFactory.createPolyline2D(gp);
+	    }
+	} catch (ExpansionFileReadException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
 	}
 
+	return geom;
+    }
 
-	/**
-	 * Obtiene la geometria actual a partir de los puntos introducidos
-	 * */
-	public IGeometry getCurrentGeom(){
-		VectorialEditableAdapter vea = getVLE().getVEA();
-		IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
-		FGeometryCollection fgc = new FGeometryCollection(geoms);
-		GeneralPathX gp = new GeneralPathX();
-		gp.append(fgc.getPathIterator(null,FConverter.FLATNESS), true);
-
-		IGeometry geom = null;
-		try {
-			if(virtualIndex != null){
-				if(numLines != 0){
-					IRowEdited row;
-					row = vea.getRow(virtualIndex.intValue());
-					IGeometry geometry =  ((IFeature)row.getLinkedRow().cloneRow()).getGeometry();
-					GeneralPathX currentGp = getCurrentPath(geometry);
-					currentGp.append(gp.getPathIterator(null,FConverter.FLATNESS), false);
-					geom = ShapeFactory.createPolyline2D(currentGp);
-				}
-			}else{
-				geom = ShapeFactory.createPolyline2D(gp);
-			}
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(), e);
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(), e);
-		}
-
-		return geom;
+    /**
+     * Acción que se ejecuta cuando cancelamos el formulario de inserción. Borra
+     * la última fila añadida al VectorialEditableAdapter. Si sólo hay una línea
+     * se elimina la fila completa del VectorialEditableAdapter.
+     * */
+    public void cancelInsertion() {
+	VectorialLayerEdited vle = getVLE();
+	VectorialEditableAdapter vea = vle.getVEA();
+	IRowEdited row = null;
+	try {
+	    if (numLines > 1) {
+		row = vea.getRow(virtualIndex.intValue());
+		IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
+		IGeometry geometry = feat.getGeometry();
+		geometry = removeLastShape(geometry);
+		feat.setGeometry(geometry);
+		modifyFeature(virtualIndex.intValue(), feat);
+	    } else {
+		getCadToolAdapter().delete(virtualIndex.intValue());
+		virtualIndex = null;
+	    }
+	    numLines--;
+	} catch (ExpansionFileReadException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
 	}
 
+	// con esto limpio el ultimo punto pulsado para reinicializar el
+	// seguimiento de
+	// los snappers
+	getCadToolAdapter().setPreviousPoint((double[]) null);
+    }
 
-	/**
-	 * Acción que se ejecuta cuando cancelamos el formulario de inserción.
-	 * Borra la última fila añadida al VectorialEditableAdapter. Si sólo
-	 * hay una línea se elimina la fila completa del VectorialEditableAdapter.
-	 * */
-	public void cancelInsertion(){
-		VectorialLayerEdited vle=getVLE();
-		VectorialEditableAdapter vea = vle.getVEA();
-		IRowEdited row=null;
-		try {
-			if(numLines > 1){
-			    row = vea.getRow(virtualIndex.intValue());
-				IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
-				IGeometry geometry = feat.getGeometry();
-				geometry = removeLastShape(geometry);
-				feat.setGeometry(geometry);
-				modifyFeature(virtualIndex.intValue(), feat);
-			}else{
-				getCadToolAdapter().delete(virtualIndex.intValue());
-				virtualIndex = null;
-			}
-			numLines--;
-		} catch (ExpansionFileReadException e) {
-			NotificationManager.addError(e.getMessage(), e);
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(), e);
-		}
+    /**
+     * Equivale al transition del prototipo pero sin pasarle como parámetro el
+     * editableFeatureSource que ya estará creado.
+     * 
+     * @param sel
+     *            Bitset con las geometrías que estén seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase en esta transición.
+     * @param y
+     *            parámetro y del punto que se pase en esta transición.
+     */
+    public void addPoint(double x, double y, InputEvent event) {
+	MultiLineaCADToolState actualState = (MultiLineaCADToolState) _fsm
+		.getPreviousState();
+	String status = actualState.getName();
 
-//		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
-//		los snappers
-		getCadToolAdapter().setPreviousPoint((double[])null);
+	// System.out.println("Acción addPoint, estado= " + status);
+	if (status.equals("MultiLinea.NextPoint")
+		|| status.equals("MultiLinea.FirstPoint")
+		|| status.equals("MultiLinea.SecondPoint")) {
+
+	    // Primer punto
+	    if (firstPoint == null) {
+		firstPoint = new Point2D.Double(x, y);
+	    }
+	    Point2D point = new Point2D.Double(x, y);
+
+	    // No es el primer punto
+	    if (antPoint != null) {
+		GeneralPathX elShape = new GeneralPathX(
+			GeneralPathX.WIND_EVEN_ODD, 2);
+		elShape.moveTo(antPoint.getX(), antPoint.getY());
+		elShape.lineTo(point.getX(), point.getY());
+		list.add(ShapeFactory.createPolyline2D(elShape));
+
+	    }
+	    // Reasigno las referencias
+	    // Primer punto
+	    if (antPoint == null) {
+		antPoint = (Point2D) firstPoint.clone();
+	    }
+
+	    antPoint = point;
+
+	    points.add(point);
+	}
+    }
+
+    public void removePoint(InputEvent event) {
+	MultiLineaCADToolState actualState = (MultiLineaCADToolState) _fsm
+		.getPreviousState();
+	String status = actualState.getName();
+
+	// System.out.println("Acción removePoint, estado= " + status);
+	if (status.equals("MultiLinea.SecondPoint")) {
+	    if (virtualIndex == null) {
+		// prueba para actualizar el ultimo punto pulsado
+		getCadToolAdapter().setPreviousPoint((double[]) null);
+		cancel();
+	    } else {
+		clearPoints();
+	    }
+	} else if (status.equals("MultiLinea.NextPoint")) {
+	    // System.out.println("Numero de coordenadas antes de borrar: " +
+	    // points.size());
+	    if (points.size() == 2) {
+		getCadToolAdapter().setPreviousPoint(
+			(Point2D) points.get(points.size() - 2));
+		list.remove(list.size() - 1);
+		points.remove(points.size() - 1);
+		antPoint = (Point2D) points.get(points.size() - 1);
+	    } else {
+		// prueba para actualizar el ultimo punto pulsado
+		getCadToolAdapter().setPreviousPoint(
+			(Point2D) points.get(points.size() - 2));
+
+		list.remove(list.size() - 1);
+		points.remove(points.size() - 1);
+		antPoint = (Point2D) points.get(points.size() - 1);
+	    }
 	}
 
+    }
 
+    /**
+     * Inicializa las constantes correspondientes a la línea que se está
+     * digitalizandi actualmente
+     * */
+    public void clearPoints() {
+	points.clear();
+	list.clear();
+	firstPoint = antPoint = null;
+	// con esto limpio el ultimo punto pulsado para reinicializar el
+	// seguimiento de
+	// los snappers
+	getCadToolAdapter().setPreviousPoint((double[]) null);
+    }
 
+    /**
+     * Acción que abre el formulario de edición de las propiedades para el punto
+     * introducido
+     */
+    // public void openForm(){
+    // // keys = openInsertEntityForm();
+    // if (keys.size() == 0){
+    // setFormState(InsertionCADTool.FORM_CANCELLED);
+    // }else{
+    // setFormState(InsertionCADTool.FORM_ACCEPTED);
+    // }
+    // }
 
-	/**
-	 * Equivale al transition del prototipo pero sin pasarle como parámetro el
-	 * editableFeatureSource que ya estará creado.
-	 *
-	 * @param sel Bitset con las geometrías que estén seleccionadas.
-	 * @param x parámetro x del punto que se pase en esta transición.
-	 * @param y parámetro y del punto que se pase en esta transición.
-	 */
-	public void addPoint(double x, double y,InputEvent event) {
-		MultiLineaCADToolState actualState = (MultiLineaCADToolState) _fsm.getPreviousState();
-		String status = actualState.getName();
+    /**
+     * Acción que guarda en base de datos la geometría digitalizada
+     */
+    public void save() {
+	// insertGeometry(keys);
+	// _fsm = new MultiLineaCADToolContext(this);
+	initialize();
+    }
 
-		//System.out.println("Acción addPoint, estado= " + status);
-		if (status.equals("MultiLinea.NextPoint") || status.equals("MultiLinea.FirstPoint")||
-				status.equals("MultiLinea.SecondPoint")) {
-
-			//Primer punto
-			if (firstPoint == null) {
-				firstPoint = new Point2D.Double(x, y);
-			}
-			Point2D point = new Point2D.Double(x, y);
-
-			//No es el primer punto
-			if (antPoint != null) {
-				GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
-						2);
-				elShape.moveTo(antPoint.getX(), antPoint.getY());
-				elShape.lineTo(point.getX(), point.getY());
-				list.add(ShapeFactory.createPolyline2D(elShape));
-
-			}
-			//Reasigno las referencias
-			//Primer punto
-			if (antPoint==null)
-				antPoint = (Point2D)firstPoint.clone();
-
-			antPoint = point;
-
-			points.add(point);
-		}
+    public void cancel() {
+	// Se ha insertado en vea una geometria
+	if ((virtualIndex != null) && (numLines > 0)) {
+	    getCadToolAdapter().delete(virtualIndex.intValue());
 	}
-
-
-	public void removePoint(InputEvent event) {
-		MultiLineaCADToolState actualState = (MultiLineaCADToolState) _fsm.getPreviousState();
-		String status = actualState.getName();
-
-		//System.out.println("Acción removePoint, estado= " + status);
-		if (status.equals("MultiLinea.SecondPoint")){
-			if(virtualIndex == null){
-//				prueba para actualizar el ultimo punto pulsado
-				getCadToolAdapter().setPreviousPoint((double[])null);
-				cancel();
-			}
-			else
-				clearPoints();
-		}else if(status.equals("MultiLinea.NextPoint")){
-//			System.out.println("Numero de coordenadas antes de borrar: " + points.size());
-			if(points.size() == 2){
-				getCadToolAdapter().setPreviousPoint((Point2D)points.get(points.size()-2));
-				list.remove(list.size()-1);
-				points.remove(points.size()-1);
-				antPoint =(Point2D)points.get(points.size()-1);
-			}else{
-//				prueba para actualizar el ultimo punto pulsado
-				getCadToolAdapter().setPreviousPoint((Point2D)points.get(points.size()-2));
-
-				list.remove(list.size()-1);
-				points.remove(points.size()-1);
-				antPoint = (Point2D)points.get(points.size()-1);
-			}
-		}
-
-	}
-
-
-	/**
-	 * Inicializa las constantes correspondientes a la línea
-	 * que se está digitalizandi actualmente
-	 * */
-	public void clearPoints(){
-		points.clear();
-		list.clear();
-		firstPoint = antPoint = null;
-//		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
-//		los snappers
-		getCadToolAdapter().setPreviousPoint((double[])null);
-	}
-
-
-	/**
-	 * Acción que abre el formulario de edición de las propiedades para
-	 * el punto introducido
-	 */
-//	public void openForm(){
-////		keys = openInsertEntityForm();
-//		if (keys.size() == 0){
-//			setFormState(InsertionCADTool.FORM_CANCELLED);
-//		}else{
-//			setFormState(InsertionCADTool.FORM_ACCEPTED);
-//		}
-//	}
-
-	/**
-	 * Acción que guarda en base de datos la geometría
-	 * digitalizada
-	 */
-	public void save(){
-//		insertGeometry(keys);
-//		_fsm = new MultiLineaCADToolContext(this);
-		initialize();
-	}
-
-
-	public void cancel(){
-		//Se ha insertado en vea una geometria
-		if((virtualIndex != null) && (numLines > 0)){
-			getCadToolAdapter().delete(virtualIndex.intValue());
-		}
 	// initialize();
 	clear();
-	}
+    }
 
+    private void initialize() {
+	list.clear();
+	points.clear();
+	// keys.clear();
+	antPoint = firstPoint = null;
+	// initializeFormState();
+	virtualIndex = null;
+	numLines = 0;
+	// con esto limpio el ultimo punto pulsado para reinicializar el
+	// seguimiento de
+	// los snappers
+	getCadToolAdapter().setPreviousPoint((double[]) null);
+    }
 
-	private void initialize(){
-		list.clear();
-		points.clear();
-//		keys.clear();
-		antPoint=firstPoint=null;
-//		initializeFormState();
-		virtualIndex = null;
-		numLines = 0;
-//		con esto limpio el ultimo punto pulsado para reinicializar el seguimiento de
-//		los snappers
-		getCadToolAdapter().setPreviousPoint((double[])null);
-	}
+    // Obtiene el GeneralPathX a partir de la IGeometry
+    private GeneralPathX getCurrentPath(IGeometry gp) {
 
+	GeneralPathX newGp = new GeneralPathX();
+	double[] theData = new double[6];
 
-	//Obtiene el GeneralPathX a partir de la IGeometry
-	private GeneralPathX getCurrentPath(IGeometry gp) {
+	PathIterator theIterator;
+	int theType;
+	int numParts = 0;
 
-		GeneralPathX newGp = new GeneralPathX();
-		double[] theData = new double[6];
+	theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
+	while (!theIterator.isDone()) {
+	    theType = theIterator.currentSegment(theData);
+	    switch (theType) {
 
-		PathIterator theIterator;
-		int theType;
-		int numParts = 0;
+	    case PathIterator.SEG_MOVETO:
+		numParts++;
+		newGp.moveTo(theData[0], theData[1]);
+		break;
 
+	    case PathIterator.SEG_LINETO:
+		newGp.lineTo(theData[0], theData[1]);
+		break;
 
-		theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
-		while (!theIterator.isDone()) {
-			theType = theIterator.currentSegment(theData);
-			switch (theType) {
+	    case PathIterator.SEG_QUADTO:
+		newGp.quadTo(theData[0], theData[1], theData[2], theData[3]);
+		break;
 
-			case PathIterator.SEG_MOVETO:
-				numParts++;
-				newGp.moveTo(theData[0], theData[1]);
-				break;
+	    case PathIterator.SEG_CUBICTO:
+		newGp.curveTo(theData[0], theData[1], theData[2], theData[3],
+			theData[4], theData[5]);
+		break;
 
-			case PathIterator.SEG_LINETO:
-				newGp.lineTo(theData[0], theData[1]);
-				break;
+	    case PathIterator.SEG_CLOSE:
+		newGp.closePath();
+		break;
+	    } // end switch
 
-			case PathIterator.SEG_QUADTO:
-				newGp.quadTo(theData[0], theData[1], theData[2], theData[3]);
-				break;
+	    theIterator.next();
+	} // end while loop
 
-			case PathIterator.SEG_CUBICTO:
-				newGp.curveTo(theData[0], theData[1], theData[2], theData[3], theData[4], theData[5]);
-				break;
+	return newGp;
 
-			case PathIterator.SEG_CLOSE:
-				newGp.closePath();
-				break;
-			} //end switch
+    }
 
-			theIterator.next();
-		} //end while loop
+    private IGeometry removeLastShape(IGeometry gp) {
 
+	GeneralPathX newGp = new GeneralPathX();
+	double[] theData = new double[6];
 
-		return newGp;
+	PathIterator theIterator;
+	int theType;
+	int numParts = 0;
+	boolean endGeom = false;
 
-	}
+	theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
+	while (!theIterator.isDone()) {
+	    if (endGeom) {
+		break;
+	    }
+	    theType = theIterator.currentSegment(theData);
 
-	private IGeometry removeLastShape(IGeometry gp) {
+	    switch (theType) {
 
-		GeneralPathX newGp = new GeneralPathX();
-		double[] theData = new double[6];
-
-		PathIterator theIterator;
-		int theType;
-		int numParts = 0;
-		boolean endGeom = false;
-
-
-		theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
-		while (!theIterator.isDone()) {
-			if(endGeom)
-				break;
-			theType = theIterator.currentSegment(theData);
-
-			switch (theType) {
-
-			case PathIterator.SEG_MOVETO:
-				numParts++;
-				if(numParts == numLines){
-					endGeom = true;
-					break;
-				}
-				newGp.moveTo(theData[0], theData[1]);
-				break;
-
-			case PathIterator.SEG_LINETO:
-				newGp.lineTo(theData[0], theData[1]);
-				break;
-
-			case PathIterator.SEG_QUADTO:
-				newGp.quadTo(theData[0], theData[1], theData[2], theData[3]);
-				break;
-
-			case PathIterator.SEG_CUBICTO:
-				newGp.curveTo(theData[0], theData[1], theData[2], theData[3], theData[4], theData[5]);
-				break;
-
-			case PathIterator.SEG_CLOSE:
-				newGp.closePath();
-				break;
-			} //end switch
-
-			theIterator.next();
-		} //end while loop
-
-		return  ShapeFactory.createPolyline2D(newGp);
-
-	}
-
-
-	public void drawOperation(Graphics g, ArrayList listaPuntos) {
-
-
-//		if (status.equals("MultiLinea.FirstPoint") || status.equals("MultiLinea.SecondPoint") ||
-//		status.equals("MultiLinea.NextPoint")) {
-		for (int i = 0; i < list.size(); i++) {
-			((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
-					getCadToolAdapter().getMapControl().getViewPort(),
-					CADTool.drawingSymbol);
+	    case PathIterator.SEG_MOVETO:
+		numParts++;
+		if (numParts == numLines) {
+		    endGeom = true;
+		    break;
 		}
-//		ahora debemos pintar las lineas que vienen en la lista
-		if(listaPuntos!=null&&listaPuntos.size()>1){
-			if (antPoint!=null){
-				Point2D puntoInicial = antPoint;
-				for(int i = 0; i<listaPuntos.size();i++){
-					Point2D puntoFinal = (Point2D) listaPuntos.get(i);
-					drawLine((Graphics2D) g, puntoInicial, puntoFinal);
-					puntoInicial = puntoFinal;
-//					pintamos los puntos para que se note el snapping
-					if(i<listaPuntos.size()-1){
-						Point2D actual = null;
-						actual = CADExtension.getEditionManager().getMapControl().getViewPort().fromMapPoint(puntoInicial);
-						int sizePixels = 12;
-						int half = sizePixels / 2;
-						g.drawRect((int) (actual.getX() - half),
-								(int) (actual.getY() - half),
-								sizePixels, sizePixels);
-					}
-				}
-			}else{
-				Point2D puntoInicial = (Point2D) listaPuntos.get(0);
-				for(int i = 1; i<listaPuntos.size();i++){
-					Point2D puntoFinal = (Point2D) listaPuntos.get(i);
-					drawLine((Graphics2D) g, puntoInicial, puntoFinal);
-					puntoInicial = puntoFinal;
+		newGp.moveTo(theData[0], theData[1]);
+		break;
 
-//					pintamos los puntos para que se note el snapping
-					if(i<listaPuntos.size()-1){
-						Point2D actual = null;
-						actual = CADExtension.getEditionManager().getMapControl().getViewPort().fromMapPoint(puntoInicial);
-						int sizePixels = 12;
-						int half = sizePixels / 2;
-						g.drawRect((int) (actual.getX() - half),
-								(int) (actual.getY() - half),
-								sizePixels, sizePixels);
-					}
+	    case PathIterator.SEG_LINETO:
+		newGp.lineTo(theData[0], theData[1]);
+		break;
 
-				}
-			}
+	    case PathIterator.SEG_QUADTO:
+		newGp.quadTo(theData[0], theData[1], theData[2], theData[3]);
+		break;
+
+	    case PathIterator.SEG_CUBICTO:
+		newGp.curveTo(theData[0], theData[1], theData[2], theData[3],
+			theData[4], theData[5]);
+		break;
+
+	    case PathIterator.SEG_CLOSE:
+		newGp.closePath();
+		break;
+	    } // end switch
+
+	    theIterator.next();
+	} // end while loop
+
+	return ShapeFactory.createPolyline2D(newGp);
+
+    }
+
+    public void drawOperation(Graphics g, ArrayList listaPuntos) {
+
+	// if (status.equals("MultiLinea.FirstPoint") ||
+	// status.equals("MultiLinea.SecondPoint") ||
+	// status.equals("MultiLinea.NextPoint")) {
+	for (int i = 0; i < list.size(); i++) {
+	    ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
+		    getCadToolAdapter().getMapControl().getViewPort(),
+		    CADTool.drawingSymbol);
+	}
+	// ahora debemos pintar las lineas que vienen en la lista
+	if (listaPuntos != null && listaPuntos.size() > 1) {
+	    if (antPoint != null) {
+		Point2D puntoInicial = antPoint;
+		for (int i = 0; i < listaPuntos.size(); i++) {
+		    Point2D puntoFinal = (Point2D) listaPuntos.get(i);
+		    drawLine((Graphics2D) g, puntoInicial, puntoFinal);
+		    puntoInicial = puntoFinal;
+		    // pintamos los puntos para que se note el snapping
+		    if (i < listaPuntos.size() - 1) {
+			Point2D actual = null;
+			actual = CADExtension.getEditionManager()
+				.getMapControl().getViewPort()
+				.fromMapPoint(puntoInicial);
+			int sizePixels = 12;
+			int half = sizePixels / 2;
+			g.drawRect((int) (actual.getX() - half),
+				(int) (actual.getY() - half), sizePixels,
+				sizePixels);
+		    }
 		}
+	    } else {
+		Point2D puntoInicial = (Point2D) listaPuntos.get(0);
+		for (int i = 1; i < listaPuntos.size(); i++) {
+		    Point2D puntoFinal = (Point2D) listaPuntos.get(i);
+		    drawLine((Graphics2D) g, puntoInicial, puntoFinal);
+		    puntoInicial = puntoFinal;
+
+		    // pintamos los puntos para que se note el snapping
+		    if (i < listaPuntos.size() - 1) {
+			Point2D actual = null;
+			actual = CADExtension.getEditionManager()
+				.getMapControl().getViewPort()
+				.fromMapPoint(puntoInicial);
+			int sizePixels = 12;
+			int half = sizePixels / 2;
+			g.drawRect((int) (actual.getX() - half),
+				(int) (actual.getY() - half), sizePixels,
+				sizePixels);
+		    }
+
+		}
+	    }
+	}
+    }
+
+    /**
+     * Método para dibujar la lo necesario para el estado en el que nos
+     * encontremos.
+     * 
+     * @param g
+     *            Graphics sobre el que dibujar.
+     * @param selectedGeometries
+     *            BitSet con las geometrías seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase para dibujar.
+     * @param y
+     *            parámetro x del punto que se pase para dibujar.
+     */
+    public void drawOperation(Graphics g, double x, double y) {
+	// MultiLineaCADToolState actualState =
+	// ((MultiLineaCADToolContext)_fsm).getState();
+	// String status = actualState.getName();
+
+	// if (status.equals("MultiLinea.FirstPoint") ||
+	// status.equals("MultiLinea.SecondPoint") ||
+	// status.equals("MultiLinea.NextPoint")) {
+	for (int i = 0; i < list.size(); i++) {
+	    ((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
+		    getCadToolAdapter().getMapControl().getViewPort(),
+		    CADTool.drawingSymbol);
+	}
+	if (antPoint != null) {
+	    drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
 	}
 
-	/**
-	 * Método para dibujar la lo necesario para el estado en el que nos
-	 * encontremos.
-	 *
-	 * @param g Graphics sobre el que dibujar.
-	 * @param selectedGeometries BitSet con las geometrías seleccionadas.
-	 * @param x parámetro x del punto que se pase para dibujar.
-	 * @param y parámetro x del punto que se pase para dibujar.
+    }
+
+    /**
+     * Add a diferent option.
+     * 
+     * @param sel
+     *            DOCUMENT ME!
+     * @param s
+     *            Diferent option.
+     */
+    public void addOption(String s) {
+	MultiLineaCADToolState actualState = (MultiLineaCADToolState) _fsm
+		.getPreviousState();
+
+	if (s.equals("C") || s.equals("c")) {
+	    GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD,
+		    2);
+	    elShape.moveTo(antPoint.getX(), antPoint.getY());
+	    elShape.lineTo(firstPoint.getX(), firstPoint.getY());
+	    list.add(ShapeFactory.createPolyline2D(elShape));
+	    // closeGeometry();
+	}
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
+     */
+    public void addValue(double d) {
+    }
+
+    @Override
+    public void end() {
+	/*
+	 * CADExtension.setCADTool("polyline");
+	 * PluginServices.getMainFrame().setSelectedTool("POLYLINE");
 	 */
-	public void drawOperation(Graphics g, double x,
-			double y) {
-//		MultiLineaCADToolState actualState = ((MultiLineaCADToolContext)_fsm).getState();
-//		String status = actualState.getName();
+    }
 
+    public String getName() {
+	return PluginServices.getText(this, "multipolyline_");
+    }
 
-//		if (status.equals("MultiLinea.FirstPoint") || status.equals("MultiLinea.SecondPoint") ||
-//		status.equals("MultiLinea.NextPoint")) {
-		for (int i = 0; i < list.size(); i++) {
-			((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
-					getCadToolAdapter().getMapControl().getViewPort(),
-					CADTool.drawingSymbol);
-		}
-		if (antPoint!=null) {
-			drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y));
-		}
+    @Override
+    public String toString() {
+	return "_multilinea";
+    }
 
+    @Override
+    public boolean isApplicable(int shapeType) {
+	switch (shapeType) {
+	case FShape.LINE:
+	case FShape.MULTI:// GeometryTypes.MULTILINESTRING:
+	    return true;
 	}
+	return false;
+    }
 
+    @Override
+    public boolean isMultiTransition() {
+	// TODO Auto-generated method stub
+	return true;
+    }
 
-	/**
-	 * Add a diferent option.
-	 *
-	 * @param sel DOCUMENT ME!
-	 * @param s Diferent option.
-	 */
-	public void addOption(String s) {
-		MultiLineaCADToolState actualState = (MultiLineaCADToolState) _fsm.getPreviousState();
+    @Override
+    public void setMultiTransition(boolean condicion) {
+	// TODO Auto-generated method stub
 
-		if (s.equals("C") || s.equals("c")) {
-			GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
-			elShape.moveTo(antPoint.getX(), antPoint.getY());
-			elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-			list.add(ShapeFactory.createPolyline2D(elShape));
-			//closeGeometry();
-		}
-	}
+    }
 
+    public void setPreviousTool(DefaultCADTool tool) {
+	// TODO Auto-generated method stub
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
-	 */
-	public void addValue(double d) {
-	}
+    }
 
-
-
-	public void end() {
-		/* CADExtension.setCADTool("polyline");
-        PluginServices.getMainFrame().setSelectedTool("POLYLINE"); */
-	}
-
-	public String getName() {
-	    return PluginServices.getText(this,"multipolyline_");
-	}
-
-	public String toString() {
-		return "_multilinea";
-	}
-	public boolean isApplicable(int shapeType) {
-		switch (shapeType) {
-		case FShape.LINE:
-		case FShape.MULTI://GeometryTypes.MULTILINESTRING:
-			return true;
-		}
-		return false;
-	}
-
-
-	public boolean isMultiTransition() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
-	public void setMultiTransition(boolean condicion) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	public void setPreviousTool(DefaultCADTool tool) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public int getPointsCount() {
-		return points.size();
-	}
+    public int getPointsCount() {
+	return points.size();
+    }
 }

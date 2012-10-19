@@ -25,8 +25,8 @@ import com.vividsolutions.jts.geomgraph.Node;
 import com.vividsolutions.jts.geomgraph.NodeFactory;
 
 /**
- * Custom node factory to create {@link SplitGraphNode}s initialized with an empty
- * {@link SplitEdgeStar}
+ * Custom node factory to create {@link SplitGraphNode}s initialized with an
+ * empty {@link SplitEdgeStar}
  * 
  * @author Gabriel Roldán, Axios Engineering
  * @author Mauricio Pazos, Axios Engineering
@@ -35,7 +35,8 @@ import com.vividsolutions.jts.geomgraph.NodeFactory;
  */
 class SplitGraphNodeFactory extends NodeFactory {
 
-    public Node createNode( Coordinate coord ) {
-        return new SplitGraphNode(coord, new SplitEdgeStar());
+    @Override
+    public Node createNode(Coordinate coord) {
+	return new SplitGraphNode(coord, new SplitEdgeStar());
     }
 }

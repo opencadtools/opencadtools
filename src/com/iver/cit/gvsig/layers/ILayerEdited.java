@@ -4,10 +4,9 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
 
 public interface ILayerEdited {
 
-	/**
-	 * @return Returns the lyr.
-	 */
-	public FLayer getLayer();
-	
+    /**
+     * @return Returns the lyr.
+     */
+    public FLayer getLayer();
 
 }
