@@ -42,132 +42,119 @@
  *   dac@iver.es
  */
 /* CVS MESSAGES:
-*
-* $Id:
-* $Log:
-*/
+ *
+ * $Id:
+ * $Log:
+ */
 package com.iver.cit.gvsig;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
-import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.EditionUtilities;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.core.FArc2D;
-import com.iver.cit.gvsig.fmap.core.FCircle2D;
-import com.iver.cit.gvsig.fmap.core.FEllipse2D;
-import com.iver.cit.gvsig.fmap.core.FGeometry;
-import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
-import com.iver.cit.gvsig.fmap.core.FMultiPoint2D;
-import com.iver.cit.gvsig.fmap.core.FMultipoint3D;
-import com.iver.cit.gvsig.fmap.core.FNullGeometry;
-import com.iver.cit.gvsig.fmap.core.FPoint2D;
-import com.iver.cit.gvsig.fmap.core.FPoint3D;
-import com.iver.cit.gvsig.fmap.core.FPolygon2D;
-import com.iver.cit.gvsig.fmap.core.FPolygon3D;
-import com.iver.cit.gvsig.fmap.core.FPolyline2D;
-import com.iver.cit.gvsig.fmap.core.FPolyline3D;
 import com.iver.cit.gvsig.fmap.core.FShape;
-import com.iver.cit.gvsig.fmap.core.FSpline2D;
-import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.gt2.FLiteShape;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.SplitGeometryCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * CAD extension to split geometries from a digitized linear geometry.
- *
+ * 
  * @author Alvaro Zabala
- *
+ * 
  */
 public class SplitGeometryCADToolExtension extends Extension {
 
-	private View view;
-	private MapControl mapControl;
-	private SplitGeometryCADTool cadTool;
+    private View view;
+    private MapControl mapControl;
+    private SplitGeometryCADTool cadTool;
 
-
-	public void execute(String actionCommand) {
-		CADExtension.initFocus();
-		if (actionCommand.equals(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME)) {
-        	CADExtension.setCADTool(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME, true);
-        }
-		CADExtension.getEditionManager().setMapControl(mapControl);
-		CADExtension.getCADToolAdapter().configureMenu();
+    @Override
+    public void execute(String actionCommand) {
+	CADExtension.initFocus();
+	if (actionCommand.equals(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME)) {
+	    CADExtension.setCADTool(
+		    SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME, true);
 	}
+	CADExtension.getEditionManager().setMapControl(mapControl);
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
 
-	public void initialize() {
-		cadTool = new SplitGeometryCADTool();
-		CADExtension.addCADTool(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME, cadTool);
-		registerIcons();
-	}
+    @Override
+    public void initialize() {
+	cadTool = new SplitGeometryCADTool();
+	CADExtension.addCADTool(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME,
+		cadTool);
+	registerIcons();
+    }
 
-	private void registerIcons(){
-		PluginServices.getIconTheme().registerDefault("split-geometry",
-													   this.getClass().
-													   getClassLoader().
-													   getResource("images/split-poly.png")
-		);
-	}
+    private void registerIcons() {
+	PluginServices.getIconTheme().registerDefault(
+		"split-geometry",
+		this.getClass().getClassLoader()
+			.getResource("images/split-poly.png"));
+    }
 
-	/**
-	 * Returns if this Edit CAD tool is visible.
-	 * For this, there must be an active vectorial editing lyr in the TOC, which geometries'
-	 * dimension would must be linear or polygonal, and with at least one selected geometry.
-	 *
-	 */
-	public boolean isEnabled() {
-		try {
-			if (EditionUtilities.getEditionStatus() ==
-				EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-					this.view = (View) PluginServices.getMDIManager().getActiveWindow();
-					mapControl = view.getMapControl();
-					if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
-						return false;
-					FLyrVect lv = (FLyrVect) CADExtension.
-											getEditionManager().
-											getActiveLayerEdited().
-											getLayer();
-					int geometryDimensions = getDimensions(lv.getShapeType());
-					if(geometryDimensions <= 0)
-						return false;
-
-					return lv.getRecordset().getSelection().cardinality() != 0;
-			}
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-			return false;
+    /**
+     * Returns if this Edit CAD tool is visible. For this, there must be an
+     * active vectorial editing lyr in the TOC, which geometries' dimension
+     * would must be linear or polygonal, and with at least one selected
+     * geometry.
+     * 
+     */
+    @Override
+    public boolean isEnabled() {
+	try {
+	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+		this.view = (View) PluginServices.getMDIManager()
+			.getActiveWindow();
+		mapControl = view.getMapControl();
+		if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
+		    return false;
 		}
-		return true;
-	}
-	private static int getDimensions(int shapeType) {
-		switch (shapeType) {
-		case FShape.ARC:
-		case FShape.LINE:
-			return 1;
-
-		case FShape.CIRCLE:
-		case FShape.ELLIPSE:
-		case FShape.POLYGON:
-		case FShape.MULTI:
-			return 2;
-
-		case FShape.MULTIPOINT:
-		case FShape.POINT:
-		case FShape.TEXT:
-			return 0;
-		default:
-			return -1;
+		FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
+			.getActiveLayerEdited().getLayer();
+		int geometryDimensions = getDimensions(lv.getShapeType());
+		if (geometryDimensions <= 0) {
+		    return false;
 		}
-	}
 
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
+		return lv.getRecordset().getSelection().cardinality() != 0;
+	    }
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	    return false;
 	}
+	return true;
+    }
+
+    private static int getDimensions(int shapeType) {
+	switch (shapeType) {
+	case FShape.ARC:
+	case FShape.LINE:
+	    return 1;
+
+	case FShape.CIRCLE:
+	case FShape.ELLIPSE:
+	case FShape.POLYGON:
+	case FShape.MULTI:
+	    return 2;
+
+	case FShape.MULTIPOINT:
+	case FShape.POINT:
+	case FShape.TEXT:
+	    return 0;
+	default:
+	    return -1;
+	}
+    }
+
+    @Override
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
+	}
+	return false;
+    }
 }

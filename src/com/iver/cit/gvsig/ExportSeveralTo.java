@@ -30,7 +30,6 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Vector;
 
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -55,9 +54,7 @@ import com.iver.cit.gvsig.fmap.core.v02.FLabel;
 import com.iver.cit.gvsig.fmap.drivers.DriverAttributes;
 import com.iver.cit.gvsig.fmap.drivers.DriverIOException;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
-import com.iver.cit.gvsig.fmap.drivers.ILayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
-import com.iver.cit.gvsig.fmap.drivers.VectorialDriver;
 import com.iver.cit.gvsig.fmap.drivers.dbf.DbaseFile;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
@@ -72,409 +69,451 @@ import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.iver.cit.gvsig.fmap.layers.VectorialFileAdapter;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
-import com.iver.utiles.PostProcessSupport;
-import com.iver.utiles.SimpleFileFilter;
 import com.iver.utiles.swing.threads.AbstractMonitorableTask;
 
 public class ExportSeveralTo extends ExportTo {
-	
-	private boolean overwrite = false;
-	
-	private class WriterTask extends AbstractMonitorableTask
-	{
-		FLyrVect lyrVect;
-		IWriter writer;
-		int rowCount;
-		ReadableVectorial va;
-		SelectableDataSource sds;
-		FBitSet bitSet;
-		MapContext mapContext;
-		VectorialDriver reader;
 
-		public WriterTask(MapContext mapContext, FLyrVect lyr, IWriter writer, Driver reader) throws ReadDriverException
-		{
-			this.mapContext = mapContext;
-			this.lyrVect = lyr;
-			this.writer = writer;
-			this.reader = (VectorialDriver) reader;
+    private class WriterTask extends AbstractMonitorableTask {
+	FLyrVect lyrVect;
+	IWriter writer;
+	int rowCount;
+	ReadableVectorial va;
+	SelectableDataSource sds;
+	FBitSet bitSet;
 
-			setInitialStep(0);
-			setDeterminatedProcess(true);
-			setStatusMessage(PluginServices.getText(this, "exportando_features"));
+	public WriterTask(MapContext mapContext, FLyrVect lyr, IWriter writer,
+		Driver reader) throws ReadDriverException {
+	    this.lyrVect = lyr;
+	    this.writer = writer;
 
-			va = lyrVect.getSource();
-			sds = lyrVect.getRecordset();
+	    setInitialStep(0);
+	    setDeterminatedProcess(true);
+	    setStatusMessage(PluginServices
+		    .getText(this, "exportando_features"));
 
-			bitSet = sds.getSelection();
+	    va = lyrVect.getSource();
+	    sds = lyrVect.getRecordset();
 
-			if (bitSet.cardinality() == 0)
-				rowCount = va.getShapeCount();
-			else
-				rowCount = bitSet.cardinality();
+	    bitSet = sds.getSelection();
 
-			setFinalStep(rowCount);
+	    if (bitSet.cardinality() == 0) {
+		rowCount = va.getShapeCount();
+	    } else {
+		rowCount = bitSet.cardinality();
+	    }
 
-		}
-		public void run() throws Exception {
-			lyrVect.setWaitTodraw(true);
-			va.start();
-			ICoordTrans ct = lyrVect.getCoordTrans();
-			DriverAttributes attr = va.getDriverAttributes();
-			boolean bMustClone = false;
-			if (attr != null) {
-				if (attr.isLoadedInMemory()) {
-					bMustClone = attr.isLoadedInMemory();
-				}
-			}
-			if (lyrVect instanceof FLyrAnnotation && lyrVect.getShapeType()!=FShape.POINT) {
-				SHPLayerDefinition lyrDef=(SHPLayerDefinition)writer.getTableDefinition();
-				lyrDef.setShapeType(FShape.POINT);
-				writer.initialize(lyrDef);
-			}
-
-			 if(writer instanceof ShpWriter) {
-				 String charSetName = prefs.get("dbf_encoding", DbaseFile.getDefaultCharset().toString());
-				 if(lyrVect.getSource() instanceof VectorialFileAdapter) {
-					 ((ShpWriter)writer).loadDbfEncoding(((VectorialFileAdapter)lyrVect.getSource()).getFile().getAbsolutePath(), Charset.forName(charSetName));
-				 } else {
-						Object s = lyrVect.getProperty("DBFFile");
-						if(s != null && s instanceof String)
-							((ShpWriter)writer).loadDbfEncoding((String)s, Charset.forName(charSetName));
-				 }
-			 }
-
-			// Creamos la tabla.
-			writer.preProcess();
-
-			if (bitSet.cardinality() == 0) {
-				rowCount = va.getShapeCount();
-				for (int i = 0; i < rowCount; i++) {
-					if (isCanceled())
-						break;
-					IGeometry geom = va.getShape(i);
-					if (geom == null) {
-						reportStep();
-						continue;
-					}
-					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
-						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
-						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
-					}
-					if (isCanceled())
-						break;
-					if (ct != null) {
-						if (bMustClone)
-							geom = geom.cloneGeometry();
-						geom.reProject(ct);
-					}
-					reportStep();
-					setNote(PluginServices.getText(this, "exporting_") + i);
-					if (isCanceled())
-						break;
-
-					if (geom != null) {
-						Value[] values = sds.getRow(i);
-						IFeature feat = new DefaultFeature(geom, values, "" + i);
-						DefaultRowEdited edRow = new DefaultRowEdited(feat,
-								DefaultRowEdited.STATUS_ADDED, i);
-						writer.process(edRow);
-					}
-				}
-			} else {
-				int counter = 0;
-				for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
-						.nextSetBit(i + 1)) {
-					if (isCanceled())
-						break;
-					IGeometry geom = va.getShape(i);
-					if (geom == null) {
-						reportStep();
-						continue;
-					}
-					if (lyrVect instanceof FLyrAnnotation && geom.getGeometryType()!=FShape.POINT) {
-						Point2D p=FLabel.createLabelPoint((FShape)geom.getInternalShape());
-						geom=ShapeFactory.createPoint2D(p.getX(),p.getY());
-					}
-					if (isCanceled())
-						break;
-					if (ct != null) {
-						if (bMustClone)
-							geom = geom.cloneGeometry();
-						geom.reProject(ct);
-					}
-					reportStep();
-					setNote(PluginServices.getText(this, "exporting_") + counter);
-					if (isCanceled())
-						break;
-
-					if (geom != null) {
-						Value[] values = sds.getRow(i);
-						IFeature feat = new DefaultFeature(geom, values, "" + i);
-						DefaultRowEdited edRow = new DefaultRowEdited(feat,
-								DefaultRowEdited.STATUS_ADDED, i);
-
-						writer.process(edRow);
-					}
-				}
-
-			}
-
-			writer.postProcess();
-			va.stop();
-			lyrVect.setWaitTodraw(false);
-
-		}
-		/* (non-Javadoc)
-		 * @see com.iver.utiles.swing.threads.IMonitorableTask#finished()
-		 */
-		public void finished() {
-			try {
-				executeCommand(lyrVect);
-			} catch (Exception e) {
-				NotificationManager.addError(e);
-			}
-		}
-
-	}
-	private class MultiWriterTask extends AbstractMonitorableTask{
-		Vector tasks=new Vector();
-		public void addTask(WriterTask wt) {
-			tasks.add(wt);
-		}
-		public void run() throws Exception {
-			for (int i = 0; i < tasks.size(); i++) {
-				((WriterTask)tasks.get(i)).run();
-			}
-			tasks.clear();
-		}
-		/* (non-Javadoc)
-		 * @see com.iver.utiles.swing.threads.IMonitorableTask#finished()
-		 */
-		public void finished() {
-			for (int i = 0; i < tasks.size(); i++) {
-				((WriterTask)tasks.get(i)).finished();
-			}
-			tasks.clear();
-		}
-
+	    setFinalStep(rowCount);
 
 	}
 
-	
-	public void execute(String actionCommand) {
-		try {
-		if (!actionCommand.equals("SHP")) {
-			super.execute(actionCommand);
+	@Override
+	public void run() throws Exception {
+	    lyrVect.setWaitTodraw(true);
+	    va.start();
+	    ICoordTrans ct = lyrVect.getCoordTrans();
+	    DriverAttributes attr = va.getDriverAttributes();
+	    boolean bMustClone = false;
+	    if (attr != null) {
+		if (attr.isLoadedInMemory()) {
+		    bMustClone = attr.isLoadedInMemory();
+		}
+	    }
+	    if (lyrVect instanceof FLyrAnnotation
+		    && lyrVect.getShapeType() != FShape.POINT) {
+		SHPLayerDefinition lyrDef = (SHPLayerDefinition) writer
+			.getTableDefinition();
+		lyrDef.setShapeType(FShape.POINT);
+		writer.initialize(lyrDef);
+	    }
+
+	    if (writer instanceof ShpWriter) {
+		String charSetName = prefs.get("dbf_encoding", DbaseFile
+			.getDefaultCharset().toString());
+		if (lyrVect.getSource() instanceof VectorialFileAdapter) {
+		    ((ShpWriter) writer).loadDbfEncoding(
+			    ((VectorialFileAdapter) lyrVect.getSource())
+				    .getFile().getAbsolutePath(), Charset
+				    .forName(charSetName));
 		} else {
-			overwrite = false;
-			JFileChooser jfc = new JFileChooser();
-            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			if (jfc.showSaveDialog((Component) PluginServices.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
-				File newFile = jfc.getSelectedFile();
-				String path = newFile.getAbsolutePath();
-				if (!path.endsWith(File.separator)) {
-					path = path + File.separator;
-				}
+		    Object s = lyrVect.getProperty("DBFFile");
+		    if (s != null && s instanceof String) {
+			((ShpWriter) writer).loadDbfEncoding((String) s,
+				Charset.forName(charSetName));
+		    }
+		}
+	    }
 
-				View view = (View) PluginServices.getMDIManager().getActiveWindow();
-				FLayer[] activeLayers = view.getMapControl().getMapContext().getLayers().getActives();
-				for (int i=0; i<activeLayers.length; i++) {
-					if (activeLayers[i] instanceof FLyrVect) {
-						FLyrVect lv = (FLyrVect) activeLayers[i];
-						int numSelec;
-							numSelec = lv.getRecordset().getSelection()
-							.cardinality();
-						if (numSelec > 0) {
-							String message = String.format(PluginServices.getText(this, "se_van_a_guardar_de_la_capa"), 
-									numSelec, lv.getName());
-							int resp = JOptionPane.showConfirmDialog(
-									(Component) PluginServices.getMainFrame(),
-									message,
-									PluginServices.getText(this,"export_to"), JOptionPane.YES_NO_OPTION);
-							if (resp != JOptionPane.YES_OPTION) {
-								continue;
-							}
-						}
-						String newFilePath = path 
-									+ activeLayers[i].getName().replaceAll(" ",
-											"_");
-						if (!newFilePath.toLowerCase().endsWith(".shp")) {
-							newFilePath = newFilePath + ".shp";
-						}
-						newFile = new File(newFilePath);
-                        int r = 0;
-						while (newFile.exists()) {
-								newFile = new File(newFilePath.substring(0,
-										newFilePath.length() - 4)
-										+ "_"
-										+ r
-										+ ".shp");
-								r++;
-						}
-							saveToShp(view.getMapControl().getMapContext(), 
-									(FLyrVect) activeLayers[i], newFile.getAbsolutePath());
-					}
-				}
+	    // Creamos la tabla.
+	    writer.preProcess();
+
+	    if (bitSet.cardinality() == 0) {
+		rowCount = va.getShapeCount();
+		for (int i = 0; i < rowCount; i++) {
+		    if (isCanceled()) {
+			break;
+		    }
+		    IGeometry geom = va.getShape(i);
+		    if (geom == null) {
+			reportStep();
+			continue;
+		    }
+		    if (lyrVect instanceof FLyrAnnotation
+			    && geom.getGeometryType() != FShape.POINT) {
+			Point2D p = FLabel.createLabelPoint((FShape) geom
+				.getInternalShape());
+			geom = ShapeFactory.createPoint2D(p.getX(), p.getY());
+		    }
+		    if (isCanceled()) {
+			break;
+		    }
+		    if (ct != null) {
+			if (bMustClone) {
+			    geom = geom.cloneGeometry();
 			}
-		}
-		} catch (ReadDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public boolean isVisible() {
-		com.iver.andami.ui.mdiManager.IWindow f = PluginServices.getMDIManager()
-		.getActiveWindow();
+			geom.reProject(ct);
+		    }
+		    reportStep();
+		    setNote(PluginServices.getText(this, "exporting_") + i);
+		    if (isCanceled()) {
+			break;
+		    }
 
-		if (f == null) {
-			return false;
+		    if (geom != null) {
+			Value[] values = sds.getRow(i);
+			IFeature feat = new DefaultFeature(geom, values, "" + i);
+			DefaultRowEdited edRow = new DefaultRowEdited(feat,
+				DefaultRowEdited.STATUS_ADDED, i);
+			writer.process(edRow);
+		    }
 		}
-
-		if (f instanceof View) {
-			FLayer[] layers = ((View) f).getMapControl().getMapContext().getLayers().getActives();
-			if (layers.length > 1) {
-				return true;
+	    } else {
+		int counter = 0;
+		for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet
+			.nextSetBit(i + 1)) {
+		    if (isCanceled()) {
+			break;
+		    }
+		    IGeometry geom = va.getShape(i);
+		    if (geom == null) {
+			reportStep();
+			continue;
+		    }
+		    if (lyrVect instanceof FLyrAnnotation
+			    && geom.getGeometryType() != FShape.POINT) {
+			Point2D p = FLabel.createLabelPoint((FShape) geom
+				.getInternalShape());
+			geom = ShapeFactory.createPoint2D(p.getX(), p.getY());
+		    }
+		    if (isCanceled()) {
+			break;
+		    }
+		    if (ct != null) {
+			if (bMustClone) {
+			    geom = geom.cloneGeometry();
 			}
-		}
-		return false;
-	}
-	
-	public void saveToShp(MapContext mapContext, FLyrVect layer, String path) {
-		try {
+			geom.reProject(ct);
+		    }
+		    reportStep();
+		    setNote(PluginServices.getText(this, "exporting_")
+			    + counter);
+		    if (isCanceled()) {
+			break;
+		    }
 
-				if (!(path.toLowerCase().endsWith(".shp"))) {
-					path = path + ".shp";
-				}
-				File newFile = new File(path);
+		    if (geom != null) {
+			Value[] values = sds.getRow(i);
+			IFeature feat = new DefaultFeature(geom, values, "" + i);
+			DefaultRowEdited edRow = new DefaultRowEdited(feat,
+				DefaultRowEdited.STATUS_ADDED, i);
 
-
-
-				SelectableDataSource sds = layer.getRecordset();
-				FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
-
-				if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
-				// ficheros
-				{
-					ShpWriter writer1 = (ShpWriter) LayerFactory.getWM().getWriter(
-					"Shape Writer");
-					Driver[] drivers=new Driver[3];
-					ShpWriter[] writers=new ShpWriter[3];
-
-					// puntos
-					String auxPoint = path.replaceFirst("\\.shp", "_points.shp");
-
-					SHPLayerDefinition lyrDefPoint = new SHPLayerDefinition();
-					lyrDefPoint.setFieldsDesc(fieldsDescrip);
-					File filePoints = new File(auxPoint);
-					lyrDefPoint.setFile(filePoints);
-					lyrDefPoint.setName(filePoints.getName());
-					lyrDefPoint.setShapeType(FShape.POINT);
-					loadEnconding(layer, writer1);
-					writer1.setFile(filePoints);
-					writer1.initialize(lyrDefPoint);
-					writers[0]=writer1;
-					drivers[0]=getOpenShpDriver(filePoints);
-					//drivers[0]=null;
-
-
-
-					ShpWriter writer2 = (ShpWriter) LayerFactory.getWM().getWriter(
-					"Shape Writer");
-					// Lineas
-					String auxLine = path.replaceFirst("\\.shp", "_line.shp");
-					SHPLayerDefinition lyrDefLine = new SHPLayerDefinition();
-					lyrDefLine.setFieldsDesc(fieldsDescrip);
-
-					File fileLines = new File(auxLine);
-					lyrDefLine.setFile(fileLines);
-					lyrDefLine.setName(fileLines.getName());
-					lyrDefLine.setShapeType(FShape.LINE);
-					loadEnconding(layer, writer2);
-					writer2.setFile(fileLines);
-					writer2.initialize(lyrDefLine);
-					writers[1]=writer2;
-					drivers[1]=getOpenShpDriver(fileLines);
-					//drivers[1]=null;
-
-					ShpWriter writer3 = (ShpWriter) LayerFactory.getWM().getWriter(
-					"Shape Writer");
-					// Polígonos
-					String auxPolygon = path.replaceFirst("\\.shp", "_polygons.shp");
-					SHPLayerDefinition lyrDefPolygon = new SHPLayerDefinition();
-					lyrDefPolygon.setFieldsDesc(fieldsDescrip);
-					File filePolygons = new File(auxPolygon);
-					lyrDefPolygon.setFile(filePolygons);
-					lyrDefPolygon.setName(filePolygons.getName());
-					lyrDefPolygon.setShapeType(FShape.POLYGON);
-					loadEnconding(layer, writer3);
-					writer3.setFile(filePolygons);
-					writer3.initialize(lyrDefPolygon);
-					writers[2]=writer3;
-					drivers[2]=getOpenShpDriver(filePolygons);
-					//drivers[2]=null;
-
-					writeMultiFeatures(mapContext,layer, writers, drivers);
-				} else {
-					ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
-						"Shape Writer");
-					loadEnconding(layer, writer);
-					IndexedShpDriver drv = getOpenShpDriver(newFile);
-					SHPLayerDefinition lyrDef = new SHPLayerDefinition();
-					lyrDef.setFieldsDesc(fieldsDescrip);
-					lyrDef.setFile(newFile);
-					lyrDef.setName(newFile.getName());
-					lyrDef.setShapeType(layer.getTypeIntVectorLayer());
-					writer.setFile(newFile);
-					writer.initialize(lyrDef);
-					// CODIGO PARA EXPORTAR UN SHP A UN CHARSET DETERMINADO
-					// ES UTIL PARA QUE UN DBF SE VEA CORRECTAMENTE EN EXCEL, POR EJEMPLO
-//					Charset resul = (Charset) JOptionPane.showInputDialog((Component)PluginServices.getMDIManager().getActiveWindow(),
-//								PluginServices.getText(ExportTo.class, "select_charset_for_writing"),
-//								"Charset", JOptionPane.QUESTION_MESSAGE, null,
-//								Charset.availableCharsets().values().toArray(),
-//								writer.getCharsetForWriting().displayName());
-//					if (resul == null)
-//						return;
-//					Charset charset = resul;
-//					writer.setCharsetForWriting(charset);
-					writeFeatures(mapContext, layer, writer, drv);
-
-				}
-			
-		} catch (InitializeWriterException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (OpenDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		} catch (DriverLoadException e) {
-			NotificationManager.addError(e.getMessage(),e);
+			writer.process(edRow);
+		    }
 		}
 
+	    }
+
+	    writer.postProcess();
+	    va.stop();
+	    lyrVect.setWaitTodraw(false);
+
 	}
-	
-	/**
-	 * Lanza un thread en background que escribe las features. Cuando termina, pregunta al usuario si quiere
-	 * añadir la nueva capa a la vista. Para eso necesita un driver de lectura ya configurado.
-	 * @param mapContext
-	 * @param layer
-	 * @param writer
-	 * @param reader
-	 * @throws ReadDriverException
-	 * @throws DriverException
-	 * @throws DriverIOException
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.iver.utiles.swing.threads.IMonitorableTask#finished()
 	 */
-	private void writeFeatures(MapContext mapContext, FLyrVect layer, IWriter writer, Driver reader) throws ReadDriverException
-	{
-		PluginServices.cancelableBackgroundExecution(new WriterTask(mapContext, layer, writer, reader));
+	@Override
+	public void finished() {
+	    try {
+		executeCommand(lyrVect);
+	    } catch (Exception e) {
+		NotificationManager.addError(e);
+	    }
 	}
-	private void writeMultiFeatures(MapContext mapContext, FLyrVect layers, IWriter[] writers, Driver[] readers) throws ReadDriverException{
-		MultiWriterTask mwt=new MultiWriterTask();
-		for (int i=0;i<writers.length;i++) {
-			mwt.addTask(new WriterTask(mapContext, layers, writers[i], readers[i]));
+
+    }
+
+    private class MultiWriterTask extends AbstractMonitorableTask {
+	Vector<WriterTask> tasks = new Vector<WriterTask>();
+
+	public void addTask(WriterTask wt) {
+	    tasks.add(wt);
+	}
+
+	@Override
+	public void run() throws Exception {
+	    for (int i = 0; i < tasks.size(); i++) {
+		((WriterTask) tasks.get(i)).run();
+	    }
+	    tasks.clear();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.iver.utiles.swing.threads.IMonitorableTask#finished()
+	 */
+	@Override
+	public void finished() {
+	    for (int i = 0; i < tasks.size(); i++) {
+		((WriterTask) tasks.get(i)).finished();
+	    }
+	    tasks.clear();
+	}
+
+    }
+
+    @Override
+    public void execute(String actionCommand) {
+	try {
+	    if (!actionCommand.equals("SHP")) {
+		super.execute(actionCommand);
+	    } else {
+		JFileChooser jfc = new JFileChooser();
+		jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		if (jfc.showSaveDialog((Component) PluginServices
+			.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
+		    File newFile = jfc.getSelectedFile();
+		    String path = newFile.getAbsolutePath();
+		    if (!path.endsWith(File.separator)) {
+			path = path + File.separator;
+		    }
+
+		    View view = (View) PluginServices.getMDIManager()
+			    .getActiveWindow();
+		    FLayer[] activeLayers = view.getMapControl()
+			    .getMapContext().getLayers().getActives();
+		    for (int i = 0; i < activeLayers.length; i++) {
+			if (activeLayers[i] instanceof FLyrVect) {
+			    FLyrVect lv = (FLyrVect) activeLayers[i];
+			    int numSelec;
+			    numSelec = lv.getRecordset().getSelection()
+				    .cardinality();
+			    if (numSelec > 0) {
+				String message = String.format(PluginServices
+					.getText(this,
+						"se_van_a_guardar_de_la_capa"),
+					numSelec, lv.getName());
+				int resp = JOptionPane.showConfirmDialog(
+					(Component) PluginServices
+						.getMainFrame(), message,
+					PluginServices.getText(this,
+						"export_to"),
+					JOptionPane.YES_NO_OPTION);
+				if (resp != JOptionPane.YES_OPTION) {
+				    continue;
+				}
+			    }
+			    String newFilePath = path
+				    + activeLayers[i].getName().replaceAll(" ",
+					    "_");
+			    if (!newFilePath.toLowerCase().endsWith(".shp")) {
+				newFilePath = newFilePath + ".shp";
+			    }
+			    newFile = new File(newFilePath);
+			    int r = 0;
+			    while (newFile.exists()) {
+				newFile = new File(newFilePath.substring(0,
+					newFilePath.length() - 4)
+					+ "_"
+					+ r
+					+ ".shp");
+				r++;
+			    }
+			    saveToShp(view.getMapControl().getMapContext(),
+				    (FLyrVect) activeLayers[i],
+				    newFile.getAbsolutePath());
+			}
+		    }
 		}
-		PluginServices.cancelableBackgroundExecution(mwt);
+	    }
+	} catch (ReadDriverException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
+    }
+
+    @Override
+    public boolean isVisible() {
+	com.iver.andami.ui.mdiManager.IWindow f = PluginServices
+		.getMDIManager().getActiveWindow();
+
+	if (f == null) {
+	    return false;
+	}
+
+	if (f instanceof View) {
+	    FLayer[] layers = ((View) f).getMapControl().getMapContext()
+		    .getLayers().getActives();
+	    if (layers.length > 1) {
+		return true;
+	    }
+	}
+	return false;
+    }
+
+    public void saveToShp(MapContext mapContext, FLyrVect layer, String path) {
+	try {
+
+	    if (!(path.toLowerCase().endsWith(".shp"))) {
+		path = path + ".shp";
+	    }
+	    File newFile = new File(path);
+
+	    SelectableDataSource sds = layer.getRecordset();
+	    FieldDescription[] fieldsDescrip = sds.getFieldsDescription();
+
+	    if (layer.getShapeType() == FShape.MULTI) // Exportamos a 3
+	    // ficheros
+	    {
+		ShpWriter writer1 = (ShpWriter) LayerFactory.getWM().getWriter(
+			"Shape Writer");
+		Driver[] drivers = new Driver[3];
+		ShpWriter[] writers = new ShpWriter[3];
+
+		// puntos
+		String auxPoint = path.replaceFirst("\\.shp", "_points.shp");
+
+		SHPLayerDefinition lyrDefPoint = new SHPLayerDefinition();
+		lyrDefPoint.setFieldsDesc(fieldsDescrip);
+		File filePoints = new File(auxPoint);
+		lyrDefPoint.setFile(filePoints);
+		lyrDefPoint.setName(filePoints.getName());
+		lyrDefPoint.setShapeType(FShape.POINT);
+		loadEnconding(layer, writer1);
+		writer1.setFile(filePoints);
+		writer1.initialize(lyrDefPoint);
+		writers[0] = writer1;
+		drivers[0] = getOpenShpDriver(filePoints);
+		// drivers[0]=null;
+
+		ShpWriter writer2 = (ShpWriter) LayerFactory.getWM().getWriter(
+			"Shape Writer");
+		// Lineas
+		String auxLine = path.replaceFirst("\\.shp", "_line.shp");
+		SHPLayerDefinition lyrDefLine = new SHPLayerDefinition();
+		lyrDefLine.setFieldsDesc(fieldsDescrip);
+
+		File fileLines = new File(auxLine);
+		lyrDefLine.setFile(fileLines);
+		lyrDefLine.setName(fileLines.getName());
+		lyrDefLine.setShapeType(FShape.LINE);
+		loadEnconding(layer, writer2);
+		writer2.setFile(fileLines);
+		writer2.initialize(lyrDefLine);
+		writers[1] = writer2;
+		drivers[1] = getOpenShpDriver(fileLines);
+		// drivers[1]=null;
+
+		ShpWriter writer3 = (ShpWriter) LayerFactory.getWM().getWriter(
+			"Shape Writer");
+		// Polígonos
+		String auxPolygon = path
+			.replaceFirst("\\.shp", "_polygons.shp");
+		SHPLayerDefinition lyrDefPolygon = new SHPLayerDefinition();
+		lyrDefPolygon.setFieldsDesc(fieldsDescrip);
+		File filePolygons = new File(auxPolygon);
+		lyrDefPolygon.setFile(filePolygons);
+		lyrDefPolygon.setName(filePolygons.getName());
+		lyrDefPolygon.setShapeType(FShape.POLYGON);
+		loadEnconding(layer, writer3);
+		writer3.setFile(filePolygons);
+		writer3.initialize(lyrDefPolygon);
+		writers[2] = writer3;
+		drivers[2] = getOpenShpDriver(filePolygons);
+		// drivers[2]=null;
+
+		writeMultiFeatures(mapContext, layer, writers, drivers);
+	    } else {
+		ShpWriter writer = (ShpWriter) LayerFactory.getWM().getWriter(
+			"Shape Writer");
+		loadEnconding(layer, writer);
+		IndexedShpDriver drv = getOpenShpDriver(newFile);
+		SHPLayerDefinition lyrDef = new SHPLayerDefinition();
+		lyrDef.setFieldsDesc(fieldsDescrip);
+		lyrDef.setFile(newFile);
+		lyrDef.setName(newFile.getName());
+		lyrDef.setShapeType(layer.getTypeIntVectorLayer());
+		writer.setFile(newFile);
+		writer.initialize(lyrDef);
+		// CODIGO PARA EXPORTAR UN SHP A UN CHARSET DETERMINADO
+		// ES UTIL PARA QUE UN DBF SE VEA CORRECTAMENTE EN EXCEL, POR
+		// EJEMPLO
+		// Charset resul = (Charset)
+		// JOptionPane.showInputDialog((Component)PluginServices.getMDIManager().getActiveWindow(),
+		// PluginServices.getText(ExportTo.class,
+		// "select_charset_for_writing"),
+		// "Charset", JOptionPane.QUESTION_MESSAGE, null,
+		// Charset.availableCharsets().values().toArray(),
+		// writer.getCharsetForWriting().displayName());
+		// if (resul == null)
+		// return;
+		// Charset charset = resul;
+		// writer.setCharsetForWriting(charset);
+		writeFeatures(mapContext, layer, writer, drv);
+
+	    }
+
+	} catch (InitializeWriterException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (OpenDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (DriverLoadException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	}
+
+    }
+
+    /**
+     * Lanza un thread en background que escribe las features. Cuando termina,
+     * pregunta al usuario si quiere añadir la nueva capa a la vista. Para eso
+     * necesita un driver de lectura ya configurado.
+     * 
+     * @param mapContext
+     * @param layer
+     * @param writer
+     * @param reader
+     * @throws ReadDriverException
+     * @throws DriverException
+     * @throws DriverIOException
+     */
+    private void writeFeatures(MapContext mapContext, FLyrVect layer,
+	    IWriter writer, Driver reader) throws ReadDriverException {
+	PluginServices.cancelableBackgroundExecution(new WriterTask(mapContext,
+		layer, writer, reader));
+    }
+
+    private void writeMultiFeatures(MapContext mapContext, FLyrVect layers,
+	    IWriter[] writers, Driver[] readers) throws ReadDriverException {
+	MultiWriterTask mwt = new MultiWriterTask();
+	for (int i = 0; i < writers.length; i++) {
+	    mwt.addTask(new WriterTask(mapContext, layers, writers[i],
+		    readers[i]));
+	}
+	PluginServices.cancelableBackgroundExecution(mwt);
+    }
 
 }
