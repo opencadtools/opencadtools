@@ -109,7 +109,7 @@ public class CADExtension extends Extension implements IPreferenceExtension {
 		    if (!adapters.containsKey(v.getModel())) {
 			adapters.put(v.getModel(), new CADToolAdapter());
 		    }
-		    return (CADToolAdapter) adapters.get(v.getModel());
+		    return adapters.get(v.getModel());
 		}
 	    }
 	}
@@ -124,7 +124,7 @@ public class CADExtension extends Extension implements IPreferenceExtension {
 	    if (!adapters.containsKey(v.getModel())) {
 		adapters.put(v.getModel(), new CADToolAdapter());
 	    }
-	    adapter = (CADToolAdapter) adapters.get(v.getModel());
+	    adapter = adapters.get(v.getModel());
 	    return adapter;
 	}
 	return adapter;

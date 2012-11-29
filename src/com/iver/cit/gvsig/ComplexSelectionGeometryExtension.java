@@ -50,65 +50,70 @@ import com.iver.cit.gvsig.gui.cad.tools.ComplexSelectionCADTool;
 
 /**
  * Extensión que gestiona la herramienta de seleccionar.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class ComplexSelectionGeometryExtension extends Extension {
 
-	private MapControl mapControl;
-	private  ComplexSelectionCADTool selection;
+    private MapControl mapControl;
+    private ComplexSelectionCADTool selection;
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		selection=new ComplexSelectionCADTool();
-		CADExtension.addCADTool("_complex_selection", selection);
-		
-		registerIcons();
-	}
-	
-	private void registerIcons(){
-		PluginServices.getIconTheme().registerDefault(
-				"edition-complex-selection",
-				this.getClass().getClassLoader().getResource("images/ComplexSelCAD.png")
-			);
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    @Override
+    public void initialize() {
+	selection = new ComplexSelectionCADTool();
+	CADExtension.addCADTool("_complex_selection", selection);
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals("_complex_selection")) {
-        	CADExtension.setCADTool("_complex_selection",true);
-        }
-		CADExtension.getEditionManager().setMapControl(mapControl);
-		CADExtension.getCADToolAdapter().configureMenu();
-	}
+	registerIcons();
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-		if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
-			return false;
-		FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-		try {
-			return selection.isApplicable(lv.getShapeType());
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
-		return false;
-	}
+    private void registerIcons() {
+	PluginServices.getIconTheme().registerDefault(
+		"edition-complex-selection",
+		this.getClass().getClassLoader()
+			.getResource("images/ComplexSelCAD.png"));
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE){
-			return true;
-		}
-		return false;
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    @Override
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals("_complex_selection")) {
+	    CADExtension.setCADTool("_complex_selection", true);
 	}
+	CADExtension.getEditionManager().setMapControl(mapControl);
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    @Override
+    public boolean isEnabled() {
+	if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
+	    return false;
+	FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
+		.getActiveLayerEdited().getLayer();
+	try {
+	    return selection.isApplicable(lv.getShapeType());
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	}
+	return false;
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    @Override
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    return true;
+	}
+	return false;
+    }
 }

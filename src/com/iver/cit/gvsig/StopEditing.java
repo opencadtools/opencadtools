@@ -344,7 +344,7 @@ public class StopEditing extends Extension {
 		    if (layer.getISpatialIndex() != null) {
 			PluginServices
 				.cancelableBackgroundExecution(new CreateSpatialIndexMonitorableTask(
-					(FLyrVect) layer));
+					layer));
 		    }
 		}
 
@@ -481,7 +481,7 @@ public class StopEditing extends Extension {
 	public boolean hasUnsavedData() {
 	    ProjectExtension pe = (ProjectExtension) PluginServices
 		    .getExtension(ProjectExtension.class);
-	    ProjectView[] views = (ProjectView[]) pe.getProject()
+	    ProjectView[] views = pe.getProject()
 		    .getDocumentsByType(ProjectViewFactory.registerName)
 		    .toArray(new ProjectView[0]);
 	    for (int i = 0; i < views.length; i++) {
@@ -533,7 +533,7 @@ public class StopEditing extends Extension {
 	public IUnsavedData[] getUnsavedData() {
 	    ProjectExtension pe = (ProjectExtension) PluginServices
 		    .getExtension(ProjectExtension.class);
-	    ProjectView[] views = (ProjectView[]) pe.getProject()
+	    ProjectView[] views = pe.getProject()
 		    .getDocumentsByType(ProjectViewFactory.registerName)
 		    .toArray(new ProjectView[0]);
 	    ArrayList<UnsavedLayer> unsavedLayers = new ArrayList<UnsavedLayer>();
@@ -546,7 +546,7 @@ public class StopEditing extends Extension {
 		    unsavedLayers.add(ul);
 		}
 	    }
-	    return (IUnsavedData[]) unsavedLayers.toArray(new IUnsavedData[0]);
+	    return unsavedLayers.toArray(new IUnsavedData[0]);
 	}
     }
 

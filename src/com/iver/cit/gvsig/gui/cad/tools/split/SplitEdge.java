@@ -27,50 +27,52 @@ import com.vividsolutions.jts.geomgraph.Label;
 import com.vividsolutions.jts.geomgraph.Position;
 
 /**
- * A custom edge class that knows if its an edge from the shell of the polygin being splitted, one
- * of its holes or the splitting line, by inspecing its label.
+ * A custom edge class that knows if its an edge from the shell of the polygin
+ * being splitted, one of its holes or the splitting line, by inspecing its
+ * label.
  * 
  * @author Gabriel Roldán, Axios Engineering
  * @author Mauricio Pazos, Axios Engineering
  * @since 1.1.0
  */
 final class SplitEdge extends Edge {
-    SplitEdge( Coordinate[] pts, Label label ) {
-        super(pts, label);
+    SplitEdge(Coordinate[] pts, Label label) {
+	super(pts, label);
     }
 
     private int[] getLabelLocations() {
-        int[] locations = new int[3];
-        Label label = getLabel();
-        locations[Position.ON] = label.getLocation(0, Position.ON);
-        locations[Position.LEFT] = label.getLocation(0, Position.LEFT);
-        locations[Position.RIGHT] = label.getLocation(0, Position.RIGHT);
-        return locations;
+	int[] locations = new int[3];
+	Label label = getLabel();
+	locations[Position.ON] = label.getLocation(0, Position.ON);
+	locations[Position.LEFT] = label.getLocation(0, Position.LEFT);
+	locations[Position.RIGHT] = label.getLocation(0, Position.RIGHT);
+	return locations;
     }
 
     public boolean isShellEdge() {
-        int[] loc = getLabelLocations();
-        return (loc[Position.LEFT] == Location.EXTERIOR && loc[Position.RIGHT] == Location.INTERIOR);
+	int[] loc = getLabelLocations();
+	return (loc[Position.LEFT] == Location.EXTERIOR && loc[Position.RIGHT] == Location.INTERIOR);
     }
 
     public boolean isHoleEdge() {
-        int[] loc = getLabelLocations();
-        return (loc[Position.LEFT] == Location.INTERIOR && loc[Position.RIGHT] == Location.EXTERIOR);
+	int[] loc = getLabelLocations();
+	return (loc[Position.LEFT] == Location.INTERIOR && loc[Position.RIGHT] == Location.EXTERIOR);
     }
 
     public boolean isInteriorEdge() {
-        int[] loc = getLabelLocations();
-        return (loc[Position.LEFT] == Location.INTERIOR && loc[Position.RIGHT] == Location.INTERIOR);
+	int[] loc = getLabelLocations();
+	return (loc[Position.LEFT] == Location.INTERIOR && loc[Position.RIGHT] == Location.INTERIOR);
     }
 
+    @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer("Edge[label=");
-        sb.append(getLabel()).append(", ");
-        Coordinate[] coords = getCoordinates();
-        for( int i = 0; i < coords.length; i++ ) {
-            sb.append(coords[i].x).append(",").append(coords[i].y).append(" ");
-        }
-        sb.append("]");
-        return sb.toString();
+	StringBuffer sb = new StringBuffer("Edge[label=");
+	sb.append(getLabel()).append(", ");
+	Coordinate[] coords = getCoordinates();
+	for (int i = 0; i < coords.length; i++) {
+	    sb.append(coords[i].x).append(",").append(coords[i].y).append(" ");
+	}
+	sb.append("]");
+	return sb.toString();
     }
 }

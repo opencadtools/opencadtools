@@ -58,7 +58,7 @@ public class EditionManager implements LayerListener, LayerCollectionListener {
     public ILayerEdited getLayerEdited(FLayer lyr) {
 	ILayerEdited aux = null;
 	for (int i = 0; i < editedLayers.size(); i++) {
-	    aux = (ILayerEdited) editedLayers.get(i);
+	    aux = editedLayers.get(i);
 	    if (aux.getLayer() == lyr) {
 		return aux;
 	    }

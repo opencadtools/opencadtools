@@ -22,8 +22,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
  */
 
-
-
 package com.iver.cit.gvsig;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
@@ -37,7 +35,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extension to cut lines on edition
- *
+ * 
  * @author Jose Ignacio Lamas [LBD]
  * @author Nacho Varela [Cartolab]
  * @author Pablo Sanxiao [Cartolab]
@@ -46,75 +44,79 @@ public class CutLineExtension extends Extension {
 
     private final String iconPath = "images/icons/cortar_linea.png";
     private final String iconCode = "edition-cut-line";
-	private final String cadToolCode = "_cut_line";
-	private View view;
+    private final String cadToolCode = "_cut_line";
+    private View view;
 
-	private MapControl mapControl;
-	private CutLineCADTool line;
+    private MapControl mapControl;
+    private CutLineCADTool line;
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		line = new CutLineCADTool();
-		CADExtension.addCADTool(cadToolCode, line);
-		registerIcons();
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    @Override
+    public void initialize() {
+	line = new CutLineCADTool();
+	CADExtension.addCADTool(cadToolCode, line);
+	registerIcons();
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    @Override
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals(cadToolCode)) {
+	    CADExtension.setCADTool(cadToolCode, true);
+	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals(cadToolCode)) {
-			CADExtension.setCADTool(cadToolCode,true);
-			CADExtension.getEditionManager().setMapControl(mapControl);
-		}
-		CADExtension.getCADToolAdapter().configureMenu();
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    @Override
+    public boolean isEnabled() {
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-			view = (View) PluginServices.getMDIManager().getActiveWindow();
-			mapControl = view.getMapControl();
-			if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
-				return false;
-			FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-
-				try {
-					if (line.isApplicable(lv.getShapeType()))
-						return true;
-				} catch (ReadDriverException e) {
-					NotificationManager.addError(e.getMessage(), e);
-				}
-
-//			LayerDescriptor ld = LayerManager.getLayerDescriptor(lv.getName());
-//			String tipoGeom = ld.getLayerEditionDescriptor().getTipoGeom();
-//			if (linea.newIsApplicable(ld)){
-//				return true;
-//			}
-		}
-
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    mapControl = view.getMapControl();
+	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
 		return false;
+	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
+		    .getActiveLayerEdited().getLayer();
+
+	    try {
+		if (line.isApplicable(lv.getShapeType()))
+		    return true;
+	    } catch (ReadDriverException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    }
+
+	    // LayerDescriptor ld =
+	    // LayerManager.getLayerDescriptor(lv.getName());
+	    // String tipoGeom = ld.getLayerEditionDescriptor().getTipoGeom();
+	    // if (linea.newIsApplicable(ld)){
+	    // return true;
+	    // }
 	}
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
-	}
+	return false;
+    }
 
-	private void registerIcons(){
-		PluginServices.getIconTheme().registerDefault(
-				iconCode,
-				this.getClass().getClassLoader().getResource(iconPath)
-			);
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    @Override
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	    return true;
+	return false;
+    }
+
+    private void registerIcons() {
+	PluginServices.getIconTheme().registerDefault(iconCode,
+		this.getClass().getClassLoader().getResource(iconPath));
+    }
 }

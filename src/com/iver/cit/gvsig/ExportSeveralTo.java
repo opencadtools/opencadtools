@@ -58,6 +58,7 @@ import com.iver.cit.gvsig.fmap.drivers.SHPLayerDefinition;
 import com.iver.cit.gvsig.fmap.drivers.dbf.DbaseFile;
 import com.iver.cit.gvsig.fmap.drivers.shp.IndexedShpDriver;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
+import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
 import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FBitSet;
@@ -159,7 +160,7 @@ public class ExportSeveralTo extends ExportTo {
 		    }
 		    if (lyrVect instanceof FLyrAnnotation
 			    && geom.getGeometryType() != FShape.POINT) {
-			Point2D p = FLabel.createLabelPoint((FShape) geom
+			Point2D p = FLabel.createLabelPoint(geom
 				.getInternalShape());
 			geom = ShapeFactory.createPoint2D(p.getX(), p.getY());
 		    }
@@ -182,7 +183,7 @@ public class ExportSeveralTo extends ExportTo {
 			Value[] values = sds.getRow(i);
 			IFeature feat = new DefaultFeature(geom, values, "" + i);
 			DefaultRowEdited edRow = new DefaultRowEdited(feat,
-				DefaultRowEdited.STATUS_ADDED, i);
+				IRowEdited.STATUS_ADDED, i);
 			writer.process(edRow);
 		    }
 		}
@@ -200,7 +201,7 @@ public class ExportSeveralTo extends ExportTo {
 		    }
 		    if (lyrVect instanceof FLyrAnnotation
 			    && geom.getGeometryType() != FShape.POINT) {
-			Point2D p = FLabel.createLabelPoint((FShape) geom
+			Point2D p = FLabel.createLabelPoint(geom
 				.getInternalShape());
 			geom = ShapeFactory.createPoint2D(p.getX(), p.getY());
 		    }
@@ -224,7 +225,7 @@ public class ExportSeveralTo extends ExportTo {
 			Value[] values = sds.getRow(i);
 			IFeature feat = new DefaultFeature(geom, values, "" + i);
 			DefaultRowEdited edRow = new DefaultRowEdited(feat,
-				DefaultRowEdited.STATUS_ADDED, i);
+				IRowEdited.STATUS_ADDED, i);
 
 			writer.process(edRow);
 		    }
@@ -264,7 +265,7 @@ public class ExportSeveralTo extends ExportTo {
 	@Override
 	public void run() throws Exception {
 	    for (int i = 0; i < tasks.size(); i++) {
-		((WriterTask) tasks.get(i)).run();
+		tasks.get(i).run();
 	    }
 	    tasks.clear();
 	}
@@ -277,7 +278,7 @@ public class ExportSeveralTo extends ExportTo {
 	@Override
 	public void finished() {
 	    for (int i = 0; i < tasks.size(); i++) {
-		((WriterTask) tasks.get(i)).finished();
+		tasks.get(i).finished();
 	    }
 	    tasks.clear();
 	}

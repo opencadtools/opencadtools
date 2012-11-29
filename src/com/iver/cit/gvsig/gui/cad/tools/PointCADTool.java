@@ -51,10 +51,9 @@ import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.PointCADToolContext.PointCADToolState;
 
-
 /**
  * DOCUMENT ME!
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class PointCADTool extends InsertionCADTool {
@@ -71,112 +70,150 @@ public class PointCADTool extends InsertionCADTool {
      * Método de incio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
      */
+    @Override
     public void init() {
-    	_fsm = new PointCADToolContext(this);
+	_fsm = new PointCADToolContext(this);
     }
 
     /**
      * DOCUMENT ME!
-     * @param x DOCUMENT ME!
-     * @param y DOCUMENT ME!
-     * @param sel DOCUMENT ME!
+     * 
+     * @param x
+     *            DOCUMENT ME!
+     * @param y
+     *            DOCUMENT ME!
+     * @param sel
+     *            DOCUMENT ME!
      */
+    @Override
     public void transition(double x, double y, InputEvent event) {
-        _fsm.addPoint(x, y, event);
+	_fsm.addPoint(x, y, event);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double)
      */
+    @Override
     public void transition(double d) {
-        _fsm.addValue(d);
+	_fsm.addValue(d);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, java.lang.String)
      */
+    @Override
     public void transition(String s) throws CommandException {
-    	if (!super.changeCommand(s)){
-    		_fsm.addOption(s);
-    	}
+	if (!super.changeCommand(s)) {
+	    _fsm.addOption(s);
+	}
     }
 
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
      * editableFeatureSource que ya estará creado.
-     *
-     * @param sel Bitset con las geometrías que estén seleccionadas.
-     * @param x parámetro x del punto que se pase en esta transición.
-     * @param y parámetro y del punto que se pase en esta transición.
+     * 
+     * @param sel
+     *            Bitset con las geometrías que estén seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase en esta transición.
+     * @param y
+     *            parámetro y del punto que se pase en esta transición.
      */
-    public void addPoint(double x, double y,InputEvent event) {
-        PointCADToolState actualState = (PointCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
+    @Override
+    public void addPoint(double x, double y, InputEvent event) {
+	PointCADToolState actualState = (PointCADToolState) _fsm
+		.getPreviousState();
+	String status = actualState.getName();
 
-        if (status.equals("Point.FirstPoint")) {
-            addGeometry(ShapeFactory.createPoint2D(x, y));
-        }
+	if (status.equals("Point.FirstPoint")) {
+	    addGeometry(ShapeFactory.createPoint2D(x, y));
+	}
     }
 
     /**
      * Método para dibujar la lo necesario para el estado en el que nos
      * encontremos.
-     *
-     * @param g Graphics sobre el que dibujar.
-     * @param selectedGeometries BitSet con las geometrías seleccionadas.
-     * @param x parámetro x del punto que se pase para dibujar.
-     * @param y parámetro x del punto que se pase para dibujar.
+     * 
+     * @param g
+     *            Graphics sobre el que dibujar.
+     * @param selectedGeometries
+     *            BitSet con las geometrías seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase para dibujar.
+     * @param y
+     *            parámetro x del punto que se pase para dibujar.
      */
-    public void drawOperation(Graphics g, double x,
-        double y) {
+    @Override
+    public void drawOperation(Graphics g, double x, double y) {
     }
 
     /**
      * Add a diferent option.
-     *
-     * @param sel DOCUMENT ME!
-     * @param s Diferent option.
+     * 
+     * @param sel
+     *            DOCUMENT ME!
+     * @param s
+     *            Diferent option.
      */
+    @Override
     public void addOption(String s) {
-        // TODO Auto-generated method stub
+	// TODO Auto-generated method stub
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
+    @Override
     public void addValue(double d) {
-        // TODO Auto-generated method stub
+	// TODO Auto-generated method stub
     }
 
-	public String getName() {
-		return PluginServices.getText(this,"point_");
-	}
+    @Override
+    public String getName() {
+	return PluginServices.getText(this, "point_");
+    }
 
-	public String toString() {
-		return "_point";
-	}
-	public boolean isApplicable(int shapeType) {
-		switch (shapeType) {
-		case FShape.POLYGON:
-		case FShape.LINE:
-		case FShape.MULTIPOINT:
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public String toString() {
+	return "_point";
+    }
 
-	public void drawOperation(Graphics g, ArrayList pointList) {
-		// TODO Auto-generated method stub
-		
+    @Override
+    public boolean isApplicable(int shapeType) {
+	switch (shapeType) {
+	case FShape.POLYGON:
+	case FShape.LINE:
+	case FShape.MULTIPOINT:
+	    return false;
 	}
+	return true;
+    }
 
-	public boolean isMultiTransition() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public void drawOperation(Graphics g, ArrayList pointList) {
+	// TODO Auto-generated method stub
 
-	public void transition(InputEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    @Override
+    public boolean isMultiTransition() {
+	// TODO Auto-generated method stub
+	return false;
+    }
+
+    @Override
+    public void transition(InputEvent event) {
+	// TODO Auto-generated method stub
+
+    }
 }

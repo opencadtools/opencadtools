@@ -7,58 +7,67 @@ import com.iver.andami.ui.mdiManager.IWindow;
 
 public abstract class AbstractSnapper implements ISnapper {
 
-	// private Point2D snapPoint = null;
-	private int sizePixels = 10;
-	private Color color = Color.MAGENTA;
-	private boolean enabled;
-	private int priority=10;
-//	public void setSnapPoint(Point2D snapPoint) {
-//		this.snapPoint = snapPoint;
-//
-//	}
+    // private Point2D snapPoint = null;
+    private int sizePixels = 10;
+    private Color color = Color.MAGENTA;
+    private boolean enabled;
+    private int priority = 10;
 
+    // public void setSnapPoint(Point2D snapPoint) {
+    // this.snapPoint = snapPoint;
+    //
+    // }
 
-	public int getSizePixels() {
-		return sizePixels;
-	}
+    public int getSizePixels() {
+	return sizePixels;
+    }
 
-	public void setSizePixels(int sizePixels) {
-		this.sizePixels = sizePixels;
-	}
+    public void setSizePixels(int sizePixels) {
+	this.sizePixels = sizePixels;
+    }
 
-	public Color getColor() {
-		return color;
-	}
+    public Color getColor() {
+	return color;
+    }
 
-	public void setColor(Color color) {
-		this.color = color;
-	}
+    public void setColor(Color color) {
+	this.color = color;
+    }
 
-	public IWindow getConfigurator(){
-//		DefaultConfigurePanel configurePanel=new DefaultConfigurePanel();
-//		return configurePanel;
-		return null;
-	}
+    @Override
+    public IWindow getConfigurator() {
+	// DefaultConfigurePanel configurePanel=new DefaultConfigurePanel();
+	// return configurePanel;
+	return null;
+    }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    @Override
+    public boolean isEnabled() {
+	return enabled;
+    }
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-	
-	public ArrayList getSnappedPoints(){
-		return null;
-	}
-	
-	 /* (non-Javadoc)
+    @Override
+    public void setEnabled(boolean enabled) {
+	this.enabled = enabled;
+    }
+
+    @Override
+    public ArrayList getSnappedPoints() {
+	return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapper#getPriority()
      */
+    @Override
     public int getPriority() {
-        return priority;
+	return priority;
     }
-	public void setPriority(int priority) {
-		this.priority=priority;
-	}
+
+    @Override
+    public void setPriority(int priority) {
+	this.priority = priority;
+    }
 }

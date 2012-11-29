@@ -50,26 +50,25 @@ import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 
 /**
  * @author fjp
- *
+ * 
  */
 public class OrtoAccelerator implements KeyEventDispatcher {
 
-	public boolean dispatchKeyEvent(KeyEvent e) {
-		if (e.getID() == KeyEvent.KEY_PRESSED)
-			return false;
-		
-		IWindow v = PluginServices.getMDIManager().getActiveWindow();
-		if (!(v instanceof com.iver.cit.gvsig.project.documents.view.gui.View))
-			return false;
-		
-		CADToolAdapter adapTool = CADExtension.getCADToolAdapter();
-		adapTool.setOrtoMode(!adapTool.isOrtoMode());
-		
-		System.err.println("Ponemos ORTO a " + adapTool.isOrtoMode());
-		
-		return false;
-	}
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e) {
+	if (e.getID() == KeyEvent.KEY_PRESSED)
+	    return false;
+
+	IWindow v = PluginServices.getMDIManager().getActiveWindow();
+	if (!(v instanceof com.iver.cit.gvsig.project.documents.view.gui.View))
+	    return false;
+
+	CADToolAdapter adapTool = CADExtension.getCADToolAdapter();
+	adapTool.setOrtoMode(!adapTool.isOrtoMode());
+
+	System.err.println("Ponemos ORTO a " + adapTool.isOrtoMode());
+
+	return false;
+    }
 
 }
-
-

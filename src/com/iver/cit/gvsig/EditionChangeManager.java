@@ -112,92 +112,112 @@ import com.iver.cit.gvsig.project.documents.table.gui.Table;
  *
  */
 /**
- * Cuando un tema se pone en edición se le debe asociar
- * un listener de este tipo, que se dispará cuando se produzca
- * un evento de edición (borrado, modificación,... sobre la capa.
- *
+ * Cuando un tema se pone en edición se le debe asociar un listener de este
+ * tipo, que se dispará cuando se produzca un evento de edición (borrado,
+ * modificación,... sobre la capa.
+ * 
  * @author Jorge Piera Llodrá (piera_jor@gva.es)
  */
-public class EditionChangeManager implements IEditionListener{
-	private FLayer fLayer = null;
+public class EditionChangeManager implements IEditionListener {
+    private FLayer fLayer = null;
 
-	/**
-	 * Constructor
-	 * @param fLayer
-	 * Tema que se está editando
-	 */
-	public EditionChangeManager(FLayer fLayer){
-		this.fLayer = fLayer;
-	}
-	/*
-	 *  (non-Javadoc)
-	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#processEvent(com.iver.cit.gvsig.fmap.edition.EditionEvent)
-	 */
-	public void processEvent(EditionEvent e) {
-		// TODO Auto-generated method stub
+    /**
+     * Constructor
+     * 
+     * @param fLayer
+     *            Tema que se está editando
+     */
+    public EditionChangeManager(FLayer fLayer) {
+	this.fLayer = fLayer;
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.fmap.edition.IEditionListener#processEvent(com.iver
+     * .cit.gvsig.fmap.edition.EditionEvent)
+     */
+    @Override
+    public void processEvent(EditionEvent e) {
+	// TODO Auto-generated method stub
 
-	/*
-	 *  (non-Javadoc)
-	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#beforeRowEditEvent(com.iver.cit.gvsig.fmap.edition.BeforeRowEditEvent)
-	 */
-	public void beforeRowEditEvent(IRow feat,BeforeRowEditEvent e) {
-		// TODO Auto-generated method stub
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.fmap.edition.IEditionListener#beforeRowEditEvent(com
+     * .iver.cit.gvsig.fmap.edition.BeforeRowEditEvent)
+     */
+    @Override
+    public void beforeRowEditEvent(IRow feat, BeforeRowEditEvent e) {
+	// TODO Auto-generated method stub
 
-	/*
-	 *  (non-Javadoc)
-	 * @see com.iver.cit.gvsig.fmap.edition.IEditionListener#afterRowEditEvent(com.iver.cit.gvsig.fmap.edition.AfterRowEditEvent)
-	 */
-	public void afterRowEditEvent(IRow feat, AfterRowEditEvent e) {
-		IWindow[] views = PluginServices.getMDIManager().getAllWindows();
+    }
 
-		for (int i=0 ; i<views.length ; i++){
-			if (views[i] instanceof Table){
-//				Table table=(Table)views[i];
-				///VCN Creo que no hace falta refrescar la tabla aquí
-//				if (table.getModel().getAssociatedTable()!=null && table.getModel().getAssociatedTable().equals(fLayer))
-//					table.refresh();
-			}else if (views[i] instanceof com.iver.cit.gvsig.project.documents.view.gui.View){
-				com.iver.cit.gvsig.project.documents.view.gui.View view=(com.iver.cit.gvsig.project.documents.view.gui.View)views[i];
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.fmap.edition.IEditionListener#afterRowEditEvent(com
+     * .iver.cit.gvsig.fmap.edition.AfterRowEditEvent)
+     */
+    @Override
+    public void afterRowEditEvent(IRow feat, AfterRowEditEvent e) {
+	IWindow[] views = PluginServices.getMDIManager().getAllWindows();
 
-				if (e.getChangeType() == EditionEvent.CHANGE_TYPE_ADD) {
-					// No redraw, just image paint
-					view.getMapControl().repaint();
-				}else if (e.getChangeType() == EditionEvent.CHANGE_TYPE_DELETE){
-					EditionManager em=CADExtension.getEditionManager();
-					if (em.getActiveLayerEdited()!=null){
-						VectorialLayerEdited vle=(VectorialLayerEdited)em.getActiveLayerEdited();
-						try {
-							vle.clearSelection(false);
-						} catch (ReadDriverException e1) {
-							NotificationManager.addError(e1);
-						}
-					}
-				}else{
-//					fLayer.setDirty(true);
-					view.getMapControl().rePaintDirtyLayers();
-				}
+	for (int i = 0; i < views.length; i++) {
+	    if (views[i] instanceof Table) {
+		// Table table=(Table)views[i];
+		// /VCN Creo que no hace falta refrescar la tabla aquí
+		// if (table.getModel().getAssociatedTable()!=null &&
+		// table.getModel().getAssociatedTable().equals(fLayer))
+		// table.refresh();
+	    } else if (views[i] instanceof com.iver.cit.gvsig.project.documents.view.gui.View) {
+		com.iver.cit.gvsig.project.documents.view.gui.View view = (com.iver.cit.gvsig.project.documents.view.gui.View) views[i];
 
-				/* FLayers layers=view.getMapControl().getMapContext().getLayers();
-				for (int j=0;j<layers.getLayersCount();j++){
-					if (layers.getLayer(j).equals(fLayer)){
-						view.repaintMap();
-					}
-				} */
+		if (e.getChangeType() == EditionEvent.CHANGE_TYPE_ADD) {
+		    // No redraw, just image paint
+		    view.getMapControl().repaint();
+		} else if (e.getChangeType() == EditionEvent.CHANGE_TYPE_DELETE) {
+		    EditionManager em = CADExtension.getEditionManager();
+		    if (em.getActiveLayerEdited() != null) {
+			VectorialLayerEdited vle = (VectorialLayerEdited) em
+				.getActiveLayerEdited();
+			try {
+			    vle.clearSelection(false);
+			} catch (ReadDriverException e1) {
+			    NotificationManager.addError(e1);
 			}
+		    }
+		} else {
+		    // fLayer.setDirty(true);
+		    view.getMapControl().rePaintDirtyLayers();
 		}
 
+		/*
+		 * FLayers
+		 * layers=view.getMapControl().getMapContext().getLayers(); for
+		 * (int j=0;j<layers.getLayersCount();j++){ if
+		 * (layers.getLayer(j).equals(fLayer)){ view.repaintMap(); } }
+		 */
+	    }
 	}
-	public void beforeFieldEditEvent(BeforeFieldEditEvent e) {
-		// TODO Auto-generated method stub
 
-	}
-	public void afterFieldEditEvent(AfterFieldEditEvent e) {
-		// TODO Auto-generated method stub
+    }
 
-	}
+    @Override
+    public void beforeFieldEditEvent(BeforeFieldEditEvent e) {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void afterFieldEditEvent(AfterFieldEditEvent e) {
+	// TODO Auto-generated method stub
+
+    }
 
 }

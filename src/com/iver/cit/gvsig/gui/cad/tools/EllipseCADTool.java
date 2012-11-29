@@ -54,10 +54,9 @@ import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext.EllipseCADToolState;
 
-
 /**
  * DOCUMENT ME!
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class EllipseCADTool extends InsertionCADTool {
@@ -76,143 +75,190 @@ public class EllipseCADTool extends InsertionCADTool {
      * Método de incio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
      */
+    @Override
     public void init() {
-    	 _fsm = new EllipseCADToolContext(this);
+	_fsm = new EllipseCADToolContext(this);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double, double)
      */
+    @Override
     public void transition(double x, double y, InputEvent event) {
-        _fsm.addPoint(x, y, event);
+	_fsm.addPoint(x, y, event);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double)
      */
+    @Override
     public void transition(double d) {
-        _fsm.addValue(d);
+	_fsm.addValue(d);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, java.lang.String)
      */
+    @Override
     public void transition(String s) throws CommandException {
-    	if (!super.changeCommand(s)){
-    		_fsm.addOption(s);
-    	}
+	if (!super.changeCommand(s)) {
+	    _fsm.addOption(s);
+	}
     }
 
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
      * editableFeatureSource que ya estará creado.
-     *
-     * @param sel Bitset con las geometrías que estén seleccionadas.
-     * @param x parámetro x del punto que se pase en esta transición.
-     * @param y parámetro y del punto que se pase en esta transición.
+     * 
+     * @param sel
+     *            Bitset con las geometrías que estén seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase en esta transición.
+     * @param y
+     *            parámetro y del punto que se pase en esta transición.
      */
-    public void addPoint(double x, double y,InputEvent event) {
-        EllipseCADToolState actualState = (EllipseCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
+    @Override
+    public void addPoint(double x, double y, InputEvent event) {
+	EllipseCADToolState actualState = (EllipseCADToolState) _fsm
+		.getPreviousState();
+	String status = actualState.getName();
 
-        if (status.equals("Ellipse.FirstPointAxis")) {
-            startAxis = new Point2D.Double(x, y);
-        } else if (status.equals("Ellipse.SecondPointAxis")) {
-            endAxis = new Point2D.Double(x, y);
-        } else if (status.equals("Ellipse.DistanceOtherAxis")) {
-            Point2D middle = new Point2D.Double((startAxis.getX() +
-                    endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
-            Point2D third = new Point2D.Double(x, y);
-            double distance = middle.distance(third);
-            addGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
-        }
+	if (status.equals("Ellipse.FirstPointAxis")) {
+	    startAxis = new Point2D.Double(x, y);
+	} else if (status.equals("Ellipse.SecondPointAxis")) {
+	    endAxis = new Point2D.Double(x, y);
+	} else if (status.equals("Ellipse.DistanceOtherAxis")) {
+	    Point2D middle = new Point2D.Double(
+		    (startAxis.getX() + endAxis.getX()) / 2,
+		    (startAxis.getY() + endAxis.getY()) / 2);
+	    Point2D third = new Point2D.Double(x, y);
+	    double distance = middle.distance(third);
+	    addGeometry(ShapeFactory
+		    .createEllipse(startAxis, endAxis, distance));
+	}
     }
 
     /**
      * Método para dibujar la lo necesario para el estado en el que nos
      * encontremos.
-     *
-     * @param g Graphics sobre el que dibujar.
-     * @param selectedGeometries BitSet con las geometrías seleccionadas.
-     * @param x parámetro x del punto que se pase para dibujar.
-     * @param y parámetro x del punto que se pase para dibujar.
+     * 
+     * @param g
+     *            Graphics sobre el que dibujar.
+     * @param selectedGeometries
+     *            BitSet con las geometrías seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase para dibujar.
+     * @param y
+     *            parámetro x del punto que se pase para dibujar.
      */
-    public void drawOperation(Graphics g,double x,
-        double y) {
-        EllipseCADToolState actualState = _fsm.getState();
-        String status = actualState.getName();
+    @Override
+    public void drawOperation(Graphics g, double x, double y) {
+	EllipseCADToolState actualState = _fsm.getState();
+	String status = actualState.getName();
 
-        if (status.equals("Ellipse.SecondPointAxis")) {
-            drawLine((Graphics2D) g, startAxis, new Point2D.Double(x, y),DefaultCADTool.geometrySelectSymbol);
-        } else if (status.equals("Ellipse.DistanceOtherAxis")) {
-            Point2D middle = new Point2D.Double((startAxis.getX() +
-                    endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
+	if (status.equals("Ellipse.SecondPointAxis")) {
+	    drawLine((Graphics2D) g, startAxis, new Point2D.Double(x, y),
+		    DefaultCADTool.geometrySelectSymbol);
+	} else if (status.equals("Ellipse.DistanceOtherAxis")) {
+	    Point2D middle = new Point2D.Double(
+		    (startAxis.getX() + endAxis.getX()) / 2,
+		    (startAxis.getY() + endAxis.getY()) / 2);
 
-            Point2D third = new Point2D.Double(x, y);
+	    Point2D third = new Point2D.Double(x, y);
 
-            double distance = middle.distance(third);
+	    double distance = middle.distance(third);
 
-            ShapeFactory.createEllipse(startAxis, endAxis, distance).draw((Graphics2D) g,
-                getCadToolAdapter().getMapControl().getViewPort(),
-                DefaultCADTool.axisReferencesSymbol);
+	    ShapeFactory.createEllipse(startAxis, endAxis, distance).draw(
+		    (Graphics2D) g,
+		    getCadToolAdapter().getMapControl().getViewPort(),
+		    DefaultCADTool.axisReferencesSymbol);
 
-            Point2D mediop = new Point2D.Double((startAxis.getX() +
-                    endAxis.getX()) / 2, (startAxis.getY() + endAxis.getY()) / 2);
-            drawLine((Graphics2D) g, mediop, third,DefaultCADTool.geometrySelectSymbol);
-        }
+	    Point2D mediop = new Point2D.Double(
+		    (startAxis.getX() + endAxis.getX()) / 2,
+		    (startAxis.getY() + endAxis.getY()) / 2);
+	    drawLine((Graphics2D) g, mediop, third,
+		    DefaultCADTool.geometrySelectSymbol);
+	}
     }
 
     /**
      * Add a diferent option.
-     *
-     * @param sel DOCUMENT ME!
-     * @param s Diferent option.
+     * 
+     * @param sel
+     *            DOCUMENT ME!
+     * @param s
+     *            Diferent option.
      */
+    @Override
     public void addOption(String s) {
-        // TODO Auto-generated method stub
+	// TODO Auto-generated method stub
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
+    @Override
     public void addValue(double d) {
-        EllipseCADToolState actualState = (EllipseCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
+	EllipseCADToolState actualState = (EllipseCADToolState) _fsm
+		.getPreviousState();
+	String status = actualState.getName();
 
-        if (status.equals("Ellipse.DistanceOtherAxis")) {
-            double distance = d;
-            addGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
-        }
+	if (status.equals("Ellipse.DistanceOtherAxis")) {
+	    double distance = d;
+	    addGeometry(ShapeFactory
+		    .createEllipse(startAxis, endAxis, distance));
+	}
     }
 
-	public String getName() {
-		return PluginServices.getText(this,"ellipse_");
-	}
+    @Override
+    public String getName() {
+	return PluginServices.getText(this, "ellipse_");
+    }
 
-	public String toString() {
-		return "_ellipse";
-	}
-	public boolean isApplicable(int shapeType) {
-		switch (shapeType) {
-		case FShape.POINT:
-		case FShape.MULTIPOINT:
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public String toString() {
+	return "_ellipse";
+    }
 
-	public void drawOperation(Graphics g, ArrayList pointList) {
-		// TODO Auto-generated method stub
-		
+    @Override
+    public boolean isApplicable(int shapeType) {
+	switch (shapeType) {
+	case FShape.POINT:
+	case FShape.MULTIPOINT:
+	    return false;
 	}
+	return true;
+    }
 
-	public boolean isMultiTransition() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public void drawOperation(Graphics g, ArrayList pointList) {
+	// TODO Auto-generated method stub
 
-	public void transition(InputEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    @Override
+    public boolean isMultiTransition() {
+	// TODO Auto-generated method stub
+	return false;
+    }
+
+    @Override
+    public void transition(InputEvent event) {
+	// TODO Auto-generated method stub
+
+    }
 }

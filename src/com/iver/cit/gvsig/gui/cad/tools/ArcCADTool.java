@@ -55,10 +55,9 @@ import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext.ArcCADToolState;
 
-
 /**
  * DOCUMENT ME!
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class ArcCADTool extends DefaultCADTool {
@@ -77,142 +76,178 @@ public class ArcCADTool extends DefaultCADTool {
      * Método de incio, para poner el código de todo lo que se requiera de una
      * carga previa a la utilización de la herramienta.
      */
+    @Override
     public void init() {
-    	_fsm = new ArcCADToolContext(this);
+	_fsm = new ArcCADToolContext(this);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double, double)
      */
+    @Override
     public void transition(double x, double y, InputEvent event) {
-        _fsm.addPoint(x, y,event);
+	_fsm.addPoint(x, y, event);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, double)
      */
-    public void transition(double d){
-        _fsm.addValue(d);
+    @Override
+    public void transition(double d) {
+	_fsm.addValue(d);
     }
 
-    /* (non-Javadoc)
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap.layers.FBitSet, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
+     * .layers.FBitSet, java.lang.String)
      */
+    @Override
     public void transition(String s) throws CommandException {
-    	if (!super.changeCommand(s)){
-    		_fsm.addOption(s);
-    	}
+	if (!super.changeCommand(s)) {
+	    _fsm.addOption(s);
+	}
     }
 
     /**
      * Equivale al transition del prototipo pero sin pasarle como pará metro el
      * editableFeatureSource que ya estará creado.
-     *
-     * @param sel Bitset con las geometrías que estén seleccionadas.
-     * @param x parámetro x del punto que se pase en esta transición.
-     * @param y parámetro y del punto que se pase en esta transición.
+     * 
+     * @param sel
+     *            Bitset con las geometrías que estén seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase en esta transición.
+     * @param y
+     *            parámetro y del punto que se pase en esta transición.
      */
-    public void addPoint(double x, double y,InputEvent event) {
-        ArcCADToolState actualState = (ArcCADToolState) _fsm.getPreviousState();
-        String status = actualState.getName();
+    @Override
+    public void addPoint(double x, double y, InputEvent event) {
+	ArcCADToolState actualState = (ArcCADToolState) _fsm.getPreviousState();
+	String status = actualState.getName();
 
-        if (status.equals("Arc.FirstPoint")) {
-            p1 = new Point2D.Double(x, y);
-        } else if (status.equals("Arc.SecondPoint")) {
-            p2 = new Point2D.Double(x, y);
-        } else if (status.equals("Arc.ThirdPoint")) {
-            p3 = new Point2D.Double(x, y);
+	if (status.equals("Arc.FirstPoint")) {
+	    p1 = new Point2D.Double(x, y);
+	} else if (status.equals("Arc.SecondPoint")) {
+	    p2 = new Point2D.Double(x, y);
+	} else if (status.equals("Arc.ThirdPoint")) {
+	    p3 = new Point2D.Double(x, y);
 
-            IGeometry ig = ShapeFactory.createArc(p1, p2, p3);
+	    IGeometry ig = ShapeFactory.createArc(p1, p2, p3);
 
-            if (ig != null) {
-                addGeometry(ig);
-            }
-        }
+	    if (ig != null) {
+		addGeometry(ig);
+	    }
+	}
     }
 
     /**
      * Método para dibujar lo necesario para el estado en el que nos
      * encontremos.
-     *
-     * @param g Graphics sobre el que dibujar.
-     * @param selectedGeometries BitSet con las geometrías seleccionadas.
-     * @param x parámetro x del punto que se pase para dibujar.
-     * @param y parámetro x del punto que se pase para dibujar.
+     * 
+     * @param g
+     *            Graphics sobre el que dibujar.
+     * @param selectedGeometries
+     *            BitSet con las geometrías seleccionadas.
+     * @param x
+     *            parámetro x del punto que se pase para dibujar.
+     * @param y
+     *            parámetro x del punto que se pase para dibujar.
      */
-    public void drawOperation(Graphics g, double x,
-        double y) {
-        ArcCADToolState actualState = _fsm.getState();
-        String status = actualState.getName();
+    @Override
+    public void drawOperation(Graphics g, double x, double y) {
+	ArcCADToolState actualState = _fsm.getState();
+	String status = actualState.getName();
 
-        if (status.equals("Arc.SecondPoint")) {
-            drawLine((Graphics2D) g, p1, new Point2D.Double(x, y),geometrySelectSymbol);
-        } else if (status.equals("Arc.ThirdPoint")) {
-            Point2D current = new Point2D.Double(x, y);
-            IGeometry ig = ShapeFactory.createArc(p1, p2, current);
+	if (status.equals("Arc.SecondPoint")) {
+	    drawLine((Graphics2D) g, p1, new Point2D.Double(x, y),
+		    geometrySelectSymbol);
+	} else if (status.equals("Arc.ThirdPoint")) {
+	    Point2D current = new Point2D.Double(x, y);
+	    IGeometry ig = ShapeFactory.createArc(p1, p2, current);
 
-            if (ig != null) {
-                ig.draw((Graphics2D) g,
-                    getCadToolAdapter().getMapControl().getViewPort(),
-                     DefaultCADTool.geometrySelectSymbol);
-            }
+	    if (ig != null) {
+		ig.draw((Graphics2D) g, getCadToolAdapter().getMapControl()
+			.getViewPort(), DefaultCADTool.geometrySelectSymbol);
+	    }
 
-            Point2D p = getCadToolAdapter().getMapControl().getViewPort()
-                            .fromMapPoint(p1.getX(), p1.getY());
-            g.drawRect((int) p.getX(), (int) p.getY(), 1, 1);
-            p = getCadToolAdapter().getMapControl().getViewPort().fromMapPoint(p2.getX(),
-                    p2.getY());
-            g.drawRect((int) p.getX(), (int) p.getY(), 1, 1);
-        }
+	    Point2D p = getCadToolAdapter().getMapControl().getViewPort()
+		    .fromMapPoint(p1.getX(), p1.getY());
+	    g.drawRect((int) p.getX(), (int) p.getY(), 1, 1);
+	    p = getCadToolAdapter().getMapControl().getViewPort()
+		    .fromMapPoint(p2.getX(), p2.getY());
+	    g.drawRect((int) p.getX(), (int) p.getY(), 1, 1);
+	}
     }
 
     /**
      * Add a diferent option.
-     *
-     * @param sel DOCUMENT ME!
-     * @param s Diferent option.
+     * 
+     * @param sel
+     *            DOCUMENT ME!
+     * @param s
+     *            Diferent option.
      */
+    @Override
     public void addOption(String s) {
-        // TODO Auto-generated method stub
+	// TODO Auto-generated method stub
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
      */
+    @Override
     public void addValue(double d) {
     }
 
-	public String getName() {
-		return PluginServices.getText(this,"arc_");
-	}
+    @Override
+    public String getName() {
+	return PluginServices.getText(this, "arc_");
+    }
 
-	public String toString() {
-		return "_arc";
-	}
+    @Override
+    public String toString() {
+	return "_arc";
+    }
 
-	public boolean isApplicable(int shapeType) {
-		switch (shapeType) {
-		case FShape.POINT:
-		case FShape.POLYGON:
-		case FShape.MULTIPOINT:
-			return false;
-		}
-		return true;
+    @Override
+    public boolean isApplicable(int shapeType) {
+	switch (shapeType) {
+	case FShape.POINT:
+	case FShape.POLYGON:
+	case FShape.MULTIPOINT:
+	    return false;
 	}
+	return true;
+    }
 
-	public void drawOperation(Graphics g, ArrayList pointList) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void drawOperation(Graphics g, ArrayList pointList) {
+	// TODO Auto-generated method stub
 
-	public boolean isMultiTransition() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    }
 
-	public void transition(InputEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public boolean isMultiTransition() {
+	// TODO Auto-generated method stub
+	return false;
+    }
+
+    @Override
+    public void transition(InputEvent event) {
+	// TODO Auto-generated method stub
+
+    }
 
 }

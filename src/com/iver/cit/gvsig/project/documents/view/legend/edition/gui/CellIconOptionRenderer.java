@@ -52,10 +52,9 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-
 /**
  * Renderer para iconos.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class CellIconOptionRenderer extends JPanel implements TableCellRenderer {
@@ -66,33 +65,41 @@ public class CellIconOptionRenderer extends JPanel implements TableCellRenderer 
 
     /**
      * Crea un nuevo FCellRenderer.
-     *
-     * @param isBordered DOCUMENT ME!
+     * 
+     * @param isBordered
+     *            DOCUMENT ME!
      */
     public CellIconOptionRenderer(boolean isBordered) {
-        this.isBordered = isBordered;
-        setOpaque(true); //MUST do this for background to show up.
+	this.isBordered = isBordered;
+	setOpaque(true); // MUST do this for background to show up.
     }
 
     /**
      * DOCUMENT ME!
-     *
-     * @param table DOCUMENT ME!
-     * @param value DOCUMENT ME!
-     * @param isSelected DOCUMENT ME!
-     * @param hasFocus DOCUMENT ME!
-     * @param row DOCUMENT ME!
-     * @param column DOCUMENT ME!
-     *
+     * 
+     * @param table
+     *            DOCUMENT ME!
+     * @param value
+     *            DOCUMENT ME!
+     * @param isSelected
+     *            DOCUMENT ME!
+     * @param hasFocus
+     *            DOCUMENT ME!
+     * @param row
+     *            DOCUMENT ME!
+     * @param column
+     *            DOCUMENT ME!
+     * 
      * @return DOCUMENT ME!
      */
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected, boolean hasFocus, int row, int column) {
-        preview.setIcon((ImageIcon) value);
-        if (table.getSelectedRow()==row)
-			preview.setSelected(true);
-		else
-			preview.setSelected(false);
-        return preview;
+	    boolean isSelected, boolean hasFocus, int row, int column) {
+	preview.setIcon((ImageIcon) value);
+	if (table.getSelectedRow() == row)
+	    preview.setSelected(true);
+	else
+	    preview.setSelected(false);
+	return preview;
     }
 }

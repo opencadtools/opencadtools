@@ -45,15 +45,15 @@ import java.util.List;
 
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 
-
 /**
  * Snapper vectorial with geometries.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public interface ISnapperGeometriesVectorial extends ISnapperVectorial {
+    @Override
     Point2D getSnapPoint(Point2D queryPoint, IGeometry geomToSnap,
-        double tolerance, Point2D lastPointEntered);
+	    double tolerance, Point2D lastPointEntered);
 
     void setGeometries(List geoms);
 }

@@ -41,8 +41,7 @@
 package com.iver.cit.gvsig.project.documents.view.snapping;
 
 public interface IConfigurator {
-	void setSnapper(ISnapper snapper);
-	ISnapper getSnapper();
+    void setSnapper(ISnapper snapper);
+
+    ISnapper getSnapper();
 }
-
-

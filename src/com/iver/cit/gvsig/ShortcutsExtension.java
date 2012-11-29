@@ -40,28 +40,33 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Javier Estévez [Cartolab]
  */
 
-public class ShortcutsExtension extends Extension implements KeyEventPostProcessor {
+public class ShortcutsExtension extends Extension implements
+	KeyEventPostProcessor {
 
     private ArrayList<Integer> altKeyCodes;
     private boolean altMode = false;
 
-	public void execute(String actionCommand) {
-		
-	}
+    @Override
+    public void execute(String actionCommand) {
 
-	public void initialize() {
-		KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-		kfm.addKeyEventPostProcessor(this);
-		
+    }
+
+    @Override
+    public void initialize() {
+	KeyboardFocusManager kfm = KeyboardFocusManager
+		.getCurrentKeyboardFocusManager();
+	kfm.addKeyEventPostProcessor(this);
+
 	// init altKeyCodes
 	altKeyCodes = new ArrayList<Integer>();
 	altKeyCodes.add(KeyEvent.VK_ALT);
 	altKeyCodes.add(KeyEvent.VK_ALT_GRAPH);
 	altKeyCodes.add(KeyEvent.VK_CONTROL);
 	altKeyCodes.add(KeyEvent.VK_SHIFT);
-	}
+    }
 
-	public boolean isEnabled() {
+    @Override
+    public boolean isEnabled() {
 	if (PluginServices.getMDIManager().getActiveWindow() instanceof View) {
 	    FLayers layers = ((View) PluginServices.getMDIManager()
 		    .getActiveWindow()).getMapControl().getMapContext()
@@ -70,29 +75,34 @@ public class ShortcutsExtension extends Extension implements KeyEventPostProcess
 	} else {
 	    return false;
 	}
-	}
+    }
 
-	public boolean isVisible() {
-		return false;
-	}
-	
-	/**
-	 * Changes selected tool.
-	 * @param tool toolname 
-	 * @param toolBarTool toolname in its config.xml
-	 */
-	private void setTool(String tool, String toolBarTool){
-		View v = (View) PluginServices.getMDIManager().getActiveWindow();
-		if (v.getMapControl()!=null){
-			v.getMapControl().setTool(tool);
-			PluginServices.getMainFrame().setSelectedTool(toolBarTool);
-		}
-	}
+    @Override
+    public boolean isVisible() {
+	return false;
+    }
 
-	public boolean postProcessKeyEvent(KeyEvent event) {
-		
-		boolean processed = false;
-		
+    /**
+     * Changes selected tool.
+     * 
+     * @param tool
+     *            toolname
+     * @param toolBarTool
+     *            toolname in its config.xml
+     */
+    private void setTool(String tool, String toolBarTool) {
+	View v = (View) PluginServices.getMDIManager().getActiveWindow();
+	if (v.getMapControl() != null) {
+	    v.getMapControl().setTool(tool);
+	    PluginServices.getMainFrame().setSelectedTool(toolBarTool);
+	}
+    }
+
+    @Override
+    public boolean postProcessKeyEvent(KeyEvent event) {
+
+	boolean processed = false;
+
 	if (event.getID() == KeyEvent.KEY_PRESSED) {
 	    if (altKeyCodes.contains(event.getKeyCode())) {
 		altMode = true;
@@ -108,12 +118,12 @@ public class ShortcutsExtension extends Extension implements KeyEventPostProcess
 		if (event.getKeyCode() == KeyEvent.VK_F3) {
 		    setTool("zoomOut", "ZOOM_OUT");
 		    processed = true;
-						}
+		}
 		if (event.getKeyCode() == KeyEvent.VK_F4) {
 		    setTool("pan", "PAN");
 		    processed = true;
-						}
-					}
+		}
+	    }
 	    if (altKeyCodes.contains(event.getKeyCode())) {
 		altMode = false;
 	    }

@@ -44,84 +44,88 @@ import com.iver.utiles.console.JConsole;
  */
 public class FollowGeometryExtension extends Extension {
 
-	public void initialize() {
-        PluginServices.getIconTheme().registerDefault(
-				"follow-geometry",
+    @Override
+    public void initialize() {
+	PluginServices.getIconTheme().registerDefault(
+		"follow-geometry",
 		this.getClass().getClassLoader()
-			.getResource("images/icons/seg_geometria.png")
-			);
-	}
+			.getResource("images/icons/seg_geometria.png"));
+    }
 
-	public void execute(String s) {
-		
-		CADExtension.initFocus();
-		if (s.equals("_follow")) {
+    @Override
+    public void execute(String s) {
+
+	CADExtension.initFocus();
+	if (s.equals("_follow")) {
 	    CADStatus snappers = CADStatus.getCADStatus();
 	    boolean activated = snappers.isFollowGeometryActivated();
-			String message = new String();
-			
-			if (activated) {
+	    String message = new String();
+
+	    if (activated) {
 		message = PluginServices
 			.getText(this, "followGeom_deactivated");
-			} else {
+	    } else {
 		message = PluginServices.getText(this, "followGeom_activated");
-			}
+	    }
 
 	    snappers.setFollowGeometryActivated(!activated);
-			//Printing in console if the forms are activated
-			if (PluginServices.getMDIManager().getActiveWindow() instanceof View)
-			{
-				View vista = (View) PluginServices.getMDIManager().getActiveWindow();
-				vista.getConsolePanel().addText("\n" +message, JConsole.INSERT);
-			}
-			
-			//[lbd] repintamos para que se vuelva a ver la herramienta
-			CADExtension.getEditionManager().getMapControl().repaint();
-		}
+	    // Printing in console if the forms are activated
+	    if (PluginServices.getMDIManager().getActiveWindow() instanceof View) {
+		View vista = (View) PluginServices.getMDIManager()
+			.getActiveWindow();
+		vista.getConsolePanel()
+			.addText("\n" + message, JConsole.INSERT);
+	    }
+
+	    // [lbd] repintamos para que se vuelva a ver la herramienta
+	    CADExtension.getEditionManager().getMapControl().repaint();
 	}
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    @Override
+    public boolean isEnabled() {
 
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-			
-			if (CADExtension.getEditionManager().getActiveLayerEdited()==null) {
-				return false;
-			}
-			CADTool cadTool = CADExtension.getCADToolAdapter().getCadTool();			
-			
-			if (isInsertionTool(cadTool)){
-				return true;
-			}
-			
-		}
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 
+	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
 		return false;
+	    }
+	    CADTool cadTool = CADExtension.getCADToolAdapter().getCadTool();
+
+	    if (isInsertionTool(cadTool)) {
+		return true;
+	    }
+
 	}
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
+	return false;
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    @Override
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	    return true;
+	return false;
+    }
+
+    private boolean isInsertionTool(CADTool cadTool) {
+
+	if ((cadTool instanceof InsertionCADTool)
+		|| (cadTool instanceof RedigitalizeLineCADTool)
+		|| (cadTool instanceof RedigitalizePolygonCADTool)
+		|| (cadTool instanceof SelectionCADTool)) {
+
+	    return true;
+
 	}
-	
-	private boolean isInsertionTool(CADTool cadTool){		
-		
-		if ((cadTool instanceof InsertionCADTool) ||
-			 (cadTool instanceof RedigitalizeLineCADTool) ||
-			 (cadTool instanceof RedigitalizePolygonCADTool) ||
-			 (cadTool instanceof SelectionCADTool)) {
-			
-			return true;
-			
-		}
-		
-		return false;
-	}
-	
+
+	return false;
+    }
+
 }

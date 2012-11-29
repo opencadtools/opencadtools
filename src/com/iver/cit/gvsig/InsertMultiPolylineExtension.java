@@ -34,83 +34,87 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extensión que gestiona la inserción de polilíneas en edición.
- *
+ * 
  * @author Isabel Pérez-Urria Lage [LBD]
  * @author Javier Estévez [Cartolab]
  */
 public class InsertMultiPolylineExtension extends Extension {
     private final String iconPath = "images/icons/multipolilinea.png";
     private final String iconCode = "edition-insert-multipolyline";
-	private final String cadToolCode = "_insert_multipolyline";
+    private final String cadToolCode = "_insert_multipolyline";
 
-	private View view;
+    private View view;
 
-	private MapControl mapControl;
-	private MultiPolylineCADTool multiline;
+    private MapControl mapControl;
+    private MultiPolylineCADTool multiline;
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		multiline = new MultiPolylineCADTool();
-		CADExtension.addCADTool(cadToolCode, multiline);
-		registerIcon();
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    @Override
+    public void initialize() {
+	multiline = new MultiPolylineCADTool();
+	CADExtension.addCADTool(cadToolCode, multiline);
+	registerIcon();
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    @Override
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals(cadToolCode)) {
+	    CADExtension.setCADTool(cadToolCode, true);
+	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals(cadToolCode)) {
-			CADExtension.setCADTool(cadToolCode,true);
-			CADExtension.getEditionManager().setMapControl(mapControl);
-		}
-		CADExtension.getCADToolAdapter().configureMenu();
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    @Override
+    public boolean isEnabled() {
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-			view = (View) PluginServices.getMDIManager().getActiveWindow();
-			mapControl = view.getMapControl();
-			if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
-				return false;
-			FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-
-				try {
-					if (multiline.isApplicable(lv.getShapeType()))
-						return true;
-				} catch (ReadDriverException e) {
-					NotificationManager.addError(e.getMessage(), e);
-				}
-
-//			LayerDescriptor ld = LayerManager.getLayerDescriptor(lv.getName());
-//			String tipoGeom = ld.getLayerEditionDescriptor().getTipoGeom();
-//			if (multilinea.newIsApplicable(ld)){
-//				return true;
-//			}
-		}
-
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    mapControl = view.getMapControl();
+	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
 		return false;
+	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
+		    .getActiveLayerEdited().getLayer();
+
+	    try {
+		if (multiline.isApplicable(lv.getShapeType()))
+		    return true;
+	    } catch (ReadDriverException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    }
+
+	    // LayerDescriptor ld =
+	    // LayerManager.getLayerDescriptor(lv.getName());
+	    // String tipoGeom = ld.getLayerEditionDescriptor().getTipoGeom();
+	    // if (multilinea.newIsApplicable(ld)){
+	    // return true;
+	    // }
 	}
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
-	}
+	return false;
+    }
 
-	private void registerIcon(){
-		PluginServices.getIconTheme().registerDefault(
-				iconCode,
-				this.getClass().getClassLoader().getResource(iconPath)
-			);
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    @Override
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	    return true;
+	return false;
+    }
+
+    private void registerIcon() {
+	PluginServices.getIconTheme().registerDefault(iconCode,
+		this.getClass().getClassLoader().getResource(iconPath));
+    }
 }

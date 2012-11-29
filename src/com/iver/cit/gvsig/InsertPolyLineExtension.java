@@ -52,82 +52,87 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extensión que gestiona la inserción de polilíneas en edición.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class InsertPolyLineExtension extends Extension {
-	protected View view;
+    protected View view;
 
-	protected MapControl mapControl;
-	protected EIELPolylineCADTool polyline;
-	protected SplineCADTool spline;
+    protected MapControl mapControl;
+    protected EIELPolylineCADTool polyline;
+    protected SplineCADTool spline;
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		polyline = new EIELPolylineCADTool();
-		spline = new SplineCADTool();
-		CADExtension.addCADTool("_polyline", polyline);
-		CADExtension.addCADTool("_spline", spline);
-		
-		registerIcons();
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    @Override
+    public void initialize() {
+	polyline = new EIELPolylineCADTool();
+	spline = new SplineCADTool();
+	CADExtension.addCADTool("_polyline", polyline);
+	CADExtension.addCADTool("_spline", spline);
 
-	private void registerIcons(){
-		PluginServices.getIconTheme().registerDefault(
+	registerIcons();
+    }
+
+    private void registerIcons() {
+	PluginServices.getIconTheme().registerDefault(
 		"edition-insert-polyline",
 		this.getClass().getClassLoader()
-			.getResource("images/icons/polilinea.png")
-			);
-		
-		PluginServices.getIconTheme().registerDefault(
-				"edition-insert-geometry-spline",
-				this.getClass().getClassLoader().getResource("images/Spline.png")
-			);
+			.getResource("images/icons/polilinea.png"));
+
+	PluginServices.getIconTheme().registerDefault(
+		"edition-insert-geometry-spline",
+		this.getClass().getClassLoader()
+			.getResource("images/Spline.png"));
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    @Override
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals("_polyline")) {
+	    CADExtension.setCADTool("_polyline", true);
+	} else if (s.equals("_spline")) {
+	    CADExtension.setCADTool("_spline", true);
 	}
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals("_polyline")) {
-			CADExtension.setCADTool("_polyline",true);
-		}else if (s.equals("_spline")) {
-			CADExtension.setCADTool("_spline",true);
+	CADExtension.getEditionManager().setMapControl(mapControl);
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    @Override
+    public boolean isEnabled() {
+
+	try {
+	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+		view = (View) PluginServices.getMDIManager().getActiveWindow();
+		mapControl = view.getMapControl();
+		if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
+		    return false;
+		FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
+			.getActiveLayerEdited().getLayer();
+		if (polyline.isApplicable(lv.getShapeType())) {
+		    return true;
 		}
-		CADExtension.getEditionManager().setMapControl(mapControl);
-		CADExtension.getCADToolAdapter().configureMenu();
+	    }
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
 	}
+	return false;
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-
-		try {
-			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-				view = (View) PluginServices.getMDIManager().getActiveWindow();
-				mapControl = view.getMapControl();
-				if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
-					return false;
-				FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-				if (polyline.isApplicable(lv.getShapeType())){
-					return true;
-				}
-			}
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
-		}
-		return false;
-	}
-
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    @Override
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	    return true;
+	return false;
+    }
 }

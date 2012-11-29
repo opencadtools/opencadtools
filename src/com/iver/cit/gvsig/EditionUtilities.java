@@ -118,7 +118,7 @@ public class EditionUtilities {
 		return null;
 	    }
 
-	    return (FLayer[]) resul.toArray(new FLayer[0]);
+	    return resul.toArray(new FLayer[0]);
 
 	}
 

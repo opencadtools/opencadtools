@@ -28,7 +28,6 @@ import com.iver.cit.gvsig.fmap.drivers.db.utils.ConnectionWithParams;
 public class ChooseSchemaAndTable extends JPanel implements IWindow,
 	ActionListener {
 
-
     private JComboBox schemaCB;
     private String schema;
     private JTextField tableTF;
@@ -39,7 +38,6 @@ public class ChooseSchemaAndTable extends JPanel implements IWindow,
     private JButton okBT;
     private JButton cancelBT;
     private boolean okPressed = false;
-
 
     private final CharSequence charSequence = "\\/=.:,;¿?*{}´$%&()@#|!¬";
 
@@ -57,7 +55,6 @@ public class ChooseSchemaAndTable extends JPanel implements IWindow,
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	}
-
 
 	GridBagLayout gridBagLayout = new GridBagLayout();
 	setLayout(gridBagLayout);
@@ -117,6 +114,7 @@ public class ChooseSchemaAndTable extends JPanel implements IWindow,
 
     }
 
+    @Override
     public WindowInfo getWindowInfo() {
 
 	if (windowInfo == null) {
@@ -147,10 +145,10 @@ public class ChooseSchemaAndTable extends JPanel implements IWindow,
 	return windowInfo;
     }
 
+    @Override
     public Object getWindowProfile() {
 	return WindowInfo.DIALOG_PROFILE;
     }
-
 
     public String getTable() {
 	return table;
@@ -164,12 +162,16 @@ public class ChooseSchemaAndTable extends JPanel implements IWindow,
 	return okPressed;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
 	if (e.getSource() == okBT) {
 	    String tableName = tableTF.getText().trim();
 
 	    if (tableName.length() == 0) {
-		JOptionPane.showMessageDialog(null, PluginServices.getText(this,"intro_tablename_blank"), PluginServices.getText(this,"warning"), JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(null,
+			PluginServices.getText(this, "intro_tablename_blank"),
+			PluginServices.getText(this, "warning"),
+			JOptionPane.WARNING_MESSAGE);
 		return;
 	    }
 
@@ -182,7 +184,7 @@ public class ChooseSchemaAndTable extends JPanel implements IWindow,
 			    JOptionPane.WARNING_MESSAGE);
 		    return;
 		}
-		}
+	    }
 
 	    table = tableName;
 	    schema = schemaCB.getSelectedItem().toString();

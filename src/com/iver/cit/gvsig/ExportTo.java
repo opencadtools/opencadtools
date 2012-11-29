@@ -193,7 +193,7 @@ public class ExportTo extends Extension {
 		    }
 		    if (lyrVect instanceof FLyrAnnotation
 			    && geom.getGeometryType() != FShape.POINT) {
-			Point2D p = FLabel.createLabelPoint((FShape) geom
+			Point2D p = FLabel.createLabelPoint(geom
 				.getInternalShape());
 			geom = ShapeFactory.createPoint2D(p.getX(), p.getY());
 		    }
@@ -216,7 +216,7 @@ public class ExportTo extends Extension {
 			Value[] values = sds.getRow(i);
 			IFeature feat = new DefaultFeature(geom, values, "" + i);
 			DefaultRowEdited edRow = new DefaultRowEdited(feat,
-				DefaultRowEdited.STATUS_ADDED, i);
+				IRowEdited.STATUS_ADDED, i);
 			writer.process(edRow);
 		    }
 		}
@@ -234,7 +234,7 @@ public class ExportTo extends Extension {
 		    }
 		    if (lyrVect instanceof FLyrAnnotation
 			    && geom.getGeometryType() != FShape.POINT) {
-			Point2D p = FLabel.createLabelPoint((FShape) geom
+			Point2D p = FLabel.createLabelPoint(geom
 				.getInternalShape());
 			geom = ShapeFactory.createPoint2D(p.getX(), p.getY());
 		    }
@@ -258,7 +258,7 @@ public class ExportTo extends Extension {
 			Value[] values = sds.getRow(i);
 			IFeature feat = new DefaultFeature(geom, values, "" + i);
 			DefaultRowEdited edRow = new DefaultRowEdited(feat,
-				DefaultRowEdited.STATUS_ADDED, i);
+				IRowEdited.STATUS_ADDED, i);
 
 			writer.process(edRow);
 		    }
@@ -316,7 +316,7 @@ public class ExportTo extends Extension {
 	@Override
 	public void run() throws Exception {
 	    for (int i = 0; i < tasks.size(); i++) {
-		((WriterTask) tasks.get(i)).run();
+		tasks.get(i).run();
 	    }
 	}
 
@@ -328,7 +328,7 @@ public class ExportTo extends Extension {
 	@Override
 	public void finished() {
 	    for (int i = 0; i < tasks.size(); i++) {
-		((WriterTask) tasks.get(i)).finished();
+		tasks.get(i).finished();
 	    }
 	    tasks.clear();
 	}

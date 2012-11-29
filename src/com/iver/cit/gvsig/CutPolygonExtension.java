@@ -34,78 +34,81 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extension to cut polygons on edition
- *
+ * 
  * @author Jose Ignacio Lamas
  * @author Nacho Varela [Cartolab]
  * @author Pablo Sanxiao [Cartolab]
  */
 public class CutPolygonExtension extends Extension {
-	private View view;
+    private View view;
 
-	private MapControl mapControl;
-	private CutPolygonCADTool polygon;
-	
+    private MapControl mapControl;
+    private CutPolygonCADTool polygon;
+
     private final String iconPath = "images/icons/cortar_area.png";
-	private final String iconCode = "edition-geometry-cut-polygon";
-	private final String cadToolCode = "_cut_polygon";
+    private final String iconCode = "edition-geometry-cut-polygon";
+    private final String cadToolCode = "_cut_polygon";
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		polygon = new CutPolygonCADTool();
-		CADExtension.addCADTool(cadToolCode, polygon);
-		registerIcon();
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    @Override
+    public void initialize() {
+	polygon = new CutPolygonCADTool();
+	CADExtension.addCADTool(cadToolCode, polygon);
+	registerIcon();
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    @Override
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals(cadToolCode)) {
+	    CADExtension.setCADTool(cadToolCode, true);
+	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals(cadToolCode)) {
-			CADExtension.setCADTool(cadToolCode,true);
-			CADExtension.getEditionManager().setMapControl(mapControl);
-		}
-		CADExtension.getCADToolAdapter().configureMenu();
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    @Override
+    public boolean isEnabled() {
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
-
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-			view = (View) PluginServices.getMDIManager().getActiveWindow();
-			mapControl = view.getMapControl();
-			if (CADExtension.getEditionManager().getActiveLayerEdited()==null)
-				return false;
-			FLyrVect lv=(FLyrVect)CADExtension.getEditionManager().getActiveLayerEdited().getLayer();
-
-				try {
-					if (polygon.isApplicable(lv.getShapeType()))
-						return true;
-				} catch (ReadDriverException e) {
-					NotificationManager.addError(e.getMessage(), e);
-				}
-		}
-
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+	    view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    mapControl = view.getMapControl();
+	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
 		return false;
+	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
+		    .getActiveLayerEdited().getLayer();
+
+	    try {
+		if (polygon.isApplicable(lv.getShapeType()))
+		    return true;
+	    } catch (ReadDriverException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    }
 	}
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
-	}
-	
-	private void registerIcon(){
-		PluginServices.getIconTheme().registerDefault(
-				iconCode,
-				this.getClass().getClassLoader().getResource(iconPath)
-			);
-	}
+	return false;
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    @Override
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	    return true;
+	return false;
+    }
+
+    private void registerIcon() {
+	PluginServices.getIconTheme().registerDefault(iconCode,
+		this.getClass().getClassLoader().getResource(iconPath));
+    }
 }

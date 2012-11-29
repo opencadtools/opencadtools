@@ -54,89 +54,95 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapperRaster;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class PixelSnapper extends AbstractSnapper implements ISnapperRaster {
-	private Color refColor = Color.BLACK;
-	private int tolColorR = 100;
-	private int tolColorG = 100;
-	private int tolColorB = 100;
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.gui.cad.snapping.ISnapperRaster#getSnapPoint(java.awt.image.BufferedImage, java.awt.geom.Point2D, double, java.awt.geom.Point2D)
-	 */
-	public Point2D getSnapPoint(MapControl mapControl, Point2D point,
-			double mapTolerance, Point2D lastPoint) {
-		// Miramos dentro del rectángulo que define la tolerancia
-		// y nos quedamos con el pixel que más se acerca al que buscamos
-		BufferedImage img = mapControl.getImage();
-		ViewPort vp = mapControl.getViewPort();
-		Point2D pPixel = vp.fromMapPoint(point);
-		int xPixel = (int) pPixel.getX();
-		int yPixel = (int) pPixel.getY();
-//		int centerRGB = img.getRGB(xPixel, yPixel);
-		int centerRGB = refColor.getRGB();
-		double x1 = ColorModel.getRGBdefault().getRed(centerRGB);
-		double y1 = ColorModel.getRGBdefault().getGreen(centerRGB);
-		double z1 = ColorModel.getRGBdefault().getBlue(centerRGB);
-		Coordinate c = new Coordinate(x1, y1, z1);
+    private Color refColor = Color.BLACK;
+    private int tolColorR = 100;
+    private int tolColorG = 100;
+    private int tolColorB = 100;
 
-		int half = vp.fromMapDistance(mapTolerance) / 2;
-		double minDistColor = Double.MAX_VALUE;
-		int xSnapped = -1;
-		int ySnapped = -1;
-		int fromX =xPixel -half;
-		if (fromX <0) fromX = 0;
-		int fromY =yPixel -half;
-		if (fromY <0) fromY = 0;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.iver.cit.gvsig.gui.cad.snapping.ISnapperRaster#getSnapPoint(java.
+     * awt.image.BufferedImage, java.awt.geom.Point2D, double,
+     * java.awt.geom.Point2D)
+     */
+    @Override
+    public Point2D getSnapPoint(MapControl mapControl, Point2D point,
+	    double mapTolerance, Point2D lastPoint) {
+	// Miramos dentro del rectángulo que define la tolerancia
+	// y nos quedamos con el pixel que más se acerca al que buscamos
+	BufferedImage img = mapControl.getImage();
+	ViewPort vp = mapControl.getViewPort();
+	Point2D pPixel = vp.fromMapPoint(point);
+	int xPixel = (int) pPixel.getX();
+	int yPixel = (int) pPixel.getY();
+	// int centerRGB = img.getRGB(xPixel, yPixel);
+	int centerRGB = refColor.getRGB();
+	double x1 = ColorModel.getRGBdefault().getRed(centerRGB);
+	double y1 = ColorModel.getRGBdefault().getGreen(centerRGB);
+	double z1 = ColorModel.getRGBdefault().getBlue(centerRGB);
+	Coordinate c = new Coordinate(x1, y1, z1);
 
-		int toX =xPixel + half;
-		if (toX > vp.getImageWidth()) toX = vp.getImageWidth();
-		int toY =yPixel + half;
-		if (toY > vp.getImageHeight()) toY = vp.getImageHeight();
+	int half = vp.fromMapDistance(mapTolerance) / 2;
+	double minDistColor = Double.MAX_VALUE;
+	int xSnapped = -1;
+	int ySnapped = -1;
+	int fromX = xPixel - half;
+	if (fromX < 0)
+	    fromX = 0;
+	int fromY = yPixel - half;
+	if (fromY < 0)
+	    fromY = 0;
 
-		for (int testX= fromX; testX< toX; testX++)
-		{
-			for (int testY= fromY; testY< toY; testY++)
-			{
-				// System.out.println("Testing: " + testX + ", " + testY);
-				int testRGB = img.getRGB(testX, testY);
-				// TODO: Aquí deberíamos trabajar con un ColorSpace y usar toCIEXYZ. Por ahora lo calculo con RGB.
-				int r = ColorModel.getRGBdefault().getRed(testRGB);
-				int g = ColorModel.getRGBdefault().getGreen(testRGB);
-				int b = ColorModel.getRGBdefault().getBlue(testRGB);
-				Coordinate cAux = new Coordinate(r, g, b);
+	int toX = xPixel + half;
+	if (toX > vp.getImageWidth())
+	    toX = vp.getImageWidth();
+	int toY = yPixel + half;
+	if (toY > vp.getImageHeight())
+	    toY = vp.getImageHeight();
 
-				if (Math.abs(r-x1) < tolColorR)
-					if (Math.abs(g-y1) < tolColorG)
-						if (Math.abs(b-z1) < tolColorB)
-						{
-							double dist = c.distance(cAux);
-							if (dist < minDistColor)
-							{
-								minDistColor = dist;
-								xSnapped = testX;
-								ySnapped = testY;
-							}
-						}
+	for (int testX = fromX; testX < toX; testX++) {
+	    for (int testY = fromY; testY < toY; testY++) {
+		// System.out.println("Testing: " + testX + ", " + testY);
+		int testRGB = img.getRGB(testX, testY);
+		// TODO: Aquí deberíamos trabajar con un ColorSpace y usar
+		// toCIEXYZ. Por ahora lo calculo con RGB.
+		int r = ColorModel.getRGBdefault().getRed(testRGB);
+		int g = ColorModel.getRGBdefault().getGreen(testRGB);
+		int b = ColorModel.getRGBdefault().getBlue(testRGB);
+		Coordinate cAux = new Coordinate(r, g, b);
+
+		if (Math.abs(r - x1) < tolColorR)
+		    if (Math.abs(g - y1) < tolColorG)
+			if (Math.abs(b - z1) < tolColorB) {
+			    double dist = c.distance(cAux);
+			    if (dist < minDistColor) {
+				minDistColor = dist;
+				xSnapped = testX;
+				ySnapped = testY;
+			    }
 			}
-		}
-		Point2D pResul = null;
-		if (xSnapped != -1)
-		{
-			pResul = vp.toMapPoint(xSnapped, ySnapped);
-		}
-		return pResul;
+	    }
 	}
+	Point2D pResul = null;
+	if (xSnapped != -1) {
+	    pResul = vp.toMapPoint(xSnapped, ySnapped);
+	}
+	return pResul;
+    }
 
-	public void draw(Graphics g, Point2D pPixels) {
-		g.setColor(getColor());
-		int half = getSizePixels() / 2;
-		g.drawOval((int) (pPixels.getX() - half),
-				(int) (pPixels.getY() - half),
-				getSizePixels(), getSizePixels());
-	}
+    @Override
+    public void draw(Graphics g, Point2D pPixels) {
+	g.setColor(getColor());
+	int half = getSizePixels() / 2;
+	g.drawOval((int) (pPixels.getX() - half),
+		(int) (pPixels.getY() - half), getSizePixels(), getSizePixels());
+    }
 
-	public String getToolTipText() {
-		return PluginServices.getText(this, "pixel_point");
-	}
+    @Override
+    public String getToolTipText() {
+	return PluginServices.getText(this, "pixel_point");
+    }
 
 }
-
-

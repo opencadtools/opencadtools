@@ -32,76 +32,78 @@ import com.iver.cit.gvsig.gui.cad.tools.DeleteVertexCADTool;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 
 /**
- * Extension to delete a vertex on a geometry of a layer in edition. Layer's geometry can not be a point or
- * multipoint
- *
+ * Extension to delete a vertex on a geometry of a layer in edition. Layer's
+ * geometry can not be a point or multipoint
+ * 
  * @author Nacho Uve
  * @author fpuga <fpuga (at) cartolab.es>
  */
 public class DeleteVertexExtension extends Extension {
-   private DeleteVertexCADTool deleteVertex;
+    private DeleteVertexCADTool deleteVertex;
 
     private final String iconPath = "images/icons/eliminar_vertice.png";
-   private final String iconCode = "edition-geometry-delete-vertex";
-   private final String cadToolCode = "_deleteVertex";
+    private final String iconCode = "edition-geometry-delete-vertex";
+    private final String cadToolCode = "_deleteVertex";
 
-
-
-   /**
+    /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
+    @Override
     public void initialize() {
-        deleteVertex = new DeleteVertexCADTool();
-        CADExtension.addCADTool(cadToolCode, deleteVertex);
-        registerIcons();
+	deleteVertex = new DeleteVertexCADTool();
+	CADExtension.addCADTool(cadToolCode, deleteVertex);
+	registerIcons();
     }
 
     /**
      * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
      */
+    @Override
     public void execute(String s) {
-    	CADExtension.initFocus();
-       	CADExtension.setCADTool(cadToolCode,true);
-        CADExtension.getCADToolAdapter().configureMenu();
+	CADExtension.initFocus();
+	CADExtension.setCADTool(cadToolCode, true);
+	CADExtension.getCADToolAdapter().configureMenu();
     }
 
     /**
      * @see com.iver.andami.plugins.IExtension#isEnabled()
      */
+    @Override
     public boolean isEnabled() {
-    	return true;
+	return true;
     }
 
     /**
      * @see com.iver.andami.plugins.IExtension#isVisible()
      */
+    @Override
     public boolean isVisible() {
-    	// check if there is a layer (not point or multipoint) active and in edition
-    	boolean enabled = false;
-    	try {
-			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE){
-				ILayerEdited lyr = CADExtension.getEditionManager().getActiveLayerEdited();
-				if (lyr == null) {
-					return false;
-				}
-				FLyrVect lv=(FLyrVect) lyr.getLayer();
-
-				if (deleteVertex.isApplicable(lv.getShapeType())){
-					enabled = true;
-				}
-			}
-		} catch (ReadDriverException e) {
-			  NotificationManager.addError(e.getMessage(),e);
-		} catch (Exception e) {
-			NotificationManager.addError(e.getMessage(),e);
+	// check if there is a layer (not point or multipoint) active and in
+	// edition
+	boolean enabled = false;
+	try {
+	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+		ILayerEdited lyr = CADExtension.getEditionManager()
+			.getActiveLayerEdited();
+		if (lyr == null) {
+		    return false;
 		}
-		return enabled;
+		FLyrVect lv = (FLyrVect) lyr.getLayer();
+
+		if (deleteVertex.isApplicable(lv.getShapeType())) {
+		    enabled = true;
+		}
+	    }
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (Exception e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	}
+	return enabled;
     }
 
-	private void registerIcons(){
-		PluginServices.getIconTheme().registerDefault(
-				iconCode,
-				this.getClass().getClassLoader().getResource(iconPath)
-			);
-	}
-	}
+    private void registerIcons() {
+	PluginServices.getIconTheme().registerDefault(iconCode,
+		this.getClass().getClassLoader().getResource(iconPath));
+    }
+}

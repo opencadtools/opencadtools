@@ -32,9 +32,11 @@ import com.prodevelop.cit.gvsig.vectorialdb.wizard.NewVectorDBConnectionPanel;
 public class CreateNewLayer extends Extension {
     static ImageIcon LOGO;
 
+    @Override
     public void initialize() {
     }
 
+    @Override
     public void execute(String actionCommand) {
 	IWindow f = PluginServices.getMDIManager().getActiveWindow();
 
@@ -130,10 +132,12 @@ public class CreateNewLayer extends Extension {
 	}
     }
 
+    @Override
     public boolean isEnabled() {
 	return true;
     }
 
+    @Override
     public boolean isVisible() {
 	IWindow f = PluginServices.getMDIManager().getActiveWindow();
 	return (f instanceof BaseView);

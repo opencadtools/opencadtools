@@ -9,37 +9,47 @@ import com.iver.cit.gvsig.project.documents.view.toc.ITocItem;
 
 /**
  * Termina la edición de la capa seleccionada.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class StopEditingTocMenuEntry extends AbstractTocContextMenuAction {
-	public String getGroup() {
-		return "edition";
-	}
+    @Override
+    public String getGroup() {
+	return "edition";
+    }
 
-	public int getGroupOrder() {
-		return 1;
-	}
+    @Override
+    public int getGroupOrder() {
+	return 1;
+    }
 
-	public int getOrder() {
-		return 2;
-	}
+    @Override
+    public int getOrder() {
+	return 2;
+    }
 
-	public String getText() {
-		return PluginServices.getText(this, "stop_edition");
-	}
+    @Override
+    public String getText() {
+	return PluginServices.getText(this, "stop_edition");
+    }
 
-	public boolean isEnabled(ITocItem item, FLayer[] selectedItems) {
-		return true;
-	}
+    @Override
+    public boolean isEnabled(ITocItem item, FLayer[] selectedItems) {
+	return true;
+    }
 
-	public boolean isVisible(ITocItem item, FLayer[] selectedItems) {
-		return (isTocItemBranch(item)) && (selectedItems.length == 1 && selectedItems[0].isAvailable() && selectedItems[0] instanceof FLyrVect) && ((FLyrVect)selectedItems[0]).isEditing();
-	}
+    @Override
+    public boolean isVisible(ITocItem item, FLayer[] selectedItems) {
+	return (isTocItemBranch(item))
+		&& (selectedItems.length == 1 && selectedItems[0].isAvailable() && selectedItems[0] instanceof FLyrVect)
+		&& ((FLyrVect) selectedItems[0]).isEditing();
+    }
 
-	public void execute(ITocItem item, FLayer[] selectedItems) {
-		StopEditing stopEditind=(StopEditing)PluginServices.getExtension(StopEditing.class);
-		stopEditind.execute("STOPEDITING");
-		PluginServices.getMainFrame().enableControls();
-   }
+    @Override
+    public void execute(ITocItem item, FLayer[] selectedItems) {
+	StopEditing stopEditind = (StopEditing) PluginServices
+		.getExtension(StopEditing.class);
+	stopEditind.execute("STOPEDITING");
+	PluginServices.getMainFrame().enableControls();
+    }
 }

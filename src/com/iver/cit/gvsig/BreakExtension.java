@@ -51,77 +51,81 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extensión que gestiona la partición de geometrías en edición.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class BreakExtension extends Extension {
-	private View view;
+    private View view;
 
-	private MapControl mapControl;
-	private BreakCADTool breakCADTool;
+    private MapControl mapControl;
+    private BreakCADTool breakCADTool;
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#initialize()
-	 */
-	public void initialize() {
-		breakCADTool=new BreakCADTool();
-		CADExtension.addCADTool("_break",breakCADTool);
-		
-		registerIcons();
+    /**
+     * @see com.iver.andami.plugins.IExtension#initialize()
+     */
+    @Override
+    public void initialize() {
+	breakCADTool = new BreakCADTool();
+	CADExtension.addCADTool("_break", breakCADTool);
+
+	registerIcons();
+    }
+
+    private void registerIcons() {
+	PluginServices.getIconTheme().registerDefault(
+		"edition-geometry-break",
+		this.getClass().getClassLoader()
+			.getResource("images/Break.png"));
+
+    }
+
+    /**
+     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
+     */
+    @Override
+    public void execute(String s) {
+	CADExtension.initFocus();
+	if (s.equals("_break")) {
+	    CADExtension.setCADTool(s, true);
 	}
-	
-	private void registerIcons(){
-		PluginServices.getIconTheme().registerDefault(
-				"edition-geometry-break",
-				this.getClass().getClassLoader().getResource("images/Break.png")
-			);
-		
-	}
+	CADExtension.getEditionManager().setMapControl(mapControl);
+	CADExtension.getCADToolAdapter().configureMenu();
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-	 */
-	public void execute(String s) {
-		CADExtension.initFocus();
-		if (s.equals("_break")) {
-        	CADExtension.setCADTool(s,true);
-        }
-		CADExtension.getEditionManager().setMapControl(mapControl);
-		CADExtension.getCADToolAdapter().configureMenu();
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isEnabled()
+     */
+    @Override
+    public boolean isEnabled() {
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isEnabled()
-	 */
-	public boolean isEnabled() {
+	try {
+	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
+		view = (View) PluginServices.getMDIManager().getActiveWindow();
+		mapControl = view.getMapControl();
+		EditionManager em = CADExtension.getEditionManager();
+		if (em.getActiveLayerEdited() == null)
+		    return false;
+		FLyrVect lv = (FLyrVect) em.getActiveLayerEdited().getLayer();
 
-		try {
-			if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-				view = (View) PluginServices.getMDIManager().getActiveWindow();
-				mapControl = view.getMapControl();
-				EditionManager em=CADExtension.getEditionManager();
-				if (em.getActiveLayerEdited()==null)
-						return false;
-				FLyrVect lv=(FLyrVect)em.getActiveLayerEdited().getLayer();
-
-				if (lv.getRecordset().getSelection().cardinality()!=1)
-					return false;
-				if (breakCADTool.isApplicable(lv.getShapeType())){
-					return true;
-				}
-			}
-		} catch (ReadDriverException e) {
-			NotificationManager.addError(e.getMessage(),e);
+		if (lv.getRecordset().getSelection().cardinality() != 1)
+		    return false;
+		if (breakCADTool.isApplicable(lv.getShapeType())) {
+		    return true;
 		}
-		return false;
+	    }
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
 	}
+	return false;
+    }
 
-	/**
-	 * @see com.iver.andami.plugins.IExtension#isVisible()
-	 */
-	public boolean isVisible() {
-		if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
-			return true;
-		return false;
-	}
+    /**
+     * @see com.iver.andami.plugins.IExtension#isVisible()
+     */
+    @Override
+    public boolean isVisible() {
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	    return true;
+	return false;
+    }
 }

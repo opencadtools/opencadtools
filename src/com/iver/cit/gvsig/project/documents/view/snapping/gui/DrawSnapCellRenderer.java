@@ -52,31 +52,34 @@ import javax.swing.table.TableCellRenderer;
 
 import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
 
-
-
 /**
  * Cell Renderer del símbolo de cada uno de los ISnapper.
- *
+ * 
  * @author Vicente Caballero Navarro
  */
 public class DrawSnapCellRenderer extends JPanel implements TableCellRenderer {
-	private static Point2D position=new Point2D.Double(7,7);
-	private ArrayList snappers;
-	private int row;
-	public DrawSnapCellRenderer(ArrayList snappers) {
-		this.snappers=snappers;
-		this.setBackground(Color.white);
-	}
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		this.row=row;
-		return this;
-	}
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
+    private static Point2D position = new Point2D.Double(7, 7);
+    private ArrayList snappers;
+    private int row;
 
-		((ISnapper)snappers.get(row)).draw(g,position);
-		//g.drawString("prueba",7,10);
-	}
+    public DrawSnapCellRenderer(ArrayList snappers) {
+	this.snappers = snappers;
+	this.setBackground(Color.white);
+    }
 
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+	    boolean isSelected, boolean hasFocus, int row, int column) {
+	this.row = row;
+	return this;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+	super.paintComponent(g);
+
+	((ISnapper) snappers.get(row)).draw(g, position);
+	// g.drawString("prueba",7,10);
+    }
 
 }
