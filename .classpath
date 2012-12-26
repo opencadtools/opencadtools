@@ -4,14 +4,10 @@
 	<classpathentry kind="lib" path="lib/Smc.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/gdbms-0.8-SNAPSHOT.jar" sourcepath="/libGDBMS"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libFMap"/>
-	<classpathentry kind="lib" path="lib/gt2-shapefile.jar"/>
-	<classpathentry kind="lib" path="lib/jdom-1.0b10.jar"/>
-	<classpathentry kind="lib" path="/libFMap/lib/gt2-main.jar"/>
 	<classpathentry kind="lib" path="/_fwAndami/lib/iver-utiles.jar" sourcepath="/libIverUtiles/src"/>
 	<classpathentry kind="lib" path="/libFMap/lib/driver-manager-1.1.jar" sourcepath="/libDriverManager"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/_fwAndami"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/appgvSIG"/>
-	<classpathentry kind="lib" path="lib/gt2-postgis.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extJDBC"/>
 	<classpathentry kind="lib" path="/_fwAndami/lib/JWizardComponent.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extScripting"/>

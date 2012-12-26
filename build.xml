@@ -36,6 +36,9 @@
 	</target>
 	
 	<target name="copy-data-files" depends="make-package-info">
+		<copy todir="${dist}/lib">
+			<fileset dir="lib" includes="*"/>
+		</copy>
 		<copy file="config/config.xml" todir="${dist}"/>
 		<copy file="build.number" todir="${dist}"/>
 		<copy file="package.info" todir="${dist}"/>
@@ -54,9 +57,6 @@
 		<move todir="${extensionsDir}/${plugin}/">
 			<fileset dir="${dist}" includes="**/**"/>
 		</move>
-		<copy todir="${extensionsDir}/${mainplugin}/lib">
-			<fileset dir="./lib" includes="*.jar,*.zip"/>
-		</copy>
 	</target>
 	
 	<target name="clean">
