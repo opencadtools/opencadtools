@@ -46,6 +46,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -74,6 +75,7 @@ import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.SymbologyFactory;
 import com.iver.cit.gvsig.fmap.core.symbols.ISymbol;
+import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.core.v02.FGraphicUtilities;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
@@ -699,5 +701,12 @@ public abstract class DefaultCADTool implements CADTool {
     @Override
     public void clear() {
 
+    }
+
+    protected IGeometry flattenGeometry(IGeometry geom) {
+        PathIterator pi = geom.getPathIterator(null, FConverter.FLATNESS);
+        GeneralPathX gpx = new GeneralPathX();
+        gpx.append(pi, true);
+        return ShapeFactory.createPolyline2D(gpx);
     }
 }

@@ -48,6 +48,7 @@ import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
@@ -145,11 +146,12 @@ public class EllipseCADTool extends InsertionCADTool {
 		    (startAxis.getY() + endAxis.getY()) / 2);
 	    Point2D third = new Point2D.Double(x, y);
 	    double distance = middle.distance(third);
-	    addGeometry(ShapeFactory
-		    .createEllipse(startAxis, endAxis, distance));
+	    IGeometry ellipse = ShapeFactory
+		    .createEllipse(startAxis, endAxis, distance);
+	    addGeometry(flattenGeometry(ellipse));
 	}
     }
-
+    
     /**
      * Método para dibujar la lo necesario para el estado en el que nos
      * encontremos.
@@ -179,8 +181,8 @@ public class EllipseCADTool extends InsertionCADTool {
 	    Point2D third = new Point2D.Double(x, y);
 
 	    double distance = middle.distance(third);
-
-	    ShapeFactory.createEllipse(startAxis, endAxis, distance).draw(
+	    IGeometry geom = flattenGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
+	    geom.draw(
 		    (Graphics2D) g,
 		    getCadToolAdapter().getMapControl().getViewPort(),
 		    DefaultCADTool.axisReferencesSymbol);
@@ -219,8 +221,8 @@ public class EllipseCADTool extends InsertionCADTool {
 
 	if (status.equals("Ellipse.DistanceOtherAxis")) {
 	    double distance = d;
-	    addGeometry(ShapeFactory
-		    .createEllipse(startAxis, endAxis, distance));
+	    IGeometry geom = flattenGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
+	    addGeometry(geom);
 	}
     }
 

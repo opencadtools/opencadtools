@@ -6,6 +6,7 @@ package com.iver.cit.gvsig.gui.cad.tools.smc;
 import java.awt.event.InputEvent;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
 
 public final class CircleCADToolContext extends statemap.FSMContext {
@@ -150,7 +151,7 @@ public final class CircleCADToolContext extends statemap.FSMContext {
 
 	@Override
 	protected void addOption(CircleCADToolContext context, String s) {
-	    CircleCADTool ctxt = context.getOwner();
+	    DefaultCADTool ctxt = context.getOwner();
 
 	    if (s.equals(PluginServices.getText(this, "cancel"))) {
 		boolean loopbackFlag = context.getState().getName()
@@ -198,7 +199,7 @@ public final class CircleCADToolContext extends statemap.FSMContext {
 
 	@Override
 	protected void addValue(CircleCADToolContext context, double d) {
-	    CircleCADTool ctxt = context.getOwner();
+	    DefaultCADTool ctxt = context.getOwner();
 
 	    boolean loopbackFlag = context.getState().getName()
 		    .equals(Circle.CenterPointOr3p.getName());
@@ -225,7 +226,7 @@ public final class CircleCADToolContext extends statemap.FSMContext {
 	@Override
 	protected void addPoint(CircleCADToolContext context, double pointX,
 		double pointY, InputEvent event) {
-	    CircleCADTool ctxt = context.getOwner();
+	    DefaultCADTool ctxt = context.getOwner();
 
 	    boolean loopbackFlag = context.getState().getName()
 		    .equals(Circle.CenterPointOr3p.getName());
@@ -266,7 +267,7 @@ public final class CircleCADToolContext extends statemap.FSMContext {
 
 	    @Override
 	    protected void Entry(CircleCADToolContext context) {
-		CircleCADTool ctxt = context.getOwner();
+		DefaultCADTool ctxt = context.getOwner();
 
 		ctxt.setQuestion(PluginServices.getText(this,
 			"insert_central_point_or_3p")
@@ -279,7 +280,7 @@ public final class CircleCADToolContext extends statemap.FSMContext {
 
 	    @Override
 	    protected void addOption(CircleCADToolContext context, String s) {
-		CircleCADTool ctxt = context.getOwner();
+		DefaultCADTool ctxt = context.getOwner();
 
 		if (s.equalsIgnoreCase(PluginServices.getText(this,
 			"CircleCADTool.3p"))) {
@@ -305,7 +306,7 @@ public final class CircleCADToolContext extends statemap.FSMContext {
 	    @Override
 	    protected void addPoint(CircleCADToolContext context,
 		    double pointX, double pointY, InputEvent event) {
-		CircleCADTool ctxt = context.getOwner();
+		DefaultCADTool ctxt = context.getOwner();
 
 		(context.getState()).Exit(context);
 		context.clearState();
@@ -385,7 +386,7 @@ public final class CircleCADToolContext extends statemap.FSMContext {
 	    @Override
 	    protected void addPoint(CircleCADToolContext context,
 		    double pointX, double pointY, InputEvent event) {
-		CircleCADTool ctxt = context.getOwner();
+		DefaultCADTool ctxt = context.getOwner();
 
 		(context.getState()).Exit(context);
 		context.clearState();
@@ -449,7 +450,7 @@ public final class CircleCADToolContext extends statemap.FSMContext {
 	    @Override
 	    protected void addPoint(CircleCADToolContext context,
 		    double pointX, double pointY, InputEvent event) {
-		CircleCADTool ctxt = context.getOwner();
+		DefaultCADTool ctxt = context.getOwner();
 
 		(context.getState()).Exit(context);
 		context.clearState();

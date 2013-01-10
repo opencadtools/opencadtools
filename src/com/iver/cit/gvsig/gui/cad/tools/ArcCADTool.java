@@ -142,14 +142,13 @@ public class ArcCADTool extends DefaultCADTool {
 	} else if (status.equals("Arc.ThirdPoint")) {
 	    p3 = new Point2D.Double(x, y);
 
-	    IGeometry ig = ShapeFactory.createArc(p1, p2, p3);
-
-	    if (ig != null) {
-		addGeometry(ig);
+	    IGeometry geom = flattenGeometry(ShapeFactory.createArc(p1, p2, p3));
+	    if (geom != null) {
+		addGeometry(geom);
 	    }
 	}
     }
-
+    
     /**
      * Método para dibujar lo necesario para el estado en el que nos
      * encontremos.
@@ -173,10 +172,9 @@ public class ArcCADTool extends DefaultCADTool {
 		    geometrySelectSymbol);
 	} else if (status.equals("Arc.ThirdPoint")) {
 	    Point2D current = new Point2D.Double(x, y);
-	    IGeometry ig = ShapeFactory.createArc(p1, p2, current);
-
-	    if (ig != null) {
-		ig.draw((Graphics2D) g, getCadToolAdapter().getMapControl()
+	    IGeometry geom = ShapeFactory.createArc(p1, p2, current);
+	    if (geom != null) {
+		flattenGeometry(geom).draw((Graphics2D) g, getCadToolAdapter().getMapControl()
 			.getViewPort(), DefaultCADTool.geometrySelectSymbol);
 	    }
 

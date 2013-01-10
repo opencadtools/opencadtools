@@ -43,6 +43,7 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -50,6 +51,7 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.drivers.shp.write.SHPMultiLine;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext;
@@ -139,20 +141,22 @@ public class CircleCADTool extends InsertionCADTool {
 
 	if (status.equals("Circle.CenterPointOr3p")) {
 	    center = new Point2D.Double(x, y);
-	} else if (status == "Circle.PointOrRadius") {
-	    addGeometry(ShapeFactory.createCircle(center, new Point2D.Double(x,
-		    y)));
-	} else if (status == "Circle.FirstPoint") {
+	} else if (status.equals("Circle.PointOrRadius")) {
+	    IGeometry geom = flattenGeometry(ShapeFactory.createCircle(center, new Point2D.Double(x, y)));
+	    addGeometry(geom);
+	} else if (status.equals("Circle.FirstPoint")) {
 	    firstPoint = new Point2D.Double(x, y);
-	} else if (status == "Circle.SecondPoint") {
+	} else if (status.equals("Circle.SecondPoint")) {
 	    secondPoint = new Point2D.Double(x, y);
-	} else if (status == "Circle.ThirdPoint") {
+	} else if (status.equals("Circle.ThirdPoint")) {
 	    thirdPoint = new Point2D.Double(x, y);
-	    addGeometry(ShapeFactory.createCircle(firstPoint, secondPoint,
-		    thirdPoint));
+	    IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint, thirdPoint);
+	    if (geom != null) {
+		addGeometry(flattenGeometry(geom));
+	    }
 	}
     }
-
+    
     /**
      * Método para dibujar la lo necesario para el estado en el que nos
      * encontremos.
@@ -171,30 +175,26 @@ public class CircleCADTool extends InsertionCADTool {
 	CircleCADToolState actualState = _fsm.getState();
 	String status = actualState.getName();
 
-	if ((status == "Circle.CenterPointOr3p")) { // || (status == "5")) {
+	if (status.equals("Circle.CenterPointOr3p")) {
 
 	    if (firstPoint != null) {
 		drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y),
 			DefaultCADTool.geometrySelectSymbol);
 	    }
-	}
-
-	if (status == "Circle.PointOrRadius") {
-	    Point2D currentPoint = new Point2D.Double(x, y);
-	    ShapeFactory.createCircle(center, currentPoint).draw(
+	} else if (status.equals("Circle.PointOrRadius")) {
+	    IGeometry geom = flattenGeometry(ShapeFactory.createCircle(center, new Point2D.Double(x, y)));
+	    geom.draw(
 		    (Graphics2D) g,
 		    getCadToolAdapter().getMapControl().getViewPort(),
 		    DefaultCADTool.axisReferencesSymbol);
-	} else if (status == "Circle.SecondPoint") {
+	} else if (status.equals("Circle.SecondPoint")) {
 	    drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y),
 		    DefaultCADTool.geometrySelectSymbol);
-	} else if (status == "Circle.ThirdPoint") {
+	} else if (status.equals("Circle.ThirdPoint")) {
 	    Point2D currentPoint = new Point2D.Double(x, y);
-	    IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint,
-		    currentPoint);
-
+	    IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint, currentPoint);
 	    if (geom != null) {
-		geom.draw((Graphics2D) g, getCadToolAdapter().getMapControl()
+		flattenGeometry(geom).draw((Graphics2D) g, getCadToolAdapter().getMapControl()
 			.getViewPort(), DefaultCADTool.axisReferencesSymbol);
 	    }
 	}

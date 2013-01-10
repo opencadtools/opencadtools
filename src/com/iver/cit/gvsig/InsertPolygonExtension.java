@@ -46,6 +46,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.CircleCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EditVertexCADTool;
 import com.iver.cit.gvsig.gui.cad.tools.EllipseCADTool;
@@ -70,7 +71,7 @@ public class InsertPolygonExtension extends Extension {
     @Override
     public void initialize() {
 	polygon = new PolygonCADTool();
-	CircleCADTool circle = new CircleCADTool();
+	DefaultCADTool circle = new CircleCADTool();
 	RectangleCADTool rectangle = new RectangleCADTool();
 	EllipseCADTool ellipse = new EllipseCADTool();
 	EditVertexCADTool editvertex = new EditVertexCADTool();
