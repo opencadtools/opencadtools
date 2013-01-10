@@ -256,7 +256,7 @@ public class InternalPolygonCADTool extends DefaultCADTool {
 	IRowEdited row = null;
 	if (s.equals(PluginServices.getText(this, "end"))
 		|| s.equalsIgnoreCase(PluginServices.getText(this,
-			"InternalPolygonCADTool.end"))) {
+			"InternalPolygonCADTool.end")) || s.equals("espacio")) {
 	    if (points.size() > 0) {
 		row = (DefaultRowEdited) selectedRows.get(0);
 		IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
