@@ -56,8 +56,6 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.EllipseCADToolContext.EllipseCADToolState;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Vicente Caballero Navarro
  */
 public class EllipseCADTool extends InsertionCADTool {
@@ -65,53 +63,25 @@ public class EllipseCADTool extends InsertionCADTool {
     protected Point2D startAxis;
     protected Point2D endAxis;
 
-    /**
-     * Crea un nuevo LineCADTool.
-     */
     public EllipseCADTool() {
 
     }
 
-    /**
-     * Método de incio, para poner el código de todo lo que se requiera de una
-     * carga previa a la utilización de la herramienta.
-     */
     @Override
     public void init() {
 	_fsm = new EllipseCADToolContext(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
-     * .layers.FBitSet, double, double)
-     */
     @Override
     public void transition(double x, double y, InputEvent event) {
 	_fsm.addPoint(x, y, event);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
-     * .layers.FBitSet, double)
-     */
     @Override
     public void transition(double d) {
 	_fsm.addValue(d);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
-     * .layers.FBitSet, java.lang.String)
-     */
     @Override
     public void transition(String s) throws CommandException {
 	if (!super.changeCommand(s)) {
@@ -119,17 +89,6 @@ public class EllipseCADTool extends InsertionCADTool {
 	}
     }
 
-    /**
-     * Equivale al transition del prototipo pero sin pasarle como pará metro el
-     * editableFeatureSource que ya estará creado.
-     * 
-     * @param sel
-     *            Bitset con las geometrías que estén seleccionadas.
-     * @param x
-     *            parámetro x del punto que se pase en esta transición.
-     * @param y
-     *            parámetro y del punto que se pase en esta transición.
-     */
     @Override
     public void addPoint(double x, double y, InputEvent event) {
 	EllipseCADToolState actualState = (EllipseCADToolState) _fsm
@@ -146,25 +105,12 @@ public class EllipseCADTool extends InsertionCADTool {
 		    (startAxis.getY() + endAxis.getY()) / 2);
 	    Point2D third = new Point2D.Double(x, y);
 	    double distance = middle.distance(third);
-	    IGeometry ellipse = ShapeFactory
-		    .createEllipse(startAxis, endAxis, distance);
+	    IGeometry ellipse = ShapeFactory.createEllipse(startAxis, endAxis,
+		    distance);
 	    addGeometry(flattenGeometry(ellipse));
 	}
     }
-    
-    /**
-     * Método para dibujar la lo necesario para el estado en el que nos
-     * encontremos.
-     * 
-     * @param g
-     *            Graphics sobre el que dibujar.
-     * @param selectedGeometries
-     *            BitSet con las geometrías seleccionadas.
-     * @param x
-     *            parámetro x del punto que se pase para dibujar.
-     * @param y
-     *            parámetro x del punto que se pase para dibujar.
-     */
+
     @Override
     public void drawOperation(Graphics g, double x, double y) {
 	EllipseCADToolState actualState = _fsm.getState();
@@ -181,11 +127,10 @@ public class EllipseCADTool extends InsertionCADTool {
 	    Point2D third = new Point2D.Double(x, y);
 
 	    double distance = middle.distance(third);
-	    IGeometry geom = flattenGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
-	    geom.draw(
-		    (Graphics2D) g,
-		    getCadToolAdapter().getMapControl().getViewPort(),
-		    DefaultCADTool.axisReferencesSymbol);
+	    IGeometry geom = flattenGeometry(ShapeFactory.createEllipse(
+		    startAxis, endAxis, distance));
+	    geom.draw((Graphics2D) g, getCadToolAdapter().getMapControl()
+		    .getViewPort(), DefaultCADTool.axisReferencesSymbol);
 
 	    Point2D mediop = new Point2D.Double(
 		    (startAxis.getX() + endAxis.getX()) / 2,
@@ -195,24 +140,11 @@ public class EllipseCADTool extends InsertionCADTool {
 	}
     }
 
-    /**
-     * Add a diferent option.
-     * 
-     * @param sel
-     *            DOCUMENT ME!
-     * @param s
-     *            Diferent option.
-     */
     @Override
     public void addOption(String s) {
 	// TODO Auto-generated method stub
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
-     */
     @Override
     public void addValue(double d) {
 	EllipseCADToolState actualState = (EllipseCADToolState) _fsm
@@ -221,7 +153,8 @@ public class EllipseCADTool extends InsertionCADTool {
 
 	if (status.equals("Ellipse.DistanceOtherAxis")) {
 	    double distance = d;
-	    IGeometry geom = flattenGeometry(ShapeFactory.createEllipse(startAxis, endAxis, distance));
+	    IGeometry geom = flattenGeometry(ShapeFactory.createEllipse(
+		    startAxis, endAxis, distance));
 	    addGeometry(geom);
 	}
     }
@@ -248,19 +181,14 @@ public class EllipseCADTool extends InsertionCADTool {
 
     @Override
     public void drawOperation(Graphics g, ArrayList pointList) {
-	// TODO Auto-generated method stub
-
     }
 
     @Override
     public boolean isMultiTransition() {
-	// TODO Auto-generated method stub
 	return false;
     }
 
     @Override
     public void transition(InputEvent event) {
-	// TODO Auto-generated method stub
-
     }
 }

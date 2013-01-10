@@ -43,7 +43,6 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -51,15 +50,12 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
-import com.iver.cit.gvsig.fmap.drivers.shp.write.SHPMultiLine;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.CircleCADToolContext.CircleCADToolState;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Vicente Caballero Navarro
  */
 public class CircleCADTool extends InsertionCADTool {
@@ -69,52 +65,24 @@ public class CircleCADTool extends InsertionCADTool {
     protected Point2D secondPoint;
     protected Point2D thirdPoint;
 
-    /**
-     * Crea un nuevo LineCADTool.
-     */
     public CircleCADTool() {
     }
 
-    /**
-     * Método de incio, para poner el código de todo lo que se requiera de una
-     * carga previa a la utilización de la herramienta.
-     */
     @Override
     public void init() {
 	_fsm = new CircleCADToolContext(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
-     * .layers.FBitSet, double, double)
-     */
     @Override
     public void transition(double x, double y, InputEvent event) {
 	_fsm.addPoint(x, y, event);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
-     * .layers.FBitSet, double)
-     */
     @Override
     public void transition(double d) {
 	_fsm.addValue(d);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
-     * .layers.FBitSet, java.lang.String)
-     */
     @Override
     public void transition(String s) throws CommandException {
 	if (!super.changeCommand(s)) {
@@ -122,17 +90,6 @@ public class CircleCADTool extends InsertionCADTool {
 	}
     }
 
-    /**
-     * Equivale al transition del prototipo pero sin pasarle como pará metro el
-     * editableFeatureSource que ya estará creado.
-     * 
-     * @param sel
-     *            Bitset con las geometrías que estén seleccionadas.
-     * @param x
-     *            parámetro x del punto que se pase en esta transición.
-     * @param y
-     *            parámetro y del punto que se pase en esta transición.
-     */
     @Override
     public void addPoint(double x, double y, InputEvent event) {
 	CircleCADToolState actualState = (CircleCADToolState) _fsm
@@ -142,7 +99,8 @@ public class CircleCADTool extends InsertionCADTool {
 	if (status.equals("Circle.CenterPointOr3p")) {
 	    center = new Point2D.Double(x, y);
 	} else if (status.equals("Circle.PointOrRadius")) {
-	    IGeometry geom = flattenGeometry(ShapeFactory.createCircle(center, new Point2D.Double(x, y)));
+	    IGeometry geom = flattenGeometry(ShapeFactory.createCircle(center,
+		    new Point2D.Double(x, y)));
 	    addGeometry(geom);
 	} else if (status.equals("Circle.FirstPoint")) {
 	    firstPoint = new Point2D.Double(x, y);
@@ -150,25 +108,16 @@ public class CircleCADTool extends InsertionCADTool {
 	    secondPoint = new Point2D.Double(x, y);
 	} else if (status.equals("Circle.ThirdPoint")) {
 	    thirdPoint = new Point2D.Double(x, y);
-	    IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint, thirdPoint);
+	    IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint,
+		    thirdPoint);
 	    if (geom != null) {
 		addGeometry(flattenGeometry(geom));
 	    }
 	}
     }
-    
+
     /**
-     * Método para dibujar la lo necesario para el estado en el que nos
-     * encontremos.
-     * 
-     * @param g
-     *            Graphics sobre el que dibujar.
-     * @param selectedGeometries
-     *            BitSet con las geometrías seleccionadas.
-     * @param x
-     *            parámetro x del punto que se pase para dibujar.
-     * @param y
-     *            parámetro x del punto que se pase para dibujar.
+     * Method to draw what it's needed for the actual state
      */
     @Override
     public void drawOperation(Graphics g, double x, double y) {
@@ -182,20 +131,21 @@ public class CircleCADTool extends InsertionCADTool {
 			DefaultCADTool.geometrySelectSymbol);
 	    }
 	} else if (status.equals("Circle.PointOrRadius")) {
-	    IGeometry geom = flattenGeometry(ShapeFactory.createCircle(center, new Point2D.Double(x, y)));
-	    geom.draw(
-		    (Graphics2D) g,
-		    getCadToolAdapter().getMapControl().getViewPort(),
-		    DefaultCADTool.axisReferencesSymbol);
+	    IGeometry geom = flattenGeometry(ShapeFactory.createCircle(center,
+		    new Point2D.Double(x, y)));
+	    geom.draw((Graphics2D) g, getCadToolAdapter().getMapControl()
+		    .getViewPort(), DefaultCADTool.axisReferencesSymbol);
 	} else if (status.equals("Circle.SecondPoint")) {
 	    drawLine((Graphics2D) g, firstPoint, new Point2D.Double(x, y),
 		    DefaultCADTool.geometrySelectSymbol);
 	} else if (status.equals("Circle.ThirdPoint")) {
 	    Point2D currentPoint = new Point2D.Double(x, y);
-	    IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint, currentPoint);
+	    IGeometry geom = ShapeFactory.createCircle(firstPoint, secondPoint,
+		    currentPoint);
 	    if (geom != null) {
-		flattenGeometry(geom).draw((Graphics2D) g, getCadToolAdapter().getMapControl()
-			.getViewPort(), DefaultCADTool.axisReferencesSymbol);
+		flattenGeometry(geom).draw((Graphics2D) g,
+			getCadToolAdapter().getMapControl().getViewPort(),
+			DefaultCADTool.axisReferencesSymbol);
 	    }
 	}
     }
@@ -203,8 +153,6 @@ public class CircleCADTool extends InsertionCADTool {
     /**
      * Add a diferent option.
      * 
-     * @param sel
-     *            DOCUMENT ME!
      * @param s
      *            Diferent option.
      */
@@ -222,11 +170,6 @@ public class CircleCADTool extends InsertionCADTool {
 	}
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
-     */
     @Override
     public void addValue(double d) {
 	CircleCADToolState actualState = (CircleCADToolState) _fsm
@@ -260,20 +203,15 @@ public class CircleCADTool extends InsertionCADTool {
 
     @Override
     public void drawOperation(Graphics g, ArrayList pointList) {
-	// TODO Auto-generated method stub
-
     }
 
     @Override
     public boolean isMultiTransition() {
-	// TODO Auto-generated method stub
 	return false;
     }
 
     @Override
     public void transition(InputEvent event) {
-	// TODO Auto-generated method stub
-
     }
 
 }

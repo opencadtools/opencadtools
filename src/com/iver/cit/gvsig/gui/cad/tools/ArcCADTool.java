@@ -56,8 +56,6 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ArcCADToolContext.ArcCADToolState;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Vicente Caballero Navarro
  */
 public class ArcCADTool extends DefaultCADTool {
@@ -66,52 +64,24 @@ public class ArcCADTool extends DefaultCADTool {
     protected Point2D p2;
     protected Point2D p3;
 
-    /**
-     * Crea un nuevo LineCADTool.
-     */
     public ArcCADTool() {
     }
 
-    /**
-     * Método de incio, para poner el código de todo lo que se requiera de una
-     * carga previa a la utilización de la herramienta.
-     */
     @Override
     public void init() {
 	_fsm = new ArcCADToolContext(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
-     * .layers.FBitSet, double, double)
-     */
     @Override
     public void transition(double x, double y, InputEvent event) {
 	_fsm.addPoint(x, y, event);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
-     * .layers.FBitSet, double)
-     */
     @Override
     public void transition(double d) {
 	_fsm.addValue(d);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.iver.cit.gvsig.gui.cad.CADTool#transition(com.iver.cit.gvsig.fmap
-     * .layers.FBitSet, java.lang.String)
-     */
     @Override
     public void transition(String s) throws CommandException {
 	if (!super.changeCommand(s)) {
@@ -119,17 +89,6 @@ public class ArcCADTool extends DefaultCADTool {
 	}
     }
 
-    /**
-     * Equivale al transition del prototipo pero sin pasarle como pará metro el
-     * editableFeatureSource que ya estará creado.
-     * 
-     * @param sel
-     *            Bitset con las geometrías que estén seleccionadas.
-     * @param x
-     *            parámetro x del punto que se pase en esta transición.
-     * @param y
-     *            parámetro y del punto que se pase en esta transición.
-     */
     @Override
     public void addPoint(double x, double y, InputEvent event) {
 	ArcCADToolState actualState = (ArcCADToolState) _fsm.getPreviousState();
@@ -148,20 +107,7 @@ public class ArcCADTool extends DefaultCADTool {
 	    }
 	}
     }
-    
-    /**
-     * Método para dibujar lo necesario para el estado en el que nos
-     * encontremos.
-     * 
-     * @param g
-     *            Graphics sobre el que dibujar.
-     * @param selectedGeometries
-     *            BitSet con las geometrías seleccionadas.
-     * @param x
-     *            parámetro x del punto que se pase para dibujar.
-     * @param y
-     *            parámetro x del punto que se pase para dibujar.
-     */
+
     @Override
     public void drawOperation(Graphics g, double x, double y) {
 	ArcCADToolState actualState = _fsm.getState();
@@ -174,8 +120,9 @@ public class ArcCADTool extends DefaultCADTool {
 	    Point2D current = new Point2D.Double(x, y);
 	    IGeometry geom = ShapeFactory.createArc(p1, p2, current);
 	    if (geom != null) {
-		flattenGeometry(geom).draw((Graphics2D) g, getCadToolAdapter().getMapControl()
-			.getViewPort(), DefaultCADTool.geometrySelectSymbol);
+		flattenGeometry(geom).draw((Graphics2D) g,
+			getCadToolAdapter().getMapControl().getViewPort(),
+			DefaultCADTool.geometrySelectSymbol);
 	    }
 
 	    Point2D p = getCadToolAdapter().getMapControl().getViewPort()
@@ -187,24 +134,10 @@ public class ArcCADTool extends DefaultCADTool {
 	}
     }
 
-    /**
-     * Add a diferent option.
-     * 
-     * @param sel
-     *            DOCUMENT ME!
-     * @param s
-     *            Diferent option.
-     */
     @Override
     public void addOption(String s) {
-	// TODO Auto-generated method stub
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#addvalue(double)
-     */
     @Override
     public void addValue(double d) {
     }
@@ -232,20 +165,15 @@ public class ArcCADTool extends DefaultCADTool {
 
     @Override
     public void drawOperation(Graphics g, ArrayList pointList) {
-	// TODO Auto-generated method stub
-
     }
 
     @Override
     public boolean isMultiTransition() {
-	// TODO Auto-generated method stub
 	return false;
     }
 
     @Override
     public void transition(InputEvent event) {
-	// TODO Auto-generated method stub
-
     }
 
 }

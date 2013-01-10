@@ -54,8 +54,6 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import org.apache.log4j.Logger;
-
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
@@ -110,8 +108,7 @@ public abstract class DefaultCADTool implements CADTool {
 	    .createDefaultSymbolByShapeType(FShape.MULTI, Color.RED);
     public static ISymbol handlerSymbol = SymbologyFactory
 	    .createDefaultSymbolByShapeType(FShape.MULTI, Color.ORANGE);
-    private static Logger logger = Logger.getLogger(DefaultCADTool.class
-	    .getName());
+
     private CADToolAdapter cadToolAdapter;
 
     private String question;
@@ -167,9 +164,6 @@ public abstract class DefaultCADTool implements CADTool {
 
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void draw(IGeometry geometry) {
 	if (geometry != null) {
 	    BufferedImage img = getCadToolAdapter().getMapControl().getImage();
@@ -179,22 +173,11 @@ public abstract class DefaultCADTool implements CADTool {
 	}
     }
 
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param cta
-     *            DOCUMENT ME!
-     */
     @Override
     public void setCadToolAdapter(CADToolAdapter cta) {
 	cadToolAdapter = cta;
     }
 
-    /**
-     * DOCUMENT ME!
-     * 
-     * @return DOCUMENT ME!
-     */
     @Override
     public CADToolAdapter getCadToolAdapter() {
 	return cadToolAdapter;
@@ -206,16 +189,6 @@ public abstract class DefaultCADTool implements CADTool {
 		.getActiveLayerEdited();
     }
 
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param g
-     *            DOCUMENT ME!
-     * @param firstPoint
-     *            DOCUMENT ME!
-     * @param endPoint
-     *            DOCUMENT ME!
-     */
     public void drawLine(Graphics2D g, Point2D firstPoint, Point2D endPoint,
 	    ISymbol symbol) {
 	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
@@ -225,16 +198,6 @@ public abstract class DefaultCADTool implements CADTool {
 		getCadToolAdapter().getMapControl().getViewPort(), symbol);
     }
 
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param g
-     *            DOCUMENT ME!
-     * @param firstPoint
-     *            DOCUMENT ME!
-     * @param endPoint
-     *            DOCUMENT ME!
-     */
     public void drawLine(Graphics2D g, Point2D firstPoint, Point2D endPoint) {
 	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
 	elShape.moveTo(firstPoint.getX(), firstPoint.getY());
@@ -244,12 +207,6 @@ public abstract class DefaultCADTool implements CADTool {
 		CADTool.drawingSymbol);
     }
 
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param geometry
-     *            DOCUMENT ME!
-     */
     public void addGeometry(IGeometry geometry) {
 	VectorialEditableAdapter vea = getVLE().getVEA();
 	try {
@@ -350,12 +307,6 @@ public abstract class DefaultCADTool implements CADTool {
 	draw(geometry.cloneGeometry());
     }
 
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param geometry
-     *            DOCUMENT ME!
-     */
     public void modifyFeature(int index, IFeature row) {
 	try {
 	    getVLE().getVEA().modifyRow(index, row, getName(),
@@ -370,14 +321,6 @@ public abstract class DefaultCADTool implements CADTool {
 	draw(row.getGeometry().cloneGeometry());
     }
 
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param geometry
-     *            DOCUMENT ME!
-     * @param values
-     *            DOCUMENT ME!
-     */
     public int addGeometry(IGeometry geometry, Value[] values) {
 	int index = 0;
 	VectorialEditableAdapter vea = getVLE().getVEA();
@@ -395,9 +338,7 @@ public abstract class DefaultCADTool implements CADTool {
     }
 
     /**
-     * Devuelve la cadena que corresponde al estado en el que nos encontramos.
-     * 
-     * @return Cadena para mostrar por consola.
+     * Returns the string of the actual state
      */
     @Override
     public String getQuestion() {
@@ -405,10 +346,10 @@ public abstract class DefaultCADTool implements CADTool {
     }
 
     /**
-     * Actualiza la cadena que corresponde al estado actual.
+     * Updates the text for the actual state
      * 
      * @param s
-     *            Cadena que aparecer� en consola.
+     *            String that will be shown in the console
      */
     @Override
     public void setQuestion(String s) {
@@ -424,28 +365,18 @@ public abstract class DefaultCADTool implements CADTool {
     public void refresh() {
 	// getCadToolAdapter().getMapControl().drawMap(false);
 	// getVLE().getLayer().setDirty(true);
-
 	getCadToolAdapter().getMapControl().rePaintDirtyLayers();
     }
 
-    /*
-     * public void drawHandlers(Graphics g, FBitSet sel, AffineTransform at)
-     * throws DriverIOException { for (int i = sel.nextSetBit(0); i >= 0; i =
-     * sel.nextSetBit(i + 1)) { IGeometry ig =
-     * getCadToolAdapter().getVectorialAdapter() .getShape(i).cloneGeometry();
-     * if (ig == null) continue; Handler[] handlers =
-     * ig.getHandlers(IGeometry.SELECTHANDLER);
-     * FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers); } }
-     */
     public void drawHandlers(Graphics g, ArrayList selectedRows,
 	    AffineTransform at) {
 	for (int i = 0; i < selectedRows.size(); i++) {
 	    IRowEdited edRow = (IRowEdited) selectedRows.get(i);
 	    IFeature feat = (IFeature) edRow.getLinkedRow();
-	    // IFeature feat = (IFeature) selectedRows.get(i);
 	    IGeometry ig = feat.getGeometry().cloneGeometry();
-	    if (ig == null)
+	    if (ig == null) {
 		continue;
+	    }
 	    Handler[] handlers = ig.getHandlers(IGeometry.SELECTHANDLER);
 	    FGraphicUtilities.DrawHandlers((Graphics2D) g, at, handlers,
 		    DefaultCADTool.handlerSymbol);
@@ -462,11 +393,6 @@ public abstract class DefaultCADTool implements CADTool {
 	return currentdescriptions;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.iver.cit.gvsig.gui.cad.CADTool#end()
-     */
     @Override
     public void end() {
 	CADExtension.setCADTool("_selection", true);
@@ -613,12 +539,11 @@ public abstract class DefaultCADTool implements CADTool {
 
     @Override
     public void endTransition(double x, double y, MouseEvent e) {
-	// TODO Auto-generated method stub
-
     }
 
-    // Permite transiciones múltiples para emplear los snaps de
-    // "seguir geometría"
+    /**
+     * Allows multiple transitions to use the snaps of "follow geometry"
+     */
     @Override
     public boolean isMultiTransition() {
 	return multiTransition;
@@ -644,7 +569,9 @@ public abstract class DefaultCADTool implements CADTool {
 	return vista;
     }
 
-    /** Devuelve la capa activa. Suponemos que solo hay una activa */
+    /**
+     * Returns the "first" active layer
+     */
     public FLayer getActiveLayer() {
 	FLayer[] sel = obtenerView().getMapControl().getMapContext()
 		.getLayers().getActives();
@@ -669,28 +596,6 @@ public abstract class DefaultCADTool implements CADTool {
     public boolean checksOnEditionSinContinuidad(IGeometry Igeom, String geoid,
 	    boolean lanzaventana) {
 	boolean checksOnEdition = true;
-
-	/*
-	 * FLayer flyr = getActiveLayer(); LayerDescriptor ld =
-	 * LayerManager.getInstance().getLayerDescriptor(flyr.getName());
-	 * LayerEditionDescriptor led = ld.getLayerEditionDescriptor();
-	 * Collection comprobaciones =
-	 * ld.getLayerEditionDescriptor().getComprobaciones();
-	 * 
-	 * if(led.hayComprobaciones()){ try{ for(Iterator it =
-	 * comprobaciones.iterator(); it.hasNext(); ){ Comprobacion comp =
-	 * (Comprobacion)it.next(); if((comp instanceof ComprobacionViarios) ||
-	 * (comp instanceof ComprobacionAguas)) continue; checksOnEdition =
-	 * comp.comprobarEnEdicion(Igeom.toJTSGeometry(), geoid, lanzaventana);
-	 * if(!checksOnEdition) break; }
-	 * 
-	 * }catch(InternalErrorException e){ errorOnIntersection = true;
-	 * e.printStackTrace(); JOptionPane.showMessageDialog( (Component)
-	 * PluginServices.getMDIManager().getActiveWindow(),
-	 * PluginServices.getText(this, "error_during_check"),
-	 * PluginServices.getText(this, "error_title"),
-	 * JOptionPane.ERROR_MESSAGE); } }
-	 */
 	return checksOnEdition;
     }
 
@@ -704,9 +609,9 @@ public abstract class DefaultCADTool implements CADTool {
     }
 
     protected IGeometry flattenGeometry(IGeometry geom) {
-        PathIterator pi = geom.getPathIterator(null, FConverter.FLATNESS);
-        GeneralPathX gpx = new GeneralPathX();
-        gpx.append(pi, true);
-        return ShapeFactory.createPolyline2D(gpx);
+	PathIterator pi = geom.getPathIterator(null, FConverter.FLATNESS);
+	GeneralPathX gpx = new GeneralPathX();
+	gpx.append(pi, true);
+	return ShapeFactory.createPolyline2D(gpx);
     }
 }
