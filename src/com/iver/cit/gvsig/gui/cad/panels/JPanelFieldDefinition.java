@@ -2,8 +2,15 @@ package com.iver.cit.gvsig.gui.cad.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -22,9 +29,14 @@ import javax.swing.table.TableColumn;
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
 
+import org.gvsig.gui.beans.swing.JFileChooser;
+
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
+
+import es.icarto.gvsig.schema.SchemaSerializator;
+
 
 /**
  * @author fjp
@@ -41,6 +53,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
     private JPanel jPanelEast = null;
     private JButton jButtonAddField = null;
     private JButton jButtonDeleteField = null;
+    private JButton jButtonLoadSchema = null;
+    private JButton jButtonSaveSchema = null;
     private int MAX_FIELD_LENGTH = 254;
 
     private IWriter writer = null;
@@ -74,11 +88,11 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		JOptionPane.showMessageDialog(
 			this,
 			PluginServices.getText(this, "max_length_is")
-				+ ": "
-				+ MAX_FIELD_LENGTH
-				+ "\n"
-				+ PluginServices.getText(this,
-					"length_of_field")
+			+ ": "
+			+ MAX_FIELD_LENGTH
+			+ "\n"
+			+ PluginServices.getText(this,
+				"length_of_field")
 				+ " '"
 				+ s
 				+ "' "
@@ -101,14 +115,16 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    fieldNames.add(tm.getValueAt(i, 0));
 	}
 
-	if (valid)
+	if (valid) {
 	    super.next();
+	}
 	if (getWizardComponents().getWizardPanel(2) instanceof FileBasedPanel) {
 	    if (!((FileBasedPanel) getWizardComponents().getWizardPanel(2))
-		    .getPath().equals(""))
+		    .getPath().equals("")) {
 		setFinishButtonEnabled(true);
-	    else
+	    } else {
 		setFinishButtonEnabled(false);
+	    }
 	}
     }
 
@@ -143,22 +159,22 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
 		    PluginServices.getText(this, "no_puede_continuar")
-			    + "\n"
-			    + PluginServices.getText(this,
-				    "the_field_name_is_required"));
+		    + "\n"
+		    + PluginServices.getText(this,
+			    "the_field_name_is_required"));
 	}
 	if (s.indexOf(" ") != -1) {
 	    valid = false;
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
 		    PluginServices.getText(this, "no_puede_continuar")
-			    + "\n"
-			    + PluginServices.getText(this, "field")
-			    + " : "
-			    + s
-			    + "\n"
-			    + PluginServices.getText(this,
-				    "contiene_espacios_en_blanco"));
+		    + "\n"
+		    + PluginServices.getText(this, "field")
+		    + " : "
+		    + s
+		    + "\n"
+		    + PluginServices.getText(this,
+			    "contiene_espacios_en_blanco"));
 	}
 	if (this.writer != null
 		&& this.writer.getCapability("FieldNameMaxLength") != null) {
@@ -174,15 +190,15 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		JOptionPane.showMessageDialog(
 			(Component) PluginServices.getMainFrame(),
 			PluginServices.getText(this, "no_puede_continuar")
-				+ "\n"
-				+ PluginServices.getText(this, "field")
-				+ " : "
-				+ s
-				+ "\n"
-				+ PluginServices.getText(this, "too_long_name")
-				+ "\n"
-				+ PluginServices.getText(this,
-					"maximun_name_size") + " : " + intValue
+			+ "\n"
+			+ PluginServices.getText(this, "field")
+			+ " : "
+			+ s
+			+ "\n"
+			+ PluginServices.getText(this, "too_long_name")
+			+ "\n"
+			+ PluginServices.getText(this,
+				"maximun_name_size") + " : " + intValue
 				+ "\n");
 	    }
 	}
@@ -249,8 +265,9 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 		    // Ignore extra messages.
-		    if (e.getValueIsAdjusting())
+		    if (e.getValueIsAdjusting()) {
 			return;
+		    }
 
 		    ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 		    if (lsm.isSelectionEmpty()) {
@@ -282,6 +299,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    jPanelEast.setPreferredSize(new java.awt.Dimension(170, 100));
 	    jPanelEast.add(getJButtonAddField(), null);
 	    jPanelEast.add(getJButtonDeleteField(), null);
+	    jPanelEast.add(getJButtonLoadSchema(), null);
+	    jPanelEast.add(getJButtonSaveSchema(), null);
 	}
 	return jPanelEast;
     }
@@ -299,65 +318,65 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    jButtonAddField.setSize(new java.awt.Dimension(145, 23));
 	    jButtonAddField.setPreferredSize(new java.awt.Dimension(100, 26));
 	    jButtonAddField
-		    .addActionListener(new java.awt.event.ActionListener() {
-			@Override
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-			    DefaultTableModel tm = (DefaultTableModel) jTable
-				    .getModel();
+	    .addActionListener(new java.awt.event.ActionListener() {
+		@Override
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+		    DefaultTableModel tm = (DefaultTableModel) jTable
+			    .getModel();
 
-			    // Figure out a suitable field name
-			    ArrayList fieldNames = new ArrayList();
-			    for (int i = 0; i < jTable.getRowCount(); i++) {
-				fieldNames.add(tm.getValueAt(i, 0));
+		    // Figure out a suitable field name
+		    ArrayList fieldNames = new ArrayList();
+		    for (int i = 0; i < jTable.getRowCount(); i++) {
+			fieldNames.add(tm.getValueAt(i, 0));
+		    }
+		    String[] currentFieldNames = (String[]) fieldNames
+			    .toArray(new String[0]);
+		    String newField = PluginServices.getText(this,
+			    "field").replaceAll(" +", "_");
+		    int index = 0;
+		    for (int i = 0; i < currentFieldNames.length; i++) {
+			if (currentFieldNames[i].startsWith(newField)) {
+			    try {
+				index = Integer
+					.parseInt(currentFieldNames[i]
+						.replaceAll(newField,
+							""));
+			    } catch (Exception ex) { /* we don't care */
 			    }
-			    String[] currentFieldNames = (String[]) fieldNames
-				    .toArray(new String[0]);
-			    String newField = PluginServices.getText(this,
-				    "field").replaceAll(" +", "_");
-			    int index = 0;
-			    for (int i = 0; i < currentFieldNames.length; i++) {
-				if (currentFieldNames[i].startsWith(newField)) {
-				    try {
-					index = Integer
-						.parseInt(currentFieldNames[i]
-							.replaceAll(newField,
-								""));
-				    } catch (Exception ex) { /* we don't care */
-				    }
-				}
-			    }
-			    String newFieldName = newField + (++index);
-
-			    // Add a new row
-			    Object[] newRow = new Object[tm.getColumnCount()];
-			    newRow[0] = newFieldName;
-			    newRow[1] = "String";
-			    newRow[2] = "20";
-			    tm.addRow(newRow);
-
-			    // Esto lo añado aquí porque si no tiene registros,
-			    // no hace caso. (Por eso no
-			    // lo pongo en getJTable()
-			    TableColumn typeColumn = jTable.getColumnModel()
-				    .getColumn(1);
-			    JComboBox comboBox = new JComboBox();
-			    comboBox.addItem("Boolean");
-			    comboBox.addItem("Date");
-			    comboBox.addItem("Integer");
-			    comboBox.addItem("Double");
-			    comboBox.addItem("String");
-			    typeColumn.setCellEditor(new DefaultCellEditor(
-				    comboBox));
-
-			    TableColumn widthColumn = jTable.getColumnModel()
-				    .getColumn(2);
-
-			    // tm.setValueAt("NewField", tm.getRowCount()-1, 0);
 			}
-		    });
+		    }
+		    String newFieldName = newField + (++index);
+
+		    // Add a new row
+		    Object[] newRow = new Object[tm.getColumnCount()];
+		    newRow[0] = newFieldName;
+		    newRow[1] = "String";
+		    newRow[2] = "20";
+		    tm.addRow(newRow);
+
+		    setCellEditorForFieldType();
+
+		    TableColumn widthColumn = jTable.getColumnModel()
+			    .getColumn(2);
+
+		    // tm.setValueAt("NewField", tm.getRowCount()-1, 0);
+		}
+
+	    });
 
 	}
 	return jButtonAddField;
+    }
+
+    private void setCellEditorForFieldType() {
+	TableColumn typeColumn = jTable.getColumnModel().getColumn(1);
+	JComboBox comboBox = new JComboBox();
+	comboBox.addItem("Boolean");
+	comboBox.addItem("Date");
+	comboBox.addItem("Integer");
+	comboBox.addItem("Double");
+	comboBox.addItem("String");
+	typeColumn.setCellEditor(new DefaultCellEditor(comboBox));
     }
 
     /**
@@ -374,19 +393,127 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    jButtonDeleteField.setSize(new java.awt.Dimension(145, 23));
 	    jButtonDeleteField.setEnabled(false);
 	    jButtonDeleteField
-		    .addActionListener(new java.awt.event.ActionListener() {
-			@Override
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-			    int[] selecteds = jTable.getSelectedRows();
-			    DefaultTableModel tm = (DefaultTableModel) jTable
-				    .getModel();
+	    .addActionListener(new java.awt.event.ActionListener() {
+		@Override
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+		    int[] selecteds = jTable.getSelectedRows();
+		    DefaultTableModel tm = (DefaultTableModel) jTable
+			    .getModel();
 
-			    for (int i = selecteds.length - 1; i >= 0; i--)
-				tm.removeRow(selecteds[i]);
-			}
-		    });
+		    for (int i = selecteds.length - 1; i >= 0; i--) {
+			tm.removeRow(selecteds[i]);
+		    }
+		}
+	    });
 	}
 	return jButtonDeleteField;
+    }
+
+    /**
+     * This method initializes jButtonLoadSchema
+     * 
+     * @return javax.swing.JButton
+     */
+    private JButton getJButtonLoadSchema() {
+	if (jButtonLoadSchema == null) {
+	    jButtonLoadSchema = new JButton();
+	    jButtonLoadSchema.setText(PluginServices.getText(this,
+		    "load_schema"));
+	    jButtonLoadSchema.setLocation(new java.awt.Point(7, 61));
+	    jButtonLoadSchema.setSize(new java.awt.Dimension(145, 23));
+	    jButtonLoadSchema.setPreferredSize(new java.awt.Dimension(100, 26));
+	    jButtonLoadSchema.addActionListener(new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+		    Preferences prefs = Preferences.userRoot().node(
+			    "gvsig.foldering");
+		    JFileChooser jfc = new JFileChooser("LOAD_SCHEMA_ID", prefs
+			    .get("TemplatesFolder", null));
+		    if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File schema = jfc.getSelectedFile();
+			SchemaSerializator serializator = new SchemaSerializator();
+			FieldDescription[] fields = serializator
+				.fromXML(schema);
+			DefaultTableModel tm = (DefaultTableModel) jTable
+				.getModel();
+			for (int i = 0; i < fields.length; i++) {
+			    Object[] newField = new Object[3];
+			    newField[0] = fields[i].getFieldName();
+			    newField[1] = getType(fields[i]);
+			    newField[2] = Integer.toString(fields[i]
+				    .getFieldLength());
+			    tm.addRow(newField);
+			}
+			setCellEditorForFieldType();
+		    }
+		}
+
+		private String getType(FieldDescription field) {
+		    if (field.getFieldType() == Types.VARCHAR) {
+			return "String";
+		    } else if (field.getFieldType() == Types.DOUBLE) {
+			return "Double";
+		    } else if (field.getFieldType() == Types.INTEGER) {
+			return "Integer";
+		    } else if (field.getFieldType() == Types.BOOLEAN) {
+			return "Boolean";
+		    } else if (field.getFieldType() == Types.DATE) {
+			return "Date";
+		    }
+		    return null;
+		}
+	    });
+	}
+	return jButtonLoadSchema;
+    }
+
+    /**
+     * This method initializes jButtonSaveSchema
+     * 
+     * @return javax.swing.JButton
+     */
+    private JButton getJButtonSaveSchema() {
+	if (jButtonSaveSchema == null) {
+	    jButtonSaveSchema = new JButton();
+	    jButtonSaveSchema.setText(PluginServices.getText(this,
+		    "save_schema"));
+	    jButtonSaveSchema.setLocation(new java.awt.Point(7, 89));
+	    jButtonSaveSchema.setSize(new java.awt.Dimension(145, 23));
+	    jButtonSaveSchema.setPreferredSize(new java.awt.Dimension(100, 26));
+	    jButtonSaveSchema.addActionListener(new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		    Preferences prefs = Preferences.userRoot().node(
+			    "gvsig.foldering");
+		    JFileChooser jfc = new JFileChooser("SAVE_SCHEMA_ID", prefs
+			    .get("TemplatesFolder", null));
+		    if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			SchemaSerializator serializator = new SchemaSerializator();
+			String xml = serializator.toXML(getFieldsDescription());
+			File schema = jfc.getSelectedFile();
+			if (!schema.exists()) {
+			    try {
+				schema.createNewFile();
+			    } catch (IOException e1) {
+				e1.printStackTrace();
+			    }
+			}
+			FileWriter fw;
+			try {
+			    fw = new FileWriter(schema.getAbsoluteFile());
+			    BufferedWriter bw = new BufferedWriter(fw);
+			    bw.write(xml);
+			    bw.close();
+			} catch (IOException e1) {
+			    e1.printStackTrace();
+			}
+		    }
+		}
+	    });
+	}
+	return jButtonSaveSchema;
     }
 
     /**
@@ -403,22 +530,28 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    fieldsDesc[i] = new FieldDescription();
 	    fieldsDesc[i].setFieldName((String) tm.getValueAt(i, 0));
 	    String strType = (String) tm.getValueAt(i, 1);
-	    if (strType.equals("String"))
+	    if (strType.equals("String")) {
 		fieldsDesc[i].setFieldType(Types.VARCHAR);
-	    if (strType.equals("Double"))
+	    }
+	    if (strType.equals("Double")) {
 		fieldsDesc[i].setFieldType(Types.DOUBLE);
-	    if (strType.equals("Integer"))
+	    }
+	    if (strType.equals("Integer")) {
 		fieldsDesc[i].setFieldType(Types.INTEGER);
-	    if (strType.equals("Boolean"))
+	    }
+	    if (strType.equals("Boolean")) {
 		fieldsDesc[i].setFieldType(Types.BOOLEAN);
-	    if (strType.equals("Date"))
+	    }
+	    if (strType.equals("Date")) {
 		fieldsDesc[i].setFieldType(Types.DATE);
+	    }
 	    int fieldLength = Integer.parseInt((String) tm.getValueAt(i, 2));
 	    fieldsDesc[i].setFieldLength(fieldLength);
 
 	    // TODO: HACERLO BIEN
-	    if (strType.equals("Double"))
+	    if (strType.equals("Double")) {
 		fieldsDesc[i].setFieldDecimalCount(5);
+	    }
 
 	}
 

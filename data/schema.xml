@@ -1,0 +1,27 @@
+<gvsig-layer-schema>
+  <field>
+    <name>test_varchar</name>
+    <type>12</type>
+    <length>2</length>
+  </field>
+  <field>
+    <name>test_double</name>
+    <type>8</type>
+    <length>3</length>
+  </field>
+  <field>
+    <name>test_integer</name>
+    <type>4</type>
+    <length>1</length>
+  </field>
+  <field>
+    <name>test_boolean</name>
+    <type>16</type>
+    <length>3</length>
+  </field>
+  <field>
+    <name>test_date</name>
+    <type>91</type>
+    <length>3</length>
+  </field>
+</gvsig-layer-schema>

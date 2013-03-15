@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-test"/>
 	<classpathentry kind="lib" path="lib/Smc.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/gdbms-0.8-SNAPSHOT.jar" sourcepath="/libGDBMS"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libFMap"/>
@@ -21,5 +22,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/_fwAndami/lib/log4j-1.2.14.jar"/>
 	<classpathentry kind="lib" path="/libFMap/lib/jts-1.12.jar"/>
+	<classpathentry kind="lib" path="lib/xstream-1.4.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
