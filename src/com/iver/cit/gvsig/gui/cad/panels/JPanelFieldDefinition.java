@@ -15,6 +15,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -136,6 +138,44 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	return valid;
     }
 
+    private boolean validateSchema(DefaultTableModel tm) {
+	boolean isValid = true;
+	Pattern p = Pattern.compile("[^\\w]"); // non-word characters
+	for (int i = 0; i < tm.getRowCount(); i++) {
+	    String fieldName = (String) tm.getValueAt(i, 0);
+	    List<String> reservedWords = new ArrayList<String>();
+	    reservedWords = readReservedWordsFromFile();
+	    if (reservedWords.contains(fieldName.toUpperCase())) {
+		isValid = false;
+		JOptionPane.showMessageDialog(
+			(Component) PluginServices.getMainFrame(),
+			PluginServices.getText(this, "no_puede_continuar")
+			+ "\n"
+			+ PluginServices.getText(this, "field")
+			+ " : "
+			+ fieldName
+			+ "\n"
+			+ PluginServices.getText(this,
+				"is_reserved_word"));
+	    }
+	    Matcher m = p.matcher(fieldName);
+	    if (m.find()) {
+		isValid = false;
+		JOptionPane.showMessageDialog(
+			(Component) PluginServices.getMainFrame(),
+			PluginServices.getText(this, "no_puede_continuar")
+			+ "\n"
+			+ PluginServices.getText(this, "field")
+			+ " : "
+			+ fieldName
+			+ "\n"
+			+ PluginServices.getText(this,
+				"has_non_word_characters"));
+	    }
+	}
+	return isValid;
+    }
+
     public void setWriter(IWriter writer) {
 	this.writer = writer;
     }
@@ -184,20 +224,6 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		    + PluginServices.getText(this,
 			    "contiene_espacios_en_blanco"));
 	}
-	List<String> reservedWords = new ArrayList<String>();
-	reservedWords = readFromFile();
-	if (reservedWords.contains(fieldName.toUpperCase())) {
-	    valid = false;
-	    JOptionPane.showMessageDialog(
-		    (Component) PluginServices.getMainFrame(),
-		    PluginServices.getText(this, "no_puede_continuar")
-		    + "\n"
-		    + PluginServices.getText(this, "field")
-		    + " : "
-		    + fieldName
-		    + "\n"
-		    + PluginServices.getText(this, "is_reserved_word"));
-	}
 	if (this.writer != null
 		&& this.writer.getCapability("FieldNameMaxLength") != null) {
 	    String value = writer.getCapability("FieldNameMaxLength");
@@ -227,7 +253,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	return valid;
     }
 
-    private List<String> readFromFile() {
+    private List<String> readReservedWordsFromFile() {
 	List<String> list = new ArrayList<String>();
 	try {
 	    String file = "gvSIG/extensiones/com.iver.cit.gvsig.cad/restricted.txt";
@@ -525,7 +551,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		public void actionPerformed(ActionEvent e) {
 		    DefaultTableModel tm = (DefaultTableModel) jTable
 			    .getModel();
-		    if (validateTableModel(tm)) {
+		    if (validateTableModel(tm) && validateSchema(tm)) {
 			Preferences prefs = Preferences.userRoot().node(
 				"gvsig.foldering");
 			JFileChooser jfc = new JFileChooser("SAVE_SCHEMA_ID", prefs
