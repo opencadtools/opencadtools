@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.DefaultCellEditor;
@@ -73,18 +77,33 @@ public class JPanelFieldDefinition extends JWizardPanel {
     @Override
     public void next() {
 	DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
+	boolean valid = validateTableModel(tm);
+	if (valid) {
+	    super.next();
+	}
+	if (getWizardComponents().getWizardPanel(2) instanceof FileBasedPanel) {
+	    if (!((FileBasedPanel) getWizardComponents().getWizardPanel(2))
+		    .getPath().equals("")) {
+		setFinishButtonEnabled(true);
+	    } else {
+		setFinishButtonEnabled(false);
+	    }
+	}
+    }
+
+    private boolean validateTableModel(DefaultTableModel tm) {
 	boolean valid = true;
 	for (int i = 0; i < tm.getRowCount(); i++) {
-	    String s = (String) tm.getValueAt(i, 0);
-	    valid = validate(s);
-	    String size = (String) tm.getValueAt(i, 2);
-	    valid = valid && validateInteger(size);
+	    String fieldName = (String) tm.getValueAt(i, 0);
+	    String fieldType = (String) tm.getValueAt(i, 1);
+	    String fieldLength = (String) tm.getValueAt(i, 2);
+	    valid = validateFieldName(fieldName);
+	    valid = valid && validateInteger(fieldLength);
 	    if (!valid) {
-		return;
+		return valid;
 	    }
-	    String type = (String) tm.getValueAt(i, 1);
-	    int length = Integer.parseInt((String) tm.getValueAt(i, 2));
-	    if (type.equals("String") && length > MAX_FIELD_LENGTH) {
+	    int length = Integer.parseInt((String) fieldLength);
+	    if (fieldType.equals("String") && length > MAX_FIELD_LENGTH) {
 		JOptionPane.showMessageDialog(
 			this,
 			PluginServices.getText(this, "max_length_is")
@@ -94,7 +113,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			+ PluginServices.getText(this,
 				"length_of_field")
 				+ " '"
-				+ s
+				+ fieldName
 				+ "' "
 				+ PluginServices.getText(this,
 					"will_be_truncated"));
@@ -114,18 +133,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    }
 	    fieldNames.add(tm.getValueAt(i, 0));
 	}
-
-	if (valid) {
-	    super.next();
-	}
-	if (getWizardComponents().getWizardPanel(2) instanceof FileBasedPanel) {
-	    if (!((FileBasedPanel) getWizardComponents().getWizardPanel(2))
-		    .getPath().equals("")) {
-		setFinishButtonEnabled(true);
-	    } else {
-		setFinishButtonEnabled(false);
-	    }
-	}
+	return valid;
     }
 
     public void setWriter(IWriter writer) {
@@ -152,9 +160,9 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	return valid;
     }
 
-    private boolean validate(String s) {
+    private boolean validateFieldName(String fieldName) {
 	boolean valid = true;
-	if (s.equals("")) {
+	if (fieldName.equals("")) {
 	    valid = false;
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
@@ -163,7 +171,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		    + PluginServices.getText(this,
 			    "the_field_name_is_required"));
 	}
-	if (s.indexOf(" ") != -1) {
+	if (fieldName.indexOf(" ") != -1) {
 	    valid = false;
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
@@ -171,10 +179,24 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		    + "\n"
 		    + PluginServices.getText(this, "field")
 		    + " : "
-		    + s
+		    + fieldName
 		    + "\n"
 		    + PluginServices.getText(this,
 			    "contiene_espacios_en_blanco"));
+	}
+	List<String> reservedWords = new ArrayList<String>();
+	reservedWords = readFromFile();
+	if (reservedWords.contains(fieldName.toUpperCase())) {
+	    valid = false;
+	    JOptionPane.showMessageDialog(
+		    (Component) PluginServices.getMainFrame(),
+		    PluginServices.getText(this, "no_puede_continuar")
+		    + "\n"
+		    + PluginServices.getText(this, "field")
+		    + " : "
+		    + fieldName
+		    + "\n"
+		    + PluginServices.getText(this, "is_reserved_word"));
 	}
 	if (this.writer != null
 		&& this.writer.getCapability("FieldNameMaxLength") != null) {
@@ -185,7 +207,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    } catch (NumberFormatException e) {
 		intValue = 0;
 	    }
-	    if (intValue > 0 && s.length() > intValue) {
+	    if (intValue > 0 && fieldName.length() > intValue) {
 		valid = false;
 		JOptionPane.showMessageDialog(
 			(Component) PluginServices.getMainFrame(),
@@ -193,7 +215,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			+ "\n"
 			+ PluginServices.getText(this, "field")
 			+ " : "
-			+ s
+			+ fieldName
 			+ "\n"
 			+ PluginServices.getText(this, "too_long_name")
 			+ "\n"
@@ -203,6 +225,22 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    }
 	}
 	return valid;
+    }
+
+    private List<String> readFromFile() {
+	List<String> list = new ArrayList<String>();
+	try {
+	    String file = "gvSIG/extensiones/com.iver.cit.gvsig.cad/restricted.txt";
+	    FileInputStream in = new FileInputStream(file);
+	    BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	    String strLine;
+	    while ((strLine = br.readLine()) != null) {
+		list.add(strLine.toUpperCase());
+	    }
+	} catch (Exception e) {
+	    list.clear();
+	}
+	return list;
     }
 
     /**
@@ -485,29 +523,33 @@ public class JPanelFieldDefinition extends JWizardPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-		    Preferences prefs = Preferences.userRoot().node(
-			    "gvsig.foldering");
-		    JFileChooser jfc = new JFileChooser("SAVE_SCHEMA_ID", prefs
-			    .get("TemplatesFolder", null));
-		    if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-			SchemaSerializator serializator = new SchemaSerializator();
-			String xml = serializator.toXML(getFieldsDescription());
-			File schema = jfc.getSelectedFile();
-			if (!schema.exists()) {
+		    DefaultTableModel tm = (DefaultTableModel) jTable
+			    .getModel();
+		    if (validateTableModel(tm)) {
+			Preferences prefs = Preferences.userRoot().node(
+				"gvsig.foldering");
+			JFileChooser jfc = new JFileChooser("SAVE_SCHEMA_ID", prefs
+				.get("TemplatesFolder", null));
+			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			    SchemaSerializator serializator = new SchemaSerializator();
+			    String xml = serializator.toXML(getFieldsDescription());
+			    File schema = jfc.getSelectedFile();
+			    if (!schema.exists()) {
+				try {
+				    schema.createNewFile();
+				} catch (IOException e1) {
+				    e1.printStackTrace();
+				}
+			    }
+			    FileWriter fw;
 			    try {
-				schema.createNewFile();
+				fw = new FileWriter(schema.getAbsoluteFile());
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(xml);
+				bw.close();
 			    } catch (IOException e1) {
 				e1.printStackTrace();
 			    }
-			}
-			FileWriter fw;
-			try {
-			    fw = new FileWriter(schema.getAbsoluteFile());
-			    BufferedWriter bw = new BufferedWriter(fw);
-			    bw.write(xml);
-			    bw.close();
-			} catch (IOException e1) {
-			    e1.printStackTrace();
 			}
 		    }
 		}

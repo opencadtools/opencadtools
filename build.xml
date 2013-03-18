@@ -44,6 +44,7 @@
 		<copy file="package.info" todir="${dist}"/>
 		<copy todir="${dist}">
 			<fileset dir="config" includes="text*.properties"/>
+			<fileset dir="config" includes="restricted.txt"/>
 		</copy>
 		<copy todir="${dist}/images">
 			<fileset dir="images/" includes="*"/>
