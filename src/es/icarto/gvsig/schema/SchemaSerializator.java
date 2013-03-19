@@ -1,38 +1,24 @@
 package es.icarto.gvsig.schema;
 
 import java.io.File;
+import java.util.List;
 
-import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.thoughtworks.xstream.XStream;
 
 public class SchemaSerializator {
 
-    public String toXML(FieldDescription[] fields) {
+    public String toXML(List<FieldDefinition> fields) {
 	XStream xstream = new XStream();
-	xstream.alias("gvsig-layer-schema", FieldDescription[].class);
-	xstream.alias("field", FieldDescription.class);
-	xstream.aliasField("name", FieldDescription.class, "fieldName");
-	xstream.aliasField("type", FieldDescription.class, "fieldType");
-	xstream.aliasField("length", FieldDescription.class, "fieldLength");
-
-	xstream.omitField(FieldDescription.class, "fieldAlias");
-	xstream.omitField(FieldDescription.class, "fieldDecimalCount");
-	xstream.omitField(FieldDescription.class, "defaultValue");
+	xstream.alias("gvsig-layer-schema", List.class);
+	xstream.alias("field", FieldDefinition.class);
 	return xstream.toXML(fields);
     }
 
-    public FieldDescription[] fromXML(File xml) {
+    public List<FieldDefinition> fromXML(File xml) {
 	XStream xstream = new XStream();
-	xstream.alias("gvsig-layer-schema", FieldDescription[].class);
-	xstream.alias("field", FieldDescription.class);
-	xstream.aliasField("name", FieldDescription.class, "fieldName");
-	xstream.aliasField("type", FieldDescription.class, "fieldType");
-	xstream.aliasField("length", FieldDescription.class, "fieldLength");
-
-	xstream.omitField(FieldDescription.class, "fieldAlias");
-	xstream.omitField(FieldDescription.class, "fieldDecimalCount");
-	xstream.omitField(FieldDescription.class, "defaultValue");
-	return (FieldDescription[]) xstream.fromXML(xml);
+	xstream.alias("gvsig-layer-schema", List.class);
+	xstream.alias("field", FieldDefinition.class);
+	return (List<FieldDefinition>) xstream.fromXML(xml);
     }
 
 }

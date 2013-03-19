@@ -41,6 +41,7 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
 
+import es.icarto.gvsig.schema.FieldDefinition;
 import es.icarto.gvsig.schema.SchemaSerializator;
 
 
@@ -497,35 +498,19 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		    if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			File schema = jfc.getSelectedFile();
 			SchemaSerializator serializator = new SchemaSerializator();
-			FieldDescription[] fields = serializator
+			List<FieldDefinition> fields = serializator
 				.fromXML(schema);
 			DefaultTableModel tm = (DefaultTableModel) jTable
 				.getModel();
-			for (int i = 0; i < fields.length; i++) {
-			    Object[] newField = new Object[3];
-			    newField[0] = fields[i].getFieldName();
-			    newField[1] = getType(fields[i]);
-			    newField[2] = Integer.toString(fields[i]
-				    .getFieldLength());
-			    tm.addRow(newField);
+			for (FieldDefinition field : fields) {
+			    Object[] f = new Object[3];
+			    f[0] = field.getName();
+			    f[1] = field.getType();
+			    f[2] = field.getLength();
+			    tm.addRow(f);
 			}
 			setCellEditorForFieldType();
 		    }
-		}
-
-		private String getType(FieldDescription field) {
-		    if (field.getFieldType() == Types.VARCHAR) {
-			return "String";
-		    } else if (field.getFieldType() == Types.DOUBLE) {
-			return "Double";
-		    } else if (field.getFieldType() == Types.INTEGER) {
-			return "Integer";
-		    } else if (field.getFieldType() == Types.BOOLEAN) {
-			return "Boolean";
-		    } else if (field.getFieldType() == Types.DATE) {
-			return "Date";
-		    }
-		    return null;
 		}
 	    });
 	}
@@ -557,8 +542,9 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			JFileChooser jfc = new JFileChooser("SAVE_SCHEMA_ID", prefs
 				.get("TemplatesFolder", null));
 			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			    List<FieldDefinition> fields = getFieldsFromModel();
 			    SchemaSerializator serializator = new SchemaSerializator();
-			    String xml = serializator.toXML(getFieldsDescription());
+			    String xml = serializator.toXML(fields);
 			    File schema = jfc.getSelectedFile();
 			    if (!schema.exists()) {
 				try {
@@ -582,6 +568,21 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    });
 	}
 	return jButtonSaveSchema;
+    }
+
+    public List<FieldDefinition> getFieldsFromModel() {
+	DefaultTableModel tm = (DefaultTableModel) jTable.getModel();
+	List<FieldDefinition> fields = new ArrayList<FieldDefinition>();
+
+	for (int i = 0; i < tm.getRowCount(); i++) {
+	    FieldDefinition field = new FieldDefinition();
+	    field.setName((String) tm.getValueAt(i, 0));
+	    field.setType((String) tm.getValueAt(i, 1));
+	    field.setLength((String) tm.getValueAt(i, 2));
+	    fields.add(field);
+	}
+
+	return fields;
     }
 
     /**
