@@ -141,7 +141,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 
     private boolean validateSchema(DefaultTableModel tm) {
 	boolean isValid = true;
-	Pattern p = Pattern.compile("[^\\w]"); // non-word characters
+	Pattern nonWordCharsPattern = Pattern.compile("[^\\w]");
+	Pattern upperCaseCharsPattern = Pattern.compile("[A-Z]");
 	for (int i = 0; i < tm.getRowCount(); i++) {
 	    String fieldName = (String) tm.getValueAt(i, 0);
 	    List<String> reservedWords = new ArrayList<String>();
@@ -159,8 +160,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			+ PluginServices.getText(this,
 				"is_reserved_word"));
 	    }
-	    Matcher m = p.matcher(fieldName);
-	    if (m.find()) {
+	    Matcher matcherNonWordChars = nonWordCharsPattern.matcher(fieldName);
+	    if (matcherNonWordChars.find()) {
 		isValid = false;
 		JOptionPane.showMessageDialog(
 			(Component) PluginServices.getMainFrame(),
@@ -172,6 +173,19 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			+ "\n"
 			+ PluginServices.getText(this,
 				"has_non_word_characters"));
+	    }
+	    Matcher matcherUpperCase = upperCaseCharsPattern.matcher(fieldName);
+	    if (matcherUpperCase.find()) {
+		JOptionPane.showMessageDialog(
+			(Component) PluginServices.getMainFrame(),
+			PluginServices.getText(this, "warning_title")
+			+ "\n"
+			+ PluginServices.getText(this, "field")
+			+ " : "
+			+ fieldName
+			+ "\n"
+			+ PluginServices.getText(this,
+				"has_upper_case_characters"));
 	    }
 	}
 	return isValid;
