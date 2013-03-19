@@ -100,8 +100,9 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    String fieldName = (String) tm.getValueAt(i, 0);
 	    String fieldType = (String) tm.getValueAt(i, 1);
 	    String fieldLength = (String) tm.getValueAt(i, 2);
-	    valid = validateFieldName(fieldName);
-	    valid = valid && validateInteger(fieldLength);
+	    valid = validateFieldName(fieldName)
+		    && validateInteger(fieldLength)
+		    && validateFieldType(fieldType);
 	    if (!valid) {
 		return valid;
 	    }
@@ -137,6 +138,20 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    fieldNames.add(tm.getValueAt(i, 0));
 	}
 	return valid;
+    }
+
+    private boolean validateFieldType(String fieldType) {
+	boolean isValid = true;
+	if (fieldType == null) {
+	    isValid = false;
+	    JOptionPane.showMessageDialog(
+		    (Component) PluginServices.getMainFrame(),
+		    PluginServices.getText(this, "no_puede_continuar")
+		    + "\n"
+		    + PluginServices.getText(this,
+			    "field_type_cannot_be_null"));
+	}
+	return isValid;
     }
 
     private boolean validateSchema(DefaultTableModel tm) {
@@ -217,7 +232,15 @@ public class JPanelFieldDefinition extends JWizardPanel {
 
     private boolean validateFieldName(String fieldName) {
 	boolean valid = true;
-	if (fieldName.equals("")) {
+	if (fieldName == null) {
+	    valid = false;
+	    JOptionPane.showMessageDialog(
+		    (Component) PluginServices.getMainFrame(),
+		    PluginServices.getText(this, "no_puede_continuar")
+		    + "\n"
+		    + PluginServices.getText(this,
+			    "field_name_cannot_be_null"));
+	} else if (fieldName.equals("")) {
 	    valid = false;
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
@@ -225,8 +248,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		    + "\n"
 		    + PluginServices.getText(this,
 			    "the_field_name_is_required"));
-	}
-	if (fieldName.indexOf(" ") != -1) {
+	} else if (fieldName.indexOf(" ") != -1) {
 	    valid = false;
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
@@ -238,8 +260,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		    + "\n"
 		    + PluginServices.getText(this,
 			    "contiene_espacios_en_blanco"));
-	}
-	if (this.writer != null
+	} else if (this.writer != null
 		&& this.writer.getCapability("FieldNameMaxLength") != null) {
 	    String value = writer.getCapability("FieldNameMaxLength");
 	    int intValue;
@@ -264,7 +285,21 @@ public class JPanelFieldDefinition extends JWizardPanel {
 				"maximun_name_size") + " : " + intValue
 				+ "\n");
 	    }
+	} else if (fieldName.length() > MAX_FIELD_LENGTH) {
+	    // if the writer has not defined the max length, truncate the field
+	    // name to MAX_FIELD_LENGTH
+	    valid = false;
+	    JOptionPane.showMessageDialog(
+		    (Component) PluginServices.getMainFrame(),
+		    PluginServices.getText(this, "no_puede_continuar") + "\n"
+			    + PluginServices.getText(this, "field") + " : "
+			    + fieldName + "\n"
+			    + PluginServices.getText(this, "too_long_name")
+			    + "\n"
+			    + PluginServices.getText(this, "maximun_name_size")
+			    + " : " + MAX_FIELD_LENGTH + "\n");
 	}
+
 	return valid;
     }
 

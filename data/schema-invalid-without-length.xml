@@ -1,0 +1,16 @@
+<gvsig-layer-schema>
+	<field>
+		<name>test_date</name>
+		<type>Date</type>
+		<length>3</length>
+	</field>
+	<field>
+		<name>test_varchar</name>
+		<type>String</type>
+	</field>
+	<field>
+		<name>test_double</name>
+		<type>Double</type>
+		<length>3</length>
+	</field>
+</gvsig-layer-schema>
