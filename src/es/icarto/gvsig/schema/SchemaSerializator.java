@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 
 public class SchemaSerializator {
 
@@ -14,7 +15,7 @@ public class SchemaSerializator {
 	return xstream.toXML(fields);
     }
 
-    public List<FieldDefinition> fromXML(File xml) {
+    public List<FieldDefinition> fromXML(File xml) throws XStreamException {
 	XStream xstream = new XStream();
 	xstream.alias("gvsig-layer-schema", List.class);
 	xstream.alias("field", FieldDefinition.class);

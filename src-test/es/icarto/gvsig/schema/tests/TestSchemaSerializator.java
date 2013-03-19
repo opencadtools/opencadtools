@@ -2,6 +2,7 @@ package es.icarto.gvsig.schema.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.Test;
+
+import com.thoughtworks.xstream.XStreamException;
 
 import es.icarto.gvsig.schema.FieldDefinition;
 import es.icarto.gvsig.schema.SchemaSerializator;
@@ -87,15 +90,85 @@ public class TestSchemaSerializator {
 		    fields.get(i).getType());
 	    assertEquals(fieldsOriginal.get(i).getLength(),
 		    fields.get(i).getLength());
-
 	}
+    }
+
+    @Test
+    public void testFromXMLWithoutNameIsParsed() {
+	SchemaSerializator serializator = new SchemaSerializator();
+	try {
+	    List<FieldDefinition> fields = serializator.fromXML(new File(
+		    "data/schema-without-name.xml"));
+	    List<FieldDefinition> fieldsOriginal = getFields();
+	    assertEquals(null, fields.get(0).getName());
+	    assertEquals(fieldsOriginal.get(0).getType(),
+		    fields.get(0).getType());
+	    assertEquals(fieldsOriginal.get(0).getLength(),
+		    fields.get(0).getLength());
+	} catch (XStreamException e) {
+	    fail("exception is thrown");
+	}
+    }
+
+    @Test
+    public void testFromXMLWithoutTypeIsParsed() {
+	SchemaSerializator serializator = new SchemaSerializator();
+	try {
+	    List<FieldDefinition> fields = serializator.fromXML(new File(
+		    "data/schema-without-type.xml"));
+	    List<FieldDefinition> fieldsOriginal = getFields();
+	    assertEquals(fieldsOriginal.get(0).getName(),
+		    fields.get(0).getName());
+	    assertEquals(null, fields.get(0).getType());
+	    assertEquals(fieldsOriginal.get(0).getLength(),
+		    fields.get(0).getLength());
+	} catch (XStreamException e) {
+	    fail("exception is thrown");
+	}
+    }
+
+    @Test
+    public void testFromXMLWithoutLengthIsParsed() {
+	SchemaSerializator serializator = new SchemaSerializator();
+	try {
+	    List<FieldDefinition> fields = serializator.fromXML(new File(
+		    "data/schema-without-length.xml"));
+	    List<FieldDefinition> fieldsOriginal = getFields();
+	    assertEquals(fieldsOriginal.get(0).getName(),
+		    fields.get(0).getName());
+	    assertEquals(fieldsOriginal.get(0).getType(),
+		    fields.get(0).getType());
+	    assertEquals(null, fields.get(0).getLength());
+	} catch (XStreamException e) {
+	    fail("exception is thrown");
+	}
+    }
+
+    @Test(expected = XStreamException.class)
+    public void testFromXMLWithoutFieldThrowsException() {
+	SchemaSerializator serializator = new SchemaSerializator();
+	List<FieldDefinition> fields = serializator.fromXML(new File(
+		"data/schema-invalid-without-field.xml"));
+    }
+
+    @Test(expected = XStreamException.class)
+    public void testFromXMLWithHalfFieldTagThrowsException() {
+	SchemaSerializator serializator = new SchemaSerializator();
+	List<FieldDefinition> fields = serializator.fromXML(new File(
+		"data/schema-invalid-with-half-field.xml"));
+    }
+
+    @Test(expected = XStreamException.class)
+    public void testFromXMLSomeFieldHasHalfFieldTagThrowsException() {
+	SchemaSerializator serializator = new SchemaSerializator();
+	List<FieldDefinition> fields = serializator.fromXML(new File(
+		"data/schema-invalid-some-field-has-half-field.xml"));
     }
 
     @AfterClass
     public static void printXML() {
 	SchemaSerializator serializator = new SchemaSerializator();
 	String xml = serializator.toXML(getFields());
-
 	System.out.println(xml);
     }
 

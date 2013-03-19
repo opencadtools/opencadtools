@@ -18,7 +18,6 @@
 		<name>test_boolean</name>
 		<type>Boolean</type>
 		<length>3</length>
-	</field>
 	<field>
 		<name>test_date</name>
 		<type>Date</type>

@@ -40,6 +40,7 @@ import org.gvsig.gui.beans.swing.JFileChooser;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 import com.iver.cit.gvsig.fmap.edition.IWriter;
+import com.thoughtworks.xstream.XStreamException;
 
 import es.icarto.gvsig.schema.FieldDefinition;
 import es.icarto.gvsig.schema.SchemaSerializator;
@@ -547,23 +548,33 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		    if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			File schema = jfc.getSelectedFile();
 			SchemaSerializator serializator = new SchemaSerializator();
-			List<FieldDefinition> fields = serializator
-				.fromXML(schema);
-			DefaultTableModel tm = (DefaultTableModel) jTable
-				.getModel();
-			for (FieldDefinition field : fields) {
-			    Object[] f = new Object[3];
-			    f[0] = field.getName();
-			    f[1] = field.getType();
-			    f[2] = field.getLength();
-			    tm.addRow(f);
+			try {
+			    List<FieldDefinition> fields = serializator
+				    .fromXML(schema);
+			    DefaultTableModel tm = (DefaultTableModel) jTable
+				    .getModel();
+			    for (FieldDefinition field : fields) {
+				Object[] f = new Object[3];
+				f[0] = field.getName();
+				f[1] = field.getType();
+				f[2] = field.getLength();
+				tm.addRow(f);
+			    }
+			    setCellEditorForFieldType();
+			} catch (XStreamException e) {
+			    showXStreamException(e);
 			}
-			setCellEditorForFieldType();
 		    }
 		}
 	    });
 	}
 	return jButtonLoadSchema;
+    }
+
+    private void showXStreamException(XStreamException e) {
+	// NotificacionManager.add(e);
+	JOptionPane.showMessageDialog(this,
+		PluginServices.getText(this, "xstream_parsing_error"));
     }
 
     /**
