@@ -29,8 +29,11 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 import jwizardcomponent.JWizardComponents;
 import jwizardcomponent.JWizardPanel;
@@ -44,7 +47,6 @@ import com.thoughtworks.xstream.XStreamException;
 
 import es.icarto.gvsig.schema.FieldDefinition;
 import es.icarto.gvsig.schema.SchemaSerializator;
-
 
 /**
  * @author fjp
@@ -176,7 +178,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			+ PluginServices.getText(this,
 				"is_reserved_word"));
 	    }
-	    Matcher matcherNonWordChars = nonWordCharsPattern.matcher(fieldName);
+	    Matcher matcherNonWordChars = nonWordCharsPattern
+		    .matcher(fieldName);
 	    if (matcherNonWordChars.find()) {
 		isValid = false;
 		JOptionPane.showMessageDialog(
@@ -373,6 +376,17 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	     * DefaultTableCellRenderer()); jTable.addColumn(fieldLengthColumn);
 	     */
 	    tm.addColumn(PluginServices.getText(this, "length"));
+
+	    tm.addTableModelListener(new TableModelListener() {
+		@Override
+		public void tableChanged(TableModelEvent e) {
+		    if (((TableModel) e.getSource()).getRowCount() > 0) {
+			jButtonSaveSchema.setEnabled(true);
+		    } else {
+			jButtonSaveSchema.setEnabled(false);
+		    }
+		}
+	    });
 
 	    // Ask to be notified of selection changes.
 	    ListSelectionModel rowSM = jTable.getSelectionModel();
@@ -590,6 +604,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    jButtonSaveSchema.setLocation(new java.awt.Point(7, 89));
 	    jButtonSaveSchema.setSize(new java.awt.Dimension(145, 23));
 	    jButtonSaveSchema.setPreferredSize(new java.awt.Dimension(100, 26));
+	    jButtonSaveSchema.setEnabled(false);
 	    jButtonSaveSchema.addActionListener(new ActionListener() {
 
 		@Override
@@ -599,8 +614,8 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		    if (validateTableModel(tm) && validateSchema(tm)) {
 			Preferences prefs = Preferences.userRoot().node(
 				"gvsig.foldering");
-			JFileChooser jfc = new JFileChooser("SAVE_SCHEMA_ID", prefs
-				.get("TemplatesFolder", null));
+			JFileChooser jfc = new JFileChooser("SAVE_SCHEMA_ID",
+				prefs.get("TemplatesFolder", null));
 			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 			    List<FieldDefinition> fields = getFieldsFromModel();
 			    SchemaSerializator serializator = new SchemaSerializator();
