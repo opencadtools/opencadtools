@@ -1,0 +1,6 @@
+<gvsig-layer-schema>
+	<field>
+		<type>String</type>
+		<length>2</length>
+	</field>
+</gvsig-layer-schema>

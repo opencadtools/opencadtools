@@ -1,0 +1,6 @@
+<gvsig-layer-schema>
+	<field>
+		<name>test_varchar</name>
+		<type>String</type>
+		<length>2</length>
+</gvsig-layer-schema>

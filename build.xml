@@ -32,7 +32,7 @@
 	
 	<target name="create-jar">
 		<mkdir dir="${dist}"/>
-		<jar jarfile="${dist}/${jarName}" basedir="${build}"/>
+		<jar jarfile="${dist}/lib/${jarName}" basedir="${build}"/>
 	</target>
 	
 	<target name="copy-data-files" depends="make-package-info">
@@ -44,6 +44,7 @@
 		<copy file="package.info" todir="${dist}"/>
 		<copy todir="${dist}">
 			<fileset dir="config" includes="text*.properties"/>
+			<fileset dir="config" includes="restricted.txt"/>
 		</copy>
 		<copy todir="${dist}/images">
 			<fileset dir="images/" includes="*"/>
