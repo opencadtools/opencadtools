@@ -609,6 +609,12 @@ public class JPanelFieldDefinition extends JWizardPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+		    // in case the user is still editing the table
+		    if (jTable.isEditing()) {
+			if (jTable.getCellEditor() != null) {
+			    jTable.getCellEditor().stopCellEditing();
+			}
+		    }
 		    DefaultTableModel tm = (DefaultTableModel) jTable
 			    .getModel();
 		    if (validateTableModel(tm) && validateSchema(tm)) {
