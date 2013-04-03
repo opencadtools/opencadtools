@@ -357,30 +357,36 @@ public class ExportTo extends Extension {
 	    FLayers layers = mapa.getLayers();
 	    FLayer[] actives = layers.getActives();
 	    try {
-		// NOTA: SI HAY UNA SELECCIÓN, SOLO SE SALVAN LOS SELECCIONADOS
+		// NOTE: IF THERE IS SOME SELECTION, ONLY SELECTED RECORDS ARE
+		// SAVED
 		for (int i = 0; i < actives.length; i++) {
 		    if (actives[i] instanceof FLyrVect) {
+			// Get number of selected and total features
 			FLyrVect lv = (FLyrVect) actives[i];
-			int numSelec = lv.getRecordset().getSelection()
-				.cardinality();
-			if (numSelec > 0) {
-			    int resp = JOptionPane
-				    .showConfirmDialog(
-					    (Component) PluginServices
-						    .getMainFrame(),
-					    PluginServices.getText(this,
-						    "se_van_a_guardar_")
-						    + numSelec
-						    + PluginServices
-							    .getText(this,
-								    "features_desea_continuar"),
-					    PluginServices.getText(this,
-						    "export_to"),
-					    JOptionPane.YES_NO_OPTION);
-			    if (resp != JOptionPane.YES_OPTION) {
-				continue;
-			    }
-			} // if numSelec > 0
+			int numSelected = lv.getRecordset().getSelection().cardinality();
+			long total = lv.getRecordset().getRowCount();
+			// Create message
+			String layerName = PluginServices.getText(this,
+				"LayerName") + ": " + lv.getName() + "\n";
+			String numSavedFeatures = PluginServices.getText(this,
+				"se_van_a_guardar_") + " ";
+			numSavedFeatures += (numSelected > 0) ? numSelected
+				: total;
+			numSavedFeatures += "/" + total + " ";
+			String message = layerName
+				+ numSavedFeatures
+				+ PluginServices.getText(this,
+					"features_desea_continuar");
+			// Show dialog
+			int resp = JOptionPane.showConfirmDialog(
+				(Component) PluginServices.getMainFrame(),
+				message,
+				PluginServices.getText(this, "export_to"),
+				JOptionPane.YES_NO_OPTION);
+			if (resp != JOptionPane.YES_OPTION) {
+			    continue;
+			}
+			
 			if (actionCommand.equals("SHP")) {
 			    saveToShp(mapa, lv);
 			}
