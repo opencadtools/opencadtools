@@ -1,7 +1,7 @@
 /*
  * Copyright 2008 Deputación Provincial de A Coruña
  * Copyright 2009 Deputación Provincial de Pontevedra
- * Copyright 2010 CartoLab, Universidad de A Coruña
+ * Copyright 2010-2013 CartoLab, Universidad de A Coruña
  *
  * This file is part of openCADTools, developed by the Cartography
  * Engineering Laboratory of the University of A Coruña (CartoLab).
@@ -67,27 +67,19 @@ import com.iver.cit.gvsig.project.documents.view.snapping.ISnapper;
  * @author Laboratorio de Bases de Datos. Universidad de A Coruña
  * @author Cartolab. Universidad de A Coruña
  */
+@SuppressWarnings("serial")
 public class EditionPreferencePage extends AbstractPreferencePage {
 
     private JLabel jLabel = null;
     private ImageIcon icon;
-
     private JTextField jTxtTolerance = null;
-
     private JLabel jLabel1 = null;
-
     private JSeparator jSeparator = null;
-
     private JScrollPane jScrollPane = null;
-
     private JTable jTableSnapping = null;
-
     private JLabel jLabelCache = null;
-
     private JPanel jPanelNord = null;
-
     private JPanel jPanelCache = null;
-
     VectorialLayerEdited layerEdited;
     private JPanel jPanelSnappers = null;
     private JCheckBox eielVertexEIELSnapCB = new JCheckBox();
@@ -96,24 +88,18 @@ public class EditionPreferencePage extends AbstractPreferencePage {
     // private JCheckBox lineSnapCB = new JCheckBox();
     private JCheckBox followGeometryCB = new JCheckBox();
     private boolean changed = false;
-
-    // [Cartolab]
     private JCheckBox deleteButtonOptionCB = new JCheckBox();
-
     private FLayers layers;
-
     private MapContext mapContext;
-
+    
     private class MyRecord {
 	public Boolean bSelec = new Boolean(false);
-
 	public String layerName;
-
 	public Integer maxFeat = new Integer(1000);
     }
 
     private class MyTableModel extends AbstractTableModel {
-	private ArrayList records = new ArrayList();
+	private ArrayList<MyRecord> records = new ArrayList<MyRecord>();
 
 	public MyTableModel(FLayers layers) {
 	    addLayer(layers);
@@ -210,27 +196,12 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
     }
 
-    /**
-     * This method initializes
-     * 
-     */
     public EditionPreferencePage() {
 	super();
 	icon = PluginServices.getIconTheme().get("edition-properties");
 	initialize();
     }
 
-    /*
-     * private void addLayer(FLayer lyr) { if (lyr instanceof FLayers) { FLayers
-     * lyrGroup = (FLayers) lyr; for (int i=0; i < lyrGroup.getLayersCount();
-     * i++) { FLayer lyr2 = lyrGroup.getLayer(i); addLayer(lyr2); } } else { if
-     * (lyr instanceof FLyrVect) { layers.add(lyr); } } }
-     */
-
-    /**
-     * This method initializes this
-     * 
-     */
     private void initialize() {
 	BorderLayout layout = new BorderLayout();
 	layout.setHgap(20);
@@ -424,7 +395,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
     }
 
     protected void deleteSnapper(String string) {
-	// TODO Auto-generated method stub
 	int indice = 0;
 	boolean termine = false;
 	ArrayList listaSnappers = layerEdited.getSnappers();
@@ -484,7 +454,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
     }
 
     protected void addSnapper(ISnapper snapper) {
-	// TODO Auto-generated method stub
 	ArrayList listaSnappers = layerEdited.getSnappers();
 	if (listaSnappers.size() > 0) {
 	    // en caso de que ya tenga snappers debemos comprobar la prioridad
@@ -531,11 +500,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	return this;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.iver.cit.gvsig.gui.preferences.IPreference#initializeValues()
-     */
     @Override
     public void initializeValues() {
 	TableModel tm = getJTableSnapping().getModel();
@@ -567,22 +531,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	    }
 	}
 	return pos;
-    }
-
-    /**
-     * Get the <b>first</b> vectorial layer with the given name on the given
-     * FLayers. If there's no vectorial layer with that name, it returns null.
-     */
-    private FLyrVect getLayer(FLayers layers, String layerName) {
-	FLayer layer = layers.getLayer(layerName);
-	if (layer != null) {
-	    if (layer instanceof FLyrVect) {
-		return (FLyrVect) layer;
-	    } else if (layer instanceof FLayers) {
-		return getLayer((FLayers) layer, layerName);
-	    }
-	}
-	return null;
     }
 
     @Override
@@ -643,7 +591,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 		    }
 	    }
-	} // while
+	}
 	it.rewind();
 	/*
 	 * Iteramos por las capas en edición y marcamos aquellas capas que
@@ -670,7 +618,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 		}
 
-	} // while
+	}
 
 	try {
 	    SelectionCADTool.tolerance = Integer.parseInt(getJTxtTolerance()
@@ -711,7 +659,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	getJTableSnapping().setModel(tm);
 	getJTxtTolerance().setText(String.valueOf(SelectionCADTool.tolerance));
 
-	// [LBD]
 	// aqui miraremos la capa que esta activa y editandose para coger sus
 	// snappers
 	FLayer[] capasActivas = this.layers.getActives();
@@ -762,11 +709,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	deleteButtonOptionCB.setSelected(cadStatus.isDeleteButtonActivated());
     }
 
-    /**
-     * This method initializes jTxtTolerance
-     * 
-     * @return javax.swing.JTextField
-     */
     private JTextField getJTxtTolerance() {
 	if (jTxtTolerance == null) {
 	    jTxtTolerance = new JTextField();
@@ -795,11 +737,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	return jTxtTolerance;
     }
 
-    /**
-     * This method initializes jSeparator
-     * 
-     * @return javax.swing.JSeparator
-     */
     private JSeparator getJSeparator() {
 	if (jSeparator == null) {
 	    jSeparator = new JSeparator();
@@ -808,11 +745,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	return jSeparator;
     }
 
-    /**
-     * This method initializes jScrollPane
-     * 
-     * @return javax.swing.JScrollPane
-     */
     private JScrollPane getJScrollPane() {
 	if (jScrollPane == null) {
 	    jScrollPane = new JScrollPane();
@@ -824,11 +756,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	return jScrollPane;
     }
 
-    /**
-     * This method initializes jTableSnapping
-     * 
-     * @return javax.swing.JTable
-     */
     private JTable getJTableSnapping() {
 	if (jTableSnapping == null) {
 	    jTableSnapping = new JTable();
@@ -869,11 +796,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	return jTableSnapping;
     }
 
-    /**
-     * This method initializes jPanelNord
-     * 
-     * @return javax.swing.JPanel
-     */
     private JPanel getJPanelNord() {
 	if (jPanelNord == null) {
 	    jPanelNord = new JPanel();
@@ -889,11 +811,6 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	return jPanelNord;
     }
 
-    /**
-     * This method initializes jPanelCache
-     * 
-     * @return javax.swing.JPanel
-     */
     private JPanel getJPanelCache() {
 	if (jPanelCache == null) {
 	    jPanelCache = new JPanel();
@@ -914,5 +831,5 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	changed = false;
     }
 
-} // @jve:decl-index=0:visual-constraint="14,10"
+}
 
