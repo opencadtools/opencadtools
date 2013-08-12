@@ -234,8 +234,9 @@ public class PolylineCADTool extends DefaultCADTool {
 		list.add(geom);
 		addTemporalCache(geom);
 	    }
-	    if (antPoint == null)
+	    if (antPoint == null) {
 		antPoint = (Point2D) firstPoint.clone();
+	    }
 
 	    if (antPoint != null) {
 		antantPoint = antPoint;
@@ -381,9 +382,10 @@ public class PolylineCADTool extends DefaultCADTool {
 			getCadToolAdapter().getMapControl().getViewPort(),
 			DefaultCADTool.geometrySelectSymbol);
 	    }
-	    if (antPoint != null)
+	    if (antPoint != null) {
 		drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y),
 			DefaultCADTool.geometrySelectSymbol);
+	    }
 
 	} else if ((status.equals("Polyline.NextPointOrLineOrClose"))) {
 	    for (int i = 0; i < list.size(); i++) {

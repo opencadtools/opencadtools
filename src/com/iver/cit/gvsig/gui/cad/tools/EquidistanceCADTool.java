@@ -226,8 +226,9 @@ public class EquidistanceCADTool extends DefaultCADTool {
 	    Geometry gLine = g.getGeometryN(0);
 	    Coordinate[] coordinatesLine = gLine.getCoordinates();
 	    int numPointsLine = gLine.getNumPoints();
-	    if (numPointsLine < 1)
+	    if (numPointsLine < 1) {
 		return null;
+	    }
 	    LineString[] lineStrings = new LineString[numPointsLine - 1];
 
 	    for (int j = 1; j < numPointsLine; j = j + 1) {
@@ -282,8 +283,9 @@ public class EquidistanceCADTool extends DefaultCADTool {
 	    setDistancePolygon(gPolygon, pPos);
 	    Coordinate[] coordinates = gPolygon.getCoordinates();
 	    int numPointsPolygon = gPolygon.getNumPoints();
-	    if (numPointsPolygon < 2)
+	    if (numPointsPolygon < 2) {
 		return null;
+	    }
 	    LineString[] polygonStrings = new LineString[numPointsPolygon];
 	    for (int j = 1; j < numPointsPolygon; j = j + 1) {
 		c2[0] = coordinates[j - 1];
@@ -367,20 +369,22 @@ public class EquidistanceCADTool extends DefaultCADTool {
 	Coordinate pEnd = distanceLine.getCoordinateN(distanceLine
 		.getNumPoints() - 1);
 	int pos = CGAlgorithms.computeOrientation(pStart, pEnd, position);
-	if (pos > 0)
+	if (pos > 0) {
 	    distance = Math.abs(distance);
-	else
+	} else {
 	    distance = -Math.abs(distance);
+	}
 	distancePos = java.lang.Double.MAX_VALUE;
 	distanceLine = null;
     }
 
     private void setDistancePolygon(Geometry polygon, Geometry position) {
 	boolean intersects = polygon.intersects(position);
-	if (intersects)
+	if (intersects) {
 	    distance = -Math.abs(distance);
-	else
+	} else {
 	    distance = Math.abs(distance);
+	}
     }
 
     /**

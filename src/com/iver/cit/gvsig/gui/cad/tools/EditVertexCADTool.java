@@ -315,14 +315,17 @@ public class EditVertexCADTool extends DefaultCADTool {
 	    DefaultFeature fea = (DefaultFeature) ((DefaultRowEdited) selectedRows
 		    .get(i)).getLinkedRow();
 	    IGeometry ig = fea.getGeometry().cloneGeometry();
-	    if (ig == null)
+	    if (ig == null) {
 		continue;
+	    }
 	    ig.drawInts((Graphics2D) g, vp, DefaultCADTool.geometrySelectSymbol);
 	    Handler[] handlers = ig.getHandlers(IGeometry.SELECTHANDLER);
-	    if (numSelect >= handlers.length)
+	    if (numSelect >= handlers.length) {
 		numSelect = 0;
-	    if (handlers.length == 0)
+	    }
+	    if (handlers.length == 0) {
 		continue;
+	    }
 	    FGraphicUtilities.DrawVertex((Graphics2D) g,
 		    vp.getAffineTransform(), handlers[numSelect]);
 	}
@@ -397,8 +400,9 @@ public class EditVertexCADTool extends DefaultCADTool {
 		break;
 
 	    case PathIterator.SEG_CLOSE:
-		if (numSegmentsAdded < 3)
+		if (numSegmentsAdded < 3) {
 		    newGp.lineTo(theData[0], theData[1]);
+		}
 		newGp.closePath();
 
 		break;
@@ -440,8 +444,9 @@ public class EditVertexCADTool extends DefaultCADTool {
 	    for (int j = 0; j < handlers.length; j++) {
 		if (handlers[j].equalsPoint(handler)) {
 		    geomsAux.add(geoms[i]);
-		    if (pos == -1)
+		    if (pos == -1) {
 			pos = i;
+		    }
 		}
 	    }
 	}
@@ -506,8 +511,9 @@ public class EditVertexCADTool extends DefaultCADTool {
 	    switch (theType) {
 	    case PathIterator.SEG_MOVETO:
 		pLast.setLocation(theData[0], theData[1]);
-		if (numParts == 0)
+		if (numParts == 0) {
 		    firstPoint = (Point2D) pLast.clone();
+		}
 		numParts++;
 
 		gpxAux = new GeneralPathX();

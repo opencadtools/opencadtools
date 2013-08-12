@@ -89,18 +89,22 @@ public class PixelSnapper extends AbstractSnapper implements ISnapperRaster {
 	int xSnapped = -1;
 	int ySnapped = -1;
 	int fromX = xPixel - half;
-	if (fromX < 0)
+	if (fromX < 0) {
 	    fromX = 0;
+	}
 	int fromY = yPixel - half;
-	if (fromY < 0)
+	if (fromY < 0) {
 	    fromY = 0;
+	}
 
 	int toX = xPixel + half;
-	if (toX > vp.getImageWidth())
+	if (toX > vp.getImageWidth()) {
 	    toX = vp.getImageWidth();
+	}
 	int toY = yPixel + half;
-	if (toY > vp.getImageHeight())
+	if (toY > vp.getImageHeight()) {
 	    toY = vp.getImageHeight();
+	}
 
 	for (int testX = fromX; testX < toX; testX++) {
 	    for (int testY = fromY; testY < toY; testY++) {
@@ -113,8 +117,8 @@ public class PixelSnapper extends AbstractSnapper implements ISnapperRaster {
 		int b = ColorModel.getRGBdefault().getBlue(testRGB);
 		Coordinate cAux = new Coordinate(r, g, b);
 
-		if (Math.abs(r - x1) < tolColorR)
-		    if (Math.abs(g - y1) < tolColorG)
+		if (Math.abs(r - x1) < tolColorR) {
+		    if (Math.abs(g - y1) < tolColorG) {
 			if (Math.abs(b - z1) < tolColorB) {
 			    double dist = c.distance(cAux);
 			    if (dist < minDistColor) {
@@ -123,6 +127,8 @@ public class PixelSnapper extends AbstractSnapper implements ISnapperRaster {
 				ySnapped = testY;
 			    }
 			}
+		    }
+		}
 	    }
 	}
 	Point2D pResul = null;

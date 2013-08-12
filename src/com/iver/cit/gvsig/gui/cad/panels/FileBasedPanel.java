@@ -75,10 +75,11 @@ public class FileBasedPanel extends JWizardPanel {
 	    jTextFieldPath.addKeyListener(new java.awt.event.KeyAdapter() {
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-		    if (!jTextFieldPath.getText().equals(""))
+		    if (!jTextFieldPath.getText().equals("")) {
 			setFinishButtonEnabled(true);
-		    else
+		    } else {
 			setFinishButtonEnabled(false);
+		    }
 		}
 
 	    });

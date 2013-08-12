@@ -71,8 +71,9 @@ public class TableCommandStackExtension extends Extension {
 	if (f instanceof Table) {
 	    Table table = (Table) f;
 	    ProjectTable model = table.getModel();
-	    if (model.getModelo().isEditing())
+	    if (model.getModelo().isEditing()) {
 		return true;
+	    }
 	}
 	return false;
 

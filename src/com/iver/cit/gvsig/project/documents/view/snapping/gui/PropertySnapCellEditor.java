@@ -28,8 +28,9 @@ public class PropertySnapCellEditor extends JButton implements TableCellEditor {
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2) {
-		    if (panel != null)
+		    if (panel != null) {
 			openConfigurePanel();
+		    }
 		}
 	    }
 

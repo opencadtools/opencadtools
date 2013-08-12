@@ -101,8 +101,9 @@ public class UndoViewExtension extends Extension {
 		    vea.getCommandRecord().fireCommandsRepaint(null);
 		    vea.getSelection().clear();
 		    CADTool cadTool = CADExtension.getCADTool();
-		    if (cadTool != null)
+		    if (cadTool != null) {
 			cadTool.clearSelection();
+		    }
 		}
 	    }
 	} catch (EditionCommandException e) {
@@ -129,8 +130,9 @@ public class UndoViewExtension extends Extension {
 		    && activeLayer.isEditing() && activeLayer.isActive()) {
 		VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) activeLayer)
 			.getSource();
-		if (vea == null)
+		if (vea == null) {
 		    return false;
+		}
 		return vea.getCommandRecord().moreUndoCommands();
 	    }
 
@@ -161,8 +163,9 @@ public class UndoViewExtension extends Extension {
 			&& activeLayer.isEditing() && activeLayer.isActive()) {
 		    VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) activeLayer)
 			    .getSource();
-		    if (vea == null)
+		    if (vea == null) {
 			return false;
+		    }
 		    return true;
 		}
 	    }

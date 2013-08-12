@@ -222,8 +222,9 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 	    IGeometry ig = feat.getGeometry();
 	    Geometry jtsGeo = FConverter.java2d_to_jts((FShape) ig
 		    .getInternalShape());
-	    if (jtsGeo == null)
+	    if (jtsGeo == null) {
 		return;
+	    }
 	    try {
 		Geometry splitGeo = SplitStrategy.splitOp(jtsGeo, splittingLs);
 		if (splitGeo instanceof GeometryCollection
@@ -317,17 +318,16 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 
     private GeometryCollection createMulti(ArrayList<Geometry> geoms,
 	    GeometryFactory factory) {
-	if (geoms.size() == 0)
+	if (geoms.size() == 0) {
 	    return null;
+	}
 	if (geoms.get(0) instanceof Polygon) {
-	    return new MultiPolygon(geoms.toArray(new Polygon[0]),
-		    factory);
+	    return new MultiPolygon(geoms.toArray(new Polygon[0]), factory);
 	} else if (geoms.get(0) instanceof LineString) {
-	    return new MultiLineString(
-		    geoms.toArray(new LineString[0]), factory);
-	} else if (geoms.get(0) instanceof Point) {
-	    return new MultiPoint(geoms.toArray(new Point[0]),
+	    return new MultiLineString(geoms.toArray(new LineString[0]),
 		    factory);
+	} else if (geoms.get(0) instanceof Point) {
+	    return new MultiPoint(geoms.toArray(new Point[0]), factory);
 	}
 	return null;
     }
@@ -441,8 +441,9 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 	// draw selection
 	try {
 	    Image imgSel = getVLE().getSelectionImage();
-	    if (imgSel != null)
+	    if (imgSel != null) {
 		g.drawImage(imgSel, 0, 0, null);
+	    }
 	} catch (Exception e) {
 	    PluginServices.getLogger().error("Error drawing Editing Selection",
 		    e);

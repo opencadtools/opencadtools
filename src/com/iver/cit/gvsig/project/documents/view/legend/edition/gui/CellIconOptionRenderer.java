@@ -96,10 +96,11 @@ public class CellIconOptionRenderer extends JPanel implements TableCellRenderer 
     public Component getTableCellRendererComponent(JTable table, Object value,
 	    boolean isSelected, boolean hasFocus, int row, int column) {
 	preview.setIcon((ImageIcon) value);
-	if (table.getSelectedRow() == row)
+	if (table.getSelectedRow() == row) {
 	    preview.setSelected(true);
-	else
+	} else {
 	    preview.setSelected(false);
+	}
 	return preview;
     }
 }

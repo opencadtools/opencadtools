@@ -16,7 +16,6 @@ import com.thoughtworks.xstream.XStreamException;
 import es.icarto.gvsig.schema.FieldDefinition;
 import es.icarto.gvsig.schema.SchemaSerializator;
 
-
 public class TestSchemaSerializator {
 
     private static List<FieldDefinition> getFields() {
@@ -84,12 +83,12 @@ public class TestSchemaSerializator {
 		"data/schema.xml"));
 	List<FieldDefinition> fieldsOriginal = getFields();
 	for (int i = 0; i < fieldsOriginal.size(); i++) {
-	    assertEquals(fieldsOriginal.get(i).getName(),
-		    fields.get(i).getName());
-	    assertEquals(fieldsOriginal.get(i).getType(),
-		    fields.get(i).getType());
-	    assertEquals(fieldsOriginal.get(i).getLength(),
-		    fields.get(i).getLength());
+	    assertEquals(fieldsOriginal.get(i).getName(), fields.get(i)
+		    .getName());
+	    assertEquals(fieldsOriginal.get(i).getType(), fields.get(i)
+		    .getType());
+	    assertEquals(fieldsOriginal.get(i).getLength(), fields.get(i)
+		    .getLength());
 	}
     }
 
@@ -101,10 +100,10 @@ public class TestSchemaSerializator {
 		    "data/schema-without-name.xml"));
 	    List<FieldDefinition> fieldsOriginal = getFields();
 	    assertEquals(null, fields.get(0).getName());
-	    assertEquals(fieldsOriginal.get(0).getType(),
-		    fields.get(0).getType());
-	    assertEquals(fieldsOriginal.get(0).getLength(),
-		    fields.get(0).getLength());
+	    assertEquals(fieldsOriginal.get(0).getType(), fields.get(0)
+		    .getType());
+	    assertEquals(fieldsOriginal.get(0).getLength(), fields.get(0)
+		    .getLength());
 	} catch (XStreamException e) {
 	    fail("exception is thrown");
 	}
@@ -117,11 +116,11 @@ public class TestSchemaSerializator {
 	    List<FieldDefinition> fields = serializator.fromXML(new File(
 		    "data/schema-without-type.xml"));
 	    List<FieldDefinition> fieldsOriginal = getFields();
-	    assertEquals(fieldsOriginal.get(0).getName(),
-		    fields.get(0).getName());
+	    assertEquals(fieldsOriginal.get(0).getName(), fields.get(0)
+		    .getName());
 	    assertEquals(null, fields.get(0).getType());
-	    assertEquals(fieldsOriginal.get(0).getLength(),
-		    fields.get(0).getLength());
+	    assertEquals(fieldsOriginal.get(0).getLength(), fields.get(0)
+		    .getLength());
 	} catch (XStreamException e) {
 	    fail("exception is thrown");
 	}
@@ -134,10 +133,10 @@ public class TestSchemaSerializator {
 	    List<FieldDefinition> fields = serializator.fromXML(new File(
 		    "data/schema-without-length.xml"));
 	    List<FieldDefinition> fieldsOriginal = getFields();
-	    assertEquals(fieldsOriginal.get(0).getName(),
-		    fields.get(0).getName());
-	    assertEquals(fieldsOriginal.get(0).getType(),
-		    fields.get(0).getType());
+	    assertEquals(fieldsOriginal.get(0).getName(), fields.get(0)
+		    .getName());
+	    assertEquals(fieldsOriginal.get(0).getType(), fields.get(0)
+		    .getType());
 	    assertEquals(null, fields.get(0).getLength());
 	} catch (XStreamException e) {
 	    fail("exception is thrown");
@@ -171,6 +170,5 @@ public class TestSchemaSerializator {
 	String xml = serializator.toXML(getFields());
 	System.out.println(xml);
     }
-
 
 }

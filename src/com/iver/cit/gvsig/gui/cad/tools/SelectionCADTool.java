@@ -150,8 +150,9 @@ public class SelectionCADTool extends DefaultCADTool {
 	    if (views[i] instanceof Table) {
 		Table table = (Table) views[i];
 		if (table.getModel().getAssociatedTable() != null
-			&& table.getModel().getAssociatedTable().equals(lv))
+			&& table.getModel().getAssociatedTable().equals(lv)) {
 		    table.updateSelection();
+		}
 	    }
 	}
     }
@@ -264,8 +265,9 @@ public class SelectionCADTool extends DefaultCADTool {
 		    for (int k = 0; k < selectedHandler.size(); k++) {
 			Handler h = (Handler) selectedHandler.get(k);
 			for (int j = 0; j < handlers.length; j++) {
-			    if (h.getPoint().equals(handlers[j].getPoint()))
+			    if (h.getPoint().equals(handlers[j].getPoint())) {
 				handlers[j].set(x, y);
+			    }
 			}
 		    }
 		}
@@ -298,8 +300,9 @@ public class SelectionCADTool extends DefaultCADTool {
 	PluginServices.getMDIManager().restoreCursor();
 	if (selectedRow.size() > 0) {
 	    nextState = "Selection.WithSelectedFeatures";
-	} else
+	} else {
 	    nextState = "Selection.FirstPoint";
+	}
 	return selectedRow.size();
     }
 
@@ -321,8 +324,9 @@ public class SelectionCADTool extends DefaultCADTool {
 	SelectionCADToolState actualState = _fsm.getState();
 	String status = actualState.getName();
 	VectorialLayerEdited vle = getVLE();
-	if (vle == null)
+	if (vle == null) {
 	    return;
+	}
 	ArrayList selectedHandler = vle.getSelectedHandler();
 	ViewPort vp = vle.getLayer().getMapContext().getViewPort();
 	if (status.equals("Selection.SecondPoint")) {
@@ -366,15 +370,18 @@ public class SelectionCADTool extends DefaultCADTool {
 	    }
 	    return;
 	} else {
-	    if (!vle.getLayer().isVisible())
+	    if (!vle.getLayer().isVisible()) {
 		return;
+	    }
 	    try {
 		Image imgSel = vle.getSelectionImage();
-		if (imgSel != null)
+		if (imgSel != null) {
 		    g.drawImage(imgSel, 0, 0, null);
+		}
 		Image imgHand = vle.getHandlersImage();
-		if (imgHand != null)
+		if (imgHand != null) {
 		    g.drawImage(imgHand, 0, 0, null);
+		}
 	    } catch (Exception e) {
 	    }
 	}
@@ -430,8 +437,9 @@ public class SelectionCADTool extends DefaultCADTool {
 
     @Override
     public void end() {
-	if (!getNextTool().equals("selection"))
+	if (!getNextTool().equals("selection")) {
 	    CADExtension.setCADTool(getNextTool(), false);
+	}
     }
 
     @Override
@@ -440,8 +448,7 @@ public class SelectionCADTool extends DefaultCADTool {
     }
 
     public boolean selectFeatures(double x, double y, InputEvent event) {
-	SelectionCADToolState actualState = _fsm
-		.getState();
+	SelectionCADToolState actualState = _fsm.getState();
 
 	String status = actualState.getName();
 	VectorialLayerEdited vle = getVLE();

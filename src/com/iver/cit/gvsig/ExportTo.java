@@ -363,7 +363,8 @@ public class ExportTo extends Extension {
 		    if (actives[i] instanceof FLyrVect) {
 			// Get number of selected and total features
 			FLyrVect lv = (FLyrVect) actives[i];
-			int numSelected = lv.getRecordset().getSelection().cardinality();
+			int numSelected = lv.getRecordset().getSelection()
+				.cardinality();
 			long total = lv.getRecordset().getRowCount();
 			// Create message
 			String layerName = PluginServices.getText(this,
@@ -386,7 +387,7 @@ public class ExportTo extends Extension {
 			if (resp != JOptionPane.YES_OPTION) {
 			    continue;
 			}
-			
+
 			if (actionCommand.equals("SHP")) {
 			    saveToShp(mapa, lv);
 			}

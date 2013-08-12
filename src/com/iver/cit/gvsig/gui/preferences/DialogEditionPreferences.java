@@ -165,9 +165,10 @@ public class DialogEditionPreferences {
 	for (int i = 0; i < 20; i++) {
 	    TestPref newPref = new TestPref("Titulo " + i);
 	    Random rnd = new Random();
-	    if (i > 5)
+	    if (i > 5) {
 		newPref.setParentID("Titulo " + rnd.nextInt(i));
-	    // panel.addPreferencePage(newPref);
+		// panel.addPreferencePage(newPref);
+	    }
 
 	}
 

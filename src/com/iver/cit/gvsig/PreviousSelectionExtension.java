@@ -93,8 +93,9 @@ public class PreviousSelectionExtension extends Extension {
     public boolean isEnabled() {
 	ILayerEdited layerEdited = CADExtension.getEditionManager()
 		.getActiveLayerEdited();
-	if (layerEdited == null)
+	if (layerEdited == null) {
 	    return false;
+	}
 	if (layerEdited instanceof VectorialLayerEdited) {
 	    return ((VectorialLayerEdited) layerEdited).getPreviousSelection();
 	}
@@ -106,8 +107,9 @@ public class PreviousSelectionExtension extends Extension {
      */
     @Override
     public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 	    return true;
+	}
 	return false;
     }
 }

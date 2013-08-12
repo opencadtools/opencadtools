@@ -36,12 +36,14 @@ public class SnapConfigPage extends AbstractPreferencePage {
 
 		@Override
 		public int compare(ISnapper o1, ISnapper o2) {
-		    if (o1.getClass().equals(o2.getClass()))
+		    if (o1.getClass().equals(o2.getClass())) {
 			return 0;
-		    if (o1.getPriority() > o2.getPriority())
+		    }
+		    if (o1.getPriority() > o2.getPriority()) {
 			return 1;
-		    else
+		    } else {
 			return -1;
+		    }
 		}
 
 	    });
@@ -94,8 +96,9 @@ public class SnapConfigPage extends AbstractPreferencePage {
      * @return DOCUMENT ME!
      */
     public static ArrayList<ISnapper> getActivesSnappers() {
-	if (!applySnappers)
+	if (!applySnappers) {
 	    return new ArrayList<ISnapper>();
+	}
 	return new ArrayList<ISnapper>(selected.keySet());
     }
 
@@ -114,8 +117,9 @@ public class SnapConfigPage extends AbstractPreferencePage {
 	    String nameClass = snp.getClass().getName();
 	    nameClass = nameClass.substring(nameClass.lastIndexOf('.'));
 	    prefs.putBoolean("snapper_activated" + nameClass, b.booleanValue());
-	    if (b.booleanValue())
+	    if (b.booleanValue()) {
 		selected.put(snp, b);
+	    }
 	    prefs.putInt("snapper_priority" + nameClass, snp.getPriority());
 	}
 	boolean b = snapConfig.applySnappers();
@@ -177,8 +181,9 @@ public class SnapConfigPage extends AbstractPreferencePage {
 		    false);
 	    int priority = prefs.getInt("snapper_priority" + nameClass, 3);
 	    snp.setPriority(priority);
-	    if (select)
+	    if (select) {
 		selected.put(snp, new Boolean(select));
+	    }
 
 	}
 	applySnappers = prefs.getBoolean("apply-snappers", true);

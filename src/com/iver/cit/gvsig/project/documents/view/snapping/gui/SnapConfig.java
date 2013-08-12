@@ -101,8 +101,9 @@ public class SnapConfig extends JPanel {
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-	    if (columnIndex == 0 || columnIndex == 3)
+	    if (columnIndex == 0 || columnIndex == 3) {
 		return true;
+	    }
 	    return false;
 	}
 
@@ -318,10 +319,11 @@ public class SnapConfig extends JPanel {
     public void selectSnappers(TreeMap selected) {
 	for (int i = 0; i < snappers.size(); i++) {
 	    Boolean b = (Boolean) selected.get(snappers.get(i));
-	    if (b != null)
+	    if (b != null) {
 		getTableModel().setValueAt(b, i, 0);
-	    else
+	    } else {
 		getTableModel().setValueAt(new Boolean(false), i, 0);
+	    }
 	}
 
     }

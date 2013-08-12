@@ -80,14 +80,16 @@ public class InsertMultiPolylineExtension extends Extension {
 	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 	    view = (View) PluginServices.getMDIManager().getActiveWindow();
 	    mapControl = view.getMapControl();
-	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
+	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
 		return false;
+	    }
 	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
 		    .getActiveLayerEdited().getLayer();
 
 	    try {
-		if (multiline.isApplicable(lv.getShapeType()))
+		if (multiline.isApplicable(lv.getShapeType())) {
 		    return true;
+		}
 	    } catch (ReadDriverException e) {
 		NotificationManager.addError(e.getMessage(), e);
 	    }
@@ -108,8 +110,9 @@ public class InsertMultiPolylineExtension extends Extension {
      */
     @Override
     public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 	    return true;
+	}
 	return false;
     }
 

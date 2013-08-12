@@ -158,8 +158,9 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 		for (int k = 0; k < selectedHandler.size(); k++) {
 		    Handler h = (Handler) selectedHandler.get(k);
 		    for (int j = 0; j < handlers.length; j++) {
-			if (h.getPoint().equals(handlers[j].getPoint()))
+			if (h.getPoint().equals(handlers[j].getPoint())) {
 			    handlers[j].set(x, y);
+			}
 		    }
 		}
 
@@ -235,8 +236,9 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	if (selectedRow.size() > 0) {
 	    nextState = "Selection.WithSelectedFeatures";
 	    end();
-	} else
+	} else {
 	    nextState = "Selection.FirstPoint";
+	}
 	return selectedRow.size();
     }
 
@@ -323,15 +325,18 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	    }
 	    return;
 	} else {
-	    if (!vle.getLayer().isVisible())
+	    if (!vle.getLayer().isVisible()) {
 		return;
+	    }
 	    try {
 		Image imgSel = vle.getSelectionImage();
-		if (imgSel != null)
+		if (imgSel != null) {
 		    g.drawImage(imgSel, 0, 0, null);
+		}
 		Image imgHand = vle.getHandlersImage();
-		if (imgHand != null)
+		if (imgHand != null) {
 		    g.drawImage(imgHand, 0, 0, null);
+		}
 	    } catch (Exception e) {
 	    }
 	}
@@ -392,8 +397,9 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	PluginServices.getMDIManager().restoreCursor();
 	if (selectedRow.size() > 0) {
 	    nextState = "Selection.WithSelectedFeatures";
-	} else
+	} else {
 	    nextState = "Selection.FirstPoint";
+	}
 	end();
 	return selectedRow.size();
     }
@@ -430,8 +436,9 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 
     @Override
     public void end() {
-	if (!getNextTool().equals("complex_selection"))
+	if (!getNextTool().equals("complex_selection")) {
 	    CADExtension.setCADTool(getNextTool(), false);
+	}
     }
 
     @Override
@@ -579,8 +586,9 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	    if (views[i] instanceof Table) {
 		Table table = (Table) views[i];
 		if (table.getModel().getAssociatedTable() != null
-			&& table.getModel().getAssociatedTable().equals(lv))
+			&& table.getModel().getAssociatedTable().equals(lv)) {
 		    table.updateSelection();
+		}
 	    }
 	}
     }

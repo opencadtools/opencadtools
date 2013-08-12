@@ -108,8 +108,9 @@ public class ConsoleToken extends TokenMarker {
 	    }
 	}
 
-	if (token == Token.NULL)
+	if (token == Token.NULL) {
 	    doKeyword(line, length, '\0');
+	}
 
 	switch (token) {
 	case Token.LABEL:
@@ -131,8 +132,9 @@ public class ConsoleToken extends TokenMarker {
 	int len = i - lastKeyword;
 	byte id = keywords.lookup(line, lastKeyword, len);
 	if (id != Token.NULL) {
-	    if (lastKeyword != lastOffset)
+	    if (lastKeyword != lastOffset) {
 		addToken(lastKeyword - lastOffset, Token.NULL);
+	    }
 	    addToken(len, id);
 	    lastOffset = i;
 	}

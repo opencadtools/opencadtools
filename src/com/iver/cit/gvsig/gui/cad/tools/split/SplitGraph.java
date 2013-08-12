@@ -258,8 +258,9 @@ class SplitGraph extends PlanarGraph {
 	for (int i = 0; i < nParts; i++) {
 	    currGeom = linearGeom.getGeometryN(i);
 	    coords = currGeom.getCoordinates();
-	    if (coords.length < 2)
+	    if (coords.length < 2) {
 		continue;
+	    }
 	    Label label = new Label(onLoc, leftLoc, rightLoc);
 	    Edge edge = new SplitEdge(coords, label);
 	    edges.add(edge);

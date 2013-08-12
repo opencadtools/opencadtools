@@ -123,8 +123,9 @@ public class ToolSelectGraphic implements PointListener {
 	FBitSet oldBitSet = gLyr.getSelection();
 
 	FBitSet newBitSet = gLyr.queryByRect(recPoint);
-	if (event.getEvent().isControlDown())
+	if (event.getEvent().isControlDown()) {
 	    newBitSet.xor(oldBitSet);
+	}
 	gLyr.setSelection(newBitSet);
 
 	mapCtrl.drawGraphics();

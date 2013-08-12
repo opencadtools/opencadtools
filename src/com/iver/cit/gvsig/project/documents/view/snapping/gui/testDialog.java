@@ -73,8 +73,9 @@ public class testDialog {
 	JDialog dlg = new JDialog();
 
 	ArrayList list = new ArrayList();
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 20; i++) {
 	    list.add(new FinalPointSnapper());
+	}
 	SnapConfig panel = new SnapConfig();
 	panel.setSnappers(list);
 	Action act = new AbstractAction() {

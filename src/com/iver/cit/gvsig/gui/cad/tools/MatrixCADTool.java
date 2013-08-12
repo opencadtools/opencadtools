@@ -179,8 +179,9 @@ public class MatrixCADTool extends DefaultCADTool {
 		    for (int columns = 0; columns < operations.getNumColumns(); columns++) {
 
 			for (int rows = 0; rows < operations.getNumRows(); rows++) {
-			    if (columns == 0 && rows == 0)
+			    if (columns == 0 && rows == 0) {
 				continue;
+			    }
 
 			    DefaultFeature feaCloned = (DefaultFeature) fea
 				    .cloneRow();
@@ -222,8 +223,9 @@ public class MatrixCADTool extends DefaultCADTool {
 
 		    for (int numElem = 0; numElem < operations.getNum(); numElem++) {
 			System.out.println("numElem = " + numElem);
-			if (numElem == 0)
+			if (numElem == 0) {
 			    continue;
+			}
 
 			DefaultFeature feaCloned = (DefaultFeature) fea
 				.cloneRow();
@@ -346,8 +348,9 @@ public class MatrixCADTool extends DefaultCADTool {
      */
     @Override
     public void drawOperation(Graphics g, double x, double y) {
-	if (_fsm == null || firstPoint == null)
+	if (_fsm == null || firstPoint == null) {
 	    return;
+	}
 	GeneralPathX gpx = new GeneralPathX();
 	gpx.moveTo(firstPoint.getX(), firstPoint.getY());
 	gpx.lineTo(x, y);

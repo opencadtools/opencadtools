@@ -95,8 +95,9 @@ public class MoveGeometryExtension extends Extension {
      */
     @Override
     public boolean isEnabled() {
-	if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
+	if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
 	    return false;
+	}
 	FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
 		.getActiveLayerEdited().getLayer();
 	try {

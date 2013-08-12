@@ -223,8 +223,7 @@ public class CutPolygonCADTool extends DefaultCADTool {
 		gpx.closePath();
 		IGeometry geom = ShapeFactory.createPolygon2D(gpx);
 		geom.draw((Graphics2D) g, CADExtension.getEditionManager()
-			.getMapControl().getViewPort(),
-			CADTool.drawingSymbol);
+			.getMapControl().getViewPort(), CADTool.drawingSymbol);
 
 		// Painting the vertex
 		AffineTransform at = CADExtension.getEditionManager()
@@ -449,8 +448,7 @@ public class CutPolygonCADTool extends DefaultCADTool {
 
 	    IGeometry geom = ShapeFactory.createPolygon2D(gpx);
 	    geom.draw((Graphics2D) g, CADExtension.getEditionManager()
-		    .getMapControl().getViewPort(),
-		    CADTool.drawingSymbol);
+		    .getMapControl().getViewPort(), CADTool.drawingSymbol);
 
 	    // Painting vertex
 	    AffineTransform at = CADExtension.getEditionManager()

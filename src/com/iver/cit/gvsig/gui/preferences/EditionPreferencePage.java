@@ -91,7 +91,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
     private JCheckBox deleteButtonOptionCB = new JCheckBox();
     private FLayers layers;
     private MapContext mapContext;
-    
+
     private class MyRecord {
 	public Boolean bSelec = new Boolean(false);
 	public String layerName;
@@ -138,35 +138,42 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 	    MyRecord rec = (MyRecord) records.get(rowIndex);
-	    if (columnIndex == 0)
+	    if (columnIndex == 0) {
 		return rec.bSelec;
-	    if (columnIndex == 1)
+	    }
+	    if (columnIndex == 1) {
 		return rec.layerName;
-	    if (columnIndex == 2)
+	    }
+	    if (columnIndex == 2) {
 		return rec.maxFeat;
+	    }
 	    return null;
 
 	}
 
 	@Override
 	public Class getColumnClass(int c) {
-	    if (c == 0)
+	    if (c == 0) {
 		return Boolean.class;
-	    if (c == 2)
+	    }
+	    if (c == 2) {
 		return Integer.class;
+	    }
 	    return String.class;
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 	    MyRecord rec = (MyRecord) records.get(rowIndex);
-	    if (columnIndex == 0)
+	    if (columnIndex == 0) {
 		rec.bSelec = (Boolean) aValue;
+	    }
 	    if (columnIndex == 2) {
-		if (aValue != null)
+		if (aValue != null) {
 		    rec.maxFeat = (Integer) aValue;
-		else
+		} else {
 		    rec.maxFeat = new Integer(0);
+		}
 	    }
 	    changed = true;
 	    super.setValueAt(aValue, rowIndex, columnIndex);
@@ -174,22 +181,27 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-	    if (columnIndex == 0)
+	    if (columnIndex == 0) {
 		return true;
-	    if (columnIndex == 2)
+	    }
+	    if (columnIndex == 2) {
 		return true;
+	    }
 
 	    return false;
 	}
 
 	@Override
 	public String getColumnName(int column) {
-	    if (column == 0)
+	    if (column == 0) {
 		return PluginServices.getText(this, "Selected");
-	    if (column == 1)
+	    }
+	    if (column == 1) {
 		return PluginServices.getText(this, "LayerName");
-	    if (column == 2)
+	    }
+	    if (column == 2) {
 		return PluginServices.getText(this, "MaxFeaturesEditionCache");
+	    }
 	    return "You shouldn't reach this point";
 
 	}
@@ -567,8 +579,9 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		// de forma global.
 		// lyr.setSpatialCacheEnabled(bUseCache.booleanValue());
 		lyr.setMaxFeaturesInEditionCache(maxFeat.intValue());
-		if (bUseCache.booleanValue())
+		if (bUseCache.booleanValue()) {
 		    layersToSnap.add(lyr);
+		}
 	    }
 	}
 	SingleLayerIterator it = new SingleLayerIterator(layers);
@@ -580,7 +593,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		FLyrVect lyrVect = (FLyrVect) aux;
 		// Inicializamos todas
 		lyrVect.setSpatialCacheEnabled(false);
-		if (aux.isActive())
+		if (aux.isActive()) {
 		    if (aux.isEditing()) {
 			// Sobre la capa en edición siempre se puede hacer
 			// snapping
@@ -590,6 +603,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 			lyrEd.setLayersToSnap(layersToSnap);
 
 		    }
+		}
 	    }
 	}
 	it.rewind();
@@ -599,7 +613,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 	 */
 	while (it.hasNext()) {
 	    FLayer aux = it.next();
-	    if (aux.isEditing())
+	    if (aux.isEditing()) {
 		if (aux instanceof FLyrVect) {
 		    VectorialLayerEdited lyrEd = (VectorialLayerEdited) edManager
 			    .getLayerEdited(aux);
@@ -617,6 +631,7 @@ public class EditionPreferencePage extends AbstractPreferencePage {
 		    }
 
 		}
+	    }
 
 	}
 
@@ -832,4 +847,3 @@ public class EditionPreferencePage extends AbstractPreferencePage {
     }
 
 }
-

@@ -342,8 +342,7 @@ public class DeleteVertexCADTool extends DefaultCADTool {
 	    }
 	    // FGraphicUtilities.DrawVertex((Graphics2D)g,vp.getAffineTransform(),handlers[numSelect]);
 	    FGraphicUtilities.DrawHandlers((Graphics2D) g,
-		    vp.getAffineTransform(), handlers,
-		    CADTool.drawingSymbol);
+		    vp.getAffineTransform(), handlers, CADTool.drawingSymbol);
 	}
     }
 
@@ -507,8 +506,9 @@ public class DeleteVertexCADTool extends DefaultCADTool {
 		break;
 
 	    case PathIterator.SEG_CLOSE:
-		if (numSegmentsAdded < 3)
+		if (numSegmentsAdded < 3) {
 		    newGp.lineTo(theData[0], theData[1]);
+		}
 		newGp.closePath();
 		closed = true;
 
@@ -562,8 +562,9 @@ public class DeleteVertexCADTool extends DefaultCADTool {
 	    for (int j = 0; j < handlers.length; j++) {
 		if (handlers[j].equalsPoint(handler)) {
 		    geomsAux.add(geoms[i]);
-		    if (pos == -1)
+		    if (pos == -1) {
 			pos = i;
+		    }
 		}
 	    }
 	}

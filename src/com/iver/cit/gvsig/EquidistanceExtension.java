@@ -102,12 +102,14 @@ public class EquidistanceExtension extends Extension {
 		view = (View) PluginServices.getMDIManager().getActiveWindow();
 		mapControl = view.getMapControl();
 		EditionManager em = CADExtension.getEditionManager();
-		if (em.getActiveLayerEdited() == null)
+		if (em.getActiveLayerEdited() == null) {
 		    return false;
+		}
 		FLyrVect lv = (FLyrVect) em.getActiveLayerEdited().getLayer();
 
-		if (lv.getRecordset().getSelection().cardinality() != 1)
+		if (lv.getRecordset().getSelection().cardinality() != 1) {
 		    return false;
+		}
 		if (equidistanceCADTool.isApplicable(lv.getShapeType())) {
 		    return true;
 		}
@@ -123,8 +125,9 @@ public class EquidistanceExtension extends Extension {
      */
     @Override
     public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 	    return true;
+	}
 	return false;
     }
 }

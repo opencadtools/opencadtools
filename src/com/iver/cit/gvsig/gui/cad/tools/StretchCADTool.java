@@ -263,8 +263,7 @@ public class StretchCADTool extends DefaultCADTool {
      */
     @Override
     public void drawOperation(Graphics g, double x, double y) {
-	StretchCADToolState actualState = _fsm
-		.getState();
+	StretchCADToolState actualState = _fsm.getState();
 	String status = actualState.getName();
 	ArrayList selectedRow = getSelectedRows();
 

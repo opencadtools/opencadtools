@@ -114,11 +114,11 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		JOptionPane.showMessageDialog(
 			this,
 			PluginServices.getText(this, "max_length_is")
-			+ ": "
-			+ MAX_FIELD_LENGTH
-			+ "\n"
-			+ PluginServices.getText(this,
-				"length_of_field")
+				+ ": "
+				+ MAX_FIELD_LENGTH
+				+ "\n"
+				+ PluginServices.getText(this,
+					"length_of_field")
 				+ " '"
 				+ fieldName
 				+ "' "
@@ -150,9 +150,9 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
 		    PluginServices.getText(this, "no_puede_continuar")
-		    + "\n"
-		    + PluginServices.getText(this,
-			    "field_type_cannot_be_null"));
+			    + "\n"
+			    + PluginServices.getText(this,
+				    "field_type_cannot_be_null"));
 	}
 	return isValid;
     }
@@ -170,13 +170,13 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		JOptionPane.showMessageDialog(
 			(Component) PluginServices.getMainFrame(),
 			PluginServices.getText(this, "no_puede_continuar")
-			+ "\n"
-			+ PluginServices.getText(this, "field")
-			+ " : "
-			+ fieldName
-			+ "\n"
-			+ PluginServices.getText(this,
-				"is_reserved_word"));
+				+ "\n"
+				+ PluginServices.getText(this, "field")
+				+ " : "
+				+ fieldName
+				+ "\n"
+				+ PluginServices.getText(this,
+					"is_reserved_word"));
 	    }
 	    Matcher matcherNonWordChars = nonWordCharsPattern
 		    .matcher(fieldName);
@@ -185,26 +185,26 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		JOptionPane.showMessageDialog(
 			(Component) PluginServices.getMainFrame(),
 			PluginServices.getText(this, "no_puede_continuar")
-			+ "\n"
-			+ PluginServices.getText(this, "field")
-			+ " : "
-			+ fieldName
-			+ "\n"
-			+ PluginServices.getText(this,
-				"has_non_word_characters"));
+				+ "\n"
+				+ PluginServices.getText(this, "field")
+				+ " : "
+				+ fieldName
+				+ "\n"
+				+ PluginServices.getText(this,
+					"has_non_word_characters"));
 	    }
 	    Matcher matcherUpperCase = upperCaseCharsPattern.matcher(fieldName);
 	    if (matcherUpperCase.find()) {
 		JOptionPane.showMessageDialog(
 			(Component) PluginServices.getMainFrame(),
 			PluginServices.getText(this, "warning_title")
-			+ "\n"
-			+ PluginServices.getText(this, "field")
-			+ " : "
-			+ fieldName
-			+ "\n"
-			+ PluginServices.getText(this,
-				"has_upper_case_characters"));
+				+ "\n"
+				+ PluginServices.getText(this, "field")
+				+ " : "
+				+ fieldName
+				+ "\n"
+				+ PluginServices.getText(this,
+					"has_upper_case_characters"));
 	    }
 	}
 	return isValid;
@@ -241,29 +241,29 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
 		    PluginServices.getText(this, "no_puede_continuar")
-		    + "\n"
-		    + PluginServices.getText(this,
-			    "field_name_cannot_be_null"));
+			    + "\n"
+			    + PluginServices.getText(this,
+				    "field_name_cannot_be_null"));
 	} else if (fieldName.equals("")) {
 	    valid = false;
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
 		    PluginServices.getText(this, "no_puede_continuar")
-		    + "\n"
-		    + PluginServices.getText(this,
-			    "the_field_name_is_required"));
+			    + "\n"
+			    + PluginServices.getText(this,
+				    "the_field_name_is_required"));
 	} else if (fieldName.indexOf(" ") != -1) {
 	    valid = false;
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(),
 		    PluginServices.getText(this, "no_puede_continuar")
-		    + "\n"
-		    + PluginServices.getText(this, "field")
-		    + " : "
-		    + fieldName
-		    + "\n"
-		    + PluginServices.getText(this,
-			    "contiene_espacios_en_blanco"));
+			    + "\n"
+			    + PluginServices.getText(this, "field")
+			    + " : "
+			    + fieldName
+			    + "\n"
+			    + PluginServices.getText(this,
+				    "contiene_espacios_en_blanco"));
 	} else if (this.writer != null
 		&& this.writer.getCapability("FieldNameMaxLength") != null) {
 	    String value = writer.getCapability("FieldNameMaxLength");
@@ -278,15 +278,15 @@ public class JPanelFieldDefinition extends JWizardPanel {
 		JOptionPane.showMessageDialog(
 			(Component) PluginServices.getMainFrame(),
 			PluginServices.getText(this, "no_puede_continuar")
-			+ "\n"
-			+ PluginServices.getText(this, "field")
-			+ " : "
-			+ fieldName
-			+ "\n"
-			+ PluginServices.getText(this, "too_long_name")
-			+ "\n"
-			+ PluginServices.getText(this,
-				"maximun_name_size") + " : " + intValue
+				+ "\n"
+				+ PluginServices.getText(this, "field")
+				+ " : "
+				+ fieldName
+				+ "\n"
+				+ PluginServices.getText(this, "too_long_name")
+				+ "\n"
+				+ PluginServices.getText(this,
+					"maximun_name_size") + " : " + intValue
 				+ "\n");
 	    }
 	} else if (fieldName.length() > MAX_FIELD_LENGTH) {
@@ -447,51 +447,51 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    jButtonAddField.setSize(new java.awt.Dimension(145, 23));
 	    jButtonAddField.setPreferredSize(new java.awt.Dimension(100, 26));
 	    jButtonAddField
-	    .addActionListener(new java.awt.event.ActionListener() {
-		@Override
-		public void actionPerformed(java.awt.event.ActionEvent e) {
-		    DefaultTableModel tm = (DefaultTableModel) jTable
-			    .getModel();
+		    .addActionListener(new java.awt.event.ActionListener() {
+			@Override
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+			    DefaultTableModel tm = (DefaultTableModel) jTable
+				    .getModel();
 
-		    // Figure out a suitable field name
-		    ArrayList fieldNames = new ArrayList();
-		    for (int i = 0; i < jTable.getRowCount(); i++) {
-			fieldNames.add(tm.getValueAt(i, 0));
-		    }
-		    String[] currentFieldNames = (String[]) fieldNames
-			    .toArray(new String[0]);
-		    String newField = PluginServices.getText(this,
-			    "field").replaceAll(" +", "_");
-		    int index = 0;
-		    for (int i = 0; i < currentFieldNames.length; i++) {
-			if (currentFieldNames[i].startsWith(newField)) {
-			    try {
-				index = Integer
-					.parseInt(currentFieldNames[i]
-						.replaceAll(newField,
-							""));
-			    } catch (Exception ex) { /* we don't care */
+			    // Figure out a suitable field name
+			    ArrayList fieldNames = new ArrayList();
+			    for (int i = 0; i < jTable.getRowCount(); i++) {
+				fieldNames.add(tm.getValueAt(i, 0));
 			    }
+			    String[] currentFieldNames = (String[]) fieldNames
+				    .toArray(new String[0]);
+			    String newField = PluginServices.getText(this,
+				    "field").replaceAll(" +", "_");
+			    int index = 0;
+			    for (int i = 0; i < currentFieldNames.length; i++) {
+				if (currentFieldNames[i].startsWith(newField)) {
+				    try {
+					index = Integer
+						.parseInt(currentFieldNames[i]
+							.replaceAll(newField,
+								""));
+				    } catch (Exception ex) { /* we don't care */
+				    }
+				}
+			    }
+			    String newFieldName = newField + (++index);
+
+			    // Add a new row
+			    Object[] newRow = new Object[tm.getColumnCount()];
+			    newRow[0] = newFieldName;
+			    newRow[1] = "String";
+			    newRow[2] = "20";
+			    tm.addRow(newRow);
+
+			    setCellEditorForFieldType();
+
+			    TableColumn widthColumn = jTable.getColumnModel()
+				    .getColumn(2);
+
+			    // tm.setValueAt("NewField", tm.getRowCount()-1, 0);
 			}
-		    }
-		    String newFieldName = newField + (++index);
 
-		    // Add a new row
-		    Object[] newRow = new Object[tm.getColumnCount()];
-		    newRow[0] = newFieldName;
-		    newRow[1] = "String";
-		    newRow[2] = "20";
-		    tm.addRow(newRow);
-
-		    setCellEditorForFieldType();
-
-		    TableColumn widthColumn = jTable.getColumnModel()
-			    .getColumn(2);
-
-		    // tm.setValueAt("NewField", tm.getRowCount()-1, 0);
-		}
-
-	    });
+		    });
 
 	}
 	return jButtonAddField;
@@ -522,18 +522,18 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	    jButtonDeleteField.setSize(new java.awt.Dimension(145, 23));
 	    jButtonDeleteField.setEnabled(false);
 	    jButtonDeleteField
-	    .addActionListener(new java.awt.event.ActionListener() {
-		@Override
-		public void actionPerformed(java.awt.event.ActionEvent e) {
-		    int[] selecteds = jTable.getSelectedRows();
-		    DefaultTableModel tm = (DefaultTableModel) jTable
-			    .getModel();
+		    .addActionListener(new java.awt.event.ActionListener() {
+			@Override
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+			    int[] selecteds = jTable.getSelectedRows();
+			    DefaultTableModel tm = (DefaultTableModel) jTable
+				    .getModel();
 
-		    for (int i = selecteds.length - 1; i >= 0; i--) {
-			tm.removeRow(selecteds[i]);
-		    }
-		}
-	    });
+			    for (int i = selecteds.length - 1; i >= 0; i--) {
+				tm.removeRow(selecteds[i]);
+			    }
+			}
+		    });
 	}
 	return jButtonDeleteField;
     }
@@ -559,7 +559,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 			    "gvsig.foldering");
 		    JFileChooser jfc = new JFileChooser("LOAD_SCHEMA_ID", prefs
 			    .get("TemplatesFolder", null));
-		    if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+		    if (jfc.showOpenDialog(null) == javax.swing.JFileChooser.APPROVE_OPTION) {
 			File schema = jfc.getSelectedFile();
 			SchemaSerializator serializator = new SchemaSerializator();
 			try {
@@ -622,7 +622,7 @@ public class JPanelFieldDefinition extends JWizardPanel {
 				"gvsig.foldering");
 			JFileChooser jfc = new JFileChooser("SAVE_SCHEMA_ID",
 				prefs.get("TemplatesFolder", null));
-			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (jfc.showSaveDialog(null) == javax.swing.JFileChooser.APPROVE_OPTION) {
 			    List<FieldDefinition> fields = getFieldsFromModel();
 			    SchemaSerializator serializator = new SchemaSerializator();
 			    String xml = serializator.toXML(fields);

@@ -249,8 +249,9 @@ public class EditingPage extends AbstractPreferencePage {
 
     @Override
     public void initializeValues() {
-	if (!panelStarted)
+	if (!panelStarted) {
 	    getPanel();
+	}
 
 	PluginServices ps = PluginServices.getPluginServices(this);
 	XMLEntity xml = ps.getPersistentXML();
@@ -374,8 +375,9 @@ public class EditingPage extends AbstractPreferencePage {
 
     @Override
     public JPanel getPanel() {
-	if (panelStarted)
+	if (panelStarted) {
 	    return this;
+	}
 	panelStarted = true;
 
 	// just a separator

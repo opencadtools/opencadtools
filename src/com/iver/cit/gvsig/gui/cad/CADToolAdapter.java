@@ -338,8 +338,9 @@ public class CADToolAdapter extends Behavior {
 	 * getGrid().drawGrid(g);
 	 */
 	super.paintComponent(g);
-	if (CADExtension.getCADToolAdapter() != this)
+	if (CADExtension.getCADToolAdapter() != this) {
 	    return;
+	}
 	if (adjustedPoint != null) {
 	    Point2D p = null;
 	    if (mapAdjustedPoint != null) {
@@ -515,13 +516,15 @@ public class CADToolAdapter extends Behavior {
     private double adjustToHandler(Point2D point,
 	    Point2D mapHandlerAdjustedPoint) {
 
-	if (!isRefentEnabled())
+	if (!isRefentEnabled()) {
 	    return Double.MAX_VALUE;
+	}
 
 	ILayerEdited aux = CADExtension.getEditionManager()
 		.getActiveLayerEdited();
-	if (!(aux instanceof VectorialLayerEdited))
+	if (!(aux instanceof VectorialLayerEdited)) {
 	    return Double.MAX_VALUE;
+	}
 	VectorialLayerEdited vle = (VectorialLayerEdited) aux;
 
 	ArrayList snappers = SnapConfigPage.getActivesSnappers();
@@ -604,8 +607,9 @@ public class CADToolAdapter extends Behavior {
 				// encontremos un snapper mejor)
 				// TODO : revisar si es > o <
 				if (theSnapper.getPriority() > usedSnap
-					.getPriority())
+					.getPriority()) {
 				    break;
+				}
 			    }
 			    // SnappingVisitor snapVisitor = null;
 			    Point2D theSnappedPoint = null;
@@ -1328,8 +1332,9 @@ public class CADToolAdapter extends Behavior {
      * @see #setCadTool(CADTool)
      */
     public CADTool getCadTool() {
-	if (cadToolStack.isEmpty())
+	if (cadToolStack.isEmpty()) {
 	    return null;
+	}
 	return (CADTool) cadToolStack.peek();
     }
 
@@ -1443,8 +1448,9 @@ public class CADToolAdapter extends Behavior {
     public void delete() {
 	ILayerEdited aux = CADExtension.getEditionManager()
 		.getActiveLayerEdited();
-	if (!(aux instanceof VectorialLayerEdited))
+	if (!(aux instanceof VectorialLayerEdited)) {
 	    return;
+	}
 	VectorialLayerEdited vle = (VectorialLayerEdited) aux;
 	VectorialEditableAdapter vea = vle.getVEA();
 
@@ -1497,8 +1503,9 @@ public class CADToolAdapter extends Behavior {
     public void delete(int index) {
 	ILayerEdited aux = CADExtension.getEditionManager()
 		.getActiveLayerEdited();
-	if (!(aux instanceof VectorialLayerEdited))
+	if (!(aux instanceof VectorialLayerEdited)) {
 	    return;
+	}
 	VectorialLayerEdited vle = (VectorialLayerEdited) aux;
 	VectorialEditableAdapter vea = vle.getVEA();
 	try {

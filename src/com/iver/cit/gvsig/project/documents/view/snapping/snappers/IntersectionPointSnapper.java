@@ -66,8 +66,9 @@ public class IntersectionPointSnapper extends AbstractSnapper implements
 	    ArrayList lineSegments = getLineIntersection(auxGeom, c, tolerance);
 	    candidates.addAll(lineSegments);
 	}
-	if (candidates.size() < 2)
+	if (candidates.size() < 2) {
 	    return null;
+	}
 	Geometry ant = null;
 	double minDist = tolerance;
 	for (int i = 0; i < candidates.size(); i++) {
@@ -75,8 +76,9 @@ public class IntersectionPointSnapper extends AbstractSnapper implements
 	    for (int j = i; j < candidates.size(); j++) {
 		LineSegment l2 = (LineSegment) candidates.get(j);
 		Coordinate cI = l1.intersection(l2);
-		if (cI == null)
+		if (cI == null) {
 		    continue;
+		}
 		double dist = cI.distance(c);
 		if ((dist < minDist)) {
 		    result = new Point2D.Double(cI.x, cI.y);

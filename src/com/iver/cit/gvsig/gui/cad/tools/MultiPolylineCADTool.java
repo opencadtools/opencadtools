@@ -294,8 +294,9 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 	    }
 	    // Reasigno las referencias
 	    // Primer punto
-	    if (antPoint == null)
+	    if (antPoint == null) {
 		antPoint = (Point2D) firstPoint.clone();
+	    }
 
 	    antPoint = point;
 
@@ -314,8 +315,9 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 		// prueba para actualizar el ultimo punto pulsado
 		getCadToolAdapter().setPreviousPoint((double[]) null);
 		cancel();
-	    } else
+	    } else {
 		clearPoints();
+	    }
 	} else if (status.equals("MultiLinea.NextPoint")) {
 	    // System.out.println("Numero de coordenadas antes de borrar: " +
 	    // points.size());
@@ -454,8 +456,9 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 
 	theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
 	while (!theIterator.isDone()) {
-	    if (endGeom)
+	    if (endGeom) {
 		break;
+	    }
 	    theType = theIterator.currentSegment(theData);
 
 	    switch (theType) {

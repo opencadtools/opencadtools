@@ -272,8 +272,9 @@ public class InsertVertexCADTool extends DefaultCADTool {
 		    .get(i)).getLinkedRow();
 	    IGeometry ig = fea.getGeometry().cloneGeometry();
 	    ig.drawInts((Graphics2D) g, vp, CADTool.drawingSymbol);
-	    if (ig == null)
+	    if (ig == null) {
 		continue;
+	    }
 	    Handler[] handlers = ig.getHandlers(IGeometry.SELECTHANDLER);
 	    if (numSelect >= handlers.length) {
 		numSelect = 0;
@@ -282,8 +283,7 @@ public class InsertVertexCADTool extends DefaultCADTool {
 	    // other handlers
 	    // FGraphicUtilities.DrawVertex((Graphics2D)g,vp.getAffineTransform(),handlers[numSelect]);
 	    FGraphicUtilities.DrawHandlers((Graphics2D) g,
-		    vp.getAffineTransform(), handlers,
-		    CADTool.drawingSymbol);
+		    vp.getAffineTransform(), handlers, CADTool.drawingSymbol);
 	}
 
     }
@@ -421,8 +421,9 @@ public class InsertVertexCADTool extends DefaultCADTool {
 	    switch (theType) {
 	    case PathIterator.SEG_MOVETO:
 		pLast.setLocation(theData[0], theData[1]);
-		if (numParts == 0)
+		if (numParts == 0) {
 		    firstPoint = (Point2D) pLast.clone();
+		}
 		numParts++;
 
 		gpxAux = new GeneralPathX();

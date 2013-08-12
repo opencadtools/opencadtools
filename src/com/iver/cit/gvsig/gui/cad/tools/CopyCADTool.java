@@ -236,8 +236,9 @@ public class CopyCADTool extends DefaultCADTool {
 	     * CADTool.drawingSymbol); }
 	     */
 	} else {
-	    if (!vle.getLayer().isVisible())
+	    if (!vle.getLayer().isVisible()) {
 		return;
+	    }
 	    Image imgSel = vle.getSelectionImage();
 	    g.drawImage(imgSel, 0, 0, null);
 	    Image imgHand = vle.getHandlersImage();

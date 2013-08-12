@@ -332,10 +332,11 @@ public class BreakCADTool extends DefaultCADTool {
 
 		previous = new Point2D.Double(theData[0], theData[1]);
 
-		if (isFirstPart)
+		if (isFirstPart) {
 		    newGp1.moveTo(theData[0], theData[1]);
-		else
+		} else {
 		    newGp2.moveTo(theData[0], theData[1]);
+		}
 		break;
 
 	    case PathIterator.SEG_LINETO:
@@ -359,9 +360,9 @@ public class BreakCADTool extends DefaultCADTool {
 		    }
 		}
 		previous = new Point2D.Double(theData[0], theData[1]);
-		if (isFirstPart)
+		if (isFirstPart) {
 		    newGp1.lineTo(theData[0], theData[1]);
-		else if (intersectsP2) {
+		} else if (intersectsP2) {
 		    newGp2.lineTo(theData[0], theData[1]);
 		}
 
@@ -387,12 +388,13 @@ public class BreakCADTool extends DefaultCADTool {
 		    }
 		}
 		previous = new Point2D.Double(theData[0], theData[1]);
-		if (isFirstPart)
+		if (isFirstPart) {
 		    newGp1.quadTo(theData[0], theData[1], theData[2],
 			    theData[3]);
-		else
+		} else {
 		    newGp2.quadTo(theData[0], theData[1], theData[2],
 			    theData[3]);
+		}
 
 		break;
 
@@ -417,12 +419,13 @@ public class BreakCADTool extends DefaultCADTool {
 		    }
 		}
 		previous = new Point2D.Double(theData[0], theData[1]);
-		if (isFirstPart)
+		if (isFirstPart) {
 		    newGp1.curveTo(theData[0], theData[1], theData[2],
 			    theData[3], theData[4], theData[5]);
-		else
+		} else {
 		    newGp2.curveTo(theData[0], theData[1], theData[2],
 			    theData[3], theData[4], theData[5]);
+		}
 
 		break;
 

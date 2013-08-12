@@ -205,8 +205,9 @@ public class MyFinishAction extends FinishAction {
 			.getWizardPanel(2);
 		ConnectionWithParams cwp = postgisPanel
 			.getConnectionWithParams();
-		if (cwp == null)
+		if (cwp == null) {
 		    return;
+		}
 
 		IConnection conex = ConnectionFactory.createConnection(
 			cwp.getConnectionStr(), cwp.getUser(), cwp.getPw());

@@ -84,8 +84,9 @@ public class FieldExpresionPage extends AbstractPreferencePage {
 			    "without_limit"));
 		} else {
 		    if (txtLimit.getText().equals(
-			    PluginServices.getText(this, "without_limit")))
+			    PluginServices.getText(this, "without_limit"))) {
 			txtLimit.setText("500000");
+		    }
 		}
 
 	    }

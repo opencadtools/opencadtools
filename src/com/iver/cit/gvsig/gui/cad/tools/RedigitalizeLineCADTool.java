@@ -184,8 +184,7 @@ public class RedigitalizeLineCADTool extends DefaultCADTool {
 		}
 		IGeometry geom = ShapeFactory.createPolyline2D(gpx);
 		geom.draw((Graphics2D) g, CADExtension.getEditionManager()
-			.getMapControl().getViewPort(),
-			CADTool.drawingSymbol);
+			.getMapControl().getViewPort(), CADTool.drawingSymbol);
 
 		// Painting vertex
 		AffineTransform at = CADExtension.getEditionManager()
@@ -318,8 +317,7 @@ public class RedigitalizeLineCADTool extends DefaultCADTool {
 
 	    IGeometry geom = ShapeFactory.createPolyline2D(gpx);
 	    geom.draw((Graphics2D) g, CADExtension.getEditionManager()
-		    .getMapControl().getViewPort(),
-		    CADTool.drawingSymbol);
+		    .getMapControl().getViewPort(), CADTool.drawingSymbol);
 
 	    // Painting vertex
 	    AffineTransform at = CADExtension.getEditionManager()
@@ -686,8 +684,7 @@ public class RedigitalizeLineCADTool extends DefaultCADTool {
 		double x = theData[0];
 		double y = theData[1];
 		numberMultiActual++;
-		if (multiSelected == numberMultiActual)
-
+		if (multiSelected == numberMultiActual) {
 		    if (firstCutIndex > secondCutIndex) {
 			int aux = firstCutIndex;
 			firstCutIndex = secondCutIndex;
@@ -755,7 +752,7 @@ public class RedigitalizeLineCADTool extends DefaultCADTool {
 			}
 
 		    }
-		else {
+		} else {
 		    gpx.moveTo(x, y);
 		}
 		break;

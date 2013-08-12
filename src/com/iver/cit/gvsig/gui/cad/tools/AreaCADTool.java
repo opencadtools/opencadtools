@@ -41,7 +41,6 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
-import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.gui.cad.CADTool;
@@ -228,8 +227,7 @@ public class AreaCADTool extends InsertionCADTool {
 	    if (points.size() > 0) {
 		if (numShapes != 0) {
 		    if (virtualIndex != null) {
-			row = vea.getRow(virtualIndex
-				.intValue());
+			row = vea.getRow(virtualIndex.intValue());
 			rowEdited = row;
 			IFeature feat = (IFeature) row.getLinkedRow()
 				.cloneRow();
@@ -385,8 +383,7 @@ public class AreaCADTool extends InsertionCADTool {
 	    IGeometry geom = ShapeFactory.createPolygon2D(gpx);
 	    IGeometry geom1 = ShapeFactory.createPolygon2D(gpx1);
 	    geom1.draw((Graphics2D) g, CADExtension.getEditionManager()
-		    .getMapControl().getViewPort(),
-		    CADTool.drawingSymbol);
+		    .getMapControl().getViewPort(), CADTool.drawingSymbol);
 	    geom.draw((Graphics2D) g, CADExtension.getEditionManager()
 		    .getMapControl().getViewPort(), CADTool.modifySymbol);
 	}
@@ -443,8 +440,7 @@ public class AreaCADTool extends InsertionCADTool {
 	    IGeometry geom = ShapeFactory.createPolygon2D(gpx);
 	    IGeometry geom1 = ShapeFactory.createPolygon2D(gpx1);
 	    geom1.draw((Graphics2D) g, CADExtension.getEditionManager()
-		    .getMapControl().getViewPort(),
-		    CADTool.drawingSymbol);
+		    .getMapControl().getViewPort(), CADTool.drawingSymbol);
 	    geom.draw((Graphics2D) g, CADExtension.getEditionManager()
 		    .getMapControl().getViewPort(), CADTool.modifySymbol);
 	} else {
@@ -510,11 +506,13 @@ public class AreaCADTool extends InsertionCADTool {
 	gpx.closePath();
 	// Los shell son CW y los holes CCW
 	if (isHole) {
-	    if (!gpx.isCCW())
+	    if (!gpx.isCCW()) {
 		gpx.flip();
+	    }
 	} else {
-	    if (gpx.isCCW())
+	    if (gpx.isCCW()) {
 		gpx.flip();
+	    }
 	}
 
 	return ShapeFactory.createPolygon2D(gpx);
@@ -593,8 +591,9 @@ public class AreaCADTool extends InsertionCADTool {
 
 	theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
 	while (!theIterator.isDone()) {
-	    if (endGeom)
+	    if (endGeom) {
 		break;
+	    }
 	    theType = theIterator.currentSegment(theData);
 
 	    switch (theType) {

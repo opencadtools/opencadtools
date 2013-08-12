@@ -96,8 +96,9 @@ public class RedoViewExtension extends Extension {
 			vea.getCommandRecord().fireCommandsRepaint(null);
 			vea.getSelection().clear();
 			CADTool cadTool = CADExtension.getCADTool();
-			if (cadTool != null)
+			if (cadTool != null) {
 			    cadTool.clearSelection();
+			}
 		    }
 
 		}
@@ -127,8 +128,9 @@ public class RedoViewExtension extends Extension {
 		    && activeLayer.isEditing() && activeLayer.isActive()) {
 		VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) activeLayer)
 			.getSource();
-		if (vea == null)
+		if (vea == null) {
 		    return false;
+		}
 		return vea.getCommandRecord().moreRedoCommands();
 	    }
 
@@ -159,8 +161,9 @@ public class RedoViewExtension extends Extension {
 			&& activeLayer.isEditing() && activeLayer.isActive()) {
 		    VectorialEditableAdapter vea = (VectorialEditableAdapter) ((FLyrVect) activeLayer)
 			    .getSource();
-		    if (vea == null)
+		    if (vea == null) {
 			return false;
+		    }
 		    return true;
 		}
 	    }

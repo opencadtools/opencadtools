@@ -33,10 +33,11 @@ public class ChooseWriteDriver extends JWizardPanel {
     private class MyInputEventListener implements CaretListener {
 	@Override
 	public void caretUpdate(CaretEvent arg0) {
-	    if (jTextLayerName.getText().length() > 0)
+	    if (jTextLayerName.getText().length() > 0) {
 		setNextButtonEnabled(true);
-	    else
+	    } else {
 		setNextButtonEnabled(false);
+	    }
 
 	}
 

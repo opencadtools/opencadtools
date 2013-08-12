@@ -183,8 +183,7 @@ public class CutLineCADTool extends InsertionCADTool {
 		IGeometry geom = getCuttedGeometry();
 		// Repainting the line
 		geom.draw((Graphics2D) g, CADExtension.getEditionManager()
-			.getMapControl().getViewPort(),
-			CADTool.drawingSymbol);
+			.getMapControl().getViewPort(), CADTool.drawingSymbol);
 
 		// Painting the vertex
 		AffineTransform at = CADExtension.getEditionManager()

@@ -41,10 +41,11 @@ public class ChooseGeometryType extends JWizardPanel {
     private class MyInputEventListener implements CaretListener {
 	@Override
 	public void caretUpdate(CaretEvent arg0) {
-	    if (jTextFieldLayerName.getText().length() > 0)
+	    if (jTextFieldLayerName.getText().length() > 0) {
 		setNextButtonEnabled(true);
-	    else
+	    } else {
 		setNextButtonEnabled(false);
+	    }
 
 	}
 
@@ -221,16 +222,21 @@ public class ChooseGeometryType extends JWizardPanel {
     }
 
     public int getSelectedGeometryType() {
-	if (getJRadioButtonPoint().isSelected())
+	if (getJRadioButtonPoint().isSelected()) {
 	    return FShape.POINT;
-	if (getJRadioButtonMultiPoint().isSelected())
+	}
+	if (getJRadioButtonMultiPoint().isSelected()) {
 	    return FShape.MULTIPOINT;
-	if (getJRadioButtonLine().isSelected())
+	}
+	if (getJRadioButtonLine().isSelected()) {
 	    return FShape.LINE;
-	if (getJRadioButtonPolygon().isSelected())
+	}
+	if (getJRadioButtonPolygon().isSelected()) {
 	    return FShape.POLYGON;
-	if (getJRadioButtonMulti().isSelected())
+	}
+	if (getJRadioButtonMulti().isSelected()) {
 	    return FShape.MULTI;
+	}
 
 	return -1;
     }
@@ -246,8 +252,7 @@ public class ChooseGeometryType extends JWizardPanel {
 	    jTextFieldLayerName.setBounds(new java.awt.Rectangle(13, 36, 323,
 		    20));
 	    jTextFieldLayerName.setText("layer1"); // PluginServices.getText(this,"new_layer"));
-	    jTextFieldLayerName
-		    .setHorizontalAlignment(SwingConstants.LEFT);
+	    jTextFieldLayerName.setHorizontalAlignment(SwingConstants.LEFT);
 	    jTextFieldLayerName.addCaretListener(new MyInputEventListener());
 	}
 	return jTextFieldLayerName;

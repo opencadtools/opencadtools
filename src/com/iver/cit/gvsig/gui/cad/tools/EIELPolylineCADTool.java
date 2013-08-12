@@ -260,8 +260,9 @@ public class EIELPolylineCADTool extends InsertionCADTool {
 		list.add(ShapeFactory.createPolyline2D(elShape));
 
 	    }
-	    if (antPoint == null)
+	    if (antPoint == null) {
 		antPoint = (Point2D) firstPoint.clone();
+	    }
 
 	    if (antPoint != null) {
 		antantPoint = antPoint;
@@ -441,8 +442,7 @@ public class EIELPolylineCADTool extends InsertionCADTool {
      */
     @Override
     public void drawOperation(Graphics g, double x, double y) {
-	EIELPolylineCADToolState actualState = _fsm
-		.getState();
+	EIELPolylineCADToolState actualState = _fsm.getState();
 	String status = actualState.getName();
 
 	if (status.equals("Polyline.NextPointOrArcOrClose")
@@ -452,9 +452,10 @@ public class EIELPolylineCADTool extends InsertionCADTool {
 			getCadToolAdapter().getMapControl().getViewPort(),
 			DefaultCADTool.geometrySelectSymbol);
 	    }
-	    if (antPoint != null)
+	    if (antPoint != null) {
 		drawLine((Graphics2D) g, antPoint, new Point2D.Double(x, y),
 			DefaultCADTool.geometrySelectSymbol);
+	    }
 
 	} else if ((status.equals("Polyline.NextPointOrLineOrClose"))) {
 	    for (int i = 0; i < list.size(); i++) {

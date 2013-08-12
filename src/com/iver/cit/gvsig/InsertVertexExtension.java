@@ -80,8 +80,9 @@ public class InsertVertexExtension extends Extension {
 	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 	    view = (View) PluginServices.getMDIManager().getActiveWindow();
 	    mapControl = view.getMapControl();
-	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null)
+	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
 		return false;
+	    }
 	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
 		    .getActiveLayerEdited().getLayer();
 	    try {
@@ -101,8 +102,9 @@ public class InsertVertexExtension extends Extension {
     @Override
     public boolean isVisible() {
 	// TODO Make only with non-point geometry layers.
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE)
+	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
 	    return true;
+	}
 	return false;
     }
 }

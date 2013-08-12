@@ -178,8 +178,9 @@ public class MoveCADTool extends DefaultCADTool {
 		    IRowEdited edRow = (IRowEdited) selectedRow.get(i);
 		    IFeature feat = (IFeature) edRow.getLinkedRow().cloneRow();
 		    IGeometry ig = feat.getGeometry();
-		    if (ig == null)
+		    if (ig == null) {
 			continue;
+		    }
 		    if (ct != null) {
 			lastPoint = ct.getInverted().convert(lastPoint, null);
 			firstPoint = ct.getInverted().convert(firstPoint, null);
@@ -256,8 +257,9 @@ public class MoveCADTool extends DefaultCADTool {
 	     * CADTool.drawingSymbol); }
 	     */
 	} else {
-	    if (!vle.getLayer().isVisible())
+	    if (!vle.getLayer().isVisible()) {
 		return;
+	    }
 	    Image imgSel = vle.getSelectionImage();
 	    g.drawImage(imgSel, 0, 0, null);
 	    Image imgHand = vle.getHandlersImage();
