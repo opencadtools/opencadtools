@@ -16,6 +16,12 @@ Features
 * Redigitalize lines
 * ...
 
-Get involved
-============
-To know more about this project you can contact on cartolab@udc.es
+Contribute
+==========
+Feel free to fork this repo and make pull request or send patches with bug fixing or new features. You can use the mailing list:
+
+opencadtools-devel (AT) joinup.ec.europa.eu
+
+to request more information about the project, make suggestions or ask for help.
+
+Take care that we are using the "project specific settings" feature of Eclipse to ensure that all the contributors follow the same code style when developing opencadtools. You can see the rules applied in the .settings folder uploaded to the repo.
