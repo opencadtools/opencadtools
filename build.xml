@@ -31,8 +31,8 @@
 	</target>
 	
 	<target name="create-jar">
-		<mkdir dir="${dist}"/>
-		<jar jarfile="${dist}/lib/${jarName}" basedir="${build}"/>
+		<mkdir dir="${dist}/${lib}"/>
+		<jar jarfile="${dist}/${lib}/${jarName}" basedir="${build}"/>
 	</target>
 	
 	<target name="copy-data-files" depends="make-package-info">
