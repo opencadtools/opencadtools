@@ -33,47 +33,28 @@ import com.iver.utiles.console.jedit.KeywordMap;
 import com.iver.utiles.console.jedit.Token;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Vicente Caballero Navarro
+ * @author Francisco Puga <fpuga@cartolab.es>
  */
 public class StartEditing extends Extension {
 
-    // private class MyAction extends AbstractAction
-    // {
-    //
-    // public void actionPerformed(ActionEvent e) {
-    // System.err.println("F3");
-    // }
-    //
-    // }
-
-    // View vista;
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
     }
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#execute(java.lang.String)
-     */
     @Override
     public void execute(String actionCommand) {
 
-	com.iver.andami.ui.mdiManager.IWindow f = PluginServices
-		.getMDIManager().getActiveWindow();
+	IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();
 
-	if (f instanceof View) {
-	    View vista = (View) f;
+	if (iWindow instanceof View) {
+	    View view = (View) iWindow;
 
-	    MapControl mapControl = vista.getMapControl();
+	    MapControl mapControl = view.getMapControl();
 
-	    IProjectView model = vista.getModel();
+	    IProjectView model = view.getModel();
 	    FLayer[] actives = model.getMapContext().getLayers().getActives();
 
-	    // boolean bEditingStarted = false;
 	    if (actives.length == 1 && actives[0] instanceof FLyrVect) {
 		FLyrVect lv = (FLyrVect) actives[0];
 		if (!mapControl.getProjection().getAbrev()
@@ -97,17 +78,11 @@ public class StartEditing extends Extension {
 		    }
 		}
 		CADExtension.initFocus();
-		vista.showConsole();
+		view.showConsole();
 		EditionManager editionManager = CADExtension
 			.getEditionManager();
 		editionManager.setMapControl(mapControl);
-		// mapControl.getMapContext().clearAllCachingImageDrawnLayers();
-		/*
-		 * for (int j = 0; j < i; j++) {
-		 * layers.getLayer(j).setVisible(false); }
-		 */
 
-		// lv.setVisible(true);
 		lv.addLayerListener(editionManager);
 		try {
 		    ILegend legendOriginal = lv.getLegend().cloneLegend();
@@ -131,17 +106,16 @@ public class StartEditing extends Extension {
 			vea.getRules().add(rulePol);
 		    }
 
-		    // if (!(lv.getSource().getDriver() instanceof
-		    // IndexedShpDriver)){
 		    VectorialLayerEdited vle = (VectorialLayerEdited) editionManager
 			    .getLayerEdited(lv);
 		    vle.setLegend(legendOriginal);
 		    // starts snapping over every visible layer
 		    setSnappers(vle, mapControl.getMapContext().getLayers());
-		    // }
+
 		    vea.getCommandRecord().addCommandListener(mapControl);
-		    // Si existe una tabla asociada a esta capa se cambia su
-		    // modelo por el VectorialEditableAdapter.
+
+		    // If an associated table exists its model it's changed to
+		    // VectorialEditableAdapter
 		    ProjectExtension pe = (ProjectExtension) PluginServices
 			    .getExtension(ProjectExtension.class);
 		    ProjectTable pt = pe.getProject().getTable(lv);
@@ -153,8 +127,8 @@ public class StartEditing extends Extension {
 			}
 		    }
 
-		    startCommandsApplicable(vista, lv);
-		    vista.repaintMap();
+		    startCommandsApplicable(view, lv);
+		    view.repaintMap();
 
 		} catch (XMLException e) {
 		    NotificationManager.addError(e.getMessage(), e);
@@ -165,135 +139,9 @@ public class StartEditing extends Extension {
 		} catch (DriverLoadException e) {
 		    NotificationManager.addError(e.getMessage(), e);
 		}
-
-		// return;
 	    }
 	}
 
-	/*
-	 * PluginServices.getMDIManager().setWaitCursor(); try { if (((FLyrVect)
-	 * capa).getSource().getDriver().getClass() == DXFCadDriver.class) { if
-	 * (JOptionPane.showConfirmDialog( (Component)
-	 * PluginServices.getMainFrame(), "Todas las geometrías del formato DXF
-	 * no se pueden editar, de momento podemos editar: Line, Point,
-	 * Polyline, Arc, Circle y Ellipse. \n El resto de geometrías se
-	 * perderán con la edición. \n ¿Desea continuar?") ==
-	 * JOptionPane.YES_OPTION) { capa.startEdition();
-	 * vista.getMapControl().setCadTool("selection"); } else { } } else {
-	 * capa.startEdition(); vista.getMapControl().setCadTool("selection"); }
-	 * } catch (EditionException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); }
-	 * PluginServices.getMDIManager().restoreCursor();
-	 */
-	// vista.getMapControl().drawMap(false);
-    }
-
-    // private void registerKeyStrokes() {
-    // JComponent theComponent = vista.getConsolePanel().getTxt();
-    //
-    // // The actions
-    // Action F3Action = new AbstractAction("REFENT") {
-    // public void actionPerformed(ActionEvent evt) {
-    // System.err.println("SOY F3");
-    // }
-    // };
-    //
-    // InputMap inputMap =
-    // theComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    // inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0),
-    // F3Action.getValue(Action.NAME));
-    //
-    // ActionMap actionMap = theComponent.getActionMap();
-    // // actionMap.put("REFENT", new MyAction());
-    // actionMap.put(F3Action.getValue(Action.NAME), F3Action);
-    //
-    // }
-
-    public static void startCommandsApplicable(View vista, FLyrVect lv) {
-	if (vista == null) {
-	    vista = (View) PluginServices.getMDIManager().getActiveWindow();
-	}
-	CADTool[] cadtools = CADExtension.getCADTools();
-	KeywordMap keywordMap = new KeywordMap(true);
-	for (int i = 0; i < cadtools.length; i++) {
-	    try {
-		if (cadtools[i].isApplicable(lv.getShapeType())) {
-		    keywordMap.add(cadtools[i].getName(), Token.KEYWORD2);
-		    keywordMap.add(cadtools[i].toString(), Token.KEYWORD3);
-		}
-	    } catch (ReadDriverException e) {
-		NotificationManager.addError(e.getMessage(), e);
-	    }
-
-	}
-	ConsoleToken consoletoken = new ConsoleToken(keywordMap);
-	vista.getConsolePanel().setTokenMarker(consoletoken);
-
-    }
-
-    protected void changeModelTable(ProjectTable pt,
-	    VectorialEditableAdapter vea) {
-	com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
-		.getMDIManager().getAllWindows();
-
-	for (int i = 0; i < views.length; i++) {
-	    if (views[i] instanceof Table) {
-		Table table = (Table) views[i];
-		ProjectTable model = table.getModel();
-		if (model.equals(pt)) {
-		    table.setModel(pt);
-		    vea.getCommandRecord().addCommandListener(table);
-		}
-	    }
-	}
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-	View f = (View) PluginServices.getMDIManager().getActiveWindow();
-
-	if (f == null) {
-	    return false;
-	}
-
-	FLayer[] selected = f.getModel().getMapContext().getLayers()
-		.getActives();
-	if (selected.length == 1 && selected[0].isAvailable()
-		&& selected[0] instanceof FLyrVect) {
-	    if (((FLyrVect) selected[0]).isJoined()) {
-		return false;
-	    }
-	    return true;
-	}
-	return false;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	IWindow f = PluginServices.getMDIManager().getActiveWindow();
-
-	if (f == null) {
-	    return false;
-	}
-	if (f instanceof View) {
-	    View view = (View) f;
-	    FLayer[] selected = view.getModel().getMapContext().getLayers()
-		    .getActives();
-	    if (selected.length == 1 && selected[0].isAvailable()
-		    && selected[0] instanceof FLyrVect) {
-		if (selected[0].isEditing()) {
-		    return false;
-		}
-		return true;
-	    }
-	}
-	return false;
     }
 
     public void setSnappers(VectorialLayerEdited vle, FLayers layers) {
@@ -320,6 +168,81 @@ public class StartEditing extends Extension {
 		}
 	    }
 	}
+    }
 
+    public static void startCommandsApplicable(View view, FLyrVect lv) {
+	if (view == null) {
+	    view = (View) PluginServices.getMDIManager().getActiveWindow();
+	}
+	CADTool[] cadtools = CADExtension.getCADTools();
+	KeywordMap keywordMap = new KeywordMap(true);
+	for (int i = 0; i < cadtools.length; i++) {
+	    try {
+		if (cadtools[i].isApplicable(lv.getShapeType())) {
+		    keywordMap.add(cadtools[i].getName(), Token.KEYWORD2);
+		    keywordMap.add(cadtools[i].toString(), Token.KEYWORD3);
+		}
+	    } catch (ReadDriverException e) {
+		NotificationManager.addError(e.getMessage(), e);
+	    }
+
+	}
+	ConsoleToken consoletoken = new ConsoleToken(keywordMap);
+	view.getConsolePanel().setTokenMarker(consoletoken);
+    }
+
+    protected void changeModelTable(ProjectTable pt,
+	    VectorialEditableAdapter vea) {
+	IWindow[] iWindows = PluginServices.getMDIManager().getAllWindows();
+
+	for (IWindow iWindow : iWindows) {
+	    if (iWindow instanceof Table) {
+		Table table = (Table) iWindow;
+		ProjectTable model = table.getModel();
+		if (model.equals(pt)) {
+		    table.setModel(pt);
+		    vea.getCommandRecord().addCommandListener(table);
+		}
+	    }
+	}
+    }
+
+    @Override
+    public boolean isVisible() {
+	IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();
+
+	if (iWindow instanceof View) {
+	    View view = (View) iWindow;
+	    FLayer[] actives = view.getModel().getMapContext().getLayers()
+		    .getActives();
+	    if (actives.length == 1) {
+		FLayer active = actives[0];
+		if (active.isAvailable() && active instanceof FLyrVect
+			&& !active.isEditing()) {
+		    return true;
+		}
+	    }
+	}
+	return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+	View view = (View) PluginServices.getMDIManager().getActiveWindow();
+
+	if (view == null) {
+	    return false;
+	}
+
+	FLayer[] actives = view.getModel().getMapContext().getLayers()
+		.getActives();
+	if (actives.length == 1 && actives[0].isAvailable()
+		&& actives[0] instanceof FLyrVect) {
+	    if (((FLyrVect) actives[0]).isJoined()) {
+		return false;
+	    }
+	    return true;
+	}
+	return false;
     }
 }
