@@ -1,7 +1,6 @@
 package com.iver.cit.gvsig;
 
 import java.awt.Component;
-import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -29,6 +28,7 @@ import com.iver.cit.gvsig.project.documents.table.ProjectTable;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.cit.gvsig.project.documents.view.snapping.VectorialLayerSnapping;
 import com.iver.utiles.console.jedit.KeywordMap;
 import com.iver.utiles.console.jedit.Token;
 
@@ -50,124 +50,129 @@ public class StartEditing extends Extension {
 	if (iWindow instanceof View) {
 	    View view = (View) iWindow;
 
-	    MapControl mapControl = view.getMapControl();
-
 	    IProjectView model = view.getModel();
 	    FLayer[] actives = model.getMapContext().getLayers().getActives();
 
 	    if (actives.length == 1 && actives[0] instanceof FLyrVect) {
 		FLyrVect lv = (FLyrVect) actives[0];
-		if (!mapControl.getProjection().getAbrev()
-			.equals(lv.getProjection().getAbrev())) {
-		    NotificationManager.showMessageInfo(PluginServices.getText(
-			    this, "no_es_posible_editar_capa_reproyectada"),
-			    null);
+		if (isReprojected(view, lv)) {
 		    return;
 		}
-		if (lv.isJoined()) {
-		    int resp = JOptionPane.showConfirmDialog(
-			    (Component) PluginServices.getMainFrame(),
-			    PluginServices.getText(this, "se_perdera_la_union")
-				    + "\n"
-				    + PluginServices.getText(this,
-					    "desea_continuar"),
-			    PluginServices.getText(this, "start_edition"),
-			    JOptionPane.YES_NO_OPTION);
-		    if (resp != JOptionPane.YES_OPTION) { // CANCEL EDITING
-			return; // Salimos sin iniciar edición
-		    }
+		if (cancelIfLayerIsJoined(lv)) {
+		    return;
 		}
-		CADExtension.initFocus();
-		view.showConsole();
-		EditionManager editionManager = CADExtension
-			.getEditionManager();
-		editionManager.setMapControl(mapControl);
 
-		lv.addLayerListener(editionManager);
-		try {
-		    ILegend legendOriginal = lv.getLegend().cloneLegend();
+		warnIfLayerNotWriteable(lv);
 
-		    if (!lv.isWritable()) {
-			JOptionPane.showMessageDialog(
-				(Component) PluginServices.getMDIManager()
-					.getActiveWindow(),
-				PluginServices.getText(this,
-					"this_layer_is_not_self_editable"),
-				PluginServices.getText(this, "warning_title"),
-				JOptionPane.WARNING_MESSAGE);
-		    }
-		    lv.setEditing(true);
-		    VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
-			    .getSource();
-
-		    vea.getRules().clear();
-		    if (vea.getShapeType() == FShape.POLYGON) {
-			IRule rulePol = new RulePolygon();
-			vea.getRules().add(rulePol);
-		    }
-
-		    VectorialLayerEdited vle = (VectorialLayerEdited) editionManager
-			    .getLayerEdited(lv);
-		    vle.setLegend(legendOriginal);
-		    // starts snapping over every visible layer
-		    setSnappers(vle, mapControl.getMapContext().getLayers());
-
-		    vea.getCommandRecord().addCommandListener(mapControl);
-
-		    // If an associated table exists its model it's changed to
-		    // VectorialEditableAdapter
-		    ProjectExtension pe = (ProjectExtension) PluginServices
-			    .getExtension(ProjectExtension.class);
-		    ProjectTable pt = pe.getProject().getTable(lv);
-		    if (pt != null) {
-			pt.setModel(vea);
-			changeModelTable(pt, vea);
-			if (lv.isJoined()) {
-			    pt.restoreDataSource();
-			}
-		    }
-
-		    startCommandsApplicable(view, lv);
-		    view.repaintMap();
-
-		} catch (XMLException e) {
-		    NotificationManager.addError(e.getMessage(), e);
-		} catch (StartEditionLayerException e) {
-		    NotificationManager.addError(e.getMessage(), e);
-		} catch (ReadDriverException e) {
-		    NotificationManager.addError(e.getMessage(), e);
-		} catch (DriverLoadException e) {
-		    NotificationManager.addError(e.getMessage(), e);
-		}
+		startEditing(view, lv);
+		// starts snapping over every visible layer
+		VectorialLayerSnapping snapTo = new VectorialLayerSnapping(lv);
+		snapTo.setSnappinTo(view.getMapControl().getMapContext()
+			.getLayers());
 	    }
 	}
 
     }
 
-    public void setSnappers(VectorialLayerEdited vle, FLayers layers) {
+    public void startEditing(View view, FLyrVect lv) {
+	CADExtension.initFocus();
+	view.showConsole();
+	EditionManager editionManager = CADExtension.getEditionManager();
+	MapControl mapControl = view.getMapControl();
+	editionManager.setMapControl(mapControl);
 
-	ArrayList<FLyrVect> layersToSnap = vle.getLayersToSnap();
-	for (int i = 0; i < layers.getLayersCount(); i++) {
-	    FLayer layer = layers.getLayer(i);
-	    if (layer instanceof FLayers) {
-		setSnappers(vle, (FLayers) layer);
-	    } else if ((layer instanceof FLyrVect) && (layer.isVisible())) {
-		FLyrVect lyrVect = (FLyrVect) layer;
-		if (!layersToSnap.contains(lyrVect)) {
-		    layersToSnap.add(lyrVect);
-		    lyrVect.setSpatialCacheEnabled(true);
-		    // a layer reload is needed to get snappers working...
-		    // try {
-		    // if (vle.getLayer() != lyrVect) {
-		    // lyrVect.reload();
-		    // }
-		    // } catch (ReloadLayerException e) {
-		    // Logger.getLogger(EditionPreferencePage.class).error("Error reloading layer",
-		    // e);
-		    // }
+	lv.addLayerListener(editionManager);
+	try {
+	    ILegend legendOriginal = lv.getLegend().cloneLegend();
+
+	    lv.setEditing(true);
+	    VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
+		    .getSource();
+
+	    vea.getRules().clear();
+	    if (vea.getShapeType() == FShape.POLYGON) {
+		IRule rulePol = new RulePolygon();
+		vea.getRules().add(rulePol);
+	    }
+
+	    VectorialLayerEdited vle = (VectorialLayerEdited) editionManager
+		    .getLayerEdited(lv);
+	    vle.setLegend(legendOriginal);
+
+	    vea.getCommandRecord().addCommandListener(mapControl);
+
+	    // If an associated table exists its model it's changed to
+	    // VectorialEditableAdapter
+	    ProjectExtension pe = (ProjectExtension) PluginServices
+		    .getExtension(ProjectExtension.class);
+	    ProjectTable pt = pe.getProject().getTable(lv);
+	    if (pt != null) {
+		pt.setModel(vea);
+		changeModelTable(pt, vea);
+		if (lv.isJoined()) {
+		    pt.restoreDataSource();
 		}
 	    }
+
+	    startCommandsApplicable(view, lv);
+	    view.repaintMap();
+
+	} catch (XMLException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (StartEditionLayerException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (ReadDriverException e) {
+	    NotificationManager.addError(e.getMessage(), e);
+	} catch (DriverLoadException e) {
+	    NotificationManager.addError(e.getMessage(), e);
 	}
+    }
+
+    private boolean isReprojected(View view, FLyrVect lv) {
+	if (!view.getProjection().getAbrev()
+		.equals(lv.getProjection().getAbrev())) {
+	    NotificationManager.showMessageInfo(PluginServices.getText(this,
+		    "no_es_posible_editar_capa_reproyectada"), null);
+	    return true;
+	}
+	return false;
+    }
+
+    private boolean cancelIfLayerIsJoined(FLyrVect lv) {
+	if (lv.isJoined()) {
+	    int resp = JOptionPane.showConfirmDialog(
+		    (Component) PluginServices.getMainFrame(),
+		    PluginServices.getText(this, "se_perdera_la_union") + "\n"
+			    + PluginServices.getText(this, "desea_continuar"),
+		    PluginServices.getText(this, "start_edition"),
+		    JOptionPane.YES_NO_OPTION);
+	    if (resp != JOptionPane.YES_OPTION) {
+		return true;
+	    }
+	}
+	return false;
+    }
+
+    private void warnIfLayerNotWriteable(FLyrVect lv) {
+	if (!lv.isWritable()) {
+	    JOptionPane.showMessageDialog((Component) PluginServices
+		    .getMDIManager().getActiveWindow(), PluginServices.getText(
+		    this, "this_layer_is_not_self_editable"), PluginServices
+		    .getText(this, "warning_title"),
+		    JOptionPane.WARNING_MESSAGE);
+	}
+    }
+
+    /**
+     * Use VectorialLayerSnapping vectorialLayerSnapping = new
+     * VectorialLayerSnapping((FLyrVect) vle.getLayer());
+     * vectorialLayerSnapping.setSnappinTo(layers);
+     */
+    @Deprecated
+    public void setSnappers(VectorialLayerEdited vle, FLayers layers) {
+	VectorialLayerSnapping vectorialLayerSnapping = new VectorialLayerSnapping(
+		(FLyrVect) vle.getLayer());
+	vectorialLayerSnapping.setSnappinTo(layers);
     }
 
     public static void startCommandsApplicable(View view, FLyrVect lv) {
@@ -191,8 +196,7 @@ public class StartEditing extends Extension {
 	view.getConsolePanel().setTokenMarker(consoletoken);
     }
 
-    protected void changeModelTable(ProjectTable pt,
-	    VectorialEditableAdapter vea) {
+    private void changeModelTable(ProjectTable pt, VectorialEditableAdapter vea) {
 	IWindow[] iWindows = PluginServices.getMDIManager().getAllWindows();
 
 	for (IWindow iWindow : iWindows) {
@@ -245,4 +249,5 @@ public class StartEditing extends Extension {
 	}
 	return false;
     }
+
 }
