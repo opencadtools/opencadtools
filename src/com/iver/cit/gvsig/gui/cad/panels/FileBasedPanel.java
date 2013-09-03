@@ -44,6 +44,11 @@ public class FileBasedPanel extends JWizardPanel {
 	initialize();
     }
 
+    public FileBasedPanel(JWizardComponents wizardComponents, String extension) {
+	this(wizardComponents);
+	setFileExtension(extension);
+    }
+
     /**
      * This method initializes this
      * 
