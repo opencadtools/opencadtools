@@ -48,8 +48,10 @@ public class NewPostgisLayerWizard implements NewLayerWizard {
 
 	fieldDefinition = new JPanelFieldDefinition(components);
 	fieldDefinition.setWriter(getWriter());
+	connection = new NewVectorDBConnectionPanel(
+		wizard.getWizardComponents(), PostGisDriver.NAME, 20);
 
-	return new JWizardPanel[] { geometryType, fieldDefinition };
+	return new JWizardPanel[] { geometryType, fieldDefinition, connection };
     }
 
     @Override
