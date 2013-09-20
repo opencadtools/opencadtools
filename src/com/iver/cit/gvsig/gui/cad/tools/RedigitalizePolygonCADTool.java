@@ -64,6 +64,8 @@ import com.vividsolutions.jts.geom.LineSegment;
  */
 public class RedigitalizePolygonCADTool extends DefaultCADTool {
 
+    public static final String REDIGITALIZE_ACTION_COMMAND = "_redigitalize_polygon";
+
     double PROXIMITY_THRESHOLD = 0.00001;
 
     private RedigitalizePolygonCADToolContext _fsm;
