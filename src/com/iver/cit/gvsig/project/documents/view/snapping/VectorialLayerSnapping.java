@@ -40,6 +40,9 @@ public class VectorialLayerSnapping {
 		.getLayerEdited(layer);
 	ArrayList<FLyrVect> layersToSnap = new ArrayList<FLyrVect>();
 	for (FLyrVect newLayerToSnap : layers) {
+	    if (newLayerToSnap == null) {
+		continue;
+	    }
 	    if (newLayerToSnap.isVisible()) {
 		layersToSnap.add(newLayerToSnap);
 		newLayerToSnap.setSpatialCacheEnabled(true);
