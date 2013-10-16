@@ -21,6 +21,8 @@ import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 
 public class NewDXFLayerWizard implements NewLayerWizard {
+    public static final String TYPE = "DXF";
+
     private FileBasedPanel filePanel;
 
     @Override

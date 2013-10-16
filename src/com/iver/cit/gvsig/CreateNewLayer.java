@@ -34,9 +34,9 @@ public class CreateNewLayer extends Extension {
 
     @Override
     public void initialize() {
-	wizards.put("SHP", new NewSHPLayerWizard());
-	wizards.put("POSTGIS", new NewPostgisLayerWizard());
-	wizards.put("DXF", new NewDXFLayerWizard());
+	wizards.put(NewSHPLayerWizard.TYPE, new NewSHPLayerWizard());
+	wizards.put(NewPostgisLayerWizard.TYPE, new NewPostgisLayerWizard());
+	wizards.put(NewDXFLayerWizard.TYPE, new NewDXFLayerWizard());
     }
 
     /**
@@ -48,7 +48,10 @@ public class CreateNewLayer extends Extension {
      * 
      * @param type
      *            The type of layer to create. This string must be used later to
-     *            call the {@link #create(String, View)} method.
+     *            call the {@link #create(String, View)} method. Also, this
+     *            string must match the string used for the
+     *            <i>action-command</i> attribute in the <i>config.xml</i> file,
+     *            which is later passed to the {@link #execute(String)} method.
      * @param wizard
      *            The specific wizard to use with this type of layer.
      */
@@ -102,7 +105,7 @@ public class CreateNewLayer extends Extension {
 	    components.getFinishButton().setEnabled(false);
 
 	    String title = PluginServices.getPluginServices(
-		    "com.iver.cit.gvsig").getText("new_layer");
+		    "com.iver.cit.gvsig.cad").getText("new_layer");
 	    info.setTitle(title);
 	    info.setWidth(640);
 	    info.setHeight(350);

@@ -28,6 +28,8 @@ import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 
 public class NewSHPLayerWizard implements NewLayerWizard {
+    public static final String TYPE = "SHP";
+    
     private static Preferences prefs = Preferences.userRoot().node(
 	    "gvSIG.encoding.dbf");
 

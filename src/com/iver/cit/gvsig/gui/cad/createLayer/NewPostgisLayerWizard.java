@@ -35,6 +35,8 @@ import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 import com.prodevelop.cit.gvsig.vectorialdb.wizard.NewVectorDBConnectionPanel;
 
 public class NewPostgisLayerWizard implements NewLayerWizard {
+    public static final String TYPE = "POSTGIS";
+
     private ChooseGeometryType geometryType;
     private JPanelFieldDefinition fieldDefinition;
     private NewVectorDBConnectionPanel connection;
