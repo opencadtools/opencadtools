@@ -1,5 +1,6 @@
 package com.iver.cit.gvsig;
 
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -9,6 +10,7 @@ import jwizardcomponent.Utilities;
 import jwizardcomponent.frame.SimpleLogoJWizardFrame;
 
 import com.iver.cit.gvsig.gui.cad.MyFinishAction;
+import com.iver.cit.gvsig.gui.cad.createLayer.NewSHPLayerWizard;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 
@@ -66,7 +68,8 @@ public class TestJWizard {
 	    wizardFrame.setTitle("Nuevo tema");
 
 	    MyFinishAction myFinish = new MyFinishAction(
-		    wizardFrame.getWizardComponents(), null, "SHP");
+		    wizardFrame.getWizardComponents(), null,
+		    new NewSHPLayerWizard());
 
 	    wizardFrame.getWizardComponents().setFinishAction(myFinish);
 
