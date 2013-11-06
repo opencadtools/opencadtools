@@ -64,7 +64,6 @@ import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLyrAnnotation;
-import com.iver.cit.gvsig.gui.accelerators.ForceCursorAccelerator;
 import com.iver.cit.gvsig.gui.accelerators.GridAccelerator;
 import com.iver.cit.gvsig.gui.accelerators.OrtoAccelerator;
 import com.iver.cit.gvsig.gui.accelerators.RefentAccelerator;
@@ -171,10 +170,6 @@ public class CADExtension extends Extension implements IPreferenceExtension {
 	key = KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0);
 	GridAccelerator accGrid = new GridAccelerator();
 	PluginServices.registerKeyStroke(key, accGrid);
-
-	key = KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0);
-	ForceCursorAccelerator accForce = new ForceCursorAccelerator();
-	PluginServices.registerKeyStroke(key, accForce);
 
 	KeyboardFocusManager kfm = KeyboardFocusManager
 		.getCurrentKeyboardFocusManager();
