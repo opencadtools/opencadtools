@@ -18,16 +18,16 @@ import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfFieldsMapping;
 import com.iver.cit.gvsig.fmap.edition.writers.dxf.DxfWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
-import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
+import com.iver.cit.gvsig.gui.cad.panels.SpatialFileBasedPanel;
 
 public class NewDXFLayerWizard implements NewLayerWizard {
     public static final String TYPE = "DXF";
 
-    private FileBasedPanel filePanel;
+    private SpatialFileBasedPanel filePanel;
 
     @Override
     public JWizardPanel[] getPanels(WizardAndami wizard) {
-	filePanel = new FileBasedPanel(wizard.getWizardComponents(), "dxf");
+	filePanel = new SpatialFileBasedPanel(wizard.getWizardComponents(), "dxf");
 	return new JWizardPanel[] { filePanel };
 
     }

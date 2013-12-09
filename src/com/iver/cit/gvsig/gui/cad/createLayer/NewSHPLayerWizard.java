@@ -24,7 +24,7 @@ import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
-import com.iver.cit.gvsig.gui.cad.panels.FileBasedPanel;
+import com.iver.cit.gvsig.gui.cad.panels.SpatialFileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
 
 public class NewSHPLayerWizard implements NewLayerWizard {
@@ -35,7 +35,7 @@ public class NewSHPLayerWizard implements NewLayerWizard {
 
     private ChooseGeometryType geometryType;
     private JPanelFieldDefinition fieldDefinition;
-    private FileBasedPanel filePanel;
+    private SpatialFileBasedPanel filePanel;
 
     @Override
     public JWizardPanel[] getPanels(WizardAndami wizard)
@@ -47,7 +47,7 @@ public class NewSHPLayerWizard implements NewLayerWizard {
 	fieldDefinition = new JPanelFieldDefinition(components);
 	fieldDefinition.setWriter(getWriter());
 
-	filePanel = new FileBasedPanel(wizard.getWizardComponents(), "shp");
+	filePanel = new SpatialFileBasedPanel(wizard.getWizardComponents(), "shp");
 
 	return new JWizardPanel[] { geometryType, fieldDefinition, filePanel };
     }

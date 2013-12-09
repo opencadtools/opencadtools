@@ -87,9 +87,9 @@ public class JPanelFieldDefinition extends JWizardPanel {
 	if (valid) {
 	    super.next();
 	}
-	if (getWizardComponents().getWizardPanel(2) instanceof FileBasedPanel) {
-	    if (!((FileBasedPanel) getWizardComponents().getWizardPanel(2))
-		    .getPath().equals("")) {
+	if (getWizardComponents().getWizardPanel(2) instanceof SpatialFileBasedPanel) {
+	    if (!((SpatialFileBasedPanel) getWizardComponents().getWizardPanel(
+		    2)).getPath().equals("")) {
 		setFinishButtonEnabled(true);
 	    } else {
 		setFinishButtonEnabled(false);
