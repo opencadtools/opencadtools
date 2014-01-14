@@ -19,7 +19,7 @@ import com.iver.andami.ui.mdiManager.WindowInfo;
 
 public class NewTableChoosePanel extends JPanel implements IWindow {
     private WindowInfo info;
-    private JList<String> list;
+    private JList list;
     private String selected;
 
     public NewTableChoosePanel(String[] types) {
@@ -30,7 +30,7 @@ public class NewTableChoosePanel extends JPanel implements IWindow {
 		+ ":");
 	label.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
 
-	list = new JList<String>(types);
+	list = new JList(types);
 	list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	JScrollPane pane = new JScrollPane(list);
 	JPanel center = new JPanel(new BorderLayout());
@@ -47,7 +47,7 @@ public class NewTableChoosePanel extends JPanel implements IWindow {
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
 		close();
-		selected = list.getSelectedValue();
+		selected = (String) list.getSelectedValue();
 	    }
 	};
 
