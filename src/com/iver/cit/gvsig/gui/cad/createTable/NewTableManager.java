@@ -83,7 +83,7 @@ public class NewTableManager {
 	components.getFinishButton().setEnabled(false);
 
 	String title = PluginServices.getPluginServices("com.iver.cit.gvsig")
-		.getText("new_layer");
+		.getText("new_table");
 	info.setTitle(title);
 	info.setWidth(640);
 	info.setHeight(350);
