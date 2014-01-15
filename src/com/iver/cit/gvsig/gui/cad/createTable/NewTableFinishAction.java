@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import com.hardcode.gdbms.engine.data.DataSource;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
+import com.iver.cit.gvsig.exceptions.table.StartEditingTableException;
 import com.iver.cit.gvsig.fmap.edition.EditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.iver.cit.gvsig.project.Project;
@@ -59,11 +60,17 @@ public class NewTableFinishAction extends FinishAction {
 
 	Table table = new Table();
 	table.setModel(projectTable);
+	try {
+	    table.startEditing();
+	} catch (StartEditingTableException e) {
+	    logger.error("Cannot start editing table", e);
+	}
 	PluginServices.getMDIManager().addWindow(table);
 
 	project.addDocument(projectTable);
 	project.setModified(true);
 
 	oldAction.performAction();
+
     }
 }
