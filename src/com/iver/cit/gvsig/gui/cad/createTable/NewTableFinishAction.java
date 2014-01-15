@@ -37,6 +37,13 @@ public class NewTableFinishAction extends FinishAction {
 	EditableAdapter adapter = new EditableAdapter();
 	try {
 	    dataSource = wizard.createTable();
+
+	    // If data source cannot be created, an error has been already
+	    // shown, simply return
+	    if (dataSource == null) {
+		return;
+	    }
+
 	    adapter.setOriginalDataSource(new SelectableDataSource(dataSource));
 	} catch (Exception e) {
 	    logger.error("Cannot create table", e);
