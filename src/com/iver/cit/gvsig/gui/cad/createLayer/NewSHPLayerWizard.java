@@ -24,12 +24,12 @@ import com.iver.cit.gvsig.fmap.edition.writers.shp.ShpWriter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import com.iver.cit.gvsig.gui.cad.panels.ChooseGeometryType;
-import com.iver.cit.gvsig.gui.cad.panels.SpatialFileBasedPanel;
 import com.iver.cit.gvsig.gui.cad.panels.JPanelFieldDefinition;
+import com.iver.cit.gvsig.gui.cad.panels.SpatialFileBasedPanel;
 
 public class NewSHPLayerWizard implements NewLayerWizard {
     public static final String TYPE = "SHP";
-    
+
     private static Preferences prefs = Preferences.userRoot().node(
 	    "gvSIG.encoding.dbf");
 
@@ -44,10 +44,10 @@ public class NewSHPLayerWizard implements NewLayerWizard {
 	geometryType = new ChooseGeometryType(components);
 	geometryType.setDriver(getDriver());
 
-	fieldDefinition = new JPanelFieldDefinition(components);
-	fieldDefinition.setWriter(getWriter());
+	fieldDefinition = new JPanelFieldDefinition(components, getWriter());
 
-	filePanel = new SpatialFileBasedPanel(wizard.getWizardComponents(), "shp");
+	filePanel = new SpatialFileBasedPanel(wizard.getWizardComponents(),
+		"shp");
 
 	return new JWizardPanel[] { geometryType, fieldDefinition, filePanel };
     }

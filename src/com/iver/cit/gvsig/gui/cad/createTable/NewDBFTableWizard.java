@@ -34,8 +34,7 @@ public class NewDBFTableWizard implements NewTableWizard {
     public JWizardPanel[] getPanels(WizardAndami wizard)
 	    throws DriverLoadException {
 	DefaultJWizardComponents components = wizard.getWizardComponents();
-	fieldDefinition = new JPanelFieldDefinition(components);
-	fieldDefinition.setWriter(getWriter());
+	fieldDefinition = new JPanelFieldDefinition(components, getWriter());
 
 	filePanel = new FileBasedPanel(wizard.getWizardComponents(), "dbf");
 

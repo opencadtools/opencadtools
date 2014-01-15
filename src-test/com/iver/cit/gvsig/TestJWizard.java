@@ -1,6 +1,5 @@
 package com.iver.cit.gvsig;
 
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -100,7 +99,7 @@ public class TestJWizard {
 	    ChooseGeometryType panelChoose = new ChooseGeometryType(
 		    wizardFrame.getWizardComponents());
 	    JPanelFieldDefinition panelFields = new JPanelFieldDefinition(
-		    wizardFrame.getWizardComponents());
+		    wizardFrame.getWizardComponents(), null);
 	    wizardFrame.getWizardComponents().addWizardPanel(panelChoose);
 
 	    wizardFrame.getWizardComponents().addWizardPanel(panelFields);
