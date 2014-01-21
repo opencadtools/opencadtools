@@ -43,7 +43,14 @@ public class MyFinishAction extends FinishAction {
 	    mapCtrl.getMapContext().beginAtomicEvent();
 	    lyr = wizard.createLayer(mapCtrl.getProjection());
 	} catch (Exception e) {
-	    NotificationManager.showMessageError(e.getLocalizedMessage(), e);
+	    Throwable cause = e.getCause();
+	    if (cause != null) {
+		NotificationManager.showMessageError(
+			cause.getLocalizedMessage(), e);
+	    } else {
+		NotificationManager
+			.showMessageError(e.getLocalizedMessage(), e);
+	    }
 	    return;
 	}
 
