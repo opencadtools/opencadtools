@@ -149,7 +149,7 @@ public class JPanelFieldDefinition extends JWizardPanel implements
     }
 
     protected void setCellEditorForFieldType() {
-	JComboBox<String> comboBox = new JComboBox<String>();
+	JComboBox comboBox = new JComboBox();
 
 	if (writer.canWriteAttribute(Types.BOOLEAN)) {
 	    comboBox.addItem("Boolean");
