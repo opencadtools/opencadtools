@@ -9,9 +9,10 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -494,8 +495,10 @@ public class JPanelFieldDefinition extends JWizardPanel implements
     private List<String> readReservedWordsFromFile() {
 	List<String> list = new ArrayList<String>();
 	try {
-	    String file = "gvSIG/extensiones/com.iver.cit.gvsig.cad/restricted.txt";
-	    BufferedReader reader = new BufferedReader(new FileReader(file));
+	    InputStream stream = getClass().getResourceAsStream(
+		    "restricted.txt");
+	    BufferedReader reader = new BufferedReader(new InputStreamReader(
+		    stream));
 	    String strLine;
 	    while ((strLine = reader.readLine()) != null) {
 		list.add(strLine.toUpperCase());
