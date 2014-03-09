@@ -45,6 +45,7 @@ import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
@@ -60,7 +61,6 @@ import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.edition.DefaultRowEdited;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
-import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
 import com.iver.cit.gvsig.gui.cad.exception.CommandException;
@@ -198,61 +198,53 @@ public class JoinCADTool extends DefaultCADTool {
 	if (selectedRow.size() < 2) {
 	    return;
 	}
-	ArrayList selectedRowAux = new ArrayList();
+
 	VectorialLayerEdited vle = getVLE();
 	VectorialEditableAdapter vea = vle.getVEA();
-	try {
-	    vea.startComplexRow();
-	    Geometry geomTotal = null;
-	    DefaultRowEdited[] dres = (DefaultRowEdited[]) selectedRow
-		    .toArray(new DefaultRowEdited[0]);
-	    for (int i = 0; i < dres.length; i++) {
-		shorted.add(dres[i]);
-	    }
-	    boolean first = true;
-	    Value[] values = null;
-	    String fid = null;
-	    int index = -1;
-	    Iterator<DefaultRowEdited> iterator = shorted.iterator();
-	    while (iterator.hasNext()) {
-		DefaultRowEdited dre = iterator.next();
-		DefaultFeature df = (DefaultFeature) dre.getLinkedRow()
-			.cloneRow();
-		IGeometry geom = df.getGeometry();
-		if (first) {
-		    values = df.getAttributes();
-		    fid = df.getID();
-		    index = dre.getIndex();
-		    first = false;
-		} else {
-		    vea.removeRow(dre.getIndex(), getName(),
-			    EditionEvent.GRAPHIC);
-		}
+	List<Integer> toRemove = new ArrayList<Integer>();
 
-		if (geomTotal == null) {
-		    geomTotal = geom.toJTSGeometry();
-		} else {
-		    Geometry geomJTS = geom.toJTSGeometry();
-		    geomTotal = geomTotal.union(geomJTS);
-		}
+	vea.startComplexRow();
+
+	shorted.addAll(selectedRow);
+
+	Value[] values = null;
+	String fid = null;
+	int index = -1;
+	Geometry geomTotal = null;
+
+	Iterator<DefaultRowEdited> iterator = shorted.iterator();
+	while (iterator.hasNext()) {
+	    DefaultRowEdited dre = iterator.next();
+	    DefaultFeature df = (DefaultFeature) dre.getLinkedRow().cloneRow();
+
+	    Geometry jtsGeom = df.getGeometry().toJTSGeometry();
+
+	    if (geomTotal == null) {
+		values = df.getAttributes();
+		fid = df.getID();
+		index = dre.getIndex();
+		geomTotal = jtsGeom;
+	    } else {
+		toRemove.add(dre.getIndex());
+		geomTotal = geomTotal.union(jtsGeom);
 	    }
-	    shorted.clear();
-	    // String newFID = vea.getNewFID();
-	    IGeometry geom = FConverter.jts_to_igeometry(geomTotal);
-	    // DefaultFeature df1 = new DefaultFeature(geom, values, newFID);
-	    DefaultFeature df1 = new DefaultFeature(geom, values, fid);
-	    joinedGeometry = geom;
-	    joinedFeature = (IFeature) df1.cloneRow();
-	    // int index1 = vea.addRow(df1, PluginServices.getText(this,
-	    // "join"),
-	    // EditionEvent.GRAPHIC);
-	    int index1 = vea.modifyRow(index, df1,
-		    PluginServices.getText(this, "join"), EditionEvent.GRAPHIC);
-	    selectedRowAux.add(new DefaultRowEdited(df1,
-		    IRowEdited.STATUS_ADDED, vea.getInversedIndex(index1)));
+	}
+
+	shorted.clear();
+
+	IGeometry geom = FConverter.jts_to_igeometry(geomTotal);
+	DefaultFeature df1 = new DefaultFeature(geom, values, fid);
+	joinedGeometry = geom;
+	joinedFeature = (IFeature) df1.cloneRow();
+
+	try {
+	    vea.modifyRow(index, df1, PluginServices.getText(this, "join"),
+		    EditionEvent.GRAPHIC);
+	    for (Integer i : toRemove) {
+		vea.removeRow(i, getName(), EditionEvent.GRAPHIC);
+	    }
 	    vea.endComplexRow(getName());
-	    // vle.setSelectionCache(VectorialLayerEdited.NOTSAVEPREVIOUS,
-	    // selectedRowAux);
+
 	    refresh();
 	    fireEndGeometry(JOIN_ACTION_COMMAND);
 	} catch (ReadDriverException e) {
