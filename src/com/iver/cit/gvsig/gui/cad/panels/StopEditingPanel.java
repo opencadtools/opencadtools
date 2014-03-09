@@ -77,6 +77,7 @@ public class StopEditingPanel extends JPanel implements ActionListener,
     private StopEditing stopEditing = null;
     private FLyrVect layer = null;
     private MapControl mapControl = null;
+    private boolean accepted;
 
     public StopEditingPanel(StopEditing stopEditing, FLyrVect layer,
 	    MapControl mapControl) {
@@ -242,6 +243,8 @@ public class StopEditingPanel extends JPanel implements ActionListener,
 		}
 	    }
 	}
+
+	accepted = true;
     }
 
     public void stopEditing() throws Exception {
@@ -280,5 +283,9 @@ public class StopEditingPanel extends JPanel implements ActionListener,
     @Override
     public void execute() throws Exception {
 	stopEditing();
+    }
+
+    public boolean isAccepted() {
+	return accepted;
     }
 }
