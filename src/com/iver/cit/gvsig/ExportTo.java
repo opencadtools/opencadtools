@@ -143,11 +143,6 @@ public class ExportTo extends Extension {
 	return PluginServices.getText(new ExportTo(), key);
     }
 
-    public void saveToPostGIS(MapContext mapContext, FLyrVect layer) {
-	// We keep this method for compatibility with gvSIG 1.12 and gvSIG CE
-	PostGISExporter.getInstance().export(mapContext, layer);
-    }
-
     /**
      * @param layer
      *            FLyrVect to obtain features. If selection, only selected
@@ -234,16 +229,6 @@ public class ExportTo extends Extension {
 	progress.close();
     }
 
-    public void saveToDxf(MapContext mapContext, FLyrVect layer) {
-	// We keep this method for compatibility with gvSIG 1.12 and gvSIG CE
-	DXFExporter.getInstance().export(mapContext, layer);
-    }
-
-    public void saveToShp(MapContext mapContext, FLyrVect layer) {
-	// We keep this method for compatibility with gvSIG 1.12 and gvSIG CE
-	SHPExporter.getInstance().export(mapContext, layer);
-    }
-
     @Override
     public boolean isEnabled() {
 	int status = EditionUtilities.getEditionStatus();
@@ -269,6 +254,41 @@ public class ExportTo extends Extension {
 	return false;
     }
 
+    @Deprecated
+    /**
+     * Use PostGISExporter.getInstance().export(mapContext, layer) instead
+     * We keep this method for compatibility with gvSIG 1.12 and gvSIG CE, but
+     * it can be removed in following versions of OpenCADTools, so don't use it
+     * deprecated March 10, 2014.
+     */
+    public void saveToPostGIS(MapContext mapContext, FLyrVect layer) {
+	PostGISExporter.getInstance().export(mapContext, layer);
+    }
+    
+    @Deprecated
+    /**
+     * Use DXFExporter.getInstance().export(mapContext, layer) instead
+     * We keep this method for compatibility with gvSIG 1.12 and gvSIG CE, but
+     * it can be removed in following versions of OpenCADTools, so don't use it
+     * deprecated March 10, 2014.
+     */
+    public void saveToDxf(MapContext mapContext, FLyrVect layer) {
+	// We keep this method for compatibility with gvSIG 1.12 and gvSIG CE
+	DXFExporter.getInstance().export(mapContext, layer);
+    }
+
+    @Deprecated
+    /**
+     * Use SHPExporter.getInstance().export(mapContext, layer) instead
+     * We keep this method for compatibility with gvSIG 1.12 and gvSIG CE, but
+     * it can be removed in following versions of OpenCADTools, so don't use it
+     * deprecated March 10, 2014.
+     */
+    public void saveToShp(MapContext mapContext, FLyrVect layer) {
+	// We keep this method for compatibility with gvSIG 1.12 and gvSIG CE
+	SHPExporter.getInstance().export(mapContext, layer);
+    }
+    
     /**
      * This class is used to execute a command at the end of a export process.
      * 
