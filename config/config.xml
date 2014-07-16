@@ -350,6 +350,10 @@
 				<selectable-tool icon="follow-geometry" action-command="_follow" tooltip="follow_geom" group="follow" position="6"/>
 			</tool-bar>
 		</extension>
+		
+		<extension class-name="com.iver.cit.gvsig.AddPartExtension" active="true">
+			<menu text="geometry/parts/add_part" action-command="_add_part"/>
+		</extension>
 
 
 	</extensions>
