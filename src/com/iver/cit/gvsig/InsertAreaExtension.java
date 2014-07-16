@@ -36,11 +36,15 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class InsertAreaExtension extends BaseCADExtension {
 
+    private static final String CAD_TOOL_KEY = "_area";
+    private static final String ICON_KEY = "insert-tool";
+    private static final String ICON_PATH = "images/icons/multipoligono.png";
+
     @Override
     public void initialize() {
 	tool = new AreaCADTool();
-	CADExtension.addCADTool("_area", tool);
-	registerIcon("insert-tool", "images/icons/multipoligono.png");
+	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -49,8 +53,8 @@ public class InsertAreaExtension extends BaseCADExtension {
     @Override
     public void execute(String s) {
 	CADExtension.initFocus();
-	if (s.equals("_area")) {
-	    CADExtension.setCADTool(s, true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	}
 	View view = (View) PluginServices.getMDIManager().getActiveWindow();
 	MapControl mapControl = view.getMapControl();

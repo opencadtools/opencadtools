@@ -54,16 +54,19 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class BreakExtension extends BaseCADExtension {
-    private View view;
+    private static final String CAD_TOOL_KEY = "_break";
+    private static final String ICON_KEY = "edition-geometry-break";
+    private static final String ICON_PATH = "images/Break.png";
 
+    private View view;
     private MapControl mapControl;
     private BreakCADTool breakCADTool;
 
     @Override
     public void initialize() {
 	breakCADTool = new BreakCADTool();
-	CADExtension.addCADTool("_break", breakCADTool);
-	registerIcon("edition-geometry-break", "images/Break.png");
+	CADExtension.addCADTool(CAD_TOOL_KEY, breakCADTool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -72,8 +75,8 @@ public class BreakExtension extends BaseCADExtension {
     @Override
     public void execute(String s) {
 	CADExtension.initFocus();
-	if (s.equals("_break")) {
-	    CADExtension.setCADTool(s, true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	}
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.getCADToolAdapter().configureMenu();

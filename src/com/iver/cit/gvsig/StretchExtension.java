@@ -58,6 +58,11 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class StretchExtension extends BaseCADExtension {
+
+    private static final String CAD_TOOL_KEY = "_stretch";
+    private static final String ICON_KEY = "edition-geometry-stretch";
+    private static final String ICON_PATH = "images/Stretch.png";
+
     private View view;
 
     private MapControl mapControl;
@@ -66,8 +71,8 @@ public class StretchExtension extends BaseCADExtension {
     @Override
     public void initialize() {
 	stretch = new StretchCADTool();
-	CADExtension.addCADTool("_stretch", stretch);
-	registerIcon("edition-geometry-stretch", "images/Stretch.png");
+	CADExtension.addCADTool(CAD_TOOL_KEY, stretch);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -76,8 +81,8 @@ public class StretchExtension extends BaseCADExtension {
     @Override
     public void execute(String s) {
 	CADExtension.initFocus();
-	if (s.equals("_stretch")) {
-	    CADExtension.setCADTool(s, true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	}
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.getCADToolAdapter().configureMenu();

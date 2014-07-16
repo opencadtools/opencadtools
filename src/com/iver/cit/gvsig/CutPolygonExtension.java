@@ -37,15 +37,15 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class CutPolygonExtension extends BaseCADExtension {
 
-    private final String iconPath = "images/icons/cortar_area.png";
-    private final String iconCode = "edition-geometry-cut-tool";
-    private final String cadToolCode = "_cut_polygon";
+    private final static String CAD_TOOL_KEY = "_cut_polygon";
+    private final static String ICON_KEY = "edition-geometry-cut-tool";
+    private final static String ICON_PATH = "images/icons/cortar_area.png";
 
     @Override
     public void initialize() {
 	tool = new CutPolygonCADTool();
-	CADExtension.addCADTool(cadToolCode, tool);
-	registerIcon(iconCode, iconPath);
+	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -54,8 +54,8 @@ public class CutPolygonExtension extends BaseCADExtension {
     @Override
     public void execute(String s) {
 	CADExtension.initFocus();
-	if (s.equals(cadToolCode)) {
-	    CADExtension.setCADTool(cadToolCode, true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	    View view = (View) PluginServices.getMDIManager().getActiveWindow();
 	    MapControl mapControl = view.getMapControl();
 	    CADExtension.getEditionManager().setMapControl(mapControl);

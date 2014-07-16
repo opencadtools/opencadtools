@@ -37,12 +37,15 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class InsertVertexExtension extends BaseCADExtension {
 
+    private static final String CAD_TOOL_KEY = "_insertVertex";
+    private static final String ICON_KEY = "edition-geometry-insert-vertex";
+    private static final String ICON_PATH = "images/icons/anhadir_vertice.png";
+
     @Override
     public void initialize() {
 	tool = new InsertVertexCADTool();
-	CADExtension.addCADTool("_insertVertex", tool);
-	registerIcon("edition-geometry-insert-vertex",
-		"images/icons/anhadir_vertice.png");
+	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -52,8 +55,8 @@ public class InsertVertexExtension extends BaseCADExtension {
     public void execute(String s) {
 	CADExtension.initFocus();
 
-	if (s.equals("_insertVertex")) {
-	    CADExtension.setCADTool("_insertVertex", true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	    View view = (View) PluginServices.getMDIManager().getActiveWindow();
 	    MapControl mapControl = view.getMapControl();
 	    CADExtension.getEditionManager().setMapControl(mapControl);

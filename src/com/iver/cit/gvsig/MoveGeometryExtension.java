@@ -52,11 +52,15 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class MoveGeometryExtension extends BaseCADExtension {
 
+    private static final String CAD_TOOL_KEY = "_move";
+    private static final String ICON_KEY = "edition-geometry-tool";
+    private static final String ICON_PATH = "images/Move.png";
+
     @Override
     public void initialize() {
 	tool = new MoveCADTool();
-	CADExtension.addCADTool("_move", tool);
-	registerIcon("edition-geometry-tool", "images/Move.png");
+	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -65,8 +69,8 @@ public class MoveGeometryExtension extends BaseCADExtension {
     @Override
     public void execute(String s) {
 	CADExtension.initFocus();
-	if (s.equals("_move")) {
-	    CADExtension.setCADTool("_move", true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	}
 	View view = (View) PluginServices.getMDIManager().getActiveWindow();
 	MapControl mapControl = view.getMapControl();

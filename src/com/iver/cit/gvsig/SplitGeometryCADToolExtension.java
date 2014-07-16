@@ -78,9 +78,9 @@ public class SplitGeometryCADToolExtension extends BaseCADExtension {
     }
 
     @Override
-    public void execute(String actionCommand) {
+    public void execute(String s) {
 	CADExtension.initFocus();
-	if (actionCommand.equals(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME)) {
+	if (s.equals(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME)) {
 	    CADExtension.setCADTool(
 		    SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME, true);
 	}

@@ -55,6 +55,11 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class JoinExtension extends BaseCADExtension {
+
+    private static final String CAD_TOOL_KEY = "_join";
+    private static final String ICON_KEY = "edition-geometry-Join";
+    private static final String ICON_PATH = "images/Join.png";
+
     protected View view;
 
     protected MapControl mapControl;
@@ -63,8 +68,8 @@ public class JoinExtension extends BaseCADExtension {
     @Override
     public void initialize() {
 	joinCADTool = new JoinCADTool();
-	CADExtension.addCADTool("_join", joinCADTool);
-	registerIcon("edition-geometry-Join", "images/Join.png");
+	CADExtension.addCADTool(CAD_TOOL_KEY, joinCADTool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -73,8 +78,8 @@ public class JoinExtension extends BaseCADExtension {
     @Override
     public void execute(String s) {
 	CADExtension.initFocus();
-	if (s.equals("_join")) {
-	    CADExtension.setCADTool(s, true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	}
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.getCADToolAdapter().configureMenu();

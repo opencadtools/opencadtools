@@ -54,6 +54,10 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class EquidistanceExtension extends BaseCADExtension {
+    private static final String CAD_TOOL_KEY = "_equidistance";
+    private static final String ICON_KEY = "edition-geometry-equidistance";
+    private static final String ICON_PATH = "images/Equidistance.png";
+
     private View view;
 
     private MapControl mapControl;
@@ -62,8 +66,8 @@ public class EquidistanceExtension extends BaseCADExtension {
     @Override
     public void initialize() {
 	equidistanceCADTool = new EquidistanceCADTool();
-	CADExtension.addCADTool("_equidistance", equidistanceCADTool);
-	registerIcon("edition-geometry-equidistance", "images/Equidistance.png");
+	CADExtension.addCADTool(CAD_TOOL_KEY, equidistanceCADTool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -72,8 +76,8 @@ public class EquidistanceExtension extends BaseCADExtension {
     @Override
     public void execute(String s) {
 	CADExtension.initFocus();
-	if (s.equals("_equidistance")) {
-	    CADExtension.setCADTool(s, true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	}
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.getCADToolAdapter().configureMenu();

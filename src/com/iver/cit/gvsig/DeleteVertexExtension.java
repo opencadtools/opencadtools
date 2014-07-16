@@ -23,11 +23,7 @@
  */
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.iver.andami.messages.NotificationManager;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.DeleteVertexCADTool;
-import com.iver.cit.gvsig.layers.ILayerEdited;
 
 /**
  * Extension to delete a vertex on a geometry of a layer in edition. Layer's
@@ -37,17 +33,16 @@ import com.iver.cit.gvsig.layers.ILayerEdited;
  * @author fpuga <fpuga (at) cartolab.es>
  */
 public class DeleteVertexExtension extends BaseCADExtension {
-    private DeleteVertexCADTool deleteVertex;
 
-    private final String iconPath = "images/icons/eliminar_vertice.png";
-    private final String iconCode = "edition-geometry-delete-vertex";
-    private final String cadToolCode = "_deleteVertex";
+    private final static String CAD_TOOL_KEY = "_deleteVertex";
+    private final static String ICON_KEY = "edition-geometry-delete-vertex";
+    private final static String ICON_PATH = "images/icons/eliminar_vertice.png";
 
     @Override
     public void initialize() {
-	deleteVertex = new DeleteVertexCADTool();
-	CADExtension.addCADTool(cadToolCode, deleteVertex);
-	registerIcon(iconCode, iconPath);
+	tool = new DeleteVertexCADTool();
+	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -56,44 +51,8 @@ public class DeleteVertexExtension extends BaseCADExtension {
     @Override
     public void execute(String s) {
 	CADExtension.initFocus();
-	CADExtension.setCADTool(cadToolCode, true);
+	CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	CADExtension.getCADToolAdapter().configureMenu();
     }
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-	return true;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	// check if there is a layer (not point or multipoint) active and in
-	// edition
-	boolean enabled = false;
-	try {
-	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-		ILayerEdited lyr = CADExtension.getEditionManager()
-			.getActiveLayerEdited();
-		if (lyr == null) {
-		    return false;
-		}
-		FLyrVect lv = (FLyrVect) lyr.getLayer();
-
-		if (deleteVertex.isApplicable(lv.getShapeType())) {
-		    enabled = true;
-		}
-	    }
-	} catch (ReadDriverException e) {
-	    NotificationManager.addError(e.getMessage(), e);
-	} catch (Exception e) {
-	    NotificationManager.addError(e.getMessage(), e);
-	}
-	return enabled;
-    }
 }

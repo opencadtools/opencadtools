@@ -52,11 +52,15 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class InsertMultiPointExtension extends BaseCADExtension {
 
+    private static final String CAD_TOOL_KEY = "_multipoint";
+    private static final String ICON_KEY = "edition-insert-tool";
+    private static final String ICON_PATH = "images/icons/multipunto.png";
+
     @Override
     public void initialize() {
 	tool = new MultiPointCADTool();
-	CADExtension.addCADTool("_multipoint", tool);
-	registerIcon("edition-insert-tool", "images/icons/multipunto.png");
+	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -66,8 +70,8 @@ public class InsertMultiPointExtension extends BaseCADExtension {
     public void execute(String s) {
 	CADExtension.initFocus();
 
-	if (s.equals("_multipoint")) {
-	    CADExtension.setCADTool("_multipoint", true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	    View view = (View) PluginServices.getMDIManager().getActiveWindow();
 	    MapControl mapControl = view.getMapControl();
 	    CADExtension.getEditionManager().setMapControl(mapControl);

@@ -271,9 +271,9 @@
 		<extension class-name="com.iver.cit.gvsig.AutoCompletePolygonExtension"
 			description="Extensión encargada de restablecer la selección anterior."
 			active="true">
-			<menu text="geometry/insert/autopolygon" action-command="AUTOCOMPLETE_POLYGON" icon="edition-geometry-autocompletepolygon"/>
+			<menu text="geometry/insert/autopolygon" action-command="_autocompletepolygon" icon="edition-geometry-autocompletepolygon"/>
 			<tool-bar name="insert" position="30">
-				<selectable-tool icon="edition-geometry-autocompletepolygon" action-command="AUTOCOMPLETE_POLYGON" tooltip="autocomplete-polygon" position="20"/>
+				<selectable-tool icon="edition-geometry-autocompletepolygon" action-command="_autocompletepolygon" tooltip="autocomplete-polygon" position="20"/>
 			</tool-bar>
 		</extension>
 

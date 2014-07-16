@@ -52,11 +52,15 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class ComplexSelectionGeometryExtension extends BaseCADExtension {
 
+    private static final String CAD_TOOL_KEY = "_complex_selection";
+    private static final String ICON_KEY = "edition-complex-tool";
+    private static final String ICON_PATH = "images/ComplexSelCAD.png";
+
     @Override
     public void initialize() {
 	tool = new ComplexSelectionCADTool();
-	CADExtension.addCADTool("_complex_selection", tool);
-	registerIcon("edition-complex-tool", "images/ComplexSelCAD.png");
+	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     /**
@@ -65,8 +69,8 @@ public class ComplexSelectionGeometryExtension extends BaseCADExtension {
     @Override
     public void execute(String s) {
 	CADExtension.initFocus();
-	if (s.equals("_complex_selection")) {
-	    CADExtension.setCADTool("_complex_selection", true);
+	if (s.equals(CAD_TOOL_KEY)) {
+	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	}
 	View view = (View) PluginServices.getMDIManager().getActiveWindow();
 	MapControl mapControl = view.getMapControl();
