@@ -113,7 +113,7 @@ public abstract class DefaultCADTool implements CADTool {
 
     private String question;
 
-    private String[] currentdescriptions;
+    private String[] currentdescriptions = new String[0];
 
     private String tool = "selection";
 
@@ -122,7 +122,7 @@ public abstract class DefaultCADTool implements CADTool {
     private boolean multiTransition = false;
     private boolean errorOnIntersection;
 
-    private ArrayList temporalCache = new ArrayList();
+    private final ArrayList temporalCache = new ArrayList();
 
     public void addTemporalCache(IGeometry geom) {
 	temporalCache.add(geom);

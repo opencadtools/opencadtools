@@ -142,7 +142,7 @@ public class CADToolAdapter extends Behavior {
      * @see EditionManager
      * @see #getEditionManager()
      */
-    private EditionManager editionManager = new EditionManager();
+    private final EditionManager editionManager = new EditionManager();
 
     /**
      * Identifies that the data are absolute coordinates of the new point from
@@ -187,7 +187,7 @@ public class CADToolAdapter extends Behavior {
      * display a different icon according to the current operation and its
      * status.</i>
      */
-    private Stack cadToolStack = new Stack();
+    private final Stack cadToolStack = new Stack();
 
     /**
      * X coordinate of the last dragging or moving mouse event.
@@ -202,8 +202,9 @@ public class CADToolAdapter extends Behavior {
     /**
      * Unused attribute.
      */
-    private ISymbol symbol = SymbologyFactory.createDefaultSymbolByShapeType(
-	    FConstant.SYMBOL_TYPE_POINT, Color.RED);
+    private final ISymbol symbol = SymbologyFactory
+	    .createDefaultSymbolByShapeType(FConstant.SYMBOL_TYPE_POINT,
+		    Color.RED);
 
     /**
      * Represents the cursor's point selected in <i>map coordinates</i>.
@@ -266,7 +267,7 @@ public class CADToolAdapter extends Behavior {
      * @see #getGrid()
      * @see #setAdjustGrid(boolean)
      */
-    private CADGrid cadgrid = new CADGrid();
+    private final CADGrid cadgrid = new CADGrid();
 
     /**
      * Determines is is enabled or not the <i>Orto</i> mode.
@@ -277,7 +278,7 @@ public class CADToolAdapter extends Behavior {
      * A light yellow color for the tool tip text box associated to the point
      * indicated by the mouse's cursor.
      */
-    private Color theTipColor = new Color(255, 255, 155);
+    private final Color theTipColor = new Color(255, 255, 155);
 
     /**
      * Last question asked to the user in the CAD console.
@@ -1027,18 +1028,13 @@ public class CADToolAdapter extends Behavior {
      */
     public void configureMenu() {
 	String[] desc = ((CADTool) cadToolStack.peek()).getDescriptions();
-	// String[] labels = ((CADTool)
-	// cadToolStack.peek()).getCurrentTransitions();
 	CADExtension.clearMenu();
-
 	for (int i = 0; i < desc.length; i++) {
 	    if (desc[i] != null) {
 		CADExtension
-			.addMenuEntry(PluginServices.getText(this, desc[i]));// ,
-		// labels[i]);
+			.addMenuEntry(PluginServices.getText(this, desc[i]));
 	    }
 	}
-
     }
 
     /**
