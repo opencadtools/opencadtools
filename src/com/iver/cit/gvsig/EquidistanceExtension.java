@@ -40,12 +40,14 @@
  */
 package com.iver.cit.gvsig;
 
+import org.apache.log4j.Logger;
+
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.EquidistanceCADTool;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
@@ -54,19 +56,18 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class EquidistanceExtension extends BaseCADExtension {
+
+    private static final Logger logger = Logger
+	    .getLogger(EquidistanceExtension.class);
+
     private static final String CAD_TOOL_KEY = "_equidistance";
     private static final String ICON_KEY = "edition-geometry-equidistance";
     private static final String ICON_PATH = "images/Equidistance.png";
 
-    private View view;
-
-    private MapControl mapControl;
-    private EquidistanceCADTool equidistanceCADTool;
-
     @Override
     public void initialize() {
-	equidistanceCADTool = new EquidistanceCADTool();
-	CADExtension.addCADTool(CAD_TOOL_KEY, equidistanceCADTool);
+	tool = new EquidistanceCADTool();
+	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
 	registerIcon(ICON_KEY, ICON_PATH);
     }
 
@@ -79,35 +80,19 @@ public class EquidistanceExtension extends BaseCADExtension {
 	if (s.equals(CAD_TOOL_KEY)) {
 	    CADExtension.setCADTool(CAD_TOOL_KEY, true);
 	}
+	View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	MapControl mapControl = view.getMapControl();
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.getCADToolAdapter().configureMenu();
     }
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
     @Override
-    public boolean isEnabled() {
-
+    protected boolean isCustomEnabled(VectorialLayerEdited vle) {
+	FLyrVect lv = (FLyrVect) vle.getLayer();
 	try {
-	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-		view = (View) PluginServices.getMDIManager().getActiveWindow();
-		mapControl = view.getMapControl();
-		EditionManager em = CADExtension.getEditionManager();
-		if (em.getActiveLayerEdited() == null) {
-		    return false;
-		}
-		FLyrVect lv = (FLyrVect) em.getActiveLayerEdited().getLayer();
-
-		if (lv.getRecordset().getSelection().cardinality() != 1) {
-		    return false;
-		}
-		if (equidistanceCADTool.isApplicable(lv.getShapeType())) {
-		    return true;
-		}
-	    }
+	    return lv.getRecordset().getSelection().cardinality() == 1;
 	} catch (ReadDriverException e) {
-	    NotificationManager.addError(e.getMessage(), e);
+	    logger.error(e.getStackTrace(), e);
 	}
 	return false;
     }

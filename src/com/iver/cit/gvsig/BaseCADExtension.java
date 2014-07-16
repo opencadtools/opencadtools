@@ -6,6 +6,7 @@ import com.iver.andami.messages.NotificationManager;
 import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.DefaultCADTool;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
 public abstract class BaseCADExtension extends Extension {
 
@@ -37,16 +38,37 @@ public abstract class BaseCADExtension extends Extension {
 		if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
 		    return false;
 		}
-		FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-			.getActiveLayerEdited().getLayer();
-		if (tool.isApplicable(lv.getShapeType())) {
+		VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+			.getEditionManager().getActiveLayerEdited();
+		FLyrVect lv = (FLyrVect) vle.getLayer();
+		if (!tool.isApplicable(lv.getShapeType())) {
+		    return false;
+		}
+		if (isCustomEnabled(vle)) {
 		    return true;
 		}
 	    }
 	} catch (ReadDriverException e) {
 	    NotificationManager.addError(e.getMessage(), e);
+	    return false;
 	}
 	return false;
+    }
+
+    /**
+     * A child should override this method to provide custom enable checks.
+     * Commonly this condition is related to the 'edition selected' features in
+     * the layer. Get it by means of
+     * 
+     * <pre>
+     * @code
+     * vle.getSelectedRow().size()
+     * </pre>
+     * 
+     * @return true when the condition is satisfied and the tool must be enabled
+     */
+    protected boolean isCustomEnabled(VectorialLayerEdited vle) {
+	return true;
     }
 
     @Override

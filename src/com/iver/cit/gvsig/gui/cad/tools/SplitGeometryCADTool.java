@@ -518,4 +518,23 @@ public class SplitGeometryCADTool extends DefaultCADTool {
 	// TODO Auto-generated method stub
 
     }
+
+    @Override
+    public boolean isApplicable(int shapeType) {
+	switch (shapeType) {
+	case FShape.ARC:
+	case FShape.LINE:
+	case FShape.CIRCLE:
+	case FShape.ELLIPSE:
+	case FShape.POLYGON:
+	case FShape.MULTI:
+	    return true;
+	case FShape.MULTIPOINT:
+	case FShape.POINT:
+	case FShape.TEXT:
+	    return false;
+	default:
+	    return false;
+	}
+    }
 }
