@@ -40,11 +40,8 @@
  */
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.MatrixCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -55,10 +52,6 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class MatrixExtension extends BaseCADExtension {
-    private View view;
-
-    private MapControl mapControl;
-    private MatrixCADTool matrixCADTool;
 
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
@@ -66,8 +59,8 @@ public class MatrixExtension extends BaseCADExtension {
     @Override
     public void initialize() {
 	registerIcons();
-	matrixCADTool = new MatrixCADTool();
-	CADExtension.addCADTool("_matrix", matrixCADTool);
+	tool = new MatrixCADTool();
+	CADExtension.addCADTool("_matrix", tool);
 
     }
 
@@ -93,35 +86,11 @@ public class MatrixExtension extends BaseCADExtension {
     public void execute(String s) {
 	CADExtension.initFocus();
 	if (s.equals("_matrix")) {
-
 	    CADExtension.setCADTool(s, true);
 	}
+	View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	MapControl mapControl = view.getMapControl();
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-
-	try {
-	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-		view = (View) PluginServices.getMDIManager().getActiveWindow();
-		mapControl = view.getMapControl();
-		if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
-		    return false;
-		}
-		FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-			.getActiveLayerEdited().getLayer();
-		if (matrixCADTool.isApplicable(lv.getShapeType())) {
-		    return true;
-		}
-	    }
-	} catch (ReadDriverException e) {
-	    NotificationManager.addError(e.getMessage(), e);
-	}
-	return false;
     }
 }

@@ -23,10 +23,8 @@
  */
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.AreaCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -37,20 +35,16 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Pablo Sanxiao [CartoLab]
  */
 public class InsertAreaExtension extends BaseCADExtension {
-    private View view;
-
-    private MapControl mapControl;
-    private AreaCADTool area;
 
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
     @Override
     public void initialize() {
-	area = new AreaCADTool();
-	CADExtension.addCADTool("_area", area);
+	tool = new AreaCADTool();
+	CADExtension.addCADTool("_area", tool);
 	PluginServices.getIconTheme().registerDefault(
-		"insert-area",
+		"insert-tool",
 		this.getClass().getClassLoader()
 			.getResource("images/icons/multipoligono.png"));
     }
@@ -64,40 +58,10 @@ public class InsertAreaExtension extends BaseCADExtension {
 	if (s.equals("_area")) {
 	    CADExtension.setCADTool(s, true);
 	}
+	View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	MapControl mapControl = view.getMapControl();
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.getCADToolAdapter().configureMenu();
     }
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    view = (View) PluginServices.getMDIManager().getActiveWindow();
-	    mapControl = view.getMapControl();
-	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
-		return false;
-	    }
-	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-		    .getActiveLayerEdited().getLayer();
-	    try {
-		if (area.isApplicable(lv.getShapeType())) {
-		    return true;
-		}
-	    } catch (ReadDriverException e) {
-		e.printStackTrace();
-	    }
-
-	    // LayerDescriptor ld =
-	    // LayerManager.getLayerDescriptor(lv.getName());
-	    // String tipoGeom = ld.getLayerEditionDescriptor().getTipoGeom();
-	    // if (area.newIsApplicable(ld)){
-	    // return true;
-	    // }
-	}
-
-	return false;
-    }
 }

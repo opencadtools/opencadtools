@@ -24,11 +24,8 @@
 
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.InsertVertexCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -39,17 +36,14 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Nacho Uve [Cartolab]
  */
 public class InsertVertexExtension extends BaseCADExtension {
-    private View view;
-    private MapControl mapControl;
-    private InsertVertexCADTool insertVertex;
 
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
     @Override
     public void initialize() {
-	insertVertex = new InsertVertexCADTool();
-	CADExtension.addCADTool("_insertVertex", insertVertex);
+	tool = new InsertVertexCADTool();
+	CADExtension.addCADTool("_insertVertex", tool);
 	PluginServices.getIconTheme().registerDefault(
 		"edition-geometry-insert-vertex",
 		this.getClass().getClassLoader()
@@ -65,34 +59,11 @@ public class InsertVertexExtension extends BaseCADExtension {
 
 	if (s.equals("_insertVertex")) {
 	    CADExtension.setCADTool("_insertVertex", true);
+	    View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    MapControl mapControl = view.getMapControl();
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    view = (View) PluginServices.getMDIManager().getActiveWindow();
-	    mapControl = view.getMapControl();
-	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
-		return false;
-	    }
-	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-		    .getActiveLayerEdited().getLayer();
-	    try {
-		if (insertVertex.isApplicable(lv.getShapeType())) {
-		    return true;
-		}
-	    } catch (ReadDriverException e) {
-		NotificationManager.addError(e.getMessage(), e);
-	    }
-	}
-	return false;
     }
 
 }

@@ -40,11 +40,8 @@
  */
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPointCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -54,24 +51,21 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Vicente Caballero Navarro
  */
 public class InsertMultiPointExtension extends BaseCADExtension {
-    private View view;
-    private MapControl mapControl;
-    private MultiPointCADTool multipoint;
 
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
     @Override
     public void initialize() {
-	multipoint = new MultiPointCADTool();
-	CADExtension.addCADTool("_multipoint", multipoint);
+	tool = new MultiPointCADTool();
+	CADExtension.addCADTool("_multipoint", tool);
 
 	registerIcons();
     }
 
     private void registerIcons() {
 	PluginServices.getIconTheme().registerDefault(
-		"edition-insert-multipoint",
+		"edition-insert-tool",
 		this.getClass().getClassLoader()
 			.getResource("images/icons/multipunto.png"));
 
@@ -86,33 +80,10 @@ public class InsertMultiPointExtension extends BaseCADExtension {
 
 	if (s.equals("_multipoint")) {
 	    CADExtension.setCADTool("_multipoint", true);
+	    View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    MapControl mapControl = view.getMapControl();
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-
-	try {
-	    if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-		view = (View) PluginServices.getMDIManager().getActiveWindow();
-		mapControl = view.getMapControl();
-		if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
-		    return false;
-		}
-		FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-			.getActiveLayerEdited().getLayer();
-		if (multipoint.isApplicable(lv.getShapeType())) {
-		    return true;
-		}
-	    }
-	} catch (ReadDriverException e) {
-	    NotificationManager.addError(e.getMessage(), e);
-	}
-	return false;
     }
 }

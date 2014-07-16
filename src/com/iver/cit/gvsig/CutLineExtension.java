@@ -24,11 +24,8 @@
 
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.CutLineCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -42,20 +39,16 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 public class CutLineExtension extends BaseCADExtension {
 
     private final String iconPath = "images/icons/cortar_linea.png";
-    private final String iconCode = "edition-cut-line";
+    private final String iconCode = "edition-cut-tool";
     private final String cadToolCode = "_cut_line";
-    private View view;
-
-    private MapControl mapControl;
-    private CutLineCADTool line;
 
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
     @Override
     public void initialize() {
-	line = new CutLineCADTool();
-	CADExtension.addCADTool(cadToolCode, line);
+	tool = new CutLineCADTool();
+	CADExtension.addCADTool(cadToolCode, tool);
 	registerIcons();
     }
 
@@ -67,43 +60,11 @@ public class CutLineExtension extends BaseCADExtension {
 	CADExtension.initFocus();
 	if (s.equals(cadToolCode)) {
 	    CADExtension.setCADTool(cadToolCode, true);
+	    View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    MapControl mapControl = view.getMapControl();
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    view = (View) PluginServices.getMDIManager().getActiveWindow();
-	    mapControl = view.getMapControl();
-	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
-		return false;
-	    }
-	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-		    .getActiveLayerEdited().getLayer();
-
-	    try {
-		if (line.isApplicable(lv.getShapeType())) {
-		    return true;
-		}
-	    } catch (ReadDriverException e) {
-		NotificationManager.addError(e.getMessage(), e);
-	    }
-
-	    // LayerDescriptor ld =
-	    // LayerManager.getLayerDescriptor(lv.getName());
-	    // String tipoGeom = ld.getLayerEditionDescriptor().getTipoGeom();
-	    // if (linea.newIsApplicable(ld)){
-	    // return true;
-	    // }
-	}
-
-	return false;
     }
 
     private void registerIcons() {

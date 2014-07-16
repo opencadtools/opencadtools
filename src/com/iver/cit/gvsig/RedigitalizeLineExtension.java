@@ -24,11 +24,8 @@
 
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.RedigitalizeLineCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -40,21 +37,16 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class RedigitalizeLineExtension extends BaseCADExtension {
     private final String iconPath = "images/icons/redigit_linea.png";
-    private final String iconCode = "edition-geometry-redigitalize-line";
+    private final String iconCode = "edition-geometry-redigitalize-tool";
     private final String cadToolCode = "_redigitalize_line";
-
-    private View view;
-
-    private MapControl mapControl;
-    private RedigitalizeLineCADTool line;
 
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
     @Override
     public void initialize() {
-	line = new RedigitalizeLineCADTool();
-	CADExtension.addCADTool(cadToolCode, line);
+	tool = new RedigitalizeLineCADTool();
+	CADExtension.addCADTool(cadToolCode, tool);
 	registerIcon();
     }
 
@@ -66,37 +58,11 @@ public class RedigitalizeLineExtension extends BaseCADExtension {
 	CADExtension.initFocus();
 	if (s.equals("_redigitalize_line")) {
 	    CADExtension.setCADTool("_redigitalize_line", true);
+	    View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    MapControl mapControl = view.getMapControl();
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    view = (View) PluginServices.getMDIManager().getActiveWindow();
-	    mapControl = view.getMapControl();
-	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
-		return false;
-	    }
-	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-		    .getActiveLayerEdited().getLayer();
-
-	    try {
-		if (line.isApplicable(lv.getShapeType())) {
-		    return true;
-		}
-	    } catch (ReadDriverException e) {
-		NotificationManager.addError(e.getMessage(), e);
-	    }
-
-	}
-
-	return false;
     }
 
     private void registerIcon() {

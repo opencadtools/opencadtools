@@ -96,7 +96,7 @@ public class CADExtension extends Extension implements IPreferenceExtension {
 
     private MapControl mapControl;
     private static CADToolAdapter adapter = null;
-    private EditingPage editingPage = new EditingPage();
+    private final EditingPage editingPage = new EditingPage();
 
     public static CADToolAdapter getCADToolAdapter(FLayer layer) {
 	IWindow[] windows = PluginServices.getMDIManager().getAllWindows();
@@ -305,18 +305,11 @@ public class CADExtension extends Extension implements IPreferenceExtension {
 	return cta.getCadTool();
     }
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
     @Override
     public boolean isEnabled() {
-	// initFocus();
 	return true;
     }
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
     @Override
     public boolean isVisible() {
 	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
@@ -338,7 +331,7 @@ public class CADExtension extends Extension implements IPreferenceExtension {
     @SuppressWarnings("serial")
     class KeyAction extends AbstractAction {
 
-	private String key;
+	private final String key;
 
 	public KeyAction(String key) {
 	    this.key = key;
@@ -360,7 +353,7 @@ public class CADExtension extends Extension implements IPreferenceExtension {
 
     @SuppressWarnings("serial")
     class MyAction extends AbstractAction {
-	private String actionCommand;
+	private final String actionCommand;
 
 	public MyAction(String command) {
 	    actionCommand = command;

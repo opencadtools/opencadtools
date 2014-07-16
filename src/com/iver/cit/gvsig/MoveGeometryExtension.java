@@ -40,12 +40,10 @@
  */
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
  * Extensión que gestiona la herramienta de mover.
@@ -54,24 +52,20 @@ import com.iver.cit.gvsig.gui.cad.tools.MoveCADTool;
  */
 public class MoveGeometryExtension extends BaseCADExtension {
 
-    protected MapControl mapControl;
-    protected MoveCADTool move;
-
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
     @Override
     public void initialize() {
-	move = new MoveCADTool();
-	CADExtension.addCADTool("_move", move);
-
+	tool = new MoveCADTool();
+	CADExtension.addCADTool("_move", tool);
 	registerIcons();
     }
 
     private void registerIcons() {
 	PluginServices.getIconTheme()
 		.registerDefault(
-			"edition-geometry-move",
+			"edition-geometry-tool",
 			this.getClass().getClassLoader()
 				.getResource("images/Move.png"));
     }
@@ -85,25 +79,9 @@ public class MoveGeometryExtension extends BaseCADExtension {
 	if (s.equals("_move")) {
 	    CADExtension.setCADTool("_move", true);
 	}
+	View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	MapControl mapControl = view.getMapControl();
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-	if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
-	    return false;
-	}
-	FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-		.getActiveLayerEdited().getLayer();
-	try {
-	    return move.isApplicable(lv.getShapeType());
-	} catch (ReadDriverException e) {
-	    NotificationManager.addError(e.getMessage(), e);
-	}
-	return false;
     }
 }

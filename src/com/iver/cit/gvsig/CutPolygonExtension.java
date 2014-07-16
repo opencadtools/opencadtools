@@ -23,11 +23,8 @@
  */
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.CutPolygonCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -39,13 +36,9 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Pablo Sanxiao [Cartolab]
  */
 public class CutPolygonExtension extends BaseCADExtension {
-    private View view;
-
-    private MapControl mapControl;
-    private CutPolygonCADTool polygon;
 
     private final String iconPath = "images/icons/cortar_area.png";
-    private final String iconCode = "edition-geometry-cut-polygon";
+    private final String iconCode = "edition-geometry-cut-tool";
     private final String cadToolCode = "_cut_polygon";
 
     /**
@@ -53,8 +46,8 @@ public class CutPolygonExtension extends BaseCADExtension {
      */
     @Override
     public void initialize() {
-	polygon = new CutPolygonCADTool();
-	CADExtension.addCADTool(cadToolCode, polygon);
+	tool = new CutPolygonCADTool();
+	CADExtension.addCADTool(cadToolCode, tool);
 	registerIcon();
     }
 
@@ -66,36 +59,11 @@ public class CutPolygonExtension extends BaseCADExtension {
 	CADExtension.initFocus();
 	if (s.equals(cadToolCode)) {
 	    CADExtension.setCADTool(cadToolCode, true);
+	    View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    MapControl mapControl = view.getMapControl();
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    view = (View) PluginServices.getMDIManager().getActiveWindow();
-	    mapControl = view.getMapControl();
-	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
-		return false;
-	    }
-	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-		    .getActiveLayerEdited().getLayer();
-
-	    try {
-		if (polygon.isApplicable(lv.getShapeType())) {
-		    return true;
-		}
-	    } catch (ReadDriverException e) {
-		NotificationManager.addError(e.getMessage(), e);
-	    }
-	}
-
-	return false;
     }
 
     private void registerIcon() {

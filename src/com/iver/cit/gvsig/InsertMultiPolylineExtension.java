@@ -23,11 +23,8 @@
  */
 package com.iver.cit.gvsig;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
-import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.MapControl;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPolylineCADTool;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
@@ -42,18 +39,13 @@ public class InsertMultiPolylineExtension extends BaseCADExtension {
     private final String iconCode = "edition-insert-multipolyline";
     private final String cadToolCode = "_insert_multipolyline";
 
-    private View view;
-
-    private MapControl mapControl;
-    private MultiPolylineCADTool multiline;
-
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
      */
     @Override
     public void initialize() {
-	multiline = new MultiPolylineCADTool();
-	CADExtension.addCADTool(cadToolCode, multiline);
+	tool = new MultiPolylineCADTool();
+	CADExtension.addCADTool(cadToolCode, tool);
 	registerIcon();
     }
 
@@ -65,43 +57,11 @@ public class InsertMultiPolylineExtension extends BaseCADExtension {
 	CADExtension.initFocus();
 	if (s.equals(cadToolCode)) {
 	    CADExtension.setCADTool(cadToolCode, true);
+	    View view = (View) PluginServices.getMDIManager().getActiveWindow();
+	    MapControl mapControl = view.getMapControl();
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    view = (View) PluginServices.getMDIManager().getActiveWindow();
-	    mapControl = view.getMapControl();
-	    if (CADExtension.getEditionManager().getActiveLayerEdited() == null) {
-		return false;
-	    }
-	    FLyrVect lv = (FLyrVect) CADExtension.getEditionManager()
-		    .getActiveLayerEdited().getLayer();
-
-	    try {
-		if (multiline.isApplicable(lv.getShapeType())) {
-		    return true;
-		}
-	    } catch (ReadDriverException e) {
-		NotificationManager.addError(e.getMessage(), e);
-	    }
-
-	    // LayerDescriptor ld =
-	    // LayerManager.getLayerDescriptor(lv.getName());
-	    // String tipoGeom = ld.getLayerEditionDescriptor().getTipoGeom();
-	    // if (multilinea.newIsApplicable(ld)){
-	    // return true;
-	    // }
-	}
-
-	return false;
     }
 
     private void registerIcon() {
