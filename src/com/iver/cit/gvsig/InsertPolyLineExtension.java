@@ -61,29 +61,15 @@ public class InsertPolyLineExtension extends BaseCADExtension {
     protected EIELPolylineCADTool polyline;
     protected SplineCADTool spline;
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	polyline = new EIELPolylineCADTool();
-	spline = new SplineCADTool();
 	CADExtension.addCADTool("_polyline", polyline);
+	registerIcon("edition-insert-polyline", "images/icons/polilinea.png");
+
+	spline = new SplineCADTool();
 	CADExtension.addCADTool("_spline", spline);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-insert-polyline",
-		this.getClass().getClassLoader()
-			.getResource("images/icons/polilinea.png"));
-
-	PluginServices.getIconTheme().registerDefault(
-		"edition-insert-geometry-spline",
-		this.getClass().getClassLoader()
-			.getResource("images/Spline.png"));
+	registerIcon("edition-insert-geometry-spline", "images/Spline.png");
     }
 
     /**

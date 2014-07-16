@@ -39,14 +39,11 @@ public class InsertMultiPolylineExtension extends BaseCADExtension {
     private final String iconCode = "edition-insert-multipolyline";
     private final String cadToolCode = "_insert_multipolyline";
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new MultiPolylineCADTool();
 	CADExtension.addCADTool(cadToolCode, tool);
-	registerIcon();
+	registerIcon(iconCode, iconPath);
     }
 
     /**
@@ -62,10 +59,5 @@ public class InsertMultiPolylineExtension extends BaseCADExtension {
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    private void registerIcon() {
-	PluginServices.getIconTheme().registerDefault(iconCode,
-		this.getClass().getClassLoader().getResource(iconPath));
     }
 }

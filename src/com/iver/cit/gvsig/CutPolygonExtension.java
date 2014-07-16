@@ -41,14 +41,11 @@ public class CutPolygonExtension extends BaseCADExtension {
     private final String iconCode = "edition-geometry-cut-tool";
     private final String cadToolCode = "_cut_polygon";
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new CutPolygonCADTool();
 	CADExtension.addCADTool(cadToolCode, tool);
-	registerIcon();
+	registerIcon(iconCode, iconPath);
     }
 
     /**
@@ -64,10 +61,5 @@ public class CutPolygonExtension extends BaseCADExtension {
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    private void registerIcon() {
-	PluginServices.getIconTheme().registerDefault(iconCode,
-		this.getClass().getClassLoader().getResource(iconPath));
     }
 }

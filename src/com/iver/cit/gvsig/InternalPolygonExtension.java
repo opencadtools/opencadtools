@@ -62,23 +62,12 @@ public class InternalPolygonExtension extends BaseCADExtension {
     private MapControl mapControl;
     private InternalPolygonCADTool internalpolygon;
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	internalpolygon = new InternalPolygonCADTool();
 	CADExtension.addCADTool("_internalpolygon", internalpolygon);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-modify-geometry-internalpolygon",
-		this.getClass().getClassLoader()
-			.getResource("images/InternalPolygon.png"));
-
+	registerIcon("edition-modify-geometry-internalpolygon",
+		"images/InternalPolygon.png");
     }
 
     /**

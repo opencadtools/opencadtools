@@ -52,22 +52,11 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class ComplexSelectionGeometryExtension extends BaseCADExtension {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new ComplexSelectionCADTool();
 	CADExtension.addCADTool("_complex_selection", tool);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-complex-tool",
-		this.getClass().getClassLoader()
-			.getResource("images/ComplexSelCAD.png"));
+	registerIcon("edition-complex-tool", "images/ComplexSelCAD.png");
     }
 
     /**

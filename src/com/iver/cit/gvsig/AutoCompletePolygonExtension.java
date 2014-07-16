@@ -11,15 +11,8 @@ public class AutoCompletePolygonExtension extends BaseCADExtension {
     public void initialize() {
 	tool = new AutoCompletePolygon();
 	CADExtension.addCADTool("_autocompletepolygon", tool);
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-geometry-autocompletepolygon",
-		this.getClass().getClassLoader()
-			.getResource("images/polygon_autocomplete.png"));
-
+	registerIcon("edition-geometry-autocompletepolygon",
+		"images/polygon_autocomplete.png");
     }
 
     @Override

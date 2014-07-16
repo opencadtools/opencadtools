@@ -52,22 +52,11 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class MoveGeometryExtension extends BaseCADExtension {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new MoveCADTool();
 	CADExtension.addCADTool("_move", tool);
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme()
-		.registerDefault(
-			"edition-geometry-tool",
-			this.getClass().getClassLoader()
-				.getResource("images/Move.png"));
+	registerIcon("edition-geometry-tool", "images/Move.png");
     }
 
     /**

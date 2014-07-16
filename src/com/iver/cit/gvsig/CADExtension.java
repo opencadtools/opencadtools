@@ -130,9 +130,6 @@ public class CADExtension extends Extension implements IPreferenceExtension {
 
     }
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 

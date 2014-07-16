@@ -59,29 +59,15 @@ public class InsertLineExtension extends BaseCADExtension {
     protected LineCADTool line;
     protected MapControl mapControl;
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	line = new LineCADTool();
 	CADExtension.addCADTool("_line", line);
+	registerIcon("edition-insert-line", "images/icons/linea.png");
+
 	ArcCADTool arc = new ArcCADTool();
 	CADExtension.addCADTool("_arc", arc);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-insert-line",
-		this.getClass().getClassLoader()
-			.getResource("images/icons/linea.png"));
-
-	PluginServices.getIconTheme().registerDefault(
-		"edition-insert-arc",
-		this.getClass().getClassLoader()
-			.getResource("images/icons/arco.png"));
+	registerIcon("edition-insert-arc", "images/icons/arco.png");
     }
 
     /**

@@ -24,9 +24,7 @@
 package com.iver.cit.gvsig;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
-import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.DeleteVertexCADTool;
 import com.iver.cit.gvsig.layers.ILayerEdited;
@@ -38,21 +36,18 @@ import com.iver.cit.gvsig.layers.ILayerEdited;
  * @author Nacho Uve
  * @author fpuga <fpuga (at) cartolab.es>
  */
-public class DeleteVertexExtension extends Extension {
+public class DeleteVertexExtension extends BaseCADExtension {
     private DeleteVertexCADTool deleteVertex;
 
     private final String iconPath = "images/icons/eliminar_vertice.png";
     private final String iconCode = "edition-geometry-delete-vertex";
     private final String cadToolCode = "_deleteVertex";
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	deleteVertex = new DeleteVertexCADTool();
 	CADExtension.addCADTool(cadToolCode, deleteVertex);
-	registerIcons();
+	registerIcon(iconCode, iconPath);
     }
 
     /**
@@ -100,10 +95,5 @@ public class DeleteVertexExtension extends Extension {
 	    NotificationManager.addError(e.getMessage(), e);
 	}
 	return enabled;
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(iconCode,
-		this.getClass().getClassLoader().getResource(iconPath));
     }
 }

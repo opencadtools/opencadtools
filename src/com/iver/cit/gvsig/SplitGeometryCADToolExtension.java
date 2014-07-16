@@ -70,6 +70,14 @@ public class SplitGeometryCADToolExtension extends BaseCADExtension {
     private SplitGeometryCADTool cadTool;
 
     @Override
+    public void initialize() {
+	cadTool = new SplitGeometryCADTool();
+	CADExtension.addCADTool(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME,
+		cadTool);
+	registerIcon("split-geometry", "images/split-poly.png");
+    }
+
+    @Override
     public void execute(String actionCommand) {
 	CADExtension.initFocus();
 	if (actionCommand.equals(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME)) {
@@ -78,21 +86,6 @@ public class SplitGeometryCADToolExtension extends BaseCADExtension {
 	}
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    @Override
-    public void initialize() {
-	cadTool = new SplitGeometryCADTool();
-	CADExtension.addCADTool(SplitGeometryCADTool.SPLIT_GEOMETRY_TOOL_NAME,
-		cadTool);
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"split-geometry",
-		this.getClass().getClassLoader()
-			.getResource("images/split-poly.png"));
     }
 
     /**

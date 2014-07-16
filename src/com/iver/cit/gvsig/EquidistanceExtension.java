@@ -59,22 +59,11 @@ public class EquidistanceExtension extends BaseCADExtension {
     private MapControl mapControl;
     private EquidistanceCADTool equidistanceCADTool;
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	equidistanceCADTool = new EquidistanceCADTool();
 	CADExtension.addCADTool("_equidistance", equidistanceCADTool);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-geometry-equidistance",
-		this.getClass().getClassLoader()
-			.getResource("images/Equidistance.png"));
+	registerIcon("edition-geometry-equidistance", "images/Equidistance.png");
     }
 
     /**

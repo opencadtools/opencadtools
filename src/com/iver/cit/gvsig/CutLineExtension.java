@@ -42,14 +42,11 @@ public class CutLineExtension extends BaseCADExtension {
     private final String iconCode = "edition-cut-tool";
     private final String cadToolCode = "_cut_line";
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new CutLineCADTool();
 	CADExtension.addCADTool(cadToolCode, tool);
-	registerIcons();
+	registerIcon(iconCode, iconPath);
     }
 
     /**
@@ -65,10 +62,5 @@ public class CutLineExtension extends BaseCADExtension {
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(iconCode,
-		this.getClass().getClassLoader().getResource(iconPath));
     }
 }

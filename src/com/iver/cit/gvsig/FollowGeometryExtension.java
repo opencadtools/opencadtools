@@ -45,10 +45,7 @@ public class FollowGeometryExtension extends BaseCADExtension {
 
     @Override
     public void initialize() {
-	PluginServices.getIconTheme().registerDefault(
-		"follow-geometry",
-		this.getClass().getClassLoader()
-			.getResource("images/icons/seg_geometria.png"));
+	registerIcon("follow-geometry", "images/icons/seg_geometria.png");
     }
 
     @Override

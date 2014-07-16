@@ -40,14 +40,11 @@ public class RedigitalizeLineExtension extends BaseCADExtension {
     private final String iconCode = "edition-geometry-redigitalize-tool";
     private final String cadToolCode = "_redigitalize_line";
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new RedigitalizeLineCADTool();
 	CADExtension.addCADTool(cadToolCode, tool);
-	registerIcon();
+	registerIcon(iconCode, iconPath);
     }
 
     /**
@@ -63,10 +60,5 @@ public class RedigitalizeLineExtension extends BaseCADExtension {
 	    CADExtension.getEditionManager().setMapControl(mapControl);
 	}
 	CADExtension.getCADToolAdapter().configureMenu();
-    }
-
-    private void registerIcon() {
-	PluginServices.getIconTheme().registerDefault(iconCode,
-		this.getClass().getClassLoader().getResource(iconPath));
     }
 }

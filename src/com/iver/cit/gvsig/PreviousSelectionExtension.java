@@ -41,7 +41,6 @@
 package com.iver.cit.gvsig;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -55,15 +54,9 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  */
 public class PreviousSelectionExtension extends BaseCADExtension {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
-	PluginServices.getIconTheme().registerDefault(
-		"previous-selection",
-		this.getClass().getClassLoader()
-			.getResource("images/previousSel.png"));
+	registerIcon("previous-selection", "images/previousSel.png");
     }
 
     /**

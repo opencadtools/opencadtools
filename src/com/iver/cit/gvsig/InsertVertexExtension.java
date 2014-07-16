@@ -37,17 +37,12 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class InsertVertexExtension extends BaseCADExtension {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new InsertVertexCADTool();
 	CADExtension.addCADTool("_insertVertex", tool);
-	PluginServices.getIconTheme().registerDefault(
-		"edition-geometry-insert-vertex",
-		this.getClass().getClassLoader()
-			.getResource("images/icons/anhadir_vertice.png"));
+	registerIcon("edition-geometry-insert-vertex",
+		"images/icons/anhadir_vertice.png");
     }
 
     /**

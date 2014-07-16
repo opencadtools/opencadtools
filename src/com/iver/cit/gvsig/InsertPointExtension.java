@@ -52,23 +52,11 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class InsertPointExtension extends BaseCADExtension {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new PointCADTool();
 	CADExtension.addCADTool("_point", tool);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-insert-tool",
-		this.getClass().getClassLoader()
-			.getResource("images/icons/punto.png"));
-
+	registerIcon("edition-insert-tool", "images/icons/punto.png");
     }
 
     /**

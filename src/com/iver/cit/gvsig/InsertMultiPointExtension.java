@@ -52,23 +52,11 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class InsertMultiPointExtension extends BaseCADExtension {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new MultiPointCADTool();
 	CADExtension.addCADTool("_multipoint", tool);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-insert-tool",
-		this.getClass().getClassLoader()
-			.getResource("images/icons/multipunto.png"));
-
+	registerIcon("edition-insert-tool", "images/icons/multipunto.png");
     }
 
     /**

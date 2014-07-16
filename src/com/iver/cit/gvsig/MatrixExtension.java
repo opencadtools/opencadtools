@@ -53,30 +53,14 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class MatrixExtension extends BaseCADExtension {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
-	registerIcons();
 	tool = new MatrixCADTool();
 	CADExtension.addCADTool("_matrix", tool);
 
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-geometry-matrix",
-		this.getClass().getClassLoader()
-			.getResource("images/Matriz.png"));
-	PluginServices.getIconTheme().registerDefault(
-		"edition-geometrymatrix-lagxy",
-		this.getClass().getClassLoader()
-			.getResource("images/lagxy.png"));
-	PluginServices.getIconTheme().registerDefault(
-		"edition-geometrymatrix-addpoint",
-		this.getClass().getClassLoader()
-			.getResource("images/addpoint.png"));
+	registerIcon("edition-geometry-matrix", "images/Matriz.png");
+	registerIcon("edition-geometrymatrix-lagxy", "images/lagxy.png");
+	registerIcon("edition-geometrymatrix-addpoint", "images/addpoint.png");
     }
 
     /**

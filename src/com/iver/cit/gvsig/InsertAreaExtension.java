@@ -36,17 +36,11 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class InsertAreaExtension extends BaseCADExtension {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new AreaCADTool();
 	CADExtension.addCADTool("_area", tool);
-	PluginServices.getIconTheme().registerDefault(
-		"insert-tool",
-		this.getClass().getClassLoader()
-			.getResource("images/icons/multipoligono.png"));
+	registerIcon("insert-tool", "images/icons/multipoligono.png");
     }
 
     /**

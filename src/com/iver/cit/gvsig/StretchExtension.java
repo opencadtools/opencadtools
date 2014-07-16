@@ -63,23 +63,11 @@ public class StretchExtension extends BaseCADExtension {
     private MapControl mapControl;
     private StretchCADTool stretch;
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	stretch = new StretchCADTool();
 	CADExtension.addCADTool("_stretch", stretch);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-geometry-stretch",
-		this.getClass().getClassLoader()
-			.getResource("images/Stretch.png"));
-
+	registerIcon("edition-geometry-stretch", "images/Stretch.png");
     }
 
     /**

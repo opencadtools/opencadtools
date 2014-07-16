@@ -52,23 +52,11 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class SelectionGeometryExtension extends BaseCADExtension {
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	tool = new SelectionCADTool();
 	CADExtension.addCADTool("_selection", tool);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-geometry-select",
-		this.getClass().getClassLoader()
-			.getResource("images/SelCAD.png"));
-
+	registerIcon("edition-geometry-select", "images/SelCAD.png");
     }
 
     /**

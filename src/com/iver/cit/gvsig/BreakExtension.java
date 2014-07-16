@@ -59,23 +59,11 @@ public class BreakExtension extends BaseCADExtension {
     private MapControl mapControl;
     private BreakCADTool breakCADTool;
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	breakCADTool = new BreakCADTool();
 	CADExtension.addCADTool("_break", breakCADTool);
-
-	registerIcons();
-    }
-
-    private void registerIcons() {
-	PluginServices.getIconTheme().registerDefault(
-		"edition-geometry-break",
-		this.getClass().getClassLoader()
-			.getResource("images/Break.png"));
-
+	registerIcon("edition-geometry-break", "images/Break.png");
     }
 
     /**

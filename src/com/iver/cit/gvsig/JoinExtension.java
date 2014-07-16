@@ -60,24 +60,11 @@ public class JoinExtension extends BaseCADExtension {
     protected MapControl mapControl;
     protected JoinCADTool joinCADTool;
 
-    /**
-     * @see com.iver.andami.plugins.IExtension#initialize()
-     */
     @Override
     public void initialize() {
 	joinCADTool = new JoinCADTool();
 	CADExtension.addCADTool("_join", joinCADTool);
-
-	registerIcons();
-    }
-
-    protected void registerIcons() {
-	PluginServices.getIconTheme()
-		.registerDefault(
-			"edition-geometry-Join",
-			this.getClass().getClassLoader()
-				.getResource("images/Join.png"));
-
+	registerIcon("edition-geometry-Join", "images/Join.png");
     }
 
     /**
