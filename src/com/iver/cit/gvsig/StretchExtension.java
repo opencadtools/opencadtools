@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
-import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.StretchCADTool;
@@ -58,7 +57,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * 
  * @author Vicente Caballero Navarro
  */
-public class StretchExtension extends Extension {
+public class StretchExtension extends BaseCADExtension {
     private View view;
 
     private MapControl mapControl;
@@ -123,17 +122,6 @@ public class StretchExtension extends Extension {
 	    }
 	} catch (ReadDriverException e) {
 	    NotificationManager.addError(e.getMessage(), e);
-	}
-	return false;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    return true;
 	}
 	return false;
     }

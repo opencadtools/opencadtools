@@ -26,7 +26,6 @@ package com.iver.cit.gvsig;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
-import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.RedigitalizePolygonCADTool;
@@ -39,7 +38,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Nacho Varela [Cartolab]
  * @author Pablo Sanxiao [CartoLab]
  */
-public class RedigitalizePolygonExtension extends Extension {
+public class RedigitalizePolygonExtension extends BaseCADExtension {
     private final String iconPath = "images/icons/redigit_poligono.png";
     private final String iconCode = "edition-geometry-redigitalize-polygon";
     private final String cadToolCode = "_redigitalize_polygon";
@@ -102,17 +101,6 @@ public class RedigitalizePolygonExtension extends Extension {
 	    // }
 	}
 
-	return false;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    return true;
-	}
 	return false;
     }
 

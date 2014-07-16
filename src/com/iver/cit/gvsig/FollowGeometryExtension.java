@@ -25,7 +25,6 @@
 package com.iver.cit.gvsig;
 
 import com.iver.andami.PluginServices;
-import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.cad.tools.InsertionCADTool;
@@ -42,7 +41,7 @@ import com.iver.utiles.console.JConsole;
  * @author Francisco Puga <fpuga (at) cartolab.es>
  * @author Javier Estévez Valiñas
  */
-public class FollowGeometryExtension extends Extension {
+public class FollowGeometryExtension extends BaseCADExtension {
 
     @Override
     public void initialize() {
@@ -101,17 +100,6 @@ public class FollowGeometryExtension extends Extension {
 
 	}
 
-	return false;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    return true;
-	}
 	return false;
     }
 

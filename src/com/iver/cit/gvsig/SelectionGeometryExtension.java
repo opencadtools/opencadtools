@@ -43,7 +43,6 @@ package com.iver.cit.gvsig;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
-import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
@@ -53,7 +52,7 @@ import com.iver.cit.gvsig.gui.cad.tools.SelectionCADTool;
  * 
  * @author Vicente Caballero Navarro
  */
-public class SelectionGeometryExtension extends Extension {
+public class SelectionGeometryExtension extends BaseCADExtension {
 
     private MapControl mapControl;
     private SelectionCADTool selection;
@@ -104,17 +103,6 @@ public class SelectionGeometryExtension extends Extension {
 	    return selection.isApplicable(lv.getShapeType());
 	} catch (ReadDriverException e) {
 	    NotificationManager.addError(e.getMessage(), e);
-	}
-	return false;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    return true;
 	}
 	return false;
     }

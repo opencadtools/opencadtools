@@ -26,7 +26,6 @@ package com.iver.cit.gvsig;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
-import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.MultiPolylineCADTool;
@@ -38,7 +37,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Isabel Pérez-Urria Lage [LBD]
  * @author Javier Estévez [Cartolab]
  */
-public class InsertMultiPolylineExtension extends Extension {
+public class InsertMultiPolylineExtension extends BaseCADExtension {
     private final String iconPath = "images/icons/multipolilinea.png";
     private final String iconCode = "edition-insert-multipolyline";
     private final String cadToolCode = "_insert_multipolyline";
@@ -102,17 +101,6 @@ public class InsertMultiPolylineExtension extends Extension {
 	    // }
 	}
 
-	return false;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    return true;
-	}
 	return false;
     }
 

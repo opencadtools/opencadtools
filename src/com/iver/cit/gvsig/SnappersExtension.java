@@ -26,7 +26,6 @@ package com.iver.cit.gvsig;
 import java.util.ArrayList;
 
 import com.iver.andami.PluginServices;
-import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.gui.cad.CADStatus;
 import com.iver.cit.gvsig.layers.ILayerEdited;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
@@ -42,7 +41,7 @@ import com.iver.utiles.console.JConsole;
  * @author Jose Ignacio Lamas [LBD]
  * @author Javier Estévez [Cartolab]
  */
-public class SnappersExtension extends Extension {
+public class SnappersExtension extends BaseCADExtension {
 
     private CADStatus cadStatus = null;
 
@@ -115,13 +114,4 @@ public class SnappersExtension extends Extension {
 
 	return false;
     }
-
-    @Override
-    public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    return true;
-	}
-	return false;
-    }
-
 }

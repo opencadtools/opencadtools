@@ -27,7 +27,6 @@ package com.iver.cit.gvsig;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
-import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.RedigitalizeLineCADTool;
@@ -39,7 +38,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  * @author Jose Ignacio Lamas [LBD]
  * @author Pablo Sanxiao [Cartolab]
  */
-public class RedigitalizeLineExtension extends Extension {
+public class RedigitalizeLineExtension extends BaseCADExtension {
     private final String iconPath = "images/icons/redigit_linea.png";
     private final String iconCode = "edition-geometry-redigitalize-line";
     private final String cadToolCode = "_redigitalize_line";
@@ -97,17 +96,6 @@ public class RedigitalizeLineExtension extends Extension {
 
 	}
 
-	return false;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    return true;
-	}
 	return false;
     }
 

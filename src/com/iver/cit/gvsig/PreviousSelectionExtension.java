@@ -43,7 +43,6 @@ package com.iver.cit.gvsig;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
-import com.iver.andami.plugins.Extension;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.layers.ILayerEdited;
@@ -54,7 +53,7 @@ import com.iver.cit.gvsig.layers.VectorialLayerEdited;
  * 
  * @author Vicente Caballero Navarro
  */
-public class PreviousSelectionExtension extends Extension {
+public class PreviousSelectionExtension extends BaseCADExtension {
 
     /**
      * @see com.iver.andami.plugins.IExtension#initialize()
@@ -98,17 +97,6 @@ public class PreviousSelectionExtension extends Extension {
 	}
 	if (layerEdited instanceof VectorialLayerEdited) {
 	    return ((VectorialLayerEdited) layerEdited).getPreviousSelection();
-	}
-	return false;
-    }
-
-    /**
-     * @see com.iver.andami.plugins.IExtension#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-	if (EditionUtilities.getEditionStatus() == EditionUtilities.EDITION_STATUS_ONE_VECTORIAL_LAYER_ACTIVE_AND_EDITABLE) {
-	    return true;
 	}
 	return false;
     }
