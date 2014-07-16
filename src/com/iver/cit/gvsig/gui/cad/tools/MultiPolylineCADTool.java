@@ -62,8 +62,8 @@ public class MultiPolylineCADTool extends InsertionCADTool {
     private MultiPolylineCADToolContext _fsm;
     private Point2D firstPoint;
     private Point2D antPoint;
-    private ArrayList list = new ArrayList();
-    private ArrayList points = new ArrayList();
+    private final ArrayList list = new ArrayList();
+    private final ArrayList points = new ArrayList();
     private int numLines;
 
     /**
@@ -164,7 +164,8 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 		    row = vea.getRow(virtualIndex.intValue());
 		    IFeature feat = (IFeature) row.getLinkedRow().cloneRow();
 		    IGeometry geometry = feat.getGeometry();
-		    GeneralPathX currentGp = getCurrentPath(geometry);
+		    GeneralPathX currentGp = new GeneralPathX(
+			    geometry.getInternalShape());
 		    currentGp.append(
 			    gp.getPathIterator(null, FConverter.FLATNESS),
 			    false);
@@ -203,7 +204,8 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 		    row = vea.getRow(virtualIndex.intValue());
 		    IGeometry geometry = ((IFeature) row.getLinkedRow()
 			    .cloneRow()).getGeometry();
-		    GeneralPathX currentGp = getCurrentPath(geometry);
+		    GeneralPathX currentGp = new GeneralPathX(
+			    geometry.getInternalShape());
 		    currentGp.append(
 			    gp.getPathIterator(null, FConverter.FLATNESS),
 			    false);
@@ -397,51 +399,6 @@ public class MultiPolylineCADTool extends InsertionCADTool {
 	// seguimiento de
 	// los snappers
 	getCadToolAdapter().setPreviousPoint((double[]) null);
-    }
-
-    // Obtiene el GeneralPathX a partir de la IGeometry
-    private GeneralPathX getCurrentPath(IGeometry gp) {
-
-	GeneralPathX newGp = new GeneralPathX();
-	double[] theData = new double[6];
-
-	PathIterator theIterator;
-	int theType;
-	int numParts = 0;
-
-	theIterator = gp.getPathIterator(null, FConverter.FLATNESS);
-	while (!theIterator.isDone()) {
-	    theType = theIterator.currentSegment(theData);
-	    switch (theType) {
-
-	    case PathIterator.SEG_MOVETO:
-		numParts++;
-		newGp.moveTo(theData[0], theData[1]);
-		break;
-
-	    case PathIterator.SEG_LINETO:
-		newGp.lineTo(theData[0], theData[1]);
-		break;
-
-	    case PathIterator.SEG_QUADTO:
-		newGp.quadTo(theData[0], theData[1], theData[2], theData[3]);
-		break;
-
-	    case PathIterator.SEG_CUBICTO:
-		newGp.curveTo(theData[0], theData[1], theData[2], theData[3],
-			theData[4], theData[5]);
-		break;
-
-	    case PathIterator.SEG_CLOSE:
-		newGp.closePath();
-		break;
-	    } // end switch
-
-	    theIterator.next();
-	} // end while loop
-
-	return newGp;
-
     }
 
     private IGeometry removeLastShape(IGeometry gp) {
