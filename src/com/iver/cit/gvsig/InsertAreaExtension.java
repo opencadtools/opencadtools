@@ -37,7 +37,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 public class InsertAreaExtension extends BaseCADExtension {
 
     private static final String CAD_TOOL_KEY = "_area";
-    private static final String ICON_KEY = "insert-tool";
+    private static final String ICON_KEY = "insert-area";
     private static final String ICON_PATH = "images/icons/multipoligono.png";
 
     @Override

@@ -53,7 +53,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 public class InsertPointExtension extends BaseCADExtension {
 
     private static final String CAD_TOOL_KEY = "_point";
-    private static final String ICON_KEY = "edition-insert-tool";
+    private static final String ICON_KEY = "edition-insert-point";
     private static final String ICON_PATH = "images/icons/punto.png";
 
     @Override

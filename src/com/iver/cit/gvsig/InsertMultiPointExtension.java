@@ -53,7 +53,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 public class InsertMultiPointExtension extends BaseCADExtension {
 
     private static final String CAD_TOOL_KEY = "_multipoint";
-    private static final String ICON_KEY = "edition-insert-tool";
+    private static final String ICON_KEY = "edition-insert-multipoint";
     private static final String ICON_PATH = "images/icons/multipunto.png";
 
     @Override

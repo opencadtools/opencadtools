@@ -38,7 +38,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 public class RedigitalizeLineExtension extends BaseCADExtension {
 
     private final static String CAD_TOOL_KEY = "_redigitalize_line";
-    private final static String ICON_KEY = "edition-geometry-redigitalize-tool";
+    private final static String ICON_KEY = "edition-geometry-redigitalize-line";
     private final static String ICON_PATH = "images/icons/redigit_linea.png";
 
     @Override

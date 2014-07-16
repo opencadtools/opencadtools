@@ -38,7 +38,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 public class CutPolygonExtension extends BaseCADExtension {
 
     private final static String CAD_TOOL_KEY = "_cut_polygon";
-    private final static String ICON_KEY = "edition-geometry-cut-tool";
+    private final static String ICON_KEY = "edition-geometry-cut-polygon";
     private final static String ICON_PATH = "images/icons/cortar_area.png";
 
     @Override
