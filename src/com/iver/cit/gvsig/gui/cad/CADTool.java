@@ -159,6 +159,28 @@ public interface CADTool {
 
     public void setDescription(String[] descriptions);
 
+    /**
+     * This method is used mainly in three situations:
+     * 
+     * <pre>
+     * 1) The string returned is printed in the cad console each time the tool is selected
+     * 2) As de description argument for the VectorialEditableAdapter methods addRow, 
+     *    removeRow, modifyRow, endComplexRow ...
+     * 3) As the cadtoolkey argument in the EndGeometryListener
+     * 4) StartEditing.startCommandsApplicable
+     * 5) DefaultCadTool.changeCommand
+     * </pre>
+     * 
+     * e returned string is
+     */
+    // TODO fpuga. The name of some tools like selection is printed in pink,
+    // other
+    // tools are printed in black. Don't know why.
+    // TODO fpuga. 4, 5 should be studied a bit better, in order to check if the
+    // getName string should be used as the key in
+    // CADToolAdapter.addCADTool(name, c);
+    // TODO fpuga. to print the name in the console is nice return a translated
+    // string, but for the rest of the uses is better return a 'key'
     public String getName();
 
     public VectorialLayerEdited getVLE();

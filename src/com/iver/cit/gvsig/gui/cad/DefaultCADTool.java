@@ -514,8 +514,10 @@ public abstract class DefaultCADTool implements CADTool {
     }
 
     public void throwNoPointsException(String s) {
-	View vista = (View) PluginServices.getMDIManager().getActiveWindow();
-	vista.getConsolePanel().addText(s, JConsole.ERROR);
+	IWindow window = PluginServices.getMDIManager().getActiveWindow();
+	if (window instanceof View) {
+	    ((View) window).getConsolePanel().addText(s, JConsole.ERROR);
+	}
     }
 
     public boolean isErrorOnIntersection() {

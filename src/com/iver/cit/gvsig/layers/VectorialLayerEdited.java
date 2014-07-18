@@ -48,18 +48,18 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class VectorialLayerEdited extends DefaultLayerEdited implements
 	LayerDrawingListener, SelectionListener {
-    private ArrayList selectedHandler = new ArrayList();
-    private ArrayList selectedRow = new ArrayList();
+    private final ArrayList selectedHandler = new ArrayList();
+    private final ArrayList selectedRow = new ArrayList();
     private Point2D lastPoint;
     private Point2D firstPoint;
     private CADTool cadtool = null;
 
-    private ArrayList snappers = new ArrayList();
+    private final ArrayList snappers = new ArrayList();
     private ArrayList layersToSnap = new ArrayList();
     private ILegend legend;
     /** Selección previa **/
-    private ArrayList previousRowSelection = new ArrayList();
-    private ArrayList previousHandlerSelection = new ArrayList();
+    private final ArrayList previousRowSelection = new ArrayList();
+    private final ArrayList previousHandlerSelection = new ArrayList();
     public static final boolean SAVEPREVIOUS = true;
     public static final boolean NOTSAVEPREVIOUS = false;
 
@@ -126,6 +126,32 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements
 	return (IFeature[]) selectedRow.toArray(new IFeature[0]);
     }
 
+    /**
+     * A feature is selected when its geometry intersects with a rectangle build
+     * as (x - tam, y - tam, tam * 2, tam * 2) where x, y is the point clicked
+     * by the user and tam the snapping distance allowed
+     */
+    public Rectangle2D getRectUsedForSnapping() {
+	ViewPort vp = getLayer().getMapContext().getViewPort();
+	double tam = vp.toMapDistance(SelectionCADTool.tolerance);
+	Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() - tam,
+		firstPoint.getY() - tam, tam * 2, tam * 2);
+	return rect;
+    }
+
+    /**
+     * Returns a new (cloned) geometry object reprojected to the actual project
+     * (coordinate transform) of the layer
+     */
+    public IGeometry reproyectToLayerCT(IGeometry geom) {
+	ICoordTrans ct = getLayer().getCoordTrans();
+	IGeometry geomReproject = geom.cloneGeometry();
+	if (ct != null) {
+	    geomReproject.reProject(ct);
+	}
+	return geomReproject;
+    }
+
     public void selectWithPoint(double x, double y, boolean multipleSelection) {
 	firstPoint = new Point2D.Double(x, y);
 	VectorialEditableAdapter vea = getVEA();
@@ -140,11 +166,9 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements
 	} catch (ReadDriverException e) {
 	    NotificationManager.addError(e.getMessage(), e);
 	}
-	// Se comprueba si se pincha en una gemometría
+
 	ViewPort vp = getLayer().getMapContext().getViewPort();
-	double tam = vp.toMapDistance(SelectionCADTool.tolerance);
-	Rectangle2D rect = new Rectangle2D.Double(firstPoint.getX() - tam,
-		firstPoint.getY() - tam, tam * 2, tam * 2);
+	Rectangle2D rect = getRectUsedForSnapping();
 
 	String strEPSG = vp.getProjection().getAbrev();
 	IRowEdited[] feats;
@@ -167,17 +191,15 @@ public class VectorialLayerEdited extends DefaultLayerEdited implements
 	    Graphics2D gs = selectionImage.createGraphics();
 
 	    Graphics2D gh = handlersImage.createGraphics();
-	    ICoordTrans ct = getLayer().getCoordTrans();
+
 	    for (int i = 0; i < feats.length; i++) {
 		IFeature feat = (IFeature) feats[i].getLinkedRow();
 		IGeometry geom = feat.getGeometry();
 		if (geom == null) {
 		    continue;
 		}
-		IGeometry geomReproject = geom.cloneGeometry();
-		if (ct != null) {
-		    geomReproject.reProject(ct);
-		}
+		IGeometry geomReproject = reproyectToLayerCT(geom);
+
 		if (geomReproject.intersects(rect)) { // , 0.1)){
 		    selection.set(feats[i].getIndex(), true);
 		    selectedRow.add(feats[i]);
