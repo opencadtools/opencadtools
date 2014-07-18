@@ -354,6 +354,9 @@
 		<extension class-name="com.iver.cit.gvsig.AddPartExtension" active="true">
 			<menu text="geometry/parts/add_part" action-command="_add_part"/>
 		</extension>
+		<extension class-name="com.iver.cit.gvsig.RemovePartExtension" active="true">
+			<menu text="geometry/parts/remove_part" action-command="remove_part"/>
+		</extension>
 
 
 	</extensions>
