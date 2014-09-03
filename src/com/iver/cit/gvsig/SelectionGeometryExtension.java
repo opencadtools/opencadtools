@@ -52,7 +52,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
  */
 public class SelectionGeometryExtension extends BaseCADExtension {
 
-    private static final String CAD_TOOL_KEY = "_selection";
+    public static final String CAD_TOOL_KEY = "_selection";
     private static final String ICON_KEY = "edition-geometry-select";
     private static final String ICON_PATH = "images/SelCAD.png";
 

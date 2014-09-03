@@ -14,14 +14,14 @@ public class AddPartExtension extends BaseCADExtension {
 
     private static final String CAD_TOOL_KEY = "_add_part";
 
-    // private static final String ICON_PATH = "images/icons/add_part.jpg";
-    // private static final String ICON_KEY = "edition-geometry-add-part-tool";
+    private static final String ICON_KEY = "geometry-modify-add-part-tool";
+    private static final String ICON_PATH = "images/icons/add_part.png";
 
     @Override
     public void initialize() {
 	tool = new AddPartCADTool();
 	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
-	// registerIcon(ICON_KEY, ICON_PATH);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     @Override

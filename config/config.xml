@@ -352,10 +352,17 @@
 		</extension>
 		
 		<extension class-name="com.iver.cit.gvsig.AddPartExtension" active="true">
-			<menu text="geometry/parts/add_part" action-command="_add_part"/>
-		</extension>
+			<menu text="geometry/modify/add_part" action-command="_add_part" icon="geometry-modify-add-part-tool" />
+			<tool-bar name="modificar" position="31">
+				<selectable-tool icon="geometry-modify-add-part-tool" action-command="_add_part" tooltip="add_part_tooltip" />
+			</tool-bar>
+			</extension>
+		
 		<extension class-name="com.iver.cit.gvsig.RemovePartExtension" active="true">
-			<menu text="geometry/parts/remove_part" action-command="remove_part"/>
+			<menu text="geometry/modify/remove_part" action-command="remove_part" icon="geometry-modify-remove-part-tool" />
+			<tool-bar name="modificar" position="31">
+				<selectable-tool icon="geometry-modify-remove-part-tool" action-command="remove_part" tooltip="remove_part_tooltip" />
+			</tool-bar>
 		</extension>
 
 

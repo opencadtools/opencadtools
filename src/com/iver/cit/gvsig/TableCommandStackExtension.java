@@ -23,7 +23,7 @@ public class TableCommandStackExtension extends Extension {
 	PluginServices.getIconTheme().registerDefault(
 		"commands-stack",
 		this.getClass().getClassLoader()
-			.getResource("images/commandstack.png"));
+			.getResource("images/icons/commandstack.png"));
     }
 
     /**

@@ -3,21 +3,21 @@ package com.iver.cit.gvsig;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.gui.cad.tools.RemovePartCADTool;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 public class RemovePartExtension extends BaseCADExtension {
 
     private final static String CAD_TOOL_KEY = "remove_part";
 
-    // private final static String ICON_KEY =
-    // "edition-geometry-remove-part-tool";
-    // private final static String ICON_PATH = "images/icons/add_part.jpg";
+    private final static String ICON_KEY = "geometry-modify-remove-part-tool";
+    private final static String ICON_PATH = "images/icons/remove_part.png";
 
     @Override
     public void initialize() {
 	tool = new RemovePartCADTool();
 	CADExtension.addCADTool(CAD_TOOL_KEY, tool);
-	// registerIcon(ICON_KEY, ICON_PATH);
+	registerIcon(ICON_KEY, ICON_PATH);
     }
 
     @Override
@@ -28,5 +28,12 @@ public class RemovePartExtension extends BaseCADExtension {
 	MapControl mapControl = view.getMapControl();
 	CADExtension.getEditionManager().setMapControl(mapControl);
 	CADExtension.clearMenu();
+    }
+
+    @Override
+    protected boolean isCustomEnabled(VectorialLayerEdited vle) {
+	// TODO: Maybe it will be acceptable that 'not edition mode selection'
+	// was used
+	return vle.getSelectedRow().size() == 1;
     }
 }

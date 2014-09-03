@@ -9,7 +9,7 @@ public class AutoCompletePolygonExtension extends BaseCADExtension {
 
     private static final String CAD_TOOL_KEY = "_autocompletepolygon";
     private static final String ICON_KEY = "edition-geometry-autocompletepolygon";
-    private static final String ICON_PATH = "images/polygon_autocomplete.png";
+    private static final String ICON_PATH = "images/icons/polygon_autocomplete.png";
 
     @Override
     public void initialize() {
