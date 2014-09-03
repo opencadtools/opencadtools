@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.SelectionGeometryExtension;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
@@ -42,14 +44,37 @@ public class RemovePartCADTool extends DefaultCADTool {
 
 	VectorialLayerEdited vle = getVLE();
 
-	vle.selectWithPoint(x, y, false);
-
-	if (vle.getSelectedRow().size() > 1) {
-	    throw new IllegalStateException(
-		    "No more than one feat should be selected");
+	if (vle.getSelectedRow().size() != 1) {
+	    throw new IllegalStateException("Only one feat must be selected");
 	}
+	IRowEdited previousSelRow = (IRowEdited) vle.getSelectedRow().get(0);
 
+	vle.selectWithPoint(x, y, false);
+	if (vle.getSelectedRow().size() > 1) {
+	    throw new IllegalStateException("Only one feat must be selected");
+	}
+	if (vle.getSelectedRow().size() == 0) {
+	    setQuestion(PluginServices.getText(this,
+		    "remove_part_point_doesnt_intersects"));
+	    try {
+		vle.restorePreviousSelection();
+	    } catch (ReadDriverException e) {
+		logger.error(e.getStackTrace(), e);
+	    }
+	    return;
+	}
 	IRowEdited rowEdited = (IRowEdited) vle.getSelectedRow().get(0);
+
+	if (rowEdited.getIndex() != previousSelRow.getIndex()) {
+	    try {
+		vle.restorePreviousSelection();
+	    } catch (ReadDriverException e) {
+		logger.error(e.getStackTrace(), e);
+	    }
+	    setQuestion(PluginServices.getText(this,
+		    "remove_part_point_doesnt_intersects"));
+	    return;
+	}
 	final IFeature feat = (IFeature) rowEdited.getLinkedRow();
 	IGeometry geom = feat.getGeometry();
 
@@ -64,14 +89,14 @@ public class RemovePartCADTool extends DefaultCADTool {
 	}
 
 	IGeometry newGeom = removePart(vle.getRectUsedForSnapping(), jtsGeom);
+
 	feat.setGeometry(newGeom);
 
-	try {
-	    clearSelection();
-	} catch (ReadDriverException e) {
-	    logger.error(e.getStackTrace(), e);
-	}
 	modifyFeature(rowEdited.getIndex(), feat);
+
+	CADExtension.setCADTool(SelectionGeometryExtension.CAD_TOOL_KEY, true);
+	PluginServices.getMainFrame().setSelectedTool(
+		SelectionGeometryExtension.CAD_TOOL_KEY);
     }
 
     private IGeometry removePart(Rectangle2D rect, Geometry jtsGeom) {

@@ -3,7 +3,10 @@ package com.iver.cit.gvsig.gui.cad.tools;
 import org.apache.log4j.Logger;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.iver.andami.PluginServices;
 import com.iver.andami.messages.NotificationManager;
+import com.iver.cit.gvsig.CADExtension;
+import com.iver.cit.gvsig.SelectionGeometryExtension;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileWriteException;
 import com.iver.cit.gvsig.exceptions.validate.ValidateRowException;
@@ -30,7 +33,7 @@ public class AddPartCADTool extends EIELPolylineCADTool {
 
     @Override
     public void addGeometry(IGeometry geometry) {
-	// TODO: fpuga. It's possible make something more straigth copying from
+	// TODO: fpuga. It's possible make something more straight copying from
 	// endGeometry, and avoiding using the geometry received as parameter
 	final IFeature feat = (IFeature) rowEdited.getLinkedRow();
 
@@ -49,9 +52,6 @@ public class AddPartCADTool extends EIELPolylineCADTool {
 
 	VectorialEditableAdapter vea = getVLE().getVEA();
 	try {
-	    // TODO: fpuga. It's possible to not clean the selection to allow
-	    // the user continue drawing parts
-	    clearSelection();
 	    vea.modifyRow(rowEdited.getIndex(), feat, "add part",
 		    EditionEvent.GRAPHIC);
 
@@ -68,6 +68,17 @@ public class AddPartCADTool extends EIELPolylineCADTool {
 	    logger.error(e.getStackTrace(), e);
 	    NotificationManager.addError(e.getMessage(), e);
 	}
+	CADExtension.setCADTool(SelectionGeometryExtension.CAD_TOOL_KEY, true);
+	PluginServices.getMainFrame().setSelectedTool(
+		SelectionGeometryExtension.CAD_TOOL_KEY);
+    }
 
+    @Override
+    /**
+     * This tool is used as a redigitalization tool, not as an insertion tool,
+     * so the listener must not be launched
+     */
+    public void fireEndGeometry() {
+	return;
     }
 }
