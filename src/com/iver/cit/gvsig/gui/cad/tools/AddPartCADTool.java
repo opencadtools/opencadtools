@@ -15,9 +15,11 @@ import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
 import com.iver.cit.gvsig.fmap.edition.VectorialEditableAdapter;
+import com.vividsolutions.jts.geom.Geometry;
 
 public class AddPartCADTool extends EIELPolylineCADTool {
     private IRowEdited rowEdited;
@@ -40,10 +42,19 @@ public class AddPartCADTool extends EIELPolylineCADTool {
 	IGeometry orgGeom = feat.getGeometry().cloneGeometry();
 
 	GeneralPathX orgGP = new GeneralPathX(orgGeom.getInternalShape());
-	orgGP.append(geometry.getInternalShape(), false);
+
+	Geometry orgJts = orgGeom.toJTSGeometry();
+	Geometry newJts = geometry.toJTSGeometry();
+	IGeometry newGeom = FConverter.jts_to_igeometry(orgJts.union(newJts));
+	if (orgJts.intersects(newJts)) {
+	    newGeom = FConverter.jts_to_igeometry(orgJts.union(newJts));
+	}
+
+	// orgGP.append(geometry.getInternalShape(), false);
 
 	if (orgGeom.getGeometryType() == FShape.POLYGON) {
-	    feat.setGeometry(ShapeFactory.createPolygon2D(orgGP));
+	    // feat.setGeometry(ShapeFactory.createPolygon2D(orgGP));
+	    feat.setGeometry(newGeom);
 	} else if (orgGeom.getGeometryType() == FShape.LINE) {
 	    feat.setGeometry(ShapeFactory.createPolyline2D(orgGP));
 	} else {
