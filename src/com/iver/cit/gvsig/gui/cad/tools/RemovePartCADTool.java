@@ -50,12 +50,10 @@ public class RemovePartCADTool extends DefaultCADTool {
 	IRowEdited previousSelRow = (IRowEdited) vle.getSelectedRow().get(0);
 
 	vle.selectWithPoint(x, y, false);
-	if (vle.getSelectedRow().size() > 1) {
-	    throw new IllegalStateException("Only one feat must be selected");
-	}
-	if (vle.getSelectedRow().size() == 0) {
+
+	if (vle.getSelectedRow().size() != 1) {
 	    setQuestion(PluginServices.getText(this,
-		    "remove_part_point_doesnt_intersects"));
+		    "only_one_feat_must_be_selected"));
 	    try {
 		vle.restorePreviousSelection();
 	    } catch (ReadDriverException e) {
