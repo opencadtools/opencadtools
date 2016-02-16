@@ -19,7 +19,6 @@ import com.iver.cit.gvsig.fmap.edition.rules.RulePolygon;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.XMLException;
 import com.iver.cit.gvsig.fmap.rendering.ILegend;
 import com.iver.cit.gvsig.gui.cad.CADTool;
 import com.iver.cit.gvsig.gui.tokenmarker.ConsoleToken;
@@ -83,7 +82,9 @@ public class StartEditing extends Extension {
 
 	lv.addLayerListener(editionManager);
 	try {
-	    ILegend legendOriginal = lv.getLegend().cloneLegend();
+
+	    // ILegend legendOriginal = lv.getLegend().cloneLegend();
+	    ILegend legendOriginal = lv.getLegend();
 
 	    lv.setEditing(true);
 	    VectorialEditableAdapter vea = (VectorialEditableAdapter) lv
@@ -117,8 +118,6 @@ public class StartEditing extends Extension {
 	    startCommandsApplicable(view, lv);
 	    view.repaintMap();
 
-	} catch (XMLException e) {
-	    NotificationManager.addError(e.getMessage(), e);
 	} catch (StartEditionLayerException e) {
 	    NotificationManager.addError(e.getMessage(), e);
 	} catch (ReadDriverException e) {
