@@ -14,7 +14,6 @@ import com.iver.cit.gvsig.fmap.core.FShape;
 import com.iver.cit.gvsig.fmap.core.GeneralPathX;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.core.v02.FConverter;
 import com.iver.cit.gvsig.fmap.edition.EditionEvent;
 import com.iver.cit.gvsig.fmap.edition.IRowEdited;
@@ -56,7 +55,7 @@ public class AddPartCADTool extends EIELPolylineCADTool {
 	    // feat.setGeometry(ShapeFactory.createPolygon2D(orgGP));
 	    feat.setGeometry(newGeom);
 	} else if (orgGeom.getGeometryType() == FShape.LINE) {
-	    feat.setGeometry(ShapeFactory.createPolyline2D(orgGP));
+	    feat.setGeometry(newGeom);
 	} else {
 	    throw new RuntimeException("Incorrect geometry type");
 	}
