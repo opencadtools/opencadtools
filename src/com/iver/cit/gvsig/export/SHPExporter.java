@@ -31,6 +31,9 @@ import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.iver.cit.gvsig.fmap.layers.VectorialFileAdapter;
 import com.iver.utiles.SimpleFileFilter;
 
+import es.icarto.gvsig.commons.utils.FileNameUtils;
+import es.icarto.gvsig.commons.utils.FileUtils;
+
 public class SHPExporter extends AbstractLayerExporter {
     private static Preferences prefs = Preferences.userRoot().node(
 	    "gvSIG.encoding.dbf");
@@ -138,7 +141,7 @@ public class SHPExporter extends AbstractLayerExporter {
 
     private void exportSingleTypeGeom(MapContext mapContext, FLyrVect layer,
 	    String path) throws BaseException {
-	path = ensureEndsWithSHP(path);
+	path = FileNameUtils.ensureExtension(path, ".shp");
 	File newFile = new File(path);
 	ensureNeededFilesExists(newFile);
 	IndexedShpDriver reader = getOpenShpDriver(newFile);
@@ -151,7 +154,7 @@ public class SHPExporter extends AbstractLayerExporter {
      */
     public void exportSingleTypeGeom(MapContext mapContext, FLyrVect layer,
 	    String path, Driver reader) throws BaseException {
-	path = ensureEndsWithSHP(path);
+	path = FileNameUtils.ensureExtension(path, ".shp");
 	File newFile = new File(path);
 	ensureNeededFilesExists(newFile);
 	SelectableDataSource sds = layer.getRecordset();
@@ -171,7 +174,7 @@ public class SHPExporter extends AbstractLayerExporter {
 
     public void export(MapContext mapContext, FLyrVect layer, String path)
 	    throws BaseException {
-	path = ensureEndsWithSHP(path);
+	path = FileNameUtils.ensureExtension(path, ".shp");
 
 	if (layer.getShapeType() == FShape.MULTI) {
 	    exportMultiTypeGeom(mapContext, layer, path);
@@ -180,12 +183,6 @@ public class SHPExporter extends AbstractLayerExporter {
 	}
     }
 
-    private String ensureEndsWithSHP(String path) {
-	if (!(path.toLowerCase().endsWith(".shp"))) {
-	    path = path + ".shp";
-	}
-	return path;
-    }
 
     private void loadEncoding(FLyrVect layer, ShpWriter writer) {
 	String charSetName = prefs.get("dbf_encoding", DbaseFile

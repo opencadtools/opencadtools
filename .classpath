@@ -19,5 +19,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/libIverUtiles"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libProjection"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libUIComponent"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/es.icarto.gvsig.commons"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
