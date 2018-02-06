@@ -70,6 +70,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.ComplexSelectionCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.ComplexSelectionCADToolContext.ComplexSelectionCADToolState;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 import com.iver.cit.gvsig.project.documents.table.gui.Table;
+import com.iver.cit.gvsig.project.documents.table.gui.TablesFor;
 
 /**
  * DOCUMENT ME!
@@ -577,20 +578,10 @@ public class ComplexSelectionCADTool extends SelectionCADTool {
 	}
 	System.out.println("ESTADO ACTUAL: " + getStatus());
 
-	FLyrVect lv = (FLyrVect) ((VectorialLayerEdited) CADExtension
-		.getEditionManager().getActiveLayerEdited()).getLayer();
-	com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
-		.getMDIManager().getAllWindows();
-
-	for (int i = 0; i < views.length; i++) {
-	    if (views[i] instanceof Table) {
-		Table table = (Table) views[i];
-		if (table.getModel().getAssociatedTable() != null
-			&& table.getModel().getAssociatedTable().equals(lv)) {
-		    table.updateSelection();
-		}
-	    }
-	}
+	FLyrVect lv = (FLyrVect) ((VectorialLayerEdited) CADExtension.getEditionManager().getActiveLayerEdited())
+                .getLayer();
+	TablesFor.layer(lv).updateSelection();
+	
     }
 
     @Override

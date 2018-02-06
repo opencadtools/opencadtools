@@ -557,7 +557,7 @@ public abstract class DefaultCADTool implements CADTool {
 
     public IView obtenerView() {
 	boolean encontrado = false;
-	IWindow[] ventanas = PluginServices.getMDIManager().getOrderedWindows();
+	IWindow[] ventanas = PluginServices.getMDIManager().getAllWindows();
 	int i = 0;
 	IView vista = null;
 	while (!encontrado && i < ventanas.length) {

@@ -75,7 +75,7 @@ import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext;
 import com.iver.cit.gvsig.gui.cad.tools.smc.SelectionCADToolContext.SelectionCADToolState;
 import com.iver.cit.gvsig.gui.panels.TextFieldEdit;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
-import com.iver.cit.gvsig.project.documents.table.gui.Table;
+import com.iver.cit.gvsig.project.documents.table.gui.TablesFor;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
@@ -140,21 +140,11 @@ public class SelectionCADTool extends DefaultCADTool {
 	// PONER.
 	// Lo he quitado porque cuando seleccionas algo con CAD, molesta que
 	// te hagan un redibujado.
-	FLyrVect lv = (FLyrVect) ((VectorialLayerEdited) CADExtension
+	FLyrVect layer = (FLyrVect) ((VectorialLayerEdited) CADExtension
 		.getEditionManager().getActiveLayerEdited()).getLayer();
 	// lv.getSource().getRecordset().getSelectionSupport().fireSelectionEvents();
-	com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
-		.getMDIManager().getAllWindows();
-
-	for (int i = 0; i < views.length; i++) {
-	    if (views[i] instanceof Table) {
-		Table table = (Table) views[i];
-		if (table.getModel().getAssociatedTable() != null
-			&& table.getModel().getAssociatedTable().equals(lv)) {
-		    table.updateSelection();
-		}
-	    }
-	}
+	TablesFor.layer(layer).updateSelection();
+	
     }
 
     /*

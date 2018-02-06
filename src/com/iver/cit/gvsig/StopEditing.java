@@ -39,7 +39,7 @@ import com.iver.cit.gvsig.fmap.spatialindex.IPersistentSpatialIndex;
 import com.iver.cit.gvsig.gui.cad.CADToolAdapter;
 import com.iver.cit.gvsig.gui.cad.panels.StopEditingPanel;
 import com.iver.cit.gvsig.layers.VectorialLayerEdited;
-import com.iver.cit.gvsig.project.documents.table.gui.Table;
+import com.iver.cit.gvsig.project.documents.table.gui.TablesFor;
 import com.iver.cit.gvsig.project.documents.view.IProjectView;
 import com.iver.cit.gvsig.project.documents.view.ProjectView;
 import com.iver.cit.gvsig.project.documents.view.ProjectViewFactory;
@@ -237,18 +237,7 @@ public class StopEditing extends Extension {
 		    .getSource();
 
 	    ISpatialWriter writer = (ISpatialWriter) vea.getWriter();
-	    com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
-		    .getMDIManager().getAllWindows();
-	    for (int j = 0; j < views.length; j++) {
-		if (views[j] instanceof Table) {
-		    Table table = (Table) views[j];
-		    if (table.getModel().getAssociatedTable() != null
-			    && table.getModel().getAssociatedTable()
-				    .equals(layer)) {
-			table.stopEditingCell();
-		    }
-		}
-	    }
+	    TablesFor.layer(layer).stopEditingCell();
 	    vea.cleanSelectableDatasource();
 	    layer.setRecordset(vea.getRecordset()); // Queremos que el recordset
 						    // del layer
@@ -288,20 +277,10 @@ public class StopEditing extends Extension {
     public void cancelEdition(FLyrVect layer)
 	    throws CancelEditingTableException, CancelEditingLayerException {
 	layer.setProperty("stoppingEditing", new Boolean(true));
-	com.iver.andami.ui.mdiManager.IWindow[] views = PluginServices
-		.getMDIManager().getAllWindows();
 	VectorialEditableAdapter vea = (VectorialEditableAdapter) layer
 		.getSource();
 	vea.cancelEdition(EditionEvent.GRAPHIC);
-	for (int j = 0; j < views.length; j++) {
-	    if (views[j] instanceof Table) {
-		Table table = (Table) views[j];
-		if (table.getModel().getAssociatedTable() != null
-			&& table.getModel().getAssociatedTable().equals(layer)) {
-		    table.cancelEditing();
-		}
-	    }
-	}
+	TablesFor.layer(layer).cancelEditing();
 	layer.setProperty("stoppingEditing", new Boolean(false));
     }
 
