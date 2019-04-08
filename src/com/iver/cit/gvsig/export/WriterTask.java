@@ -46,19 +46,27 @@ public class WriterTask extends AbstractMonitorableTask {
     private static Preferences prefs = Preferences.userRoot().node(
 	    "gvSIG.encoding.dbf");
 
-    private FLyrVect lyrVect;
-    private IWriter writer;
+    private final FLyrVect lyrVect;
+    private final IWriter writer;
     private int rowCount;
-    private ReadableVectorial va;
-    private SelectableDataSource sds;
-    private FBitSet bitSet;
-    private MapContext mapContext;
-    private VectorialDriver reader;
+    private final ReadableVectorial va;
+    private final SelectableDataSource sds;
+    private final FBitSet bitSet;
+    private final MapContext mapContext;
+    private final VectorialDriver reader;
+    private final boolean reproject;
 
     public WriterTask(MapContext mapContext, FLyrVect lyr, IWriter writer,
 	    Driver reader) throws ReadDriverException {
+	this(mapContext, lyr, true, writer, reader);
+
+    }
+
+    public WriterTask(MapContext mapContext, FLyrVect lyr, boolean reproject,
+	    IWriter writer, Driver reader) throws ReadDriverException {
 	this.mapContext = mapContext;
 	this.lyrVect = lyr;
+	this.reproject = reproject;
 	this.writer = writer;
 	this.reader = (VectorialDriver) reader;
 
@@ -108,8 +116,8 @@ public class WriterTask extends AbstractMonitorableTask {
 	    if (lyrVect.getSource() instanceof VectorialFileAdapter) {
 		((ShpWriter) writer).loadDbfEncoding(
 			((VectorialFileAdapter) lyrVect.getSource()).getFile()
-				.getAbsolutePath(), Charset
-				.forName(charSetName));
+			.getAbsolutePath(), Charset
+			.forName(charSetName));
 	    } else {
 		Object s = lyrVect.getProperty("DBFFile");
 		if (s != null && s instanceof String) {
@@ -142,7 +150,7 @@ public class WriterTask extends AbstractMonitorableTask {
 		if (isCanceled()) {
 		    break;
 		}
-		if (ct != null) {
+		if (this.reproject && ct != null) {
 		    if (bMustClone) {
 			geom = geom.cloneGeometry();
 		    }
@@ -183,7 +191,7 @@ public class WriterTask extends AbstractMonitorableTask {
 		if (isCanceled()) {
 		    break;
 		}
-		if (ct != null) {
+		if (this.reproject && ct != null) {
 		    if (bMustClone) {
 			geom = geom.cloneGeometry();
 		    }
@@ -212,15 +220,16 @@ public class WriterTask extends AbstractMonitorableTask {
 	if (reader != null && !isCanceled()) {
 	    int res = JOptionPane.showConfirmDialog((JComponent) PluginServices
 		    .getMDIManager().getActiveWindow(), PluginServices.getText(
-		    this, "insertar_en_la_vista_la_capa_creada"),
-		    PluginServices.getText(this, "insertar_capa"),
-		    JOptionPane.YES_NO_OPTION);
+			    this, "insertar_en_la_vista_la_capa_creada"),
+			    PluginServices.getText(this, "insertar_capa"),
+			    JOptionPane.YES_NO_OPTION);
 
 	    if (res == JOptionPane.YES_OPTION) {
 		PostProcessSupport.executeCalls();
 		FLayer newLayer = LayerFactory.createLayer(
-			definition.getName(), reader,
-			mapContext.getProjection());
+			definition.getName(), reader, this.reproject ? lyrVect
+				.getCoordTrans().getPDest() : lyrVect
+				.getCoordTrans().getPOrig());
 		mapContext.getLayers().addLayer(newLayer);
 	    }
 	}

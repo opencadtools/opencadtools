@@ -32,7 +32,6 @@ import com.iver.cit.gvsig.fmap.layers.VectorialFileAdapter;
 import com.iver.utiles.SimpleFileFilter;
 
 import es.icarto.gvsig.commons.utils.FileNameUtils;
-import es.icarto.gvsig.commons.utils.FileUtils;
 
 public class SHPExporter extends AbstractLayerExporter {
     private static Preferences prefs = Preferences.userRoot().node(
@@ -183,7 +182,6 @@ public class SHPExporter extends AbstractLayerExporter {
 	}
     }
 
-
     private void loadEncoding(FLyrVect layer, ShpWriter writer) {
 	String charSetName = prefs.get("dbf_encoding", DbaseFile
 		.getDefaultCharset().toString());
@@ -234,9 +232,16 @@ public class SHPExporter extends AbstractLayerExporter {
 	    IWriter[] writers, Driver[] readers) throws ReadDriverException {
 	MultiWriterTask mwt = new MultiWriterTask();
 	for (int i = 0; i < writers.length; i++) {
-	    mwt.addTask(new WriterTask(mapContext, layers, writers[i],
+	    mwt.addTask(new WriterTask(mapContext, layers, false, writers[i],
 		    readers[i]));
 	}
 	PluginServices.cancelableBackgroundExecution(mwt);
+    }
+
+    @Override
+    protected void writeFeatures(MapContext mapContext, FLyrVect layer,
+	    IWriter writer, Driver reader) throws ReadDriverException {
+	PluginServices.cancelableBackgroundExecution(new WriterTask(mapContext,
+		layer, false, writer, reader));
     }
 }
